@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".MapActivity">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        android:layout_gravity="top"
+        android:background="?attr/colorPrimary"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:menu="@menu/toolbar_map"/>
+
+    <FrameLayout
+        android:id="@+id/fl_map"
+        android:layout_width="@dimen/map_max_size"
+        android:layout_height="@dimen/map_max_size"
+        android:layout_gravity="center"
+        tools:context=".MapActivity">
+
+        <TextView
+            android:id="@+id/tv_root"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:padding="8dp"
+            android:elevation="8dp"
+            android:background="@drawable/circle"
+            android:textColor="@color/white"
+            android:text="中心" />
+
+        <!--  距離参照用  -->
+        <View
+            android:id="@+id/v_base"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:layout_marginStart="20dp"
+            android:visibility="invisible"/>
+
+    </FrameLayout>
+
+</FrameLayout>
