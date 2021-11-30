@@ -1,11 +1,14 @@
 package com.mapping.filemapping;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
-import android.content.Context;
+import android.app.Activity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -30,32 +33,36 @@ public class MapActivity extends AppCompatActivity {
 
     //マップ情報管理
     private MapInfoManager mMapInfoManager;
-
     //GestureDetector
     private ScaleGestureDetector mPinchGestureDetector;
-    private GestureDetector      mScrollGestureDetector;
-
+    private GestureDetector mScrollGestureDetector;
     //スクロール前マップ位置
     private float mPreTouchPosX;
     private float mPreTouchPosY;
-
     //ピンチ操作後のビュー間の距離の比率
     private float pinchDistanceRatioX;
     private float pinchDistanceRatioY;
-
     //ピンチ操作時のズレ値
     private float mPinchShiftX = 0;
     private float mPinchShiftY = 0;
-
     //ピンチ操作発生フラグ
     private boolean mIsPinch = false;
+    //フリング用Scroller
+    private Scroller mFlingScroller;
+    //DrawerLayoutのオープン状態
+    private boolean mDrawerIsOpen = false;
 
 
+    /*
+     * 画面生成
+     */
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        //ツールバー設定
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("ツールバー");
         setSupportActionBar(toolbar);
@@ -63,29 +70,53 @@ public class MapActivity extends AppCompatActivity {
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
+        //フリング用スクロール生成
+        mFlingScroller = new Scroller(this, new DecelerateInterpolator());
 
         //マップ管理マネージャを取得
-        mMapInfoManager = MapInfoManager.getInstance( true );
+        mMapInfoManager = MapInfoManager.getInstance(true);
         pinchDistanceRatioX = mMapInfoManager.getPinchDistanceRatioX();
         pinchDistanceRatioY = mMapInfoManager.getPinchDistanceRatioY();
 
         //リスナー生成
-        mPinchGestureDetector  = new ScaleGestureDetector(this, new PinchListener());
-        mScrollGestureDetector = new GestureDetector(this, new ScrollListener(this));
+        mPinchGestureDetector = new ScaleGestureDetector(this, new PinchListener());
+        mScrollGestureDetector = new GestureDetector(this, new ScrollListener());
 
+        //アクティビティ
+        Activity activity = (Activity) this;
+
+        //DrawerLayout
+        DrawerLayout dl_map = findViewById(R.id.dl_map);
+        dl_map.addDrawerListener( new MapDrawerListener() );
+        dl_map.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                if (mDrawerIsOpen) {
+                    //Drawerが開いているなら、Drawerを閉じる
+                    return false;
+
+                } else {
+                    //Drawerが閉じているなら、アクティビティにタッチ処理を渡す
+                    activity.onTouchEvent(motionEvent);
+                    return true;
+                }
+            }
+        });
+
+        //マップ
         FrameLayout fl_map = findViewById(R.id.fl_map);
         TextView tv_root = findViewById(R.id.tv_root);
 
         ViewTreeObserver observer = tv_root.getViewTreeObserver();
-        observer.addOnGlobalLayoutListener( new ViewTreeObserver.OnGlobalLayoutListener() {
+        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @SuppressLint("ClickableViewAccessibility")
             @Override
-            public void onGlobalLayout()
-            {
+            public void onGlobalLayout() {
                 int width = tv_root.getWidth();
 
-                int x = tv_root.getLeft() + ( tv_root.getWidth() / 2 );
-                int y = tv_root.getTop()  + ( tv_root.getHeight() / 2 );
+                int x = tv_root.getLeft() + (tv_root.getWidth() / 2);
+                int y = tv_root.getTop() + (tv_root.getHeight() / 2);
 
                 Log.i("attach2", "センターの中心座標(親レイアウトのマージン) x=" + x + " y=" + y);
                 Log.i("attach2", "センターの座標(親レイアウトのマージン) getLeft=" + tv_root.getLeft() + " getTop=" + tv_root.getTop());
@@ -93,7 +124,7 @@ public class MapActivity extends AppCompatActivity {
 
                 //ビューの生成----------------------------------------
                 TextView kyotoNode = new TextView(tv_root.getContext());
-                kyotoNode.setText( "京都" );
+                kyotoNode.setText("京都");
 
                 fl_map.addView(kyotoNode, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -119,16 +150,16 @@ public class MapActivity extends AppCompatActivity {
                 });*/
 
                 //タッチリスナー
-                kyotoNode.setOnTouchListener( new NodeTouchListener( kyotoNode, pathView ) );
+                kyotoNode.setOnTouchListener(new NodeTouchListener(kyotoNode, pathView));
 
                 //ビューの生成----------------------------------------
                 TextView hNode = new TextView(tv_root.getContext());
-                hNode.setText( "北海道" );
+                hNode.setText("北海道");
 
                 fl_map.addView(hNode, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
                 ViewTreeObserver observer = hNode.getViewTreeObserver();
-                observer.addOnGlobalLayoutListener( new ViewTreeObserver.OnGlobalLayoutListener() {
+                observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
 
@@ -151,7 +182,7 @@ public class MapActivity extends AppCompatActivity {
 
                 //ビューの生成----------------------------------------
                 TextView moveNode = new TextView(tv_root.getContext());
-                moveNode.setText( "北海道に移動" );
+                moveNode.setText("北海道に移動");
 
                 fl_map.addView(moveNode, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
@@ -191,7 +222,7 @@ public class MapActivity extends AppCompatActivity {
 
                         //移動先の親レイアウトマージン
                         int toLeft = hNode.getLeft();
-                        int toTop  = hNode.getTop();
+                        int toTop = hNode.getTop();
 
                         Log.i("move", "Left(移動先)=" + toLeft + " Left(センター)=" + tv_root.getLeft());
                         Log.i("move", "rootMarginX=" + rootMarginX + " rootMarginY=" + rootMarginY);
@@ -203,8 +234,8 @@ public class MapActivity extends AppCompatActivity {
                         //Log.i("move", "移動量 MarginDiffX=" + MarginDiffX + " MarginDiffY=" + MarginDiffY);
 
                         //移動量：スケール比率を考慮
-                        float MarginPinchDiffX = (int)(pinchDistanceRatioX * (toLeft - rootMarginX));
-                        float MarginPinchDiffY = (int)(pinchDistanceRatioY * (toTop  - rootMarginY));
+                        float MarginPinchDiffX = (int) (pinchDistanceRatioX * (toLeft - rootMarginX));
+                        float MarginPinchDiffY = (int) (pinchDistanceRatioY * (toTop - rootMarginY));
 
                         Log.i("move", "移動量(スケール考慮 比率取得 float) MarginPinchDiffX=" + MarginPinchDiffX + " MarginPinchDiffY=" + MarginPinchDiffY);
 
@@ -215,10 +246,10 @@ public class MapActivity extends AppCompatActivity {
 
                         // アニメーションを開始
                         scroller.startScroll(
-                                (int)scrollStartX,
-                                (int)scrollStartY,
-                                (int)-MarginPinchDiffX,
-                                (int)-MarginPinchDiffY,
+                                (int) scrollStartX,
+                                (int) scrollStartY,
+                                (int) -MarginPinchDiffX,
+                                (int) -MarginPinchDiffY,
                                 MOVE_DURATION       // スクロールにかかる時間 [milliseconds]
                         );
 
@@ -234,8 +265,8 @@ public class MapActivity extends AppCompatActivity {
                                     scroller.computeScrollOffset();
                                     //setPieRotation(scroller.getCurrY());
 
-                                    fl_map.setTranslationX( scroller.getCurrX() );
-                                    fl_map.setTranslationY( scroller.getCurrY() );
+                                    fl_map.setTranslationX(scroller.getCurrX());
+                                    fl_map.setTranslationY(scroller.getCurrY());
 
                                 } else {
                                     scrollAnimator.cancel();
@@ -253,7 +284,6 @@ public class MapActivity extends AppCompatActivity {
 
                     }
                 });
-
 
 
                 //リスナー削除
@@ -298,6 +328,13 @@ public class MapActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_folder_tree:
+
+                Log.i("MenuItem", "action_folder_tree");
+
+                DrawerLayout drawer = findViewById(R.id.dl_map);
+                drawer.openDrawer(GravityCompat.END);
+
+
                 return true;
 
             default:
@@ -307,20 +344,22 @@ public class MapActivity extends AppCompatActivity {
     }
 
 
-
     /*
      * タッチイベントの実装
      */
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
 
+        //現在のスクロールを停止
+        mFlingScroller.forceFinished(true);
+
         //ピンチ操作リスナーをコール
         mPinchGestureDetector.onTouchEvent(motionEvent);
 
         //ピンチ操作があれば、ここで終了
-        if( mIsPinch ){
+        if (mIsPinch) {
             //指を離れれば、ピンチ操作OFFに戻す
-            if( motionEvent.getAction() == MotionEvent.ACTION_UP ){
+            if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
                 mIsPinch = false;
             }
             return true;
@@ -400,8 +439,8 @@ public class MapActivity extends AppCompatActivity {
         /*
          * コンストラクタ
          */
-        public PinchListener(){
-            mfl_map  = findViewById(R.id.fl_map);
+        public PinchListener() {
+            mfl_map = findViewById(R.id.fl_map);
             mtv_root = findViewById(R.id.tv_root);
             mv_base = findViewById(R.id.v_base);
         }
@@ -446,8 +485,8 @@ public class MapActivity extends AppCompatActivity {
             Log.i("onScale", "getScaleFactor=" + scaleFactor);
 
             //ピンチ操作開始時の比率に、ピンチ操作中の比率を掛ける
-            mfl_map.setScaleX( mPinchScaleX * scaleFactor );
-            mfl_map.setScaleY( mPinchScaleY * scaleFactor );
+            mfl_map.setScaleX(mPinchScaleX * scaleFactor);
+            mfl_map.setScaleY(mPinchScaleY * scaleFactor);
 
             return super.onScale(detector);
         }
@@ -471,7 +510,7 @@ public class MapActivity extends AppCompatActivity {
             pinchDistanceRatioY *= (endDistanceY / startDistanceY);
 
             //マップ情報を同期
-            mMapInfoManager.setPinchDistanceRatio( pinchDistanceRatioX, pinchDistanceRatioY );
+            mMapInfoManager.setPinchDistanceRatio(pinchDistanceRatioX, pinchDistanceRatioY);
 
             Log.i("onScaleEnd", "pinchDistanceRatioX=" + pinchDistanceRatioX + " pinchDistanceRatioY=" + pinchDistanceRatioY);
 
@@ -498,22 +537,13 @@ public class MapActivity extends AppCompatActivity {
      */
     private class ScrollListener extends GestureDetector.SimpleOnGestureListener {
 
-        private Scroller mScroller;
-
-        public ScrollListener( Context context ){
-            mScroller = new Scroller(context, new DecelerateInterpolator());
-        }
-
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-
-            //現在のスクロールを停止
-            mScroller.forceFinished(true);
 
             Log.i("onFling", "velocityX=" + velocityX + " velocityY=" + velocityY);
 
 
-//            mScroller.fling(currentX, currentY, velocityX / SCALE, velocityY / SCALE, minX, minY, maxX, maxY);
+//            mFlingScroller.fling(currentX, currentY, velocityX / SCALE, velocityY / SCALE, minX, minY, maxX, maxY);
 //            postInvalidate();
 
             FrameLayout root = findViewById(R.id.fl_map);
@@ -528,11 +558,11 @@ public class MapActivity extends AppCompatActivity {
             final int MOVE_DURATION = 5000;
 
             // アニメーションを開始
-            mScroller.fling(
-                    (int)nowx,                          // scroll の開始位置 (X)
-                    (int)nowy,                          // scroll の開始位置 (Y)
-                    (int)velocityX / SCALE,     //初速
-                    (int)velocityY / SCALE,     //初速
+            mFlingScroller.fling(
+                    (int) nowx,                          //scroll の開始位置 (X)
+                    (int) nowy,                          //scroll の開始位置 (Y)
+                    (int) velocityX / SCALE,     //初速
+                    (int) velocityY / SCALE,     //初速
                     -2000,
                     2000,
                     -2000,
@@ -545,11 +575,11 @@ public class MapActivity extends AppCompatActivity {
                 @Override
                 public void onAnimationUpdate(ValueAnimator valueAnimator) {
 
-                    if (!mScroller.isFinished()) {
-                        mScroller.computeScrollOffset();
+                    if (!mFlingScroller.isFinished()) {
+                        mFlingScroller.computeScrollOffset();
 
-                        root.setTranslationX( mScroller.getCurrX() );
-                        root.setTranslationY( mScroller.getCurrY() );
+                        root.setTranslationX(mFlingScroller.getCurrX());
+                        root.setTranslationY(mFlingScroller.getCurrY());
 
                     } else {
                         scrollAnimator.cancel();
@@ -564,6 +594,35 @@ public class MapActivity extends AppCompatActivity {
 
     }
 
+    /*
+     * マップ画面のDrawerListener
+     */
+    private class MapDrawerListener implements DrawerLayout.DrawerListener {
 
+        @Override
+        public void onDrawerOpened(@NonNull View drawerView) {
+            Log.i("DrawerListener", "onDrawerOpened");
+            mDrawerIsOpen = true;
+        }
+
+        @Override
+        public void onDrawerClosed(@NonNull View drawerView) {
+            Log.i("DrawerListener", "onDrawerClosed");
+
+            mDrawerIsOpen = false;
+        }
+
+        @Override
+        public void onDrawerStateChanged(int newState) {
+            Log.i("DrawerListener", "onDrawerStateChanged newState=" + newState);
+        }
+
+        @Override
+        public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
+            Log.i("DrawerListener", "onDrawerSlide");
+
+        }
+
+    }
 
 }
