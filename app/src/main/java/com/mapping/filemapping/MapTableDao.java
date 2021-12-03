@@ -14,20 +14,31 @@ import java.util.List;
 @Dao
 public interface MapTableDao {
 
-    @Query("SELECT * FROM mapTable")
+    @Query("SELECT * FROM map")
     List<MapTable> getAll();
 
     /*
      * 取得：レコード
-     *   指定されたプライマリーキーのレコードを取得
+     *   指定プライマリーキーのレコードを取得
      */
-    @Query("SELECT * FROM mapTable WHERE pid=(:pid)")
+    @Query("SELECT * FROM map WHERE pid=(:pid)")
     MapTable getMap(int pid);
 
+    /*
+     * 取得：レコード
+     *   指定マップ名のレコードを取得
+     */
+    @Query("SELECT * FROM map WHERE map_name=(:mapName)")
+    MapTable getMap(String mapName);
+
     @Insert
-    void insert(MapTable mapTable);
+    long insert(MapTable mapTable);
 
     @Delete
     void delete(MapTable mapTable);
+
+    @Query("DELETE FROM map")
+    void deleteAll();
+
 
 }

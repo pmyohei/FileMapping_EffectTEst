@@ -39,7 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:padding="8dp"
-                android:elevation="8dp"
+                android:elevation="@dimen/node_evelation"
                 android:background="@drawable/circle"
                 android:textColor="@color/white"
                 android:text="中心" />

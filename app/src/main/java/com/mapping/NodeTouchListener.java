@@ -7,6 +7,7 @@ import android.view.View;
 
 import com.mapping.filemapping.LineView;
 import com.mapping.filemapping.MapInfoManager;
+import com.mapping.filemapping.NodeTable;
 
 /*
  * ノードタッチリスナー
@@ -16,9 +17,9 @@ public class NodeTouchListener implements View.OnTouchListener {
     //マップ情報管理
     private final MapInfoManager mMapInfoManager;
 
-    //ドラッグ対象のView
-    private final View     mNode;
-    private final LineView mParentLine;
+    private final View      mvNode;         //ドラッグ対象のView
+    private final NodeTable mNode;          //ノード
+    private       LineView  mParentLine;    //親ノードとのライン
 
     //前回のタッチ位置
     private int mPreTouchPosX;
@@ -34,12 +35,12 @@ public class NodeTouchListener implements View.OnTouchListener {
     /*
      * コンストラクタ
      */
-    public NodeTouchListener(View dragNode, LineView parentLine) {
-        mNode       = dragNode;
-        mParentLine = parentLine;
+    public NodeTouchListener(View dragNode, NodeTable node) {
+        mvNode = dragNode;
+        mNode  = node;
 
         //※空のクリック処理をオーバーライドしないと、タッチ処理が検出されないため、空処理を入れとく
-        mNode.setOnClickListener(new View.OnClickListener() {
+        mvNode.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 //Log.i("kyotoNode", "onClick");
@@ -66,6 +67,12 @@ public class NodeTouchListener implements View.OnTouchListener {
         switch (event.getAction()) {
 
             case MotionEvent.ACTION_DOWN:
+
+                //ライン情報未保持なら、保持する
+                if( mParentLine == null ){
+                    mParentLine = mNode.getLineView();
+                }
+
                 //タッチ開始時のピンチ操作比率を取得
                 pinchDistanceRatioX = mMapInfoManager.getPinchDistanceRatioX();
                 pinchDistanceRatioY = mMapInfoManager.getPinchDistanceRatioY();
@@ -80,15 +87,15 @@ public class NodeTouchListener implements View.OnTouchListener {
 
                 //今回イベントでのView移動先の位置
                 //※移動量からピンチ操作率は取り除く
-                int left = mNode.getLeft() + (int)((x - mPreTouchPosX) / pinchDistanceRatioX);
-                int top  = mNode.getTop()  + (int)((y - mPreTouchPosY) / pinchDistanceRatioY);
+                int left = mvNode.getLeft() + (int)((x - mPreTouchPosX) / pinchDistanceRatioX);
+                int top  = mvNode.getTop()  + (int)((y - mPreTouchPosY) / pinchDistanceRatioY);
 
                 //ノードの移動
-                mNode.layout(left, top, left + mNode.getWidth(), top + mNode.getHeight());
+                mvNode.layout(left, top, left + mvNode.getWidth(), top + mvNode.getHeight());
 
                 //接続線の描画を更新
-                float endPosx = left + (mNode.getWidth()  / 2f);
-                float endPosy = top  + (mNode.getHeight() / 2f);
+                float endPosx = left + (mvNode.getWidth()  / 2f);
+                float endPosy = top  + (mvNode.getHeight() / 2f);
 
                 mParentLine.moveEndPos( endPosx, endPosy );
 
@@ -117,6 +124,10 @@ public class NodeTouchListener implements View.OnTouchListener {
             return super.onDoubleTap(event);
         }
     }
+
+    
+
+
 
 
 }

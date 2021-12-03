@@ -1,13 +1,21 @@
 package com.mapping.filemapping;
 
+import android.content.Context;
 import android.os.AsyncTask;
 
-public class AsyncDBOperaion extends AsyncTask<Void, Void, Integer> {
+/*
+ * DB非同期処理
+ *   create
+ */
+public class AsyncCreateDBOperaion extends AsyncTask<Void, Void, Integer> {
+
+    private final AppDatabase mDB;
 
     /*
      * コンストラクタ
      */
-    public AsyncDBOperaion() {
+    public AsyncCreateDBOperaion(Context context) {
+        mDB = AppDatabaseManager.getInstance(context);
     }
 
 
@@ -17,6 +25,12 @@ public class AsyncDBOperaion extends AsyncTask<Void, Void, Integer> {
      */
     @Override
     protected Integer doInBackground(Void... params) {
+
+        //生成
+
+
+
+
 
         return 0;
     }

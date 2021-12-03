@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -14,21 +15,39 @@ import java.util.List;
 @Dao
 public interface NodeTableDao {
 
-    @Query("SELECT * FROM nodeTable")
+    @Query("SELECT * FROM node")
     List<NodeTable> getAll();
+
+    /*
+     *
+     */
+    @Query("SELECT * FROM node WHERE pid_map=(:mapPid)")
+    List<NodeTable> getMapNodes(int mapPid);
 
     /*
      * 取得：レコード
      *   指定されたプライマリーキーのレコードを取得
      */
-    @Query("SELECT * FROM nodeTable WHERE pid=(:pid)")
+    @Query("SELECT * FROM node WHERE pid=(:pid)")
     NodeTable getNode(int pid);
 
     @Insert
-    void insert(NodeTable nodeTable);
+    long insert(NodeTable node);
+
+    @Update
+    void updateNode(NodeTable node);
+
+    @Query("UPDATE node set pid_parent_node=(:pidParent) WHERE pid=(:pid)")
+    void updateNodeTest(int pid, int pidParent);
+
+    @Update
+    void updateNodes(NodeTable... nodes);
 
     @Delete
-    void delete(NodeTable nodeTable);
+    void delete(NodeTable node);
+
+    @Query("DELETE FROM node")
+    void deleteAll();
 
 }
 

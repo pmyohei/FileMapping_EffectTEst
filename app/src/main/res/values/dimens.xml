@@ -3,5 +3,9 @@
     <!--  マップ  -->
     <dimen name="map_max_size">4000dp</dimen>
 
+    <!--  マップ  -->
+    <dimen name="node_evelation">8dp</dimen>
+
+
 
 </resources>

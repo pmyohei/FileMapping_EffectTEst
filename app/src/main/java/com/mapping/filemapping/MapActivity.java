@@ -9,9 +9,12 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -33,6 +36,8 @@ public class MapActivity extends AppCompatActivity {
 
     //マップ情報管理
     private MapInfoManager mMapInfoManager;
+
+    /* マップ位置操作 */
     //GestureDetector
     private ScaleGestureDetector mPinchGestureDetector;
     private GestureDetector mScrollGestureDetector;
@@ -52,6 +57,13 @@ public class MapActivity extends AppCompatActivity {
     //DrawerLayoutのオープン状態
     private boolean mDrawerIsOpen = false;
 
+    /* データ */
+    private NodeArrayList<NodeTable> mNodeList;     //ノードリスト
+
+    /* 制御 */
+    //ノード生成ができる状態か
+    private boolean mEnableDrawNode = false;
+
 
     /*
      * 画面生成
@@ -63,7 +75,7 @@ public class MapActivity extends AppCompatActivity {
         setContentView(R.layout.activity_map);
 
         //ツールバー設定
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar);
         toolbar.setTitle("ツールバー");
         setSupportActionBar(toolbar);
 
@@ -83,11 +95,11 @@ public class MapActivity extends AppCompatActivity {
         mScrollGestureDetector = new GestureDetector(this, new ScrollListener());
 
         //アクティビティ
-        Activity activity = (Activity) this;
+        Activity activity = this;
 
         //DrawerLayout
         DrawerLayout dl_map = findViewById(R.id.dl_map);
-        dl_map.addDrawerListener( new MapDrawerListener() );
+        dl_map.addDrawerListener(new MapDrawerListener());
         dl_map.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -104,11 +116,64 @@ public class MapActivity extends AppCompatActivity {
             }
         });
 
-        //マップ
-        FrameLayout fl_map = findViewById(R.id.fl_map);
+        //DBからデータを取得
+        Intent intent = getIntent();
+        int mapPid = intent.getIntExtra("MapID", 0);
+        AsyncReadNodeOperaion db = new AsyncReadNodeOperaion(this, mapPid, new AsyncReadNodeOperaion.OnReadListener() {
+
+            //DB読み取り完了
+            @Override
+            public void onRead(NodeArrayList<NodeTable> nodeList) {
+
+                mNodeList = nodeList;
+
+                if( mEnableDrawNode ){
+                    //ノード生成可能なら、マップ上にノードを生成
+                    createMap();
+                }
+
+                //データは取得したため、フラグ更新
+                mEnableDrawNode = true;
+            }
+        });
+
+        //非同期処理開始
+        db.execute();
+
+        //ルートノード
         TextView tv_root = findViewById(R.id.tv_root);
 
         ViewTreeObserver observer = tv_root.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+
+                        //レイアウト確定後は、不要なので本リスナー削除
+                        tv_root.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                        if( mEnableDrawNode ){
+                            //ノード生成可能なら、マップ上にノードを生成
+                            createMap();
+                        }
+
+                        //レイアウト側は確定したため、フラグ更新
+                        mEnableDrawNode = true;
+                    }
+                }
+        );
+
+
+
+        if (true) {
+            return;
+        }
+
+/*        //マップ
+        FrameLayout fl_map = findViewById(R.id.fl_map);
+
+        //レイアウト確定待ち
+        observer = tv_root.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
             @SuppressLint("ClickableViewAccessibility")
             @Override
@@ -140,14 +205,6 @@ public class MapActivity extends AppCompatActivity {
                 //線の描画----------------------------------------
                 LineView pathView = new LineView(tv_root.getContext(), x, y, x + width * 2, y + width * 2);
                 fl_map.addView(pathView);
-
-                //※空のクリック処理をオーバーライドしないと、タッチ処理が検出されない
-/*                kyotoNode.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        Log.i("kyotoNode", "onClick");
-                    }
-                });*/
 
                 //タッチリスナー
                 kyotoNode.setOnTouchListener(new NodeTouchListener(kyotoNode, pathView));
@@ -289,9 +346,154 @@ public class MapActivity extends AppCompatActivity {
                 //リスナー削除
                 tv_root.getViewTreeObserver().removeOnGlobalLayoutListener(this);
             }
-        });
+        });*/
 
     }
+
+    /*
+     * マップ内の全てのノード・ラインを生成
+     */
+    private void createMap() {
+
+        //ノードの生成
+        drawNode();
+
+
+    }
+
+    /*
+     * ノード生成
+     */
+    private void drawNode(){
+
+        //ビュー
+        FrameLayout fl_map  = findViewById(R.id.fl_map);     //マップレイアウト（ノード追加先）
+        TextView    tv_root = findViewById(R.id.tv_root);    //ルートノード
+
+        //インフレータ
+        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        //全ノード数ループ
+        int nodeNum = mNodeList.size();
+        for ( int i = 0; i < nodeNum; i++ ) {
+
+            NodeTable node = mNodeList.get(i);
+
+            //ルートノード
+            if (node.getKind() == NodeTable.NODE_KIND_ROOT) {
+                //元々レイアウト上にあるルートノード名を変更し、中心座標を保持するだけ
+                tv_root.setText(node.getNodeName());
+
+                //マージン座標を取得
+                int left = tv_root.getLeft();
+                int top  = tv_root.getTop();
+
+                //中心座標を保持
+                node.setCenterPosX( left + (tv_root.getWidth()  / 2f) );
+                node.setCenterPosY( top  + (tv_root.getHeight() / 2f) );
+
+                Log.i("drawNodes", "root centerx=" + ( left + (tv_root.getWidth()  / 2f) ));
+                Log.i("drawNodes", "root centery=" + ( top  + (tv_root.getHeight() / 2f) ));
+
+                continue;
+            }
+
+            //ノードレイアウト
+            View v_node = inflater.inflate(R.layout.node, null);
+
+            //ノード名設定
+            TextView tv_node = v_node.findViewById(R.id.tv_node);
+            tv_node.setText(node.getNodeName());
+
+            //ノードをマップに追加
+            fl_map.addView(v_node, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            //位置設定
+            //※レイアウト追加後に行うこと（MarginLayoutParamsがnullになってしまうため）
+            int left = node.getPosX();
+            int top  = node.getPosY();
+
+            ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) v_node.getLayoutParams();
+            mlp.setMargins(left, top, mlp.rightMargin, mlp.bottomMargin);
+
+            Log.i("createNode", "getWidth=" + v_node.getWidth() + " getHeight=" + v_node.getHeight());
+
+            //無名クラス内参照用
+            int finalI = i;
+
+            ViewTreeObserver observer = v_node.getViewTreeObserver();
+            observer.addOnGlobalLayoutListener(
+                    new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+
+                            Log.i("createNode", "レイアウトが確定したノード=" + node.getNodeName() );
+
+                            //レイアウト確定後は、不要なので本リスナー削除
+                            v_node.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                            //中心座標を保持
+                            node.setCenterPosX( left + (v_node.getWidth()  / 2f) );
+                            node.setCenterPosY( top  + (v_node.getHeight() / 2f) );
+
+                            //最後に追加したビューの場合
+                            if( finalI == (nodeNum - 1) ){
+                                //ラインを描画する
+                                drawLine();
+                            }
+                        }
+                    }
+            );
+
+            //ノードタッチリスナー設定
+            v_node.setOnTouchListener(new NodeTouchListener(v_node, node));
+        }
+    }
+
+    /*
+     * ラインの描画
+     */
+    private void drawLine() {
+
+        //ビュー
+        FrameLayout fl_map = findViewById(R.id.fl_map);     //マップレイアウト（ノード追加先）
+
+        //全ノード数ループ
+        for (NodeTable node : mNodeList) {
+
+            //親ノードPid
+            int pidParentNode    = node.getPidParentNode();
+            if( pidParentNode == NodeTable.NO_PARENT ){
+                //ルートノードはラインなし
+                continue;
+            }
+
+            //親ノード
+            NodeTable parentNode = mNodeList.getParentNode(pidParentNode);
+
+            //親の中心座標を取得
+            float parentCenterX = parentNode.getCenterPosX();
+            float parentCenterY = parentNode.getCenterPosY();
+
+            //自身の中心座標を取得
+            float centerX = node.getCenterPosX();
+            float centerY = node.getCenterPosY();
+
+            //ラインを生成
+            LineView lineView = new LineView(this, parentCenterX, parentCenterY, centerX, centerY);
+
+            //ノードに保持させる
+            node.setLineView( lineView );
+
+            //レイアウトに追加
+            fl_map.addView(lineView);
+        }
+
+
+    }
+
+
+
 
     /*
      * ツールバーオプションメニュー生成
@@ -316,7 +518,7 @@ public class MapActivity extends AppCompatActivity {
     }
 
     /*
-     * ツールバーアクション
+     * ツールバーアクション選択
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
