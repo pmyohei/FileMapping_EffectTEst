@@ -30,6 +30,8 @@ import android.widget.TextView;
 
 import com.mapping.NodeTouchListener;
 
+import org.w3c.dom.Node;
+
 import java.util.Objects;
 
 public class MapActivity extends AppCompatActivity {
@@ -141,16 +143,16 @@ public class MapActivity extends AppCompatActivity {
         db.execute();
 
         //ルートノード
-        TextView tv_root = findViewById(R.id.tv_root);
+        RootNodeView rnv_rootnode = findViewById(R.id.rnv_rootnode);
 
-        ViewTreeObserver observer = tv_root.getViewTreeObserver();
+        ViewTreeObserver observer = rnv_rootnode.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
 
                         //レイアウト確定後は、不要なので本リスナー削除
-                        tv_root.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        rnv_rootnode.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
                         if( mEnableDrawNode ){
                             //ノード生成可能なら、マップ上にノードを生成
@@ -356,19 +358,19 @@ public class MapActivity extends AppCompatActivity {
     private void createMap() {
 
         //ノードの生成
-        drawNode();
-
+        //drawNode();
+        drawNodeNew();
 
     }
+
 
     /*
      * ノード生成
      */
-    private void drawNode(){
+    private void drawNodeNew(){
 
         //ビュー
         FrameLayout fl_map  = findViewById(R.id.fl_map);     //マップレイアウト（ノード追加先）
-        TextView    tv_root = findViewById(R.id.tv_root);    //ルートノード
 
         //インフレータ
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -381,47 +383,50 @@ public class MapActivity extends AppCompatActivity {
 
             //ルートノード
             if (node.getKind() == NodeTable.NODE_KIND_ROOT) {
-                //元々レイアウト上にあるルートノード名を変更し、中心座標を保持するだけ
-                tv_root.setText(node.getNodeName());
+                //元々レイアウト上にあるルートノード名を変更し、中心座標を保持
+                RootNodeView rootNodeView = findViewById(R.id.rnv_rootnode);
+                rootNodeView.setNodeName( node.getNodeName() );
 
                 //マージン座標を取得
-                int left = tv_root.getLeft();
-                int top  = tv_root.getTop();
+                int left = rootNodeView.getLeft();
+                int top  = rootNodeView.getTop();
 
                 //中心座標を保持
-                node.setCenterPosX( left + (tv_root.getWidth()  / 2f) );
-                node.setCenterPosY( top  + (tv_root.getHeight() / 2f) );
+                rootNodeView.setCenterPosX( left + (rootNodeView.getWidth()  / 2f) );
+                rootNodeView.setCenterPosY( top  + (rootNodeView.getHeight() / 2f) );
 
-                Log.i("drawNodes", "root centerx=" + ( left + (tv_root.getWidth()  / 2f) ));
-                Log.i("drawNodes", "root centery=" + ( top  + (tv_root.getHeight() / 2f) ));
+                //NodeTable側でノードビューを保持
+                node.setRootNodeView( rootNodeView );
+
+                Log.i("drawNodes", "root centerx=" + ( left + (rootNodeView.getWidth()  / 2f) ));
+                Log.i("drawNodes", "root centery=" + ( top  + (rootNodeView.getHeight() / 2f) ));
 
                 continue;
             }
 
-            //ノードレイアウト
-            View v_node = inflater.inflate(R.layout.node, null);
+            //ノード生成
+            NodeView nodeView = new NodeView(this);
 
             //ノード名設定
-            TextView tv_node = v_node.findViewById(R.id.tv_node);
-            tv_node.setText(node.getNodeName());
+            nodeView.setNodeName( node.getNodeName() );
 
             //ノードをマップに追加
-            fl_map.addView(v_node, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            fl_map.addView(nodeView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
             //位置設定
             //※レイアウト追加後に行うこと（MarginLayoutParamsがnullになってしまうため）
             int left = node.getPosX();
             int top  = node.getPosY();
 
-            ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) v_node.getLayoutParams();
+            ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) nodeView.getLayoutParams();
             mlp.setMargins(left, top, mlp.rightMargin, mlp.bottomMargin);
 
-            Log.i("createNode", "getWidth=" + v_node.getWidth() + " getHeight=" + v_node.getHeight());
+            Log.i("createNode", "getWidth=" + nodeView.getWidth() + " getHeight=" + nodeView.getHeight());
 
             //無名クラス内参照用
             int finalI = i;
 
-            ViewTreeObserver observer = v_node.getViewTreeObserver();
+            ViewTreeObserver observer = nodeView.getViewTreeObserver();
             observer.addOnGlobalLayoutListener(
                     new ViewTreeObserver.OnGlobalLayoutListener() {
                         @Override
@@ -430,30 +435,33 @@ public class MapActivity extends AppCompatActivity {
                             Log.i("createNode", "レイアウトが確定したノード=" + node.getNodeName() );
 
                             //レイアウト確定後は、不要なので本リスナー削除
-                            v_node.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                            nodeView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
                             //中心座標を保持
-                            node.setCenterPosX( left + (v_node.getWidth()  / 2f) );
-                            node.setCenterPosY( top  + (v_node.getHeight() / 2f) );
+                            nodeView.setCenterPosX( left + (nodeView.getWidth()  / 2f) );
+                            nodeView.setCenterPosY( top  + (nodeView.getHeight() / 2f) );
 
                             //最後に追加したビューの場合
                             if( finalI == (nodeNum - 1) ){
                                 //ラインを描画する
-                                drawLine();
+                                drawLineNew();
                             }
                         }
                     }
             );
 
+
+            node.setNodeView( nodeView );
+
             //ノードタッチリスナー設定
-            v_node.setOnTouchListener(new NodeTouchListener(v_node, node));
+            //nodeView.setOnTouchListener(new NodeTouchListener(v_node, node));
         }
     }
 
     /*
      * ラインの描画
      */
-    private void drawLine() {
+    private void drawLineNew() {
 
         //ビュー
         FrameLayout fl_map = findViewById(R.id.fl_map);     //マップレイアウト（ノード追加先）
@@ -462,28 +470,29 @@ public class MapActivity extends AppCompatActivity {
         for (NodeTable node : mNodeList) {
 
             //親ノードPid
-            int pidParentNode    = node.getPidParentNode();
+            int pidParentNode = node.getPidParentNode();
             if( pidParentNode == NodeTable.NO_PARENT ){
                 //ルートノードはラインなし
                 continue;
             }
 
             //親ノード
-            NodeTable parentNode = mNodeList.getParentNode(pidParentNode);
+            NodeTable parentNode = mNodeList.getNode(pidParentNode);
 
             //親の中心座標を取得
             float parentCenterX = parentNode.getCenterPosX();
             float parentCenterY = parentNode.getCenterPosY();
 
             //自身の中心座標を取得
-            float centerX = node.getCenterPosX();
-            float centerY = node.getCenterPosY();
+            NodeView nodeView = node.getNodeView();
+            float centerX = nodeView.getCenterPosX();
+            float centerY = nodeView.getCenterPosY();
 
             //ラインを生成
             LineView lineView = new LineView(this, parentCenterX, parentCenterY, centerX, centerY);
 
             //ノードに保持させる
-            node.setLineView( lineView );
+            nodeView.setLineView( lineView );
 
             //レイアウトに追加
             fl_map.addView(lineView);
@@ -491,7 +500,6 @@ public class MapActivity extends AppCompatActivity {
 
 
     }
-
 
 
 
@@ -643,7 +651,7 @@ public class MapActivity extends AppCompatActivity {
          */
         public PinchListener() {
             mfl_map = findViewById(R.id.fl_map);
-            mtv_root = findViewById(R.id.tv_root);
+            mtv_root = findViewById(R.id.tv_rootNode);
             mv_base = findViewById(R.id.v_base);
         }
 

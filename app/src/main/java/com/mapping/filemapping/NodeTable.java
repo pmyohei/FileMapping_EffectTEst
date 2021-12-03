@@ -1,5 +1,6 @@
 package com.mapping.filemapping;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -81,21 +82,27 @@ public class NodeTable {
     public static int NO_PARENT = -1;
 
     //中心座標の連想配列文字列
+/*
     public static String CENTER_POS_X = "X";
     public static String CENTER_POS_Y = "X";
+*/
 
 
 
     /*-- 非レコードフィールド --*/
+/*
     @Ignore
     private HashMap<String, Float> centerPos = new HashMap<String, Float>();        //ノード中心座標
+   @Ignore
+    private float centerPosX;                   //ノード中心座標X
     @Ignore
-    private float centerPosX;        //ノード中心座標X
+    private float centerPosY;                   //ノード中心座標Y*/
     @Ignore
-    private float centerPosY;        //ノード中心座標Y
+    private LineView lineView;                  //親ノードとの接続線
     @Ignore
-    private LineView lineView;       //親ノードとの接続線
-
+    private NodeView nodeView;                  //ノードビュー
+    @Ignore
+    private RootNodeView rootNodeView;          //ルートノードビュー
 
     /*-- getter setter --*/
 
@@ -169,7 +176,26 @@ public class NodeTable {
 
     /*-- getter setter（非レコードフィールド） --*/
 
+    /*
+     * 自身のノード種別に応じて、適切な値を返す
+     */
     public float getCenterPosX() {
+
+        if( kind == NODE_KIND_ROOT ){
+            return rootNodeView.getCenterPosX();
+        } else {
+            return nodeView.getCenterPosX();
+        }
+    }
+    public float getCenterPosY() {
+        if( kind == NODE_KIND_ROOT ){
+            return rootNodeView.getCenterPosY();
+        } else {
+            return nodeView.getCenterPosY();
+        }
+    }
+
+/*    public float getCenterPosX() {
         return centerPosX;
     }
     public void setCenterPosX(float centerPosX) {
@@ -181,21 +207,37 @@ public class NodeTable {
     }
     public void setCenterPosY(float centerPosY) {
         this.centerPosY = centerPosY;
-    }
+    }*/
 
 
+/*
     public HashMap<String, Float> getCenterPos() {
         return centerPos;
     }
     public void setCenterPos(HashMap<String, Float> centerPos) {
         this.centerPos = centerPos;
     }
+*/
 
     public LineView getLineView() {
         return lineView;
     }
     public void setLineView(LineView lineView) {
         this.lineView = lineView;
+    }
+
+    public NodeView getNodeView() {
+        return nodeView;
+    }
+    public void setNodeView(NodeView nodeView) {
+        this.nodeView = nodeView;
+    }
+
+    public RootNodeView getRootNodeView() {
+        return rootNodeView;
+    }
+    public void setRootNodeView(RootNodeView RootNodeView) {
+        this.rootNodeView = RootNodeView;
     }
 
 }

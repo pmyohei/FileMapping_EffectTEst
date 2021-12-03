@@ -34,21 +34,21 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> {
     }
 
     /*
-     *　ラストIndex取得
+     *　指定PIDのノードを取得
      */
-    public NodeTable getParentNode( int parentPid ) {
+    public NodeTable getNode(int pid ) {
 
         int size = size();
         for (int i = 0; i < size; i++) {
 
-            if (parentPid == get(i).getPid()) {
+            if (pid == get(i).getPid()) {
                 //指定親ノードのPIDと一致するノードを返す
                 return get(i);
             }
         }
 
         //ここには来ないはず
-        Log.e("NodeArrayList", "error getparentNode() parentPid" + parentPid);
+        Log.e("NodeArrayList", "error getparentNode() pid" + pid);
         return null;
     }
 

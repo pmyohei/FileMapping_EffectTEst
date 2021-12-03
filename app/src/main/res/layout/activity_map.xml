@@ -33,16 +33,40 @@
             android:layout_gravity="center"
             tools:context=".MapActivity">
 
-            <TextView
-                android:id="@+id/tv_root"
+            <!-- ルートノード生成先 -->
+<!--
+            <LinearLayout
+                android:id="@+id/ll_rootnode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:padding="8dp"
-                android:elevation="@dimen/node_evelation"
-                android:background="@drawable/circle"
-                android:textColor="@color/white"
-                android:text="中心" />
+                android:orientation="vertical">
+
+            </LinearLayout>
+-->
+            <com.mapping.filemapping.RootNodeView
+                android:id="@+id/rnv_rootnode"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"/>
+
+<!--
+            <include
+                android:id="@+id/cl_rootNode"
+                layout="@layout/node_root_test" />
+-->
+
+<!--                        <TextView
+                            android:id="@+id/tv_root"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:layout_marginStart="40dp"
+                            android:padding="8dp"
+                            android:elevation="@dimen/node_evelation"
+                            android:background="@drawable/circle"
+                            android:textColor="@color/white"
+                            android:text="中心" />-->
 
             <!--  距離参照用  -->
             <View
