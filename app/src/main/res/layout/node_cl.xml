@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         android:padding="12dp"
         android:elevation="@dimen/node_evelation"
-        android:background="@drawable/circle_tool"
+        android:background="@drawable/circle_tool_icon"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

@@ -1,0 +1,198 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/cl_node"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_anchor="@id/tv_node"
+        app:layout_anchorGravity="top|center_horizontal" >
+
+        <ImageButton
+            android:id="@+id/imageButton7"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="@dimen/node_icon_margin_long"
+            android:padding="4dp"
+            android:elevation="@dimen/node_evelation"
+            android:background="@drawable/circle_tool_icon"
+            app:srcCompat="@drawable/baseline_add_24" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_anchor="@id/tv_node"
+        app:layout_anchorGravity="top|start" >
+
+        <ImageButton
+            android:id="@+id/aaa"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="@dimen/node_icon_margin_middle1"
+            android:layout_marginEnd="@dimen/node_icon_margin_middle2"
+            android:padding="4dp"
+            android:elevation="@dimen/node_evelation"
+            android:background="@drawable/circle_tool_icon"
+            app:srcCompat="@drawable/baseline_add_24" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_anchor="@id/tv_node"
+        app:layout_anchorGravity="start|center_vertical" >
+
+        <ImageButton
+            android:id="@+id/bbb"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginEnd="@dimen/node_icon_margin_long"
+            android:padding="4dp"
+            android:elevation="@dimen/node_evelation"
+            android:background="@drawable/circle_tool_icon"
+            app:srcCompat="@drawable/baseline_add_24" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_anchor="@id/tv_node"
+        app:layout_anchorGravity="bottom|start" >
+
+        <ImageButton
+            android:id="@+id/cc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="@dimen/node_icon_margin_middle1"
+            android:layout_marginEnd="@dimen/node_icon_margin_middle2"
+            android:padding="4dp"
+            android:elevation="@dimen/node_evelation"
+            android:background="@drawable/circle_tool_icon"
+            app:srcCompat="@drawable/baseline_add_24" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_anchor="@id/tv_node"
+        app:layout_anchorGravity="bottom|center_horizontal" >
+
+        <ImageButton
+            android:id="@+id/dd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="@dimen/node_icon_margin_long"
+            android:padding="4dp"
+            android:elevation="@dimen/node_evelation"
+            android:background="@drawable/circle_tool_icon"
+            app:srcCompat="@drawable/baseline_add_24" />
+
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_anchor="@id/tv_node"
+        app:layout_anchorGravity="bottom|end" >
+
+        <ImageButton
+            android:id="@+id/ee"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginTop="@dimen/node_icon_margin_middle1"
+            android:layout_marginStart="@dimen/node_icon_margin_middle2"
+            android:padding="4dp"
+            android:elevation="@dimen/node_evelation"
+            android:background="@drawable/circle_tool_icon"
+            app:srcCompat="@drawable/baseline_add_24" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_anchor="@id/tv_node"
+        app:layout_anchorGravity="top|end" >
+
+        <ImageButton
+            android:id="@+id/fff"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="@dimen/node_icon_margin_middle1"
+            android:layout_marginStart="@dimen/node_icon_margin_middle2"
+            android:padding="4dp"
+            android:elevation="@dimen/node_evelation"
+            android:background="@drawable/circle_tool_icon"
+            app:srcCompat="@drawable/baseline_add_24" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_anchor="@id/tv_node"
+        app:layout_anchorGravity="end|center_vertical" >
+
+        <ImageButton
+            android:id="@+id/gg"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
+            android:layout_marginStart="@dimen/node_icon_margin_long"
+            android:padding="4dp"
+            android:elevation="@dimen/node_evelation"
+            android:background="@drawable/circle_tool_icon"
+            app:srcCompat="@drawable/baseline_add_24" />
+
+    </LinearLayout>
+
+    <!-- ノード -->
+    <TextView
+        android:id="@+id/tv_node"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:elevation="@dimen/node_evelation"
+        android:background="@drawable/circle_node"
+        android:padding="4dp"
+        android:text="@string/sample" />
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

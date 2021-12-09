@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/cl_node"
@@ -7,192 +7,148 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_anchor="@id/tv_node"
-        app:layout_anchorGravity="top|center_horizontal" >
-
-        <ImageButton
-            android:id="@+id/imageButton7"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginBottom="@dimen/node_icon_margin_long"
-            android:padding="4dp"
-            android:elevation="@dimen/node_evelation"
-            android:background="@drawable/circle_tool"
-            app:srcCompat="@drawable/baseline_add_24" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_anchor="@id/tv_node"
-        app:layout_anchorGravity="top|start" >
-
-        <ImageButton
-            android:id="@+id/aaa"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginBottom="@dimen/node_icon_margin_middle1"
-            android:layout_marginEnd="@dimen/node_icon_margin_middle2"
-            android:padding="4dp"
-            android:elevation="@dimen/node_evelation"
-            android:background="@drawable/circle_tool"
-            app:srcCompat="@drawable/baseline_add_24" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_anchor="@id/tv_node"
-        app:layout_anchorGravity="start|center_vertical" >
-
-        <ImageButton
-            android:id="@+id/bbb"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginStart="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginEnd="@dimen/node_icon_margin_long"
-            android:padding="4dp"
-            android:elevation="@dimen/node_evelation"
-            android:background="@drawable/circle_tool"
-            app:srcCompat="@drawable/baseline_add_24" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_anchor="@id/tv_node"
-        app:layout_anchorGravity="bottom|start" >
-
-        <ImageButton
-            android:id="@+id/cc"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="@dimen/node_icon_margin_middle1"
-            android:layout_marginEnd="@dimen/node_icon_margin_middle2"
-            android:padding="4dp"
-            android:elevation="@dimen/node_evelation"
-            android:background="@drawable/circle_tool"
-            app:srcCompat="@drawable/baseline_add_24" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_anchor="@id/tv_node"
-        app:layout_anchorGravity="bottom|center_horizontal" >
-
-        <ImageButton
-            android:id="@+id/dd"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="@dimen/node_icon_margin_long"
-            android:padding="4dp"
-            android:elevation="@dimen/node_evelation"
-            android:background="@drawable/circle_tool"
-            app:srcCompat="@drawable/baseline_add_24" />
-
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_anchor="@id/tv_node"
-        app:layout_anchorGravity="bottom|end" >
-
-        <ImageButton
-            android:id="@+id/ee"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginTop="@dimen/node_icon_margin_middle1"
-            android:layout_marginStart="@dimen/node_icon_margin_middle2"
-            android:padding="4dp"
-            android:elevation="@dimen/node_evelation"
-            android:background="@drawable/circle_tool"
-            app:srcCompat="@drawable/baseline_add_24" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_anchor="@id/tv_node"
-        app:layout_anchorGravity="top|end" >
-
-        <ImageButton
-            android:id="@+id/fff"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="@dimen/node_icon_margin_middle1"
-            android:layout_marginStart="@dimen/node_icon_margin_middle2"
-            android:padding="4dp"
-            android:elevation="@dimen/node_evelation"
-            android:background="@drawable/circle_tool"
-            app:srcCompat="@drawable/baseline_add_24" />
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_anchor="@id/tv_node"
-        app:layout_anchorGravity="end|center_vertical" >
-
-        <ImageButton
-            android:id="@+id/gg"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="4dp"
-            android:layout_marginEnd="4dp"
-            android:layout_marginBottom="4dp"
-            android:layout_marginStart="@dimen/node_icon_margin_long"
-            android:padding="4dp"
-            android:elevation="@dimen/node_evelation"
-            android:background="@drawable/circle_tool"
-            app:srcCompat="@drawable/baseline_add_24" />
-
-    </LinearLayout>
-
     <!-- ノード -->
     <TextView
         android:id="@+id/tv_node"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:elevation="@dimen/node_evelation"
         android:background="@drawable/circle_node"
+        android:elevation="@dimen/node_evelation"
         android:padding="4dp"
-        android:text="@string/sample" />
+        android:text="@string/sample"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <!--  ツールアイコン  -->
+    <ImageButton
+        android:id="@+id/ib_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:elevation="@dimen/node_evelation"
+        android:background="@drawable/circle_tool_icon"
+        android:visibility="gone"
+        app:layout_constraintCircle="@id/tv_node"
+        app:layout_constraintCircleAngle="30"
+        app:layout_constraintCircleRadius="@dimen/node_icon_radius"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_close_24" />
+
+
+    <ImageButton
+        android:id="@+id/aaa"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:elevation="@dimen/node_evelation"
+        android:background="@drawable/circle_tool_icon"
+        android:visibility="gone"
+        app:layout_constraintCircle="@id/tv_node"
+        app:layout_constraintCircleAngle="60"
+        app:layout_constraintCircleRadius="@dimen/node_icon_radius"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_add_24" />
+
+
+    <ImageButton
+        android:id="@+id/bbb"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/circle_tool_icon"
+        android:elevation="@dimen/node_evelation"
+        android:padding="4dp"
+        android:visibility="gone"
+        app:layout_constraintCircle="@id/tv_node"
+        app:layout_constraintCircleAngle="90"
+        app:layout_constraintCircleRadius="@dimen/node_icon_radius"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_add_24" />
+
+
+    <ImageButton
+        android:id="@+id/cc"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:elevation="@dimen/node_evelation"
+        android:background="@drawable/circle_tool_icon"
+        android:visibility="gone"
+        app:layout_constraintCircle="@id/tv_node"
+        app:layout_constraintCircleAngle="120"
+        app:layout_constraintCircleRadius="@dimen/node_icon_radius"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:srcCompat="@drawable/baseline_add_24" />
+
+
+    <ImageButton
+        android:id="@+id/dd"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:elevation="@dimen/node_evelation"
+        android:background="@drawable/circle_tool_icon"
+        android:visibility="gone"
+        app:layout_constraintCircle="@id/tv_node"
+        app:layout_constraintCircleAngle="150"
+        app:layout_constraintCircleRadius="@dimen/node_icon_radius"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_add_24" />
+
+
+    <ImageButton
+        android:id="@+id/ee"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@drawable/circle_tool_icon"
+        android:elevation="@dimen/node_evelation"
+        android:padding="4dp"
+        android:visibility="gone"
+        app:layout_constraintCircle="@id/tv_node"
+        app:layout_constraintCircleAngle="180"
+        app:layout_constraintCircleRadius="@dimen/node_icon_radius"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@drawable/baseline_add_24" />
+
+
+    <ImageButton
+        android:id="@+id/fff"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:elevation="@dimen/node_evelation"
+        android:background="@drawable/circle_tool_icon"
+        android:visibility="gone"
+        app:layout_constraintCircle="@id/tv_node"
+        app:layout_constraintCircleAngle="210"
+        app:layout_constraintCircleRadius="@dimen/node_icon_radius"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_add_24" />
+
+
+    <ImageButton
+        android:id="@+id/gg"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:elevation="@dimen/node_evelation"
+        android:background="@drawable/circle_tool_icon"
+        android:visibility="gone"
+        app:layout_constraintCircle="@id/tv_node"
+        app:layout_constraintCircleAngle="240"
+        app:layout_constraintCircleRadius="@dimen/node_icon_radius"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_add_24" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

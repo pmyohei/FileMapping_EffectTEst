@@ -146,9 +146,9 @@ public class GIJI_AsyncCreateDBOperaion extends AsyncTask<Void, Void, Integer> {
         NodeTable nodeD = new NodeTable();
 
         nodeR.setNodeName("MapB Root");
-        nodeA.setNodeName("MapB NodeA");
+        nodeA.setNodeName("MapB NodeA__________");
         nodeB.setNodeName("MapB\nNodeB");
-        nodeC.setNodeName("MapB\nNodeC");
+        nodeC.setNodeName("M\na\np\nB\nN\no\nd\ne\nC");
         nodeD.setNodeName("MapB NodeD");
 
         nodeR.setPidMap((int)MapPid);

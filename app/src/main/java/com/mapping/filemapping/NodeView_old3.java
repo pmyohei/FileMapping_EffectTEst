@@ -12,16 +12,8 @@ import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 
-public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
-
-    //親ノードに対する自ノードの位置定数
-    private final int POSITIVE = 1;     //正側（右）
-    private final int NEGATIVE = -1;    //負側（左）
-
-    //親ノードに対する自ノードの位置
-    private int parentRelativePosition;
+public class NodeView_old3 extends RootNodeView /*implements View.OnTouchListener*/ {
 
     //マップ情報管理
     public MapInfoManager mMapInfoManager;
@@ -44,16 +36,12 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
     //子ノードリスト
     private NodeArrayList<NodeTable> mChildNodes;
 
-    NodeView mself = this;
-
     /*
      * コンストラクタ
      */
     @SuppressLint("ClickableViewAccessibility")
-    public NodeView(Context context, NodeTable node) {
+    public NodeView_old3(Context context, NodeTable node) {
         super(context, R.layout.node);
-
-        Log.i("NodeView", "3");
 
         //ノード情報を保持
         mNode = node;
@@ -61,18 +49,14 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
         init();
     }
 
-/*    public NodeView(Context context, AttributeSet attrs) {
+    public NodeView_old3(Context context, AttributeSet attrs) {
         super(context, attrs);
-
-        Log.i("NodeView", "2");
 
         init();
     }
 
-    public NodeView(Context context, AttributeSet attrs, int defStyleAttr) {
+/*    public NodeView_old3(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-
-        Log.i("NodeView", "3");
 
         init();
     }*/
@@ -88,11 +72,13 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
         mMapInfoManager = MapInfoManager.getInstance(false);
 
         //レイアウト生成
-        //LayoutInflater inflater = LayoutInflater.from(getContext());
-        //inflater.inflate(R.layout.node, this, true);
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        //inflater.inflate(R.layout.root_node, this, false);
+        inflater.inflate(R.layout.node, this, false);
 
         //タッチリスナー
-        setOnTouchListener(new NodeTouchListener());
+        //setOnTouchListener(new NodeTouchListener());
+
     }
 
     /*
@@ -108,6 +94,7 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
         //子ノード検索
         searchChildNodes();
     }
+
 
     /*
      * 子ノード検索
@@ -153,7 +140,7 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
      * 子ノードの位置(X座標)を反転
      *   ＠自分自身／親ノード からコールされる
      */
-    public void reverceChildNodes(float touchNodePosX) {
+    public void reverceChildNodes( float touchNodePosX ) {
 
         //子ノード分ループ
         for (NodeTable childNode : mChildNodes) {
@@ -164,7 +151,7 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
             Log.i("test", "反転時の自ノード情報 自分=" + mNode.getNodeName() + " 自分のX位置=" + mCenterPosX);
 
             //移動先の位置を反映
-            v_node.place((int) touchNodePosX);
+            v_node.place( (int)touchNodePosX );
 
             //この子ノードの子ノードも対象
             v_node.reverceChildNodes(touchNodePosX);
@@ -177,50 +164,50 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
      * 　指定された移動量だけ移動させる
      *   ＠自分自身／親ノード からコールされる
      */
-    public void move(float moveX, float moveY, float parentPosX, float parentPosY, boolean isFollowParent) {
+    public void move( float moveX, float moveY, float parentPosX, float parentPosY, boolean isFollowParent ) {
 
         //今回イベントでのView移動先の位置
         //※移動量からピンチ操作率は取り除く
-        int left = getLeft() + (int) moveX;
-        int top  = getTop()  + (int) moveY;
+        int left = getLeft() + (int)moveX;
+        int top  = getTop()  + (int)moveY;
 
         //レイアウトに反映
         layout(left, top, left + mWidth, top + mHeight);
 
         //ライン終端位置（自ノードの中心位置）を計算
-        mCenterPosX = left + (mWidth / 2f);
-        mCenterPosY = top + (mHeight / 2f);
+        mCenterPosX = left + (mWidth  / 2f);
+        mCenterPosY = top  + (mHeight / 2f);
 
-        Log.i("move", "move Node=" + mNode.getNodeName() + " posx=" + mCenterPosX + " posy=" + mCenterPosY);
+        Log.i("test", "move Node=" + mNode.getNodeName() + " posx=" + mCenterPosX + " posy=" + mCenterPosY);
 
         //親の移動の追従か
-        if (isFollowParent) {
+        if( isFollowParent ){
             //ライン再描画（始端位置も更新）
-            mLineView.reDraw(parentPosX, parentPosY);
+            mLineView.reDraw( parentPosX, parentPosY );
         } else {
             //ライン再描画（終端位置のみ更新）
             mLineView.reDraw();
         }
 
         //子ノード移動
-        moveChildNodes(moveX, moveY);
+        moveChildNodes( moveX, moveY );
     }
 
     /*
      * ノードの配置
      *    指定されたX座標にノードを配置する
      */
-    public void place(int touchNodePosX) {
+    public void place( int touchNodePosX ) {
 
         //ノードの横幅半分
-        float halfWidth = mWidth / 2f;
+        float halfWidth = mWidth  / 2f;
 
         Log.i("place", "反転処理前 反転ノード=" + mNode.getNodeName() + " 自分のX位置=" + mCenterPosX);
 
         //反転後の中心位置＝「タッチノード位置」＋（「タッチノード位置」ー「自ノード位置」）
-        mCenterPosX = touchNodePosX + (touchNodePosX - (int) mCenterPosX);
+        mCenterPosX = touchNodePosX + ( touchNodePosX - (int)mCenterPosX );
         //反転後の中心位置にノードを置くためのレフトマージン
-        int revercePosX = (int) (mCenterPosX - halfWidth);
+        int revercePosX = (int)(mCenterPosX - halfWidth);
 
         //トップマージン
         int top = getTop();
@@ -235,38 +222,6 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
     }
 
     /*
-     * レイアウトマージンの設定
-     *    レイアウト上のマージンを設定する。
-     * 　　※layout()はあくまで見えている位置を変えているだけ。
-     *      本処理を行わないと、ダブルタップ発生時等で全てのノードが初期位置に戻る
-     */
-    public void setLayoutMargin() {
-
-        //現在の表示上位置にマージンを設定
-        ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams)getLayoutParams();
-        mlp.setMargins(getLeft(), getTop(), 0, 0);
-
-        //子ノードも同様
-        setLayoutMarginChildNodes();
-    }
-
-    /*
-     * 子ノードの移動
-     */
-    public void setLayoutMarginChildNodes() {
-
-        //子ノード分ループ
-        for (NodeTable childNode : mChildNodes) {
-
-            //子ノードのノードビュー
-            NodeView v_node = childNode.getNodeView();
-
-            //子ノードの子ノードを移動させる
-            v_node.setLayoutMargin();
-        }
-    }
-
-    /*
      * 親ノードのX座標を取得
      */
     public float getParentPositionX() {
@@ -277,12 +232,70 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
         return parentNode.getCenterPosX();
     }
 
+    @Override
+    //public boolean onTouch(View view, MotionEvent event) {
+    public boolean onTouchEvent(MotionEvent event) {
+
+        Log.i("NodeView", "onTouch test");
+
+        super.onTouchEvent( event );
+
+        return false;
+
+/*        //ダブルタップ処理
+        mGestureDetector.onTouchEvent( event );
+
+        //タッチしている位置取得（スクリーン座標）
+        int x = (int) event.getRawX();
+        int y = (int) event.getRawY();
+
+        switch (event.getAction()) {
+
+            case MotionEvent.ACTION_DOWN:
+
+                //タッチ開始時のピンチ操作比率を取得
+                pinchDistanceRatioX = mMapInfoManager.getPinchDistanceRatioX();
+                pinchDistanceRatioY = mMapInfoManager.getPinchDistanceRatioY();
+
+                //今回のタッチ位置を保持
+                mPreTouchPosX = x;
+                mPreTouchPosY = y;
+
+                break;
+
+            case MotionEvent.ACTION_MOVE:
+
+                //今回イベントでのView移動先の位置
+                //※移動量からピンチ操作率は取り除く
+                int left = getLeft() + (int)((x - mPreTouchPosX) / pinchDistanceRatioX);
+                int top  = getTop()  + (int)((y - mPreTouchPosY) / pinchDistanceRatioY);
+
+                //ノードの移動
+                layout(left, top, left + getWidth(), top + getHeight());
+
+                //接続線の描画を更新
+                float endPosx = left + (getWidth()  / 2f);
+                float endPosy = top  + (getHeight() / 2f);
+
+                mLineView.moveEndPos( endPosx, endPosy );
+
+                //今回のタッチ位置を保持
+                mPreTouchPosX = x;
+                mPreTouchPosY = y;
+
+                //イベント処理完了
+                return true;
+        }
+
+        //イベント処理完了
+        return false;*/
+    }
+
 
     /*
      * ノードタッチリスナー
      */
-    //private class NodeTouchListener implements View.OnTouchListener {
-    private class NodeTouchListener extends RootNodeTouchListener {
+    private class NodeTouchListener implements OnTouchListener {
 
         //親ノードに対する自ノードの位置定数
         private final int POSITIVE = 1;     //正側（右）
@@ -295,20 +308,19 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
          * コンストラクタ
          */
         public NodeTouchListener() {
+
+            //ダブルタップリスナーを実装したGestureDetector
+            mGestureDetector = new GestureDetector(getContext(), new NodeTouchListener.DoubleTapListener());
         }
 
         @Override
         public boolean onTouch(View view, MotionEvent event) {
 
-            //ルートノード側の共通処理をコール
-            boolean ret = super.onTouch( view, event );
+            Log.i("NodeTouchListener", "onTouch innerclass");
 
-            Log.i("NodeTouchListener", "super.onTouch=" + ret);
-
-            //共通処理を行った場合、終了
-            if( ret ){
-                return true;
-            }
+            //ダブルタップ処理
+            //mGestureDetector.onTouchEvent(event);
+            //super.onTouch(event);
 
             //タッチしている位置取得（スクリーン座標）
             int x = (int) event.getRawX();
@@ -366,10 +378,8 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
 
                 case MotionEvent.ACTION_UP:
 
-                    //移動後の位置をレイアウトに反映させる
-                    setLayoutMargin();
-
                     break;
+
             }
 
             //イベント処理完了
@@ -390,8 +400,19 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
             return ((selfX > parentX) ? POSITIVE : NEGATIVE);
         }
 
-    }
+        /*
+         * ダブルタップリスナー
+         */
+        private class DoubleTapListener extends GestureDetector.SimpleOnGestureListener {
+            @Override
+            public boolean onDoubleTap(MotionEvent event) {
 
+                Log.i("tap", "onDoubleTap node");
+
+                return super.onDoubleTap(event);
+            }
+        }
+    }
 
     /*
      * ラインビュー

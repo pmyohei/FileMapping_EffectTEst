@@ -73,7 +73,7 @@ public class MapActivity extends AppCompatActivity {
 
         //ツールバー設定
         Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("ツールバー");
+        toolbar.setTitle("(仮)マップ名を入れる");
         setSupportActionBar(toolbar);
 
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
@@ -419,6 +419,7 @@ public class MapActivity extends AppCompatActivity {
             ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) nodeView.getLayoutParams();
             mlp.setMargins(left, top, mlp.rightMargin, mlp.bottomMargin);
 
+            Log.i("createNode", "setMargins left=" + left + " top=" + top + " mlp.rightMargin=" + mlp.rightMargin + " mlp.bottomMargin=" + mlp.bottomMargin);
             Log.i("createNode", "getWidth=" + nodeView.getWidth() + " getHeight=" + nodeView.getHeight());
 
             //無名クラス内参照用
@@ -434,6 +435,7 @@ public class MapActivity extends AppCompatActivity {
 
                             //レイアウト確定後は、不要なので本リスナー削除
                             nodeView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
 
                             //中心座標を保持
                             nodeView.setCenterPosX( left + (nodeView.getWidth()  / 2f) );
@@ -497,8 +499,6 @@ public class MapActivity extends AppCompatActivity {
             //レイアウトに追加
             fl_map.addView(lineView);
         }
-
-
     }
 
 
