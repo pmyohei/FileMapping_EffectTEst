@@ -26,11 +26,6 @@ import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.Scroller;
-import android.widget.TextView;
-
-import com.mapping.NodeTouchListener;
-
-import org.w3c.dom.Node;
 
 import java.util.Objects;
 
@@ -60,7 +55,7 @@ public class MapActivity extends AppCompatActivity {
     private boolean mDrawerIsOpen = false;
 
     /* データ */
-    private NodeArrayList<NodeTable> mNodeList;     //ノードリスト
+    public static NodeArrayList<NodeTable> mNodes;     //ノードリスト
 
     /* 制御 */
     //ノード生成ができる状態か
@@ -120,14 +115,14 @@ public class MapActivity extends AppCompatActivity {
 
         //DBからデータを取得
         Intent intent = getIntent();
-        int mapPid = intent.getIntExtra("MapID", 0);
+        int mapPid = intent.getIntExtra(ResourceManager.INTENT_ID_MAPLIST_TO_MAP, 0);
         AsyncReadNodeOperaion db = new AsyncReadNodeOperaion(this, mapPid, new AsyncReadNodeOperaion.OnReadListener() {
 
             //DB読み取り完了
             @Override
             public void onRead(NodeArrayList<NodeTable> nodeList) {
 
-                mNodeList = nodeList;
+                mNodes = nodeList;
 
                 if( mEnableDrawNode ){
                     //ノード生成可能なら、マップ上にノードを生成
@@ -376,10 +371,10 @@ public class MapActivity extends AppCompatActivity {
         LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         //全ノード数ループ
-        int nodeNum = mNodeList.size();
+        int nodeNum = mNodes.size();
         for ( int i = 0; i < nodeNum; i++ ) {
 
-            NodeTable node = mNodeList.get(i);
+            NodeTable node = mNodes.get(i);
 
             //ルートノード
             if (node.getKind() == NodeTable.NODE_KIND_ROOT) {
@@ -398,6 +393,9 @@ public class MapActivity extends AppCompatActivity {
                 //NodeTable側でノードビューを保持
                 node.setRootNodeView( rootNodeView );
 
+                //ビュー側でもノード情報を保持
+                rootNodeView.setNode( node );
+
                 Log.i("drawNodes", "root centerx=" + ( left + (rootNodeView.getWidth()  / 2f) ));
                 Log.i("drawNodes", "root centery=" + ( top  + (rootNodeView.getHeight() / 2f) ));
 
@@ -405,7 +403,7 @@ public class MapActivity extends AppCompatActivity {
             }
 
             //ノード生成
-            NodeView nodeView = new NodeView(this);
+            NodeView nodeView = new NodeView(this, node);
 
             //ノード名設定
             nodeView.setNodeName( node.getNodeName() );
@@ -450,7 +448,7 @@ public class MapActivity extends AppCompatActivity {
                     }
             );
 
-
+            //ノードビューを保持
             node.setNodeView( nodeView );
 
             //ノードタッチリスナー設定
@@ -467,7 +465,7 @@ public class MapActivity extends AppCompatActivity {
         FrameLayout fl_map = findViewById(R.id.fl_map);     //マップレイアウト（ノード追加先）
 
         //全ノード数ループ
-        for (NodeTable node : mNodeList) {
+        for (NodeTable node : mNodes) {
 
             //親ノードPid
             int pidParentNode = node.getPidParentNode();
@@ -477,7 +475,7 @@ public class MapActivity extends AppCompatActivity {
             }
 
             //親ノード
-            NodeTable parentNode = mNodeList.getNode(pidParentNode);
+            NodeTable parentNode = mNodes.getNode(pidParentNode);
 
             //親の中心座標を取得
             float parentCenterX = parentNode.getCenterPosX();
@@ -485,14 +483,16 @@ public class MapActivity extends AppCompatActivity {
 
             //自身の中心座標を取得
             NodeView nodeView = node.getNodeView();
-            float centerX = nodeView.getCenterPosX();
-            float centerY = nodeView.getCenterPosY();
+            //float centerX = nodeView.getCenterPosX();
+            //float centerY = nodeView.getCenterPosY();
 
             //ラインを生成
-            LineView lineView = new LineView(this, parentCenterX, parentCenterY, centerX, centerY);
+            NodeView.LineView lineView = nodeView.createLine( parentCenterX, parentCenterY );
+
+            //LineViewOld lineView = new LineViewOld(this, parentCenterX, parentCenterY, centerX, centerY);
 
             //ノードに保持させる
-            nodeView.setLineView( lineView );
+            //nodeView.setLineView( lineView );
 
             //レイアウトに追加
             fl_map.addView(lineView);
@@ -628,7 +628,7 @@ public class MapActivity extends AppCompatActivity {
         //親レイアウト
         FrameLayout mfl_map;
         //ルートノード
-        View mtv_root;
+        View rnv_rootnode;
         //ルートノードとの距離把握用
         View mv_base;
 
@@ -650,9 +650,9 @@ public class MapActivity extends AppCompatActivity {
          * コンストラクタ
          */
         public PinchListener() {
-            mfl_map = findViewById(R.id.fl_map);
-            mtv_root = findViewById(R.id.tv_rootNode);
-            mv_base = findViewById(R.id.v_base);
+            mfl_map  = findViewById(R.id.fl_map);
+            rnv_rootnode = findViewById(R.id.rnv_rootnode);
+            mv_base  = findViewById(R.id.v_base);
         }
 
         @Override
@@ -670,7 +670,7 @@ public class MapActivity extends AppCompatActivity {
             //スクリーン座標を取得
             int[] locationRoot = new int[2];
             int[] locationBase = new int[2];
-            mtv_root.getLocationInWindow(locationRoot);
+            rnv_rootnode.getLocationInWindow(locationRoot);
             mv_base.getLocationInWindow(locationBase);
 
             Log.i("onScaleBegin", "mCenterNode location=" + locationRoot[0] + " location=" + locationRoot[1]);
@@ -708,7 +708,7 @@ public class MapActivity extends AppCompatActivity {
             //スクリーン座標を取得
             int[] locationRoot = new int[2];
             int[] locationBase = new int[2];
-            mtv_root.getLocationInWindow(locationRoot);
+            rnv_rootnode.getLocationInWindow(locationRoot);
             mv_base.getLocationInWindow(locationBase);
 
             //ピンチ操作終了時の2点間距離を取得

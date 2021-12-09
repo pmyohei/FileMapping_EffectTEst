@@ -20,7 +20,7 @@ public class NodeView_old extends LinearLayout {
 
     private float    mCenterPosX;        //ノード中心座標X
     private float    mCenterPosY;        //ノード中心座標Y
-    private LineView mLineView;          //親ノードとの接続線
+    private OldLineView mLineView;          //親ノードとの接続線
 
     /*
      * コンストラクタ
@@ -80,10 +80,10 @@ public class NodeView_old extends LinearLayout {
         this.mCenterPosY = centerPosY;
     }
 
-    public LineView getLineView() {
+    public OldLineView getLineView() {
         return mLineView;
     }
-    public void setLineView(LineView lineView) {
+    public void setLineView(OldLineView lineView) {
         this.mLineView = lineView;
     }
 

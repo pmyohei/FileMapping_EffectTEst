@@ -1,19 +1,55 @@
 package com.mapping.filemapping;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 
+import java.util.ArrayList;
+
 public class MapListActivity extends AppCompatActivity {
 
     private int mMapPid;
+    private ArrayList<MapTable> mMaps;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_list);
+
+        Context context = this;
+
+        //マップ情報取得
+        AsyncReadMapsOperaion db = new AsyncReadMapsOperaion(this, new AsyncReadMapsOperaion.OnReadListener() {
+
+            //DB読み取り完了
+            @Override
+            public void onRead(ArrayList<MapTable> maps) {
+
+                mMaps = maps;
+
+                //レイアウトからリストビューを取得
+                RecyclerView rv_mapList = findViewById(R.id.rv_mapList);
+
+                //アダプタの生成
+                MapListAdapter adapter = new MapListAdapter(mMaps);
+
+                //アダプタの設定
+                rv_mapList.setAdapter(adapter);
+
+                //レイアウトマネージャの設定
+                rv_mapList.setLayoutManager( new LinearLayoutManager(context) );
+            }
+        });
+
+        //非同期処理開始
+        db.execute();
+
+
 
 
         //仮；画面遷移
@@ -50,6 +86,8 @@ public class MapListActivity extends AppCompatActivity {
                 new GIJI_AsyncCreateDBOperaion(view.getContext(), true).execute();
             }
         });
+
+
 
 
 

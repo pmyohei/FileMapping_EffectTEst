@@ -1,6 +1,9 @@
 package com.mapping.filemapping;
 
+import android.os.Build;
 import android.util.Log;
+
+import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 
@@ -36,7 +39,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> {
     /*
      *　指定PIDのノードを取得
      */
-    public NodeTable getNode(int pid ) {
+    public NodeTable getNode(int pid) {
 
         int size = size();
         for (int i = 0; i < size; i++) {
@@ -52,5 +55,24 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> {
         return null;
     }
 
+    /*
+     *　指定親Pidの子ノードをリストとして取得
+     */
+    public NodeArrayList<NodeTable> getChildNodes(int parentPid ) {
+
+        //検索結果
+        NodeArrayList<NodeTable> result = new NodeArrayList<>();
+
+        //ノード数分ループ
+        for( NodeTable node: this ){
+            //親ノード検索
+            if (parentPid == node.getPidParentNode()) {
+                //リストに追加
+                result.add( node );
+            }
+        }
+
+        return result;
+    }
 
 }

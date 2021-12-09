@@ -1,14 +1,11 @@
 package com.mapping.filemapping;
 
-import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
 import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
-
-import java.util.HashMap;
 
 /*
  * ノードテーブル
@@ -98,7 +95,7 @@ public class NodeTable {
     @Ignore
     private float centerPosY;                   //ノード中心座標Y*/
     @Ignore
-    private LineView lineView;                  //親ノードとの接続線
+    private OldLineView lineView;                  //親ノードとの接続線
     @Ignore
     private NodeView nodeView;                  //ノードビュー
     @Ignore
@@ -219,10 +216,10 @@ public class NodeTable {
     }
 */
 
-    public LineView getLineView() {
+    public OldLineView getLineView() {
         return lineView;
     }
-    public void setLineView(LineView lineView) {
+    public void setLineView(OldLineView lineView) {
         this.lineView = lineView;
     }
 

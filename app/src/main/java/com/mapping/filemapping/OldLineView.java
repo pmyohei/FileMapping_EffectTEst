@@ -9,7 +9,7 @@ import android.graphics.Path;
 import android.util.Log;
 import android.view.View;
 
-public class LineView extends View {
+public class OldLineView extends View {
 
     //描画開始座標
     private float mStartPosX = 0;
@@ -22,14 +22,14 @@ public class LineView extends View {
     /*
      * コンストラクタ
      */
-    public LineView(Context context) {
+    public OldLineView(Context context) {
         super(context);
     }
 
     /*
      * コンストラクタ
      */
-    public LineView(Context context, float startPosX, float startPosY, float endPosX, float endPosY) {
+    public OldLineView(Context context, float startPosX, float startPosY, float endPosX, float endPosY) {
         super(context);
 
         //描画開始・終了座標

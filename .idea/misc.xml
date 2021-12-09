@@ -4,11 +4,19 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/circle.xml" value="0.22135416666666666" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/circle_tool.xml" value="0.18958333333333333" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/frame_item_map.xml" value="0.21979166666666666" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_main.xml" value="0.2318840579710145" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_map.xml" value="0.1261904761904762" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_map_list.xml" value="0.176" />
-        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node.xml" value="0.15416666666666667" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/item_map.xml" value="0.20364583333333333" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node.xml" value="0.4" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node_cl.xml" value="0.264" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node_cl_2.xml" value="0.264" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node_cl_old.xml" value="0.17395833333333333" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node_fab.xml" value="0.2296195652173913" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node_old.xml" value="0.15833333333333333" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node_old2.xml" value="0.17395833333333333" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node_root.xml" value="0.2749094202898551" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node_root_old.xml" value="0.15833333333333333" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node_root_old2.xml" value="0.146875" />

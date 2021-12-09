@@ -5,21 +5,21 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
 
-import com.mapping.filemapping.LineView;
+import com.mapping.filemapping.OldLineView;
 import com.mapping.filemapping.MapInfoManager;
 import com.mapping.filemapping.NodeTable;
 
 /*
  * ノードタッチリスナー
  */
-public class NodeTouchListener implements View.OnTouchListener {
+public class oldNodeTouchListener implements View.OnTouchListener {
 
     //マップ情報管理
     private final MapInfoManager mMapInfoManager;
 
     private final View      mvNode;         //ドラッグ対象のView
     private final NodeTable mNode;          //ノード
-    private       LineView  mParentLine;    //親ノードとのライン
+    private OldLineView mParentLine;    //親ノードとのライン
 
     //前回のタッチ位置
     private int mPreTouchPosX;
@@ -35,7 +35,7 @@ public class NodeTouchListener implements View.OnTouchListener {
     /*
      * コンストラクタ
      */
-    public NodeTouchListener(View dragNode, NodeTable node) {
+    public oldNodeTouchListener(View dragNode, NodeTable node) {
         mvNode = dragNode;
         mNode  = node;
 
@@ -56,6 +56,8 @@ public class NodeTouchListener implements View.OnTouchListener {
 
     @Override
     public boolean onTouch(View view, MotionEvent event) {
+
+        Log.i("NodeTouchListener", "onTouch out");
 
         //ダブルタップ処理
         mGestureDetector.onTouchEvent( event );

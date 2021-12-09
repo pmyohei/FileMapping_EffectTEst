@@ -3,8 +3,13 @@
     <!--  マップ  -->
     <dimen name="map_max_size">4000dp</dimen>
 
-    <!--  マップ  -->
+    <!--  ノード  -->
     <dimen name="node_evelation">8dp</dimen>
+
+    <!--  ノードアイコンマージン  -->
+    <dimen name="node_icon_margin_long">160dp</dimen>
+    <dimen name="node_icon_margin_middle1">80dp</dimen>
+    <dimen name="node_icon_margin_middle2">60dp</dimen>
 
 
 
