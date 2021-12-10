@@ -9,12 +9,10 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -37,9 +35,8 @@ public class MapActivity extends AppCompatActivity {
     public static final int REQ_NODE_CREATE = 100;
 
     /* 画面遷移-キー */
-    public static String INTENT_MAP_PID  = "MapPid";
+    public static String INTENT_MAP_PID = "MapPid";
     public static String INTENT_NODE_PID = "NodePid";
-
 
 
     //マップ情報管理
@@ -136,7 +133,7 @@ public class MapActivity extends AppCompatActivity {
 
                 mNodes = nodeList;
 
-                if( mEnableDrawNode ){
+                if (mEnableDrawNode) {
                     //ノード生成可能なら、マップ上にノードを生成
                     createMap();
                 }
@@ -161,7 +158,7 @@ public class MapActivity extends AppCompatActivity {
                         //レイアウト確定後は、不要なので本リスナー削除
                         rnv_rootnode.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-                        if( mEnableDrawNode ){
+                        if (mEnableDrawNode) {
                             //ノード生成可能なら、マップ上にノードを生成
                             createMap();
                         }
@@ -171,7 +168,6 @@ public class MapActivity extends AppCompatActivity {
                     }
                 }
         );
-
     }
 
     /*
@@ -180,106 +176,102 @@ public class MapActivity extends AppCompatActivity {
     private void createMap() {
 
         //ノードの生成
-        drawNode();
+        drawAllNodes();
     }
 
 
     /*
-     * ノード生成
+     * 全ノードの描画
      */
-    private void drawNode(){
+    private void drawAllNodes() {
 
-        //ビュー
-        FrameLayout fl_map  = findViewById(R.id.fl_map);     //マップレイアウト（ノード追加先）
+        //マップレイアウト（ノード追加先）
+        FrameLayout fl_map = findViewById(R.id.fl_map);
+
+        //ライン描画種別
+        int lineDrawKind = NodeGlobalLayoutListener.LINE_NONE;
 
         //全ノード数ループ
         int nodeNum = mNodes.size();
-        for ( int i = 0; i < nodeNum; i++ ) {
+        for (int i = 0; i < nodeNum; i++) {
 
+            //対象ノード
             NodeTable node = mNodes.get(i);
 
-            //ルートノード
-            if (node.getKind() == NodeTable.NODE_KIND_ROOT) {
-                //元々レイアウト上にあるルートノード名を変更し、中心座標を保持
-                RootNodeView rootNodeView = findViewById(R.id.rnv_rootnode);
-                rootNodeView.setNodeName( node.getNodeName() );
-
-                //マージン座標を取得
-                int left = rootNodeView.getLeft();
-                int top  = rootNodeView.getTop();
-
-                //中心座標を保持
-                rootNodeView.setCenterPosX( left + (rootNodeView.getWidth()  / 2f) );
-                rootNodeView.setCenterPosY( top  + (rootNodeView.getHeight() / 2f) );
-
-                //NodeTable側でノードビューを保持
-                node.setRootNodeView( rootNodeView );
-
-                //ビュー側でもノード情報を保持
-                rootNodeView.setNode( node );
-
-                Log.i("drawNodes", "root centerx=" + ( left + (rootNodeView.getWidth()  / 2f) ));
-                Log.i("drawNodes", "root centery=" + ( top  + (rootNodeView.getHeight() / 2f) ));
-
-                continue;
+            //最後のノードなら、全てのラインを描画
+            if( i == (nodeNum - 1) ){
+                lineDrawKind = NodeGlobalLayoutListener.LINE_ALL;
             }
 
-            //ノード生成
-            NodeView nodeView = new NodeView(this, node);
-
-            //ノード名設定
-            nodeView.setNodeName( node.getNodeName() );
-
-            //ノードをマップに追加
-            fl_map.addView(nodeView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-            //位置設定
-            //※レイアウト追加後に行うこと（MarginLayoutParamsがnullになってしまうため）
-            int left = node.getPosX();
-            int top  = node.getPosY();
-
-            ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) nodeView.getLayoutParams();
-            mlp.setMargins(left, top, mlp.rightMargin, mlp.bottomMargin);
-
-            Log.i("createNode", "setMargins left=" + left + " top=" + top + " mlp.rightMargin=" + mlp.rightMargin + " mlp.bottomMargin=" + mlp.bottomMargin);
-            Log.i("createNode", "getWidth=" + nodeView.getWidth() + " getHeight=" + nodeView.getHeight());
-
-            //無名クラス内参照用
-            int finalI = i;
-
-            ViewTreeObserver observer = nodeView.getViewTreeObserver();
-            observer.addOnGlobalLayoutListener(
-                    new ViewTreeObserver.OnGlobalLayoutListener() {
-                        @Override
-                        public void onGlobalLayout() {
-
-                            Log.i("createNode", "レイアウトが確定したノード=" + node.getNodeName() );
-
-                            //レイアウト確定後は、不要なので本リスナー削除
-                            nodeView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-                            //中心座標を保持
-                            nodeView.setCenterPosX( left + (nodeView.getWidth()  / 2f) );
-                            nodeView.setCenterPosY( top  + (nodeView.getHeight() / 2f) );
-
-                            //最後に追加したビューの場合
-                            if( finalI == (nodeNum - 1) ){
-                                //ラインを描画する
-                                drawLine();
-                            }
-                        }
-                    }
-            );
-
-            //ノードビューを保持
-            node.setNodeView( nodeView );
+            //ノードを描画
+            drawNode( fl_map, node, lineDrawKind);
         }
     }
 
     /*
-     * ラインの描画
+     * ノード（単体）の描画
      */
-    private void drawLine() {
+    private void drawNode(FrameLayout fl_map, NodeTable node, int lineDrawKind) {
+
+        //ルートノード
+        if (node.getKind() == NodeTable.NODE_KIND_ROOT) {
+            //元々レイアウト上にあるルートノード名を変更し、中心座標を保持
+            RootNodeView rootNodeView = findViewById(R.id.rnv_rootnode);
+            rootNodeView.setNodeName(node.getNodeName());
+
+            //マージン座標を取得
+            int left = rootNodeView.getLeft();
+            int top = rootNodeView.getTop();
+
+            //中心座標を保持
+            rootNodeView.setCenterPosX(left + (rootNodeView.getWidth() / 2f));
+            rootNodeView.setCenterPosY(top + (rootNodeView.getHeight() / 2f));
+
+            //NodeTable側でノードビューを保持
+            node.setRootNodeView(rootNodeView);
+
+            //ビュー側でもノード情報を保持
+            rootNodeView.setNode(node);
+
+            Log.i("drawNodes", "root centerx=" + (left + (rootNodeView.getWidth() / 2f)));
+            Log.i("drawNodes", "root centery=" + (top + (rootNodeView.getHeight() / 2f)));
+
+            return;
+        }
+
+        //ノード生成
+        NodeView nodeView = new NodeView(this, node);
+
+        //ノード名設定
+        nodeView.setNodeName(node.getNodeName());
+
+        //ノードをマップに追加
+        fl_map.addView(nodeView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        //位置設定
+        //※レイアウト追加後に行うこと（MarginLayoutParamsがnullになってしまうため）
+        int left = node.getPosX();
+        int top  = node.getPosY();
+
+        ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) nodeView.getLayoutParams();
+        mlp.setMargins(left, top, mlp.rightMargin, mlp.bottomMargin);
+
+        Log.i("createNode", "setMargins left=" + left + " top=" + top + " mlp.rightMargin=" + mlp.rightMargin + " mlp.bottomMargin=" + mlp.bottomMargin);
+        Log.i("createNode", "getWidth=" + nodeView.getWidth() + " getHeight=" + nodeView.getHeight());
+
+        //レイアウト確定後の処理を設定
+        ViewTreeObserver observer = nodeView.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener( new NodeGlobalLayoutListener( nodeView, lineDrawKind ) );
+
+        //ノードビューを保持
+        node.setNodeView(nodeView);
+    }
+
+
+    /*
+     * 全ラインの描画
+     */
+    private void drawAllLines() {
 
         //ビュー
         FrameLayout fl_map = findViewById(R.id.fl_map);     //マップレイアウト（ノード追加先）
@@ -287,54 +279,63 @@ public class MapActivity extends AppCompatActivity {
         //全ノード数ループ
         for (NodeTable node : mNodes) {
 
-            //親ノードPid
-            int pidParentNode = node.getPidParentNode();
-            if( pidParentNode == NodeTable.NO_PARENT ){
-                //ルートノードはラインなし
-                continue;
-            }
-
-            //親ノード
-            NodeTable parentNode = mNodes.getNode(pidParentNode);
-
-            //親の中心座標を取得
-            float parentCenterX = parentNode.getCenterPosX();
-            float parentCenterY = parentNode.getCenterPosY();
-
-            //自身の中心座標を取得
-            NodeView nodeView = node.getNodeView();
-            //float centerX = nodeView.getCenterPosX();
-            //float centerY = nodeView.getCenterPosY();
-
-            //ラインを生成
-            NodeView.LineView lineView = nodeView.createLine( parentCenterX, parentCenterY );
-
-            //LineViewOld lineView = new LineViewOld(this, parentCenterX, parentCenterY, centerX, centerY);
-
-            //ノードに保持させる
-            //nodeView.setLineView( lineView );
-
-            //レイアウトに追加
-            fl_map.addView(lineView);
+            //ラインの描画
+            drawLine( fl_map, node );
         }
     }
+
+    /*
+     * ライン（単体）の描画
+     */
+    private void drawLine(FrameLayout fl_map, NodeTable node) {
+
+        //親ノードPid
+        int pidParentNode = node.getPidParentNode();
+        if (pidParentNode == NodeTable.NO_PARENT) {
+            //ルートノードはラインなし
+            return;
+        }
+
+        //親ノード
+        NodeTable parentNode = mNodes.getNode(pidParentNode);
+
+        //親の中心座標を取得
+        float parentCenterX = parentNode.getCenterPosX();
+        float parentCenterY = parentNode.getCenterPosY();
+
+        //自身の中心座標を取得
+        NodeView nodeView = node.getNodeView();
+
+        //ラインを生成
+        NodeView.LineView lineView = nodeView.createLine(parentCenterX, parentCenterY);
+
+        //レイアウトに追加
+        fl_map.addView(lineView);
+    }
+
+
 
     /*
      * 画面遷移後の処理
      */
     @Override
-    public void onActivityResult( int requestCode, int resultCode, Intent intent) {
+    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
 
-        switch( requestCode ){
+        switch (requestCode) {
 
             //ノード生成からの戻り
             case REQ_NODE_CREATE:
 
                 //ノード生成された場合
-                if( resultCode == NodeInformationActivity.RES_NODE_CREATE ){
-                    //生成されたノードをレイアウトに追加
-                    NodeTable node = (NodeTable)intent.getSerializableExtra(NodeInformationActivity.INTENT_CREATED_NODE);
+                if (resultCode == NodeInformationActivity.RES_NODE_CREATE) {
+                    //生成されたノードを取得
+                    NodeTable node = (NodeTable) intent.getSerializableExtra(NodeInformationActivity.INTENT_CREATED_NODE);
+                    //リストに追加
+                    mNodes.add(node);
+
+                    //ノードを描画
+                    drawNode( findViewById(R.id.fl_map), node, NodeGlobalLayoutListener.LINE_SELF);
                 }
 
                 break;
@@ -461,6 +462,46 @@ public class MapActivity extends AppCompatActivity {
         return false;
     }
 
+
+    /*
+     * OnGlobalLayoutListener（ノード用）
+     */
+    private class NodeGlobalLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener {
+
+        /* ライン描画指定 */
+        public static final int LINE_NONE = 0;
+        public static final int LINE_ALL  = 1;
+        public static final int LINE_SELF = 2;
+
+        /* フィールド変数 */
+        private final NodeView mv_node;
+        private final int mLineDrawKind;
+
+        public NodeGlobalLayoutListener( NodeView v_node, int lineDrawKind ){
+            mv_node = v_node;
+            mLineDrawKind = lineDrawKind;
+        }
+
+        @Override
+        public void onGlobalLayout() {
+            //Log.i("createNode", "レイアウトが確定したノード=" + node.getNodeName());
+
+            //レイアウト確定後は、不要なので本リスナー削除
+            mv_node.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+            //中心座標を保持
+            mv_node.setCenterPosX(mv_node.getLeft() + (mv_node.getWidth() / 2f));
+            mv_node.setCenterPosY(mv_node.getTop()  + (mv_node.getHeight() / 2f));
+
+            if(mLineDrawKind == LINE_ALL){
+                //全ラインを描画
+                drawAllLines();
+            } else if( mLineDrawKind == LINE_SELF ){
+                //本ノードのラインを描画
+                drawLine( findViewById(R.id.fl_map), mv_node.getNode() );
+            }
+        }
+    }
 
     /*
      * ピンチ（拡大・縮小）操作リスナー
