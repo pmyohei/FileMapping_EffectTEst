@@ -31,6 +31,17 @@ import java.util.Objects;
 
 public class MapActivity extends AppCompatActivity {
 
+    /*-- 定数 --*/
+    /* 画面遷移-リクエストコード */
+    //ノード生成
+    public static final int REQ_NODE_CREATE = 100;
+
+    /* 画面遷移-キー */
+    public static String INTENT_MAP_PID  = "MapPid";
+    public static String INTENT_NODE_PID = "NodePid";
+
+
+
     //マップ情報管理
     private MapInfoManager mMapInfoManager;
 
@@ -93,6 +104,7 @@ public class MapActivity extends AppCompatActivity {
 
         //アクティビティ
         Activity activity = this;
+
 
         //DrawerLayout
         DrawerLayout dl_map = findViewById(R.id.dl_map);
@@ -160,191 +172,6 @@ public class MapActivity extends AppCompatActivity {
                 }
         );
 
-
-
-        if (true) {
-            return;
-        }
-
-/*        //マップ
-        FrameLayout fl_map = findViewById(R.id.fl_map);
-
-        //レイアウト確定待ち
-        observer = tv_root.getViewTreeObserver();
-        observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-            @SuppressLint("ClickableViewAccessibility")
-            @Override
-            public void onGlobalLayout() {
-                int width = tv_root.getWidth();
-
-                int x = tv_root.getLeft() + (tv_root.getWidth() / 2);
-                int y = tv_root.getTop() + (tv_root.getHeight() / 2);
-
-                Log.i("attach2", "センターの中心座標(親レイアウトのマージン) x=" + x + " y=" + y);
-                Log.i("attach2", "センターの座標(親レイアウトのマージン) getLeft=" + tv_root.getLeft() + " getTop=" + tv_root.getTop());
-
-
-                //ビューの生成----------------------------------------
-                TextView kyotoNode = new TextView(tv_root.getContext());
-                kyotoNode.setText("京都");
-
-                fl_map.addView(kyotoNode, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-                int tox = x + width * 2;
-                int toy = y + width * 2;
-
-                //レイアウトパラメータ
-                ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) kyotoNode.getLayoutParams();
-                mlp.setMargins(tox, toy, mlp.rightMargin, mlp.bottomMargin);
-
-                Log.i("mlp", "rightMargin=" + mlp.rightMargin + " bottomMargin=" + mlp.bottomMargin);
-
-                //線の描画----------------------------------------
-                LineView pathView = new LineView(tv_root.getContext(), x, y, x + width * 2, y + width * 2);
-                fl_map.addView(pathView);
-
-                //タッチリスナー
-                kyotoNode.setOnTouchListener(new NodeTouchListener(kyotoNode, pathView));
-
-                //ビューの生成----------------------------------------
-                TextView hNode = new TextView(tv_root.getContext());
-                hNode.setText("北海道");
-
-                fl_map.addView(hNode, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-                ViewTreeObserver observer = hNode.getViewTreeObserver();
-                observer.addOnGlobalLayoutListener(new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-
-                        int[] location = new int[2];
-                        hNode.getLocationInWindow(location);
-
-                        Log.i("hNode", "getLocationInWindow x=" + location[0]);
-                        Log.i("hNode", "getLocationInWindow Y=" + location[1]);
-                        Log.i("hNode", "getWidth=" + hNode.getWidth());
-                    }
-                });
-
-                int htox = x + width * 4;
-                int htoy = y - width * 2;
-
-                //レイアウトパラメータ
-                mlp = (ViewGroup.MarginLayoutParams) hNode.getLayoutParams();
-                mlp.setMargins(htox, htoy, mlp.rightMargin, mlp.bottomMargin);
-
-
-                //ビューの生成----------------------------------------
-                TextView moveNode = new TextView(tv_root.getContext());
-                moveNode.setText("北海道に移動");
-
-                fl_map.addView(moveNode, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-                int movex = x;
-                int movey = y + width * 3;
-
-                //レイアウトパラメータ
-                mlp = (ViewGroup.MarginLayoutParams) moveNode.getLayoutParams();
-                mlp.setMargins(movex, movey, mlp.rightMargin, mlp.bottomMargin);
-
-                moveNode.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-
-                        //movep
-
-                        //スクロール開始位置
-                        float scrollStartX = fl_map.getTranslationX() + mPinchShiftX;
-                        float scrollStartY = fl_map.getTranslationY() + mPinchShiftY;
-
-                        Log.i("move", "スクロール開始位置 x=" + scrollStartX + " y=" + scrollStartY);
-
-                        //ピンチ操作の差分反映は1度のみ。移動後はクリア
-                        mPinchShiftX = 0;
-                        mPinchShiftY = 0;
-
-                        //現在のrootのTranslation座標（ピンチの調整を無効化）
-                        float rootPosX = scrollStartX / pinchDistanceRatioX;
-                        float rootPosY = scrollStartY / pinchDistanceRatioY;
-
-                        Log.i("move", "現在のrootのTranslation座標 pinchDistanceRatioX=" + pinchDistanceRatioX + " x=" + rootPosX + " y=" + rootPosY);
-                        Log.i("move", "現在のcenterのマージン座標 left=" + tv_root.getLeft() + " top=" + tv_root.getTop());
-
-                        //現在のTranslation座標に対応する親レイアウトマージン=中心座標の親レイアウトマージン値（ピンチ考慮なし）
-                        float rootMarginX = tv_root.getLeft() - rootPosX;
-                        float rootMarginY = tv_root.getTop() - rootPosY;
-
-                        //移動先の親レイアウトマージン
-                        int toLeft = hNode.getLeft();
-                        int toTop = hNode.getTop();
-
-                        Log.i("move", "Left(移動先)=" + toLeft + " Left(センター)=" + tv_root.getLeft());
-                        Log.i("move", "rootMarginX=" + rootMarginX + " rootMarginY=" + rootMarginY);
-
-                        //移動量（ピンチ考慮なし）
-                        //int MarginDiffX = toLeft - (int)rootMarginX;
-                        //int MarginDiffY = toTop  - (int)rootMarginY;
-//
-                        //Log.i("move", "移動量 MarginDiffX=" + MarginDiffX + " MarginDiffY=" + MarginDiffY);
-
-                        //移動量：スケール比率を考慮
-                        float MarginPinchDiffX = (int) (pinchDistanceRatioX * (toLeft - rootMarginX));
-                        float MarginPinchDiffY = (int) (pinchDistanceRatioY * (toTop - rootMarginY));
-
-                        Log.i("move", "移動量(スケール考慮 比率取得 float) MarginPinchDiffX=" + MarginPinchDiffX + " MarginPinchDiffY=" + MarginPinchDiffY);
-
-                        //スクローラー
-                        final int MOVE_DURATION = 500;
-
-                        Scroller scroller = new Scroller(v.getContext(), new DecelerateInterpolator());
-
-                        // アニメーションを開始
-                        scroller.startScroll(
-                                (int) scrollStartX,
-                                (int) scrollStartY,
-                                (int) -MarginPinchDiffX,
-                                (int) -MarginPinchDiffY,
-                                MOVE_DURATION       // スクロールにかかる時間 [milliseconds]
-                        );
-
-
-                        ValueAnimator scrollAnimator = ValueAnimator.ofFloat(0, 1).setDuration(MOVE_DURATION);
-                        scrollAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
-                            @Override
-                            public void onAnimationUpdate(ValueAnimator valueAnimator) {
-
-                                Log.i("Scroller", "onAnimationUpdate");
-
-                                if (!scroller.isFinished()) {
-                                    scroller.computeScrollOffset();
-                                    //setPieRotation(scroller.getCurrY());
-
-                                    fl_map.setTranslationX(scroller.getCurrX());
-                                    fl_map.setTranslationY(scroller.getCurrY());
-
-                                } else {
-                                    scrollAnimator.cancel();
-                                    //onScrollFinished();
-
-                                    //jikken
-                                    //root.setScaleX(preScale);
-                                    //root.setScaleY(preScale);
-                                    //
-                                }
-                            }
-                        });
-                        scrollAnimator.start();
-
-
-                    }
-                });
-
-
-                //リスナー削除
-                tv_root.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-            }
-        });*/
-
     }
 
     /*
@@ -353,22 +180,17 @@ public class MapActivity extends AppCompatActivity {
     private void createMap() {
 
         //ノードの生成
-        //drawNode();
-        drawNodeNew();
-
+        drawNode();
     }
 
 
     /*
      * ノード生成
      */
-    private void drawNodeNew(){
+    private void drawNode(){
 
         //ビュー
         FrameLayout fl_map  = findViewById(R.id.fl_map);     //マップレイアウト（ノード追加先）
-
-        //インフレータ
-        LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         //全ノード数ループ
         int nodeNum = mNodes.size();
@@ -436,7 +258,6 @@ public class MapActivity extends AppCompatActivity {
                             //レイアウト確定後は、不要なので本リスナー削除
                             nodeView.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-
                             //中心座標を保持
                             nodeView.setCenterPosX( left + (nodeView.getWidth()  / 2f) );
                             nodeView.setCenterPosY( top  + (nodeView.getHeight() / 2f) );
@@ -444,7 +265,7 @@ public class MapActivity extends AppCompatActivity {
                             //最後に追加したビューの場合
                             if( finalI == (nodeNum - 1) ){
                                 //ラインを描画する
-                                drawLineNew();
+                                drawLine();
                             }
                         }
                     }
@@ -452,16 +273,13 @@ public class MapActivity extends AppCompatActivity {
 
             //ノードビューを保持
             node.setNodeView( nodeView );
-
-            //ノードタッチリスナー設定
-            //nodeView.setOnTouchListener(new NodeTouchListener(v_node, node));
         }
     }
 
     /*
      * ラインの描画
      */
-    private void drawLineNew() {
+    private void drawLine() {
 
         //ビュー
         FrameLayout fl_map = findViewById(R.id.fl_map);     //マップレイアウト（ノード追加先）
@@ -501,7 +319,31 @@ public class MapActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     * 画面遷移後の処理
+     */
+    @Override
+    public void onActivityResult( int requestCode, int resultCode, Intent intent) {
+        super.onActivityResult(requestCode, resultCode, intent);
 
+        switch( requestCode ){
+
+            //ノード生成からの戻り
+            case REQ_NODE_CREATE:
+
+                //ノード生成された場合
+                if( resultCode == NodeInformationActivity.RES_NODE_CREATE ){
+                    //生成されたノードをレイアウトに追加
+                    NodeTable node = (NodeTable)intent.getSerializableExtra(NodeInformationActivity.INTENT_CREATED_NODE);
+                }
+
+                break;
+
+            default:
+                break;
+        }
+
+    }
 
     /*
      * ツールバーオプションメニュー生成

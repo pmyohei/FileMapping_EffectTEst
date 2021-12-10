@@ -23,7 +23,7 @@
             android:layout_marginStart="4dp"
             android:layout_marginBottom="@dimen/node_icon_margin_long"
             android:padding="4dp"
-            android:elevation="@dimen/node_evelation"
+            android:elevation="@dimen/node_elevation"
             android:background="@drawable/circle_tool_icon"
             app:srcCompat="@drawable/baseline_add_24" />
 
@@ -37,7 +37,7 @@
         app:layout_anchorGravity="top|start" >
 
         <ImageButton
-            android:id="@+id/aaa"
+            android:id="@+id/ib_createNode"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="4dp"
@@ -45,7 +45,7 @@
             android:layout_marginBottom="@dimen/node_icon_margin_middle1"
             android:layout_marginEnd="@dimen/node_icon_margin_middle2"
             android:padding="4dp"
-            android:elevation="@dimen/node_evelation"
+            android:elevation="@dimen/node_elevation"
             android:background="@drawable/circle_tool_icon"
             app:srcCompat="@drawable/baseline_add_24" />
 
@@ -67,7 +67,7 @@
             android:layout_marginBottom="4dp"
             android:layout_marginEnd="@dimen/node_icon_margin_long"
             android:padding="4dp"
-            android:elevation="@dimen/node_evelation"
+            android:elevation="@dimen/node_elevation"
             android:background="@drawable/circle_tool_icon"
             app:srcCompat="@drawable/baseline_add_24" />
 
@@ -89,7 +89,7 @@
             android:layout_marginTop="@dimen/node_icon_margin_middle1"
             android:layout_marginEnd="@dimen/node_icon_margin_middle2"
             android:padding="4dp"
-            android:elevation="@dimen/node_evelation"
+            android:elevation="@dimen/node_elevation"
             android:background="@drawable/circle_tool_icon"
             app:srcCompat="@drawable/baseline_add_24" />
 
@@ -111,7 +111,7 @@
             android:layout_marginBottom="4dp"
             android:layout_marginTop="@dimen/node_icon_margin_long"
             android:padding="4dp"
-            android:elevation="@dimen/node_evelation"
+            android:elevation="@dimen/node_elevation"
             android:background="@drawable/circle_tool_icon"
             app:srcCompat="@drawable/baseline_add_24" />
 
@@ -134,7 +134,7 @@
             android:layout_marginTop="@dimen/node_icon_margin_middle1"
             android:layout_marginStart="@dimen/node_icon_margin_middle2"
             android:padding="4dp"
-            android:elevation="@dimen/node_evelation"
+            android:elevation="@dimen/node_elevation"
             android:background="@drawable/circle_tool_icon"
             app:srcCompat="@drawable/baseline_add_24" />
 
@@ -156,7 +156,7 @@
             android:layout_marginBottom="@dimen/node_icon_margin_middle1"
             android:layout_marginStart="@dimen/node_icon_margin_middle2"
             android:padding="4dp"
-            android:elevation="@dimen/node_evelation"
+            android:elevation="@dimen/node_elevation"
             android:background="@drawable/circle_tool_icon"
             app:srcCompat="@drawable/baseline_add_24" />
 
@@ -178,7 +178,7 @@
             android:layout_marginBottom="4dp"
             android:layout_marginStart="@dimen/node_icon_margin_long"
             android:padding="4dp"
-            android:elevation="@dimen/node_evelation"
+            android:elevation="@dimen/node_elevation"
             android:background="@drawable/circle_tool_icon"
             app:srcCompat="@drawable/baseline_add_24" />
 
@@ -190,7 +190,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:elevation="@dimen/node_evelation"
+        android:elevation="@dimen/node_elevation"
         android:background="@drawable/circle_node"
         android:padding="4dp"
         android:text="@string/sample" />

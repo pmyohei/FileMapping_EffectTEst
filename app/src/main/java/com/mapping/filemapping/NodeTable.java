@@ -7,6 +7,8 @@ import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
+
 /*
  * ノードテーブル
  */
@@ -19,7 +21,7 @@ import androidx.room.PrimaryKey;
         indices = { @Index
                         (value = {"pid_map"})}
 )
-public class NodeTable {
+public class NodeTable implements Serializable {
 
     //主キー
     @PrimaryKey(autoGenerate = true)
@@ -87,6 +89,8 @@ public class NodeTable {
 
 
     /*-- 非レコードフィールド --*/
+    @Ignore
+    private static final long serialVersionUID = ResourceManager.SERIAL_VERSION_UID_NODE_TABLE;
 /*
     @Ignore
     private HashMap<String, Float> centerPos = new HashMap<String, Float>();        //ノード中心座標
@@ -95,7 +99,7 @@ public class NodeTable {
     @Ignore
     private float centerPosY;                   //ノード中心座標Y*/
     @Ignore
-    private OldLineView lineView;                  //親ノードとの接続線
+    private OldLineView lineView;               //親ノードとの接続線
     @Ignore
     private NodeView nodeView;                  //ノードビュー
     @Ignore

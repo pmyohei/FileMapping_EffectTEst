@@ -1,13 +1,21 @@
 <resources>
     <string name="app_name">FileMapping</string>
 
+    <!--  ノード  -->
+    <string name="title_nodeName">ノード名</string>
+    <string name="title_nodeSize">ノードサイズ</string>
+    <string name="title_nodeShape">ノードの形</string>
+    <string name="title_nodeBackgroundColor">ノードの背景色</string>
+    <string name="title_nodeTextColor">ノードの文字色</string>
+    <string name="title_lineShape">ラインの形</string>
+    <string name="title_lineThickness">ラインの太さ</string>
+    <string name="title_lineColor">ラインの色</string>
+    <string name="node_nameHint">最大16文字</string>
 
+    <string name="node_createButtom">作成</string>
+    <string name="node_cancelButtom">キャンセル</string>a
 
-
-
-
-
-
+    <!--  レイアウト確認用（実際にユーザーに表示されることはない） -->
     <string name="sample">Sample</string>
 
 </resources>

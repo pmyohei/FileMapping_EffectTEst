@@ -4,7 +4,8 @@
     <dimen name="map_max_size">4000dp</dimen>
 
     <!--  ノード  -->
-    <dimen name="node_evelation">8dp</dimen>
+    <dimen name="node_elevation">8dp</dimen>
+    <dimen name="node_toolIcon_elevation">8dp</dimen>
 
     <!--  ノードアイコンマージン  -->
     <dimen name="node_icon_radius">100dp</dimen>

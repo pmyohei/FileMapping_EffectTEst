@@ -1,7 +1,9 @@
 package com.mapping.filemapping;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -113,8 +115,8 @@ public class RootNodeView extends FrameLayout {
     public void setToolIcon() {
 
         //クローズ
-        ImageButton ib_close = findViewById(R.id.ib_close);
-        ib_close.setOnClickListener(new View.OnClickListener() {
+        ImageButton ib = findViewById(R.id.ib_close);
+        ib.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //クローズする
@@ -122,6 +124,25 @@ public class RootNodeView extends FrameLayout {
             }
         });
 
+        //ノード生成
+        ib = findViewById(R.id.ib_createNode);
+        ib.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //ノード生成画面へ遷移
+                Context context = getContext();
+                Intent intent = new Intent(context, NodeInformationActivity.class);
+
+                //タッチノードの情報を渡す
+                intent.putExtra(MapActivity.INTENT_MAP_PID, mNode.getPidMap());
+                intent.putExtra(MapActivity.INTENT_NODE_PID, mNode.getPid());
+
+                ((Activity)context).startActivityForResult(intent, MapActivity.REQ_NODE_CREATE);
+
+                //クローズする
+                toolDisplayControl();
+            }
+        });
 
     }
 

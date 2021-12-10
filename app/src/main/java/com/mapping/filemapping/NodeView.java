@@ -16,13 +16,6 @@ import android.view.ViewGroup;
 
 public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
 
-    //親ノードに対する自ノードの位置定数
-    private final int POSITIVE = 1;     //正側（右）
-    private final int NEGATIVE = -1;    //負側（左）
-
-    //親ノードに対する自ノードの位置
-    private int parentRelativePosition;
-
     //マップ情報管理
     public MapInfoManager mMapInfoManager;
 
@@ -43,8 +36,6 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
 
     //子ノードリスト
     private NodeArrayList<NodeTable> mChildNodes;
-
-    NodeView mself = this;
 
     /*
      * コンストラクタ
@@ -86,10 +77,6 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
 
         //マップ情報管理
         mMapInfoManager = MapInfoManager.getInstance(false);
-
-        //レイアウト生成
-        //LayoutInflater inflater = LayoutInflater.from(getContext());
-        //inflater.inflate(R.layout.node, this, true);
 
         //タッチリスナー
         setOnTouchListener(new NodeTouchListener());
@@ -288,7 +275,7 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
         private final int POSITIVE = 1;     //正側（右）
         private final int NEGATIVE = -1;    //負側（左）
 
-        //親ノードに対する自ノードの位置
+        //親ノードに対する自ノードのX座標における相対位置（親ノードより正側か負側か）
         private int parentRelativePosition;
 
         /*
