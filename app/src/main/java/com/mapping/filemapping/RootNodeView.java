@@ -26,13 +26,10 @@ public class RootNodeView extends FrameLayout {
     //ノード情報
     public NodeTable mNode;
 
-    //自身ノード
-    public RootNodeView mSelfView;
-
     //ダブルタップ検知用
     public GestureDetector mGestureDetector;
 
-    //ルーツアイコン表示
+    //ツールアイコン表示
     public boolean misOpenToolIcon;
 
     //データ
@@ -78,9 +75,6 @@ public class RootNodeView extends FrameLayout {
     private void init( int layoutID ) {
 
         Log.i("RootNodeView", "init");
-
-        //自身のビュー
-        mSelfView = this;
 
         //ツールアイコン非表示
         misOpenToolIcon = false;
@@ -184,7 +178,7 @@ public class RootNodeView extends FrameLayout {
             }
 
             //自ノードをオープン中ノードとして保持
-            mv_toolOpenNode = mSelfView;
+            mv_toolOpenNode = this;
         }
 
         //本ビューのレイアウトを取得（※ここで取得しているのは、ノード用レイアウトのルートレイアウト）

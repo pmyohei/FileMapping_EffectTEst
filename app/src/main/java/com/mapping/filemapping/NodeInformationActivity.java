@@ -26,6 +26,7 @@ public class NodeInformationActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_node_information);
 
+
         //遷移元からの情報
         Intent intent = getIntent();
         int mapPid          = intent.getIntExtra(MapActivity.INTENT_MAP_PID, 0);
@@ -46,8 +47,12 @@ public class NodeInformationActivity extends AppCompatActivity {
                     return;
                 }
 
+                //マップ共通データ
+                MapCommonData mapCommonData = (MapCommonData)getApplication();
+                NodeArrayList<NodeTable> nodes = mapCommonData.getNodes();
+
                 //ノード名重複チェック
-                if( MapActivity.mNodes.hasSameNodeNameAtParent(selectedNodePid, nodeName) ){
+                if( nodes.hasSameNodeNameAtParent(selectedNodePid, nodeName) ){
                     //既に同じノード名があるなら、メッセージ出力して終了
                     //★
 
@@ -57,7 +62,7 @@ public class NodeInformationActivity extends AppCompatActivity {
                 //ノード初期位置を親ノードの中心位置から一定の距離離した位置にする
                 final int POS_OFFSET = 100;
 
-                NodeTable parentNode = MapActivity.mNodes.getNode( selectedNodePid );
+                NodeTable parentNode = nodes.getNode( selectedNodePid );
                 int posX = (int)parentNode.getCenterPosX() + POS_OFFSET;
                 int posY = (int)parentNode.getCenterPosY();
 

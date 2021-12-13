@@ -1,6 +1,7 @@
 package com.mapping.filemapping;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -15,9 +16,6 @@ import android.view.View;
 import android.view.ViewGroup;
 
 public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
-
-    //マップ情報管理
-    public MapInfoManager mMapInfoManager;
 
     //ピンチ操作後のビュー間の距離の比率
     private float pinchDistanceRatioX;
@@ -75,9 +73,6 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
 
         Log.i("NodeView", "init");
 
-        //マップ情報管理
-        mMapInfoManager = MapInfoManager.getInstance(false);
-
         //タッチリスナー
         setOnTouchListener(new NodeTouchListener());
     }
@@ -102,8 +97,12 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
      */
     public void searchChildNodes() {
 
+        //マップ共通データ
+        MapCommonData mapCommonData = (MapCommonData)((Activity)getContext()).getApplication();
+        NodeArrayList<NodeTable> nodes = mapCommonData.getNodes();
+
         //子ノードを検索
-        mChildNodes = MapActivity.mNodes.getChildNodes(mNode.getPid());
+        mChildNodes = nodes.getChildNodes(mNode.getPid());
 
         //子ノード分ループ
         for (NodeTable childNode : mChildNodes) {
@@ -257,9 +256,14 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
      * 親ノードのX座標を取得
      */
     public float getParentPositionX() {
+
+        //マップ共通データ
+        MapCommonData mapCommonData = (MapCommonData)((Activity)getContext()).getApplication();
+        NodeArrayList<NodeTable> nodes = mapCommonData.getNodes();
+
         //親ノード
-        int parentPid = mNode.getPidParentNode();
-        NodeTable parentNode = MapActivity.mNodes.getNode(parentPid);
+        int parentPid        = mNode.getPidParentNode();
+        NodeTable parentNode = nodes.getNode(parentPid);
 
         return parentNode.getCenterPosX();
     }
@@ -270,10 +274,6 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
      */
     //private class NodeTouchListener implements View.OnTouchListener {
     private class NodeTouchListener extends RootNodeTouchListener {
-
-        //親ノードに対する自ノードの位置定数
-        private final int POSITIVE = 1;     //正側（右）
-        private final int NEGATIVE = -1;    //負側（左）
 
         //親ノードに対する自ノードのX座標における相対位置（親ノードより正側か負側か）
         private int parentRelativePosition;
@@ -309,8 +309,9 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
                     initFollowParent();
 
                     //タッチ開始時のピンチ操作比率を取得
-                    pinchDistanceRatioX = mMapInfoManager.getPinchDistanceRatioX();
-                    pinchDistanceRatioY = mMapInfoManager.getPinchDistanceRatioY();
+                    MapCommonData mapCommonData = (MapCommonData)((Activity)getContext()).getApplication();
+                    pinchDistanceRatioX = mapCommonData.getPinchDistanceRatioX();
+                    pinchDistanceRatioY = mapCommonData.getPinchDistanceRatioY();
 
                     //今回のタッチ位置を保持
                     mPreTouchPosX = x;
@@ -372,6 +373,10 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
             float parentX = getParentPositionX();
 
             Log.i("ParentRelativePos", "selfX=" + selfX + " parentX=" + parentX);
+
+            //親ノードに対する自ノードの位置定数
+            final int POSITIVE = 1;     //正側（右）
+            final int NEGATIVE = -1;    //負側（左）
 
             //自ノードが親ノードより大きければ正、そうでなければ負を返す
             return ((selfX > parentX) ? POSITIVE : NEGATIVE);

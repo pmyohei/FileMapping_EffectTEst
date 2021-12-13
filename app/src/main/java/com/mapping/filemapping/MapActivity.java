@@ -38,10 +38,6 @@ public class MapActivity extends AppCompatActivity {
     public static String INTENT_MAP_PID = "MapPid";
     public static String INTENT_NODE_PID = "NodePid";
 
-
-    //マップ情報管理
-    private MapInfoManager mMapInfoManager;
-
     /* マップ位置操作 */
     //GestureDetector
     private ScaleGestureDetector mPinchGestureDetector;
@@ -62,8 +58,8 @@ public class MapActivity extends AppCompatActivity {
     //DrawerLayoutのオープン状態
     private boolean mDrawerIsOpen = false;
 
-    /* データ */
-    public static NodeArrayList<NodeTable> mNodes;     //ノードリスト
+    //マップ内ノードリスト
+    private NodeArrayList<NodeTable> mNodes;
 
     /* 制御 */
     //ノード生成ができる状態か
@@ -90,10 +86,10 @@ public class MapActivity extends AppCompatActivity {
         //フリング用スクロール生成
         mFlingScroller = new Scroller(this, new DecelerateInterpolator());
 
-        //マップ管理マネージャを取得
-        mMapInfoManager = MapInfoManager.getInstance(true);
-        pinchDistanceRatioX = mMapInfoManager.getPinchDistanceRatioX();
-        pinchDistanceRatioY = mMapInfoManager.getPinchDistanceRatioY();
+        //マップ共通データ
+        MapCommonData mapCommonData = (MapCommonData)getApplication();
+        pinchDistanceRatioX = mapCommonData.getPinchDistanceRatioX();
+        pinchDistanceRatioY = mapCommonData.getPinchDistanceRatioY();
 
         //リスナー生成
         mPinchGestureDetector = new ScaleGestureDetector(this, new PinchListener());
@@ -131,6 +127,11 @@ public class MapActivity extends AppCompatActivity {
             @Override
             public void onRead(NodeArrayList<NodeTable> nodeList) {
 
+                //マップ共通データ
+                MapCommonData mapCommonData = (MapCommonData)getApplication();
+                mapCommonData.setNodes( nodeList );
+
+                //フィールド変数としても保持する
                 mNodes = nodeList;
 
                 if (mEnableDrawNode) {
@@ -603,7 +604,8 @@ public class MapActivity extends AppCompatActivity {
             pinchDistanceRatioY *= (endDistanceY / startDistanceY);
 
             //マップ情報を同期
-            mMapInfoManager.setPinchDistanceRatio(pinchDistanceRatioX, pinchDistanceRatioY);
+            MapCommonData mapCommonData = (MapCommonData)getApplication();
+            mapCommonData.setPinchDistanceRatio(pinchDistanceRatioX, pinchDistanceRatioY);
 
             Log.i("onScaleEnd", "pinchDistanceRatioX=" + pinchDistanceRatioX + " pinchDistanceRatioY=" + pinchDistanceRatioY);
 
@@ -717,5 +719,6 @@ public class MapActivity extends AppCompatActivity {
         }
 
     }
+
 
 }

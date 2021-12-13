@@ -102,7 +102,7 @@ public class NodeView_old3 extends RootNodeView /*implements View.OnTouchListene
      */
     public void searchChildNodes() {
 
-        //子ノードを検索
+/*        //子ノードを検索
         mChildNodes = MapActivity.mNodes.getChildNodes(mNode.getPid());
 
         //子ノード分ループ
@@ -115,7 +115,7 @@ public class NodeView_old3 extends RootNodeView /*implements View.OnTouchListene
 
             //子ノード側も初期化
             v_node.initFollowParent();
-        }
+        }*/
     }
 
     /*
@@ -225,11 +225,12 @@ public class NodeView_old3 extends RootNodeView /*implements View.OnTouchListene
      * 親ノードのX座標を取得
      */
     public float getParentPositionX() {
-        //親ノード
+/*        //親ノード
         int parentPid = mNode.getPidParentNode();
         NodeTable parentNode = MapActivity.mNodes.getNode(parentPid);
 
-        return parentNode.getCenterPosX();
+        return parentNode.getCenterPosX();*/
+        return 0f;
     }
 
     @Override
