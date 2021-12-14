@@ -9,5 +9,6 @@ public class ResourceManager {
 
     //serialVersionUID
     public static final long SERIAL_VERSION_UID_NODE_TABLE = 1L;
+    public static final long SERIAL_VERSION_UID_NODE_VIEW  = 2L;
 
 }

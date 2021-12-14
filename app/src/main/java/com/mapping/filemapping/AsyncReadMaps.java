@@ -5,33 +5,29 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import org.w3c.dom.Node;
-
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 /*
  * DB非同期処理
  *   read用
  */
-public class AsyncReadNodeOperaion {
+public class AsyncReadMaps {
 
-    private final AppDatabase               mDB;
-    private final OnReadListener            mOnReadListener;
-    private final int                       mMapPid;
-    private       NodeArrayList<NodeTable>  mNodeList;
+    private final AppDatabase         mDB;
+    private final OnReadListener      mOnReadListener;
+    private       ArrayList<MapTable> mMaps;
 
     /*
      * コンストラクタ
      */
-    public AsyncReadNodeOperaion(Context context, int mapPid, OnReadListener listener) {
+    public AsyncReadMaps(Context context, OnReadListener listener) {
         mDB             = AppDatabaseManager.getInstance(context);
         mOnReadListener = listener;
-        mMapPid         = mapPid;
 
-        mNodeList       = new NodeArrayList<>();
+        mMaps = new ArrayList<>();
     }
 
 
@@ -65,12 +61,12 @@ public class AsyncReadNodeOperaion {
          */
         private void readDB(){
 
-            //NodeDao
-            NodeTableDao nodeDao = mDB.daoNodeTable();
+            //MapDao
+            MapTableDao mapDao = mDB.daoMapTable();
 
             //指定マップに所属するノードを取得
-            List<NodeTable> nodeList = nodeDao.getMapNodes( mMapPid );
-            mNodeList.addAll( nodeList );
+            List<MapTable> maps = mapDao.getAll();
+            mMaps.addAll( maps );
         }
 
     }
@@ -101,17 +97,17 @@ public class AsyncReadNodeOperaion {
      */
     void onPostExecute() {
 
-        Log.i("AsyncReadNodeOperaion", "onPostExecute=" + mNodeList.size());
+        Log.i("AsyncReadNodeOperaion", "onPostExecute=" + mMaps.size());
 
         //読み取り完了
-        mOnReadListener.onRead( mNodeList );
+        mOnReadListener.onRead(mMaps);
     }
 
     /*
      * データ読み取り完了リスナー
      */
     public interface OnReadListener {
-        void onRead( NodeArrayList<NodeTable> nodeList );
+        void onRead( ArrayList<MapTable> mapList );
     }
 
 

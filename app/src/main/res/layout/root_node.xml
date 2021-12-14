@@ -1,64 +1,105 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.coordinatorlayout.widget.CoordinatorLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cl_rootNode"
+    android:id="@+id/cl_node"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center">
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_anchor="@id/tv_node"
-        app:layout_anchorGravity="top|center_horizontal" >
-
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/a"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginBottom="200dp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_anchor="@id/tv_node"
-        app:layout_anchorGravity="top|start|center_vertical" >
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="120dp"
-            android:layout_marginEnd="80dp"/>
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_anchor="@id/tv_node"
-        app:layout_anchorGravity="start|center_vertical" >
-
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="180dp"/>
-
-    </LinearLayout>
-
+    <!-- ノード -->
     <TextView
         android:id="@+id/tv_node"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:elevation="@dimen/node_elevation"
         android:background="@drawable/circle_node"
-        android:padding="12dp"
-        android:text="@string/sample" />
+        android:elevation="@dimen/node_toolIcon_elevation"
+        android:padding="4dp"
+        android:text="@string/sample"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
-</androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <!--  ツールアイコン  -->
+    <ImageButton
+        android:id="@+id/ib_createNode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:elevation="@dimen/node_toolIcon_elevation"
+        android:background="@drawable/circle_tool_icon"
+        android:visibility="gone"
+        app:layout_constraintCircle="@id/tv_node"
+        app:layout_constraintCircleAngle="30"
+        app:layout_constraintCircleRadius="@dimen/node_icon_radius"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_add_24" />
+
+
+    <ImageButton
+        android:id="@+id/ib_addPictureNode"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:elevation="@dimen/node_toolIcon_elevation"
+        android:background="@drawable/circle_tool_icon"
+        android:visibility="gone"
+        app:layout_constraintCircle="@id/tv_node"
+        app:layout_constraintCircleAngle="82.5"
+        app:layout_constraintCircleRadius="@dimen/node_icon_radius"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_add_a_photo_24" />
+
+
+    <ImageButton
+        android:id="@+id/ib_edit"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/circle_tool_icon"
+        android:elevation="@dimen/node_toolIcon_elevation"
+        android:padding="4dp"
+        android:visibility="gone"
+        app:layout_constraintCircle="@id/tv_node"
+        app:layout_constraintCircleAngle="135"
+        app:layout_constraintCircleRadius="@dimen/node_icon_radius"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_edit_24" />
+
+
+    <ImageButton
+        android:id="@+id/ib_displayAllPicture"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:elevation="@dimen/node_toolIcon_elevation"
+        android:background="@drawable/circle_tool_icon"
+        android:visibility="gone"
+        app:layout_constraintCircle="@id/tv_node"
+        app:layout_constraintCircleAngle="187.5"
+        app:layout_constraintCircleRadius="@dimen/node_icon_radius"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_photo_library_24" />
+
+    <ImageButton
+        android:id="@+id/ib_close"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:elevation="@dimen/node_toolIcon_elevation"
+        android:background="@drawable/circle_tool_icon"
+        android:visibility="gone"
+        app:layout_constraintCircle="@id/tv_node"
+        app:layout_constraintCircleAngle="240"
+        app:layout_constraintCircleRadius="@dimen/node_icon_radius"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_close_24" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

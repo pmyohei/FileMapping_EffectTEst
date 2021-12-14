@@ -19,7 +19,7 @@ public interface NodeTableDao {
     List<NodeTable> getAll();
 
     /*
-     *
+     * 指定マップに所属するノードをすべて取得
      */
     @Query("SELECT * FROM node WHERE pid_map=(:mapPid)")
     List<NodeTable> getMapNodes(int mapPid);
@@ -37,8 +37,8 @@ public interface NodeTableDao {
     @Update
     void updateNode(NodeTable node);
 
-    @Query("UPDATE node set pid_parent_node=(:pidParent) WHERE pid=(:pid)")
-    void updateNodeTest(int pid, int pidParent);
+    @Query("UPDATE node set pos_x=(:posX), pos_y=(:posY) WHERE pid=(:pid)")
+    void updateNodePosition(int pid, int posX, int posY);
 
     @Update
     void updateNodes(NodeTable... nodes);

@@ -3,33 +3,28 @@ package com.mapping.filemapping;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /*
  * DB非同期処理
- *   read用
+ *   ノードupdate用
  */
-public class AsyncReadMapsOperaion {
+public class AsyncUpdateNode {
 
-    private final AppDatabase         mDB;
-    private final OnReadListener      mOnReadListener;
-    private       ArrayList<MapTable> mMaps;
+    private final AppDatabase      mDB;
+    private final NodeTable        mNode;
+    private final OnFinishListener mOnFinishListener;
 
     /*
      * コンストラクタ
      */
-    public AsyncReadMapsOperaion(Context context, OnReadListener listener) {
-        mDB             = AppDatabaseManager.getInstance(context);
-        mOnReadListener = listener;
-
-        mMaps = new ArrayList<>();
+    public AsyncUpdateNode(Context context, NodeTable node, OnFinishListener listener) {
+        mDB               = AppDatabaseManager.getInstance(context);
+        mOnFinishListener = listener;
+        mNode             = node;
     }
-
 
     /*
      * 非同期処理
@@ -45,7 +40,7 @@ public class AsyncReadMapsOperaion {
         public void run() {
 
             //メイン処理
-            readDB();
+            dbOperation();
 
             //後処理
             handler.post(new Runnable() {
@@ -57,18 +52,16 @@ public class AsyncReadMapsOperaion {
         }
 
         /*
-         * DBからデータを取得
+         * ノードを更新
          */
-        private void readDB(){
+        private void dbOperation(){
 
-            //MapDao
-            MapTableDao mapDao = mDB.daoMapTable();
+            //NodeDao
+            NodeTableDao nodeDao = mDB.daoNodeTable();
 
-            //指定マップに所属するノードを取得
-            List<MapTable> maps = mapDao.getAll();
-            mMaps.addAll( maps );
+            //ノードを更新
+            nodeDao.updateNode( mNode );
         }
-
     }
 
     /*
@@ -97,17 +90,18 @@ public class AsyncReadMapsOperaion {
      */
     void onPostExecute() {
 
-        Log.i("AsyncReadNodeOperaion", "onPostExecute=" + mMaps.size());
-
         //読み取り完了
-        mOnReadListener.onRead(mMaps);
+        mOnFinishListener.onFinish();
     }
 
     /*
-     * データ読み取り完了リスナー
+     * データ作成完了リスナー
      */
-    public interface OnReadListener {
-        void onRead( ArrayList<MapTable> mapList );
+    public interface OnFinishListener {
+        /*
+         * ノード生成完了時、コールされる
+         */
+        void onFinish();
     }
 
 

@@ -49,7 +49,7 @@ public class RootNodeView_old extends FrameLayout {
         });
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        inflater.inflate(R.layout.root_node, this, true);
+        inflater.inflate(R.layout.root_node_old, this, true);
 
     }
 
@@ -62,7 +62,7 @@ public class RootNodeView_old extends FrameLayout {
         mMapInfoManager = MapInfoManager.getInstance(false);
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        inflater.inflate(R.layout.root_node, this, true);
+        inflater.inflate(R.layout.root_node_old, this, true);
 
     }
 
@@ -75,7 +75,7 @@ public class RootNodeView_old extends FrameLayout {
         mMapInfoManager = MapInfoManager.getInstance(false);
 
         LayoutInflater inflater = LayoutInflater.from(context);
-        inflater.inflate(R.layout.root_node, this, true);
+        inflater.inflate(R.layout.root_node_old, this, true);
     }
 
 

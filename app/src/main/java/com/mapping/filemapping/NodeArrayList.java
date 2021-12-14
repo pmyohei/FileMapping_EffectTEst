@@ -53,8 +53,6 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> {
             }
         }
 
-        //ここには来ないはず
-        Log.e("NodeArrayList", "error getparentNode() pid" + pid);
         return null;
     }
 

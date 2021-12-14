@@ -24,6 +24,7 @@ import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.Scroller;
+import android.widget.TextView;
 
 import java.util.Objects;
 
@@ -31,12 +32,16 @@ public class MapActivity extends AppCompatActivity {
 
     /*-- 定数 --*/
     /* 画面遷移-リクエストコード */
-    //ノード生成
     public static final int REQ_NODE_CREATE = 100;
+    public static final int REQ_NODE_EDIT   = 101;
+
+    /* 画面遷移-キー-種別（遷移先での遷移理由識別用） */
+    public static final String INTENT_KIND_CREATE = "Create";
 
     /* 画面遷移-キー */
-    public static String INTENT_MAP_PID = "MapPid";
+    public static String INTENT_MAP_PID  = "MapPid";
     public static String INTENT_NODE_PID = "NodePid";
+    public static String INTENT_NODE     = "Node";
 
     /* マップ位置操作 */
     //GestureDetector
@@ -87,7 +92,10 @@ public class MapActivity extends AppCompatActivity {
         mFlingScroller = new Scroller(this, new DecelerateInterpolator());
 
         //マップ共通データ
-        MapCommonData mapCommonData = (MapCommonData)getApplication();
+        MapCommonData mapCommonData = (MapCommonData) getApplication();
+        //初期化
+        mapCommonData.init();
+        //ピンチ比率取得
         pinchDistanceRatioX = mapCommonData.getPinchDistanceRatioX();
         pinchDistanceRatioY = mapCommonData.getPinchDistanceRatioY();
 
@@ -97,7 +105,6 @@ public class MapActivity extends AppCompatActivity {
 
         //アクティビティ
         Activity activity = this;
-
 
         //DrawerLayout
         DrawerLayout dl_map = findViewById(R.id.dl_map);
@@ -121,15 +128,15 @@ public class MapActivity extends AppCompatActivity {
         //DBからデータを取得
         Intent intent = getIntent();
         int mapPid = intent.getIntExtra(ResourceManager.INTENT_ID_MAPLIST_TO_MAP, 0);
-        AsyncReadNodeOperaion db = new AsyncReadNodeOperaion(this, mapPid, new AsyncReadNodeOperaion.OnReadListener() {
+        AsyncReadNodes db = new AsyncReadNodes(this, mapPid, new AsyncReadNodes.OnReadListener() {
 
             //DB読み取り完了
             @Override
             public void onRead(NodeArrayList<NodeTable> nodeList) {
 
                 //マップ共通データ
-                MapCommonData mapCommonData = (MapCommonData)getApplication();
-                mapCommonData.setNodes( nodeList );
+                MapCommonData mapCommonData = (MapCommonData) getApplication();
+                mapCommonData.setNodes(nodeList);
 
                 //フィールド変数としても保持する
                 mNodes = nodeList;
@@ -200,13 +207,25 @@ public class MapActivity extends AppCompatActivity {
             NodeTable node = mNodes.get(i);
 
             //最後のノードなら、全てのラインを描画
-            if( i == (nodeNum - 1) ){
+            if (i == (nodeNum - 1)) {
                 lineDrawKind = NodeGlobalLayoutListener.LINE_ALL;
             }
 
             //ノードを描画
-            drawNode( fl_map, node, lineDrawKind);
+            drawNode(fl_map, node, lineDrawKind);
         }
+
+        //---
+        //ノードをマップに追加
+        TextView moveNode = new TextView(this);
+        moveNode.setText("CHECK");
+        fl_map.addView(moveNode, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        //位置設定
+        ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) moveNode.getLayoutParams();
+        mlp.setMargins(0, 0, mlp.rightMargin, mlp.bottomMargin);
+        //---
+
     }
 
     /*
@@ -222,7 +241,7 @@ public class MapActivity extends AppCompatActivity {
 
             //マージン座標を取得
             int left = rootNodeView.getLeft();
-            int top = rootNodeView.getTop();
+            int top  = rootNodeView.getTop();
 
             //中心座標を保持
             rootNodeView.setCenterPosX(left + (rootNodeView.getWidth() / 2f));
@@ -234,8 +253,8 @@ public class MapActivity extends AppCompatActivity {
             //ビュー側でもノード情報を保持
             rootNodeView.setNode(node);
 
-            Log.i("drawNodes", "root centerx=" + (left + (rootNodeView.getWidth() / 2f)));
-            Log.i("drawNodes", "root centery=" + (top + (rootNodeView.getHeight() / 2f)));
+            Log.i("drawNodes", "root centerx=" + (left + (rootNodeView.getWidth() / 2f)) + " left=" + left);
+            Log.i("drawNodes", "root centery=" + (top + (rootNodeView.getHeight() / 2f)) + " top=" + top);
 
             return;
         }
@@ -262,7 +281,7 @@ public class MapActivity extends AppCompatActivity {
 
         //レイアウト確定後の処理を設定
         ViewTreeObserver observer = nodeView.getViewTreeObserver();
-        observer.addOnGlobalLayoutListener( new NodeGlobalLayoutListener( nodeView, lineDrawKind ) );
+        observer.addOnGlobalLayoutListener(new NodeGlobalLayoutListener(nodeView, lineDrawKind));
 
         //ノードビューを保持
         node.setNodeView(nodeView);
@@ -281,7 +300,7 @@ public class MapActivity extends AppCompatActivity {
         for (NodeTable node : mNodes) {
 
             //ラインの描画
-            drawLine( fl_map, node );
+            drawLine(fl_map, node);
         }
     }
 
@@ -314,8 +333,6 @@ public class MapActivity extends AppCompatActivity {
         fl_map.addView(lineView);
     }
 
-
-
     /*
      * 画面遷移後の処理
      */
@@ -329,14 +346,29 @@ public class MapActivity extends AppCompatActivity {
             case REQ_NODE_CREATE:
 
                 //ノード生成された場合
-                if (resultCode == NodeInformationActivity.RES_NODE_CREATE) {
+                if (resultCode == NodeInformationActivity.RES_NODE_POSITIVE) {
                     //生成されたノードを取得
                     NodeTable node = (NodeTable) intent.getSerializableExtra(NodeInformationActivity.INTENT_CREATED_NODE);
                     //リストに追加
-                    mNodes.add(node);
+                    MapCommonData mapCommonData = (MapCommonData) getApplication();
+                    mapCommonData.addNodes(node);
 
                     //ノードを描画
-                    drawNode( findViewById(R.id.fl_map), node, NodeGlobalLayoutListener.LINE_SELF);
+                    drawNode(findViewById(R.id.fl_map), node, NodeGlobalLayoutListener.LINE_SELF);
+                }
+
+                break;
+
+            //ノード編集からの戻り
+            case REQ_NODE_EDIT:
+
+                //ノード生成された場合
+                if (resultCode == NodeInformationActivity.RES_NODE_POSITIVE) {
+                    //生成されたノードを取得
+                    NodeTable node = (NodeTable) intent.getSerializableExtra(NodeInformationActivity.INTENT_UPDATED_NODE);
+
+                    //ノード情報をビューに反映
+                    //★
                 }
 
                 break;
@@ -345,6 +377,36 @@ public class MapActivity extends AppCompatActivity {
                 break;
         }
 
+    }
+
+    /*
+     * onStop()
+     */
+    @Override
+    protected void onStop() {
+        //必須
+        super.onStop();
+
+        //位置情報を保存
+        MapCommonData mapCommonData = (MapCommonData)getApplication();
+        NodeArrayList<NodeTable> nodeQue = mapCommonData.getMovedNodesQue();
+
+        Log.i("onStop", "nodeQue.size()=" + nodeQue.size());
+
+        //座標移動したノードがあれば
+        if( nodeQue.size() > 0 ){
+            AsyncUpdateNodePosition db = new AsyncUpdateNodePosition(this, nodeQue, new AsyncUpdateNodePosition.OnFinishListener() {
+                //DB処理完了
+                @Override
+                public void onFinish() {
+                    //更新完了後は、キュークリア
+                    mapCommonData.clearMovedNodesQue();
+                }
+            });
+
+            //非同期処理開始
+            db.execute();
+        }
     }
 
     /*
@@ -485,7 +547,7 @@ public class MapActivity extends AppCompatActivity {
 
         @Override
         public void onGlobalLayout() {
-            //Log.i("createNode", "レイアウトが確定したノード=" + node.getNodeName());
+            Log.i("NodeGlobal", "レイアウト確定ノード=" + mv_node.getNode().getNodeName());
 
             //レイアウト確定後は、不要なので本リスナー削除
             mv_node.getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -494,9 +556,12 @@ public class MapActivity extends AppCompatActivity {
             mv_node.setCenterPosX(mv_node.getLeft() + (mv_node.getWidth() / 2f));
             mv_node.setCenterPosY(mv_node.getTop()  + (mv_node.getHeight() / 2f));
 
+            Log.i("NodeGlobal", "getLeft=" + mv_node.getLeft() + " getTop()=" + mv_node.getTop());
+
             if(mLineDrawKind == LINE_ALL){
                 //全ラインを描画
                 drawAllLines();
+
             } else if( mLineDrawKind == LINE_SELF ){
                 //本ノードのラインを描画
                 drawLine( findViewById(R.id.fl_map), mv_node.getNode() );
@@ -649,15 +714,15 @@ public class MapActivity extends AppCompatActivity {
             //Log.i("onFling", "nowx=" + nowx + " nowy=" + nowy);
 
             //スクローラー
-            final int SCALE = 2;
+            final float SCALE = 1.5f;
             final int MOVE_DURATION = 5000;
 
             // アニメーションを開始
             mFlingScroller.fling(
-                    (int) nowx,                          //scroll の開始位置 (X)
-                    (int) nowy,                          //scroll の開始位置 (Y)
-                    (int) velocityX / SCALE,     //初速
-                    (int) velocityY / SCALE,     //初速
+                    (int) nowx,                    //scroll の開始位置 (X)
+                    (int) nowy,                    //scroll の開始位置 (Y)
+                    (int) (velocityX / SCALE),     //初速
+                    (int) (velocityY / SCALE),     //初速
                     -2000,
                     2000,
                     -2000,

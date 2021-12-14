@@ -9,12 +9,13 @@
     android:fitsSystemWindows="true"
     tools:openDrawer="start">
 
-    <!--  画面全体  -->
+    <!--  マップ画面全体  -->
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".MapActivity">
 
+        <!--  ツールバー  -->
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"

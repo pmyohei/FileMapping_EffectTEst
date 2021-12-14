@@ -11,6 +11,7 @@ import java.io.Serializable;
 
 /*
  * ノードテーブル
+ *   Serializable：intentによるデータの受け渡しを行うために実装
  */
 @Entity(tableName = "node",
         foreignKeys = { @ForeignKey
@@ -98,8 +99,6 @@ public class NodeTable implements Serializable {
     private float centerPosX;                   //ノード中心座標X
     @Ignore
     private float centerPosY;                   //ノード中心座標Y*/
-    @Ignore
-    private OldLineView lineView;               //親ノードとの接続線
     @Ignore
     private NodeView nodeView;                  //ノードビュー
     @Ignore
@@ -219,13 +218,6 @@ public class NodeTable implements Serializable {
         this.centerPos = centerPos;
     }
 */
-
-    public OldLineView getLineView() {
-        return lineView;
-    }
-    public void setLineView(OldLineView lineView) {
-        this.lineView = lineView;
-    }
 
     public NodeView getNodeView() {
         return nodeView;

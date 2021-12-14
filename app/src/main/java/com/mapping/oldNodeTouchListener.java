@@ -72,7 +72,7 @@ public class oldNodeTouchListener implements View.OnTouchListener {
 
                 //ライン情報未保持なら、保持する
                 if( mParentLine == null ){
-                    mParentLine = mNode.getLineView();
+                    //mParentLine = mNode.getLineView();
                 }
 
                 //タッチ開始時のピンチ操作比率を取得

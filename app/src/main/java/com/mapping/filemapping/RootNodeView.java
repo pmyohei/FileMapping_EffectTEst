@@ -16,13 +16,22 @@ import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-public class RootNodeView extends FrameLayout {
+import java.io.Serializable;
+
+/*
+ *  ルートノード
+ *    Serializable：intentによるデータの受け渡しを行うために実装
+ */
+public class RootNodeView extends FrameLayout implements Serializable {
 
     /* フィールド-ノード間共通 */
     //ツールアイコン選択中ノード
     public static RootNodeView mv_toolOpenNode = null;
 
     /* フィールド */
+    //シリアルID
+    private static final long serialVersionUID = ResourceManager.SERIAL_VERSION_UID_NODE_VIEW;
+
     //ノード情報
     public NodeTable mNode;
 
@@ -46,7 +55,7 @@ public class RootNodeView extends FrameLayout {
 
         Log.i("RootNodeView", "1");
 
-        init(layoutID);
+        init(layoutID, true);
     }
 
     /*
@@ -58,7 +67,7 @@ public class RootNodeView extends FrameLayout {
 
         Log.i("RootNodeView", "2");
 
-        init(R.layout.node);
+        init(R.layout.root_node, true);
     }
 
 /*    public RootNodeView(Context context, AttributeSet attrs, int defStyleAttr) {
@@ -72,7 +81,7 @@ public class RootNodeView extends FrameLayout {
     /*
      * 初期化処理
      */
-    private void init( int layoutID ) {
+    private void init( int layoutID, boolean attachToRoot ) {
 
         Log.i("RootNodeView", "init");
 
@@ -83,7 +92,7 @@ public class RootNodeView extends FrameLayout {
 
         //レイアウト生成
         LayoutInflater inflater = LayoutInflater.from(getContext());
-        inflater.inflate(layoutID, this, true);
+        inflater.inflate(layoutID, this, attachToRoot);
 
         //クリックリスナー
         //※空のクリック処理をオーバーライドしないと、タッチ処理が検出されないため、空処理を入れとく
@@ -123,15 +132,37 @@ public class RootNodeView extends FrameLayout {
         ib.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //ノード生成画面へ遷移
+                //ノード情報画面へ遷移
                 Context context = getContext();
                 Intent intent = new Intent(context, NodeInformationActivity.class);
 
                 //タッチノードの情報を渡す
                 intent.putExtra(MapActivity.INTENT_MAP_PID, mNode.getPidMap());
                 intent.putExtra(MapActivity.INTENT_NODE_PID, mNode.getPid());
+                //生成
+                intent.putExtra( MapActivity.INTENT_KIND_CREATE, true );
 
                 ((Activity)context).startActivityForResult(intent, MapActivity.REQ_NODE_CREATE);
+
+                //クローズする
+                toolDisplayControl();
+            }
+        });
+
+        //ノード編集
+        ib = findViewById(R.id.ib_edit);
+        ib.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //ノード情報画面へ遷移
+                Context context = getContext();
+                Intent intent = new Intent(context, NodeInformationActivity.class);
+
+                //タッチノードの情報を渡す
+                intent.putExtra( MapActivity.INTENT_NODE, mNode );
+
+                //画面遷移
+                ((Activity)context).startActivityForResult(intent, MapActivity.REQ_NODE_EDIT);
 
                 //クローズする
                 toolDisplayControl();
@@ -208,7 +239,7 @@ public class RootNodeView extends FrameLayout {
 
         //ルートノード
         if( mNode.getKind() == NodeTable.NODE_KIND_ROOT ){
-            //レイアウト位置調整は不要のため、ここで終了77
+            //レイアウト位置調整は不要のため、ここで終了
             return;
         }
 

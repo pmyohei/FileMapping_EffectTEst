@@ -24,7 +24,7 @@ public class MapListActivity extends AppCompatActivity {
         Context context = this;
 
         //マップ情報取得
-        AsyncReadMapsOperaion db = new AsyncReadMapsOperaion(this, new AsyncReadMapsOperaion.OnReadListener() {
+        AsyncReadMaps db = new AsyncReadMaps(this, new AsyncReadMaps.OnReadListener() {
 
             //DB読み取り完了
             @Override

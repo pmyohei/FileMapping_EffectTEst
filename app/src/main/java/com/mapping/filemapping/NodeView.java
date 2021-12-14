@@ -3,17 +3,16 @@ package com.mapping.filemapping;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.util.AttributeSet;
 import android.util.Log;
-import android.view.GestureDetector;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
 public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
 
@@ -75,7 +74,30 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
 
         //タッチリスナー
         setOnTouchListener(new NodeTouchListener());
+
+        //ツールアイコン設定
+        setNodeToolIcon();
     }
+
+    /*
+     * ツールアイコン設定
+     */
+    public void setNodeToolIcon() {
+
+        //削除
+        ImageButton ib = findViewById(R.id.ib_delete);
+        ib.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //削除確認ダイアログを表示
+
+
+
+            }
+        });
+
+    }
+
 
     /*
      * 親ノード追随処理初期化
@@ -232,12 +254,20 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
         ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams)getLayoutParams();
         mlp.setMargins(getLeft(), getTop(), 0, 0);
 
+        //Nodetable側の位置情報を更新
+        mNode.setPosX( getLeft() );
+        mNode.setPosY( getTop() );
+
+        //位置が変更されたため、自身(のNodeTable)を位置変更キューに追加
+        MapCommonData mapCommonData = (MapCommonData)((Activity)getContext()).getApplication();
+        mapCommonData.enqueMovedNodeWithUnique( mNode );
+
         //子ノードも同様
         setLayoutMarginChildNodes();
     }
 
     /*
-     * 子ノードの移動
+     * 子ノードのレイアウトマージンの設定
      */
     public void setLayoutMarginChildNodes() {
 
@@ -278,6 +308,9 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
         //親ノードに対する自ノードのX座標における相対位置（親ノードより正側か負側か）
         private int parentRelativePosition;
 
+        //Move発生フラグ
+        private boolean isMove;
+
         /*
          * コンストラクタ
          */
@@ -290,10 +323,11 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
             //ルートノード側の共通処理をコール
             boolean ret = super.onTouch( view, event );
 
-            Log.i("NodeTouchListener", "super.onTouch=" + ret);
+            Log.i("NodeTouchListener", "super.onTouch=" + ret + " event.getAction()=" + event.getAction());
 
             //共通処理を行った場合、終了
             if( ret ){
+                Log.i("NodeTouchListener", "ダブルタッチしたため終了");
                 return true;
             }
 
@@ -319,6 +353,9 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
 
                     //親ノードに対する自ノードの位置
                     parentRelativePosition = getParentRelativePosition(mCenterPosX);
+
+                    //Moveフラグ初期化
+                    isMove = false;
 
                     break;
 
@@ -349,13 +386,19 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
                     mPreTouchPosX = x;
                     mPreTouchPosY = y;
 
+                    //MoveフラグON
+                    isMove = true;
+
                     //イベント処理完了
                     return true;
 
                 case MotionEvent.ACTION_UP:
 
-                    //移動後の位置をレイアウトに反映させる
-                    setLayoutMargin();
+                    //移動が発生していれば
+                    if( isMove ){
+                        //移動後の位置をレイアウトに反映させる
+                        setLayoutMargin();
+                    }
 
                     break;
             }
