@@ -91,11 +91,11 @@ public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ 
             public void onClick(View view) {
 
                 //本ノード配下のノード（本ノード含む）を全て取得する
-                MapCommonData mapCommonData = (MapCommonData)((Activity)getContext()).getApplication();
-                mapCommonData.setDeleteNodes( mNode.getPid() );
+                MapCommonData mapCommonData = (MapCommonData) ((Activity) getContext()).getApplication();
+                mapCommonData.setDeleteNodes(mNode.getPid());
 
                 //削除確認ダイアログを表示
-                new AlertDialog.Builder( getContext() )
+                new AlertDialog.Builder(getContext())
                         .setTitle("ノード削除確認")
                         .setMessage("配下のノードも全て削除されます。\nなお、端末上から写真は削除されません。")
                         .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -110,8 +110,11 @@ public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ 
                                     @Override
                                     public void onFinish() {
 
+                                        //自身と配下ノードをレイアウトから削除
+                                        removeLayout();
+
                                         //削除対象ノード分
-                                        for( NodeTable node: nodes ){
+/*                                        for (NodeTable node : nodes) {
                                             //Log.i("setDeleteNodes", "onFinish=" + node.getNodeName());
 
                                             //★自身削除用のメソッドを作ってそれをコールする形にする
@@ -119,11 +122,11 @@ public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ 
                                             //削除するビュー
                                             NodeView self = node.getNodeView();
                                             //親レイアウト
-                                            ViewGroup vg_parent = (ViewGroup)self.getParent();
+                                            ViewGroup vg_parent = (ViewGroup) self.getParent();
                                             //レイアウトからノードとラインを削除
-                                            vg_parent.removeView( self.getLineView() );
-                                            vg_parent.removeView( self );
-                                        }
+                                            vg_parent.removeView(self.getLineView());
+                                            vg_parent.removeView(self);
+                                        }*/
 
                                         //ノードリストから削除
                                         //★
@@ -166,7 +169,7 @@ public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ 
 
                         //ライン終端位置（自ノードの中心位置)
                         mCenterPosX = getLeft() + (getWidth() / 2f);
-                        mCenterPosY = getTop()  + (getHeight() / 2f);
+                        mCenterPosY = getTop() + (getHeight() / 2f);
 
                         //ライン再描画（終端位置のみ更新）
                         mLineView.reDraw();
@@ -193,7 +196,7 @@ public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ 
     public void searchChildNodes() {
 
         //マップ共通データ
-        MapCommonData mapCommonData = (MapCommonData)((Activity)getContext()).getApplication();
+        MapCommonData mapCommonData = (MapCommonData) ((Activity) getContext()).getApplication();
         NodeArrayList<NodeTable> nodes = mapCommonData.getNodes();
 
         //子ノードを検索
@@ -263,14 +266,14 @@ public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ 
         //今回イベントでのView移動先の位置
         //※移動量からピンチ操作率は取り除く
         int left = getLeft() + (int) moveX;
-        int top  = getTop()  + (int) moveY;
+        int top = getTop() + (int) moveY;
 
         //レイアウトに反映
         layout(left, top, left + getWidth(), top + getHeight());
 
         //ライン終端位置（自ノードの中心位置）を計算
         mCenterPosX = left + (getWidth() / 2f);
-        mCenterPosY = top  + (getHeight() / 2f);
+        mCenterPosY = top + (getHeight() / 2f);
 
         Log.i("move", "move Node=" + mNode.getNodeName() + " posx=" + mCenterPosX + " posy=" + mCenterPosY);
 
@@ -294,7 +297,7 @@ public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ 
     public void place(int touchNodePosX) {
 
         //ノードの横幅半分
-        int width       = getWidth();
+        int width = getWidth();
         float halfWidth = width / 2f;
 
         Log.i("place", "反転処理前 反転ノード=" + mNode.getNodeName() + " 自分のX位置=" + mCenterPosX);
@@ -325,16 +328,16 @@ public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ 
     public void setLayoutMargin() {
 
         //現在の表示上位置にマージンを設定
-        ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams)getLayoutParams();
+        ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) getLayoutParams();
         mlp.setMargins(getLeft(), getTop(), 0, 0);
 
         //Nodetable側の位置情報を更新
-        mNode.setPosX( getLeft() );
-        mNode.setPosY( getTop() );
+        mNode.setPosX(getLeft());
+        mNode.setPosY(getTop());
 
         //位置が変更されたため、自身(のNodeTable)を位置変更キューに追加
-        MapCommonData mapCommonData = (MapCommonData)((Activity)getContext()).getApplication();
-        mapCommonData.enqueMovedNodeWithUnique( mNode );
+        MapCommonData mapCommonData = (MapCommonData) ((Activity) getContext()).getApplication();
+        mapCommonData.enqueMovedNodeWithUnique(mNode);
 
         //子ノードも同様
         setLayoutMarginChildNodes();
@@ -362,24 +365,40 @@ public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ 
     public float getParentPositionX() {
 
         //マップ共通データ
-        MapCommonData mapCommonData = (MapCommonData)((Activity)getContext()).getApplication();
+        MapCommonData mapCommonData = (MapCommonData) ((Activity) getContext()).getApplication();
         NodeArrayList<NodeTable> nodes = mapCommonData.getNodes();
 
         //親ノード
-        int parentPid        = mNode.getPidParentNode();
+        int parentPid = mNode.getPidParentNode();
         NodeTable parentNode = nodes.getNode(parentPid);
 
         return parentNode.getCenterPosX();
     }
 
+    /*
+     * 自身をレイアウトから削除
+     * 　　※自身の配下ノードも全て削除する
+     */
+    private void removeLayout() {
+
+        //子ノードリスト更新
+        searchChildNodes();
+
+        //子ノードをレイアウトから削除
+        for( NodeTable node: mChildNodes ){
+            node.getNodeView().removeLayout();
+        }
+
+        //自ノードとラインをレイアウトから削除
+        ((ViewGroup)getParent()).removeView(getLineView());
+        ((ViewGroup)getParent()).removeView(this);
+    }
 
     /*
      * ノードタッチリスナー
      */
     //private class NodeTouchListener implements View.OnTouchListener {
     private class NodeTouchListener extends RootNodeTouchListener implements Serializable {
-
-
 
         //親ノードに対する自ノードのX座標における相対位置（親ノードより正側か負側か）
         private int parentRelativePosition;
