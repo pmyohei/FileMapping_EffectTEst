@@ -24,10 +24,6 @@ import java.io.Serializable;
  */
 public class RootNodeView extends FrameLayout implements Serializable {
 
-    /* フィールド-ノード間共通 */
-    //ツールアイコン選択中ノード
-    public static RootNodeView mv_toolOpenNode = null;
-
     /* フィールド */
     //シリアルID
     private static final long serialVersionUID = ResourceManager.SERIAL_VERSION_UID_NODE_VIEW;
@@ -158,8 +154,14 @@ public class RootNodeView extends FrameLayout implements Serializable {
                 Context context = getContext();
                 Intent intent = new Intent(context, NodeInformationActivity.class);
 
+                //mNode.setNodeView(null);
+
                 //タッチノードの情報を渡す
-                intent.putExtra( MapActivity.INTENT_NODE, mNode );
+                //intent.putExtra( MapActivity.INTENT_NODE, mNode );
+
+                //タッチノードを共通データとして設定
+                MapCommonData mapCommonData = (MapCommonData)((Activity)getContext()).getApplication();
+                mapCommonData.setEditNode( mNode );
 
                 //画面遷移
                 ((Activity)context).startActivityForResult(intent, MapActivity.REQ_NODE_EDIT);
@@ -172,6 +174,17 @@ public class RootNodeView extends FrameLayout implements Serializable {
     }
 
 
+    /*
+     * ノードテーブルの情報をノードビューに反映する
+     */
+    public void reflectNodeInformation() {
+
+        //ノード名
+        setNodeName( mNode.getNodeName() );
+
+
+        //★設定を追加した際に反映
+    }
 
     /*
      * ノード名の設定
@@ -186,6 +199,10 @@ public class RootNodeView extends FrameLayout implements Serializable {
      */
     public void toolDisplayControl() {
 
+        //共通データ
+        MapCommonData mapCommonData = (MapCommonData)((Activity)getContext()).getApplication();
+
+
         //表示制御値
         int visible;
 
@@ -196,7 +213,8 @@ public class RootNodeView extends FrameLayout implements Serializable {
             visible = View.GONE;
 
             //クローズするためnull設定
-            mv_toolOpenNode = null;
+            mapCommonData.setToolOpeningNode(null);
+            //mv_toolOpenNode = null;
 
         } else{
 
@@ -204,12 +222,15 @@ public class RootNodeView extends FrameLayout implements Serializable {
             visible = View.VISIBLE;
 
             //オープン中のノードがあれば閉じる
-            if( mv_toolOpenNode != null ){
-                mv_toolOpenNode.toolDisplayControl();
+            //if( mv_toolOpenNode != null ){
+            if( mapCommonData.isToolOpening() ){
+                //mv_toolOpenNode.toolDisplayControl();
+                mapCommonData.closeToolOpeningNode();
             }
 
             //自ノードをオープン中ノードとして保持
-            mv_toolOpenNode = this;
+            //mv_toolOpenNode = this;
+            mapCommonData.setToolOpeningNode(this);
         }
 
         //本ビューのレイアウトを取得（※ここで取得しているのは、ノード用レイアウトのルートレイアウト）
@@ -279,7 +300,10 @@ public class RootNodeView extends FrameLayout implements Serializable {
     /*
      * ノードタッチリスナー
      */
-    public class RootNodeTouchListener implements View.OnTouchListener {
+    public class RootNodeTouchListener implements View.OnTouchListener, Serializable {
+
+        //シリアルID
+        private static final long serialVersionUID = 3L;
 
         /*
          * コンストラクタ
@@ -304,7 +328,7 @@ public class RootNodeView extends FrameLayout implements Serializable {
         /*
          * ダブルタップリスナー
          */
-        private class DoubleTapListener extends GestureDetector.SimpleOnGestureListener {
+        private class DoubleTapListener extends GestureDetector.SimpleOnGestureListener implements Serializable{
 
             /*
              * ダブルタップリスナー

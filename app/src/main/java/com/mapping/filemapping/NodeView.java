@@ -2,8 +2,9 @@ package com.mapping.filemapping;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
-import android.content.Intent;
+import android.content.DialogInterface;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -12,9 +13,12 @@ import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 
-public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
+import java.io.Serializable;
+
+public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ {
 
     //ピンチ操作後のビュー間の距離の比率
     private float pinchDistanceRatioX;
@@ -23,10 +27,6 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
     //前回のタッチ位置
     private int mPreTouchPosX;
     private int mPreTouchPosY;
-
-    //自身のサイズ
-    private int mWidth;
-    private int mHeight;
 
     //親ノードとの接続線
     private LineView mLineView;
@@ -46,7 +46,7 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
         //ノード情報を保持
         mNode = node;
 
-        init();
+        initNode();
     }
 
 /*    public NodeView(Context context, AttributeSet attrs) {
@@ -68,7 +68,7 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
     /*
      * 初期化処理
      */
-    private void init() {
+    private void initNode() {
 
         Log.i("NodeView", "init");
 
@@ -89,13 +89,90 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
         ib.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //本ノード配下のノード（本ノード含む）を全て取得する
+                MapCommonData mapCommonData = (MapCommonData)((Activity)getContext()).getApplication();
+                mapCommonData.setDeleteNodes( mNode.getPid() );
+
                 //削除確認ダイアログを表示
+                new AlertDialog.Builder( getContext() )
+                        .setTitle("ノード削除確認")
+                        .setMessage("配下のノードも全て削除されます。\nなお、端末上から写真は削除されません。")
+                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
 
+                                //削除対象ノード
+                                NodeArrayList<NodeTable> nodes = mapCommonData.getDeleteNodes();
 
+                                //DBからノード削除
+                                AsyncDeleteNode db = new AsyncDeleteNode(getContext(), nodes, new AsyncDeleteNode.OnFinishListener() {
+                                    @Override
+                                    public void onFinish() {
 
+                                        //削除対象ノード分
+                                        for( NodeTable node: nodes ){
+                                            //Log.i("setDeleteNodes", "onFinish=" + node.getNodeName());
+
+                                            //★自身削除用のメソッドを作ってそれをコールする形にする
+                                            //★
+                                            //削除するビュー
+                                            NodeView self = node.getNodeView();
+                                            //親レイアウト
+                                            ViewGroup vg_parent = (ViewGroup)self.getParent();
+                                            //レイアウトからノードとラインを削除
+                                            vg_parent.removeView( self.getLineView() );
+                                            vg_parent.removeView( self );
+                                        }
+
+                                        //ノードリストから削除
+                                        //★
+
+                                    }
+                                });
+
+                                //非同期処理開始
+                                db.execute();
+                            }
+                        })
+                        .setNegativeButton("Cancel", null)
+                        .show();
             }
         });
+    }
 
+    /*
+     * ノードテーブルの情報をノードビューに反映する
+     */
+    public void reflectNodeInformation() {
+        //必須
+        super.reflectNodeInformation();
+
+        //★設定を追加した際に反映
+
+        //ライン情報
+
+
+        //レイアウト確定待ち
+        //※ノードサイズが変わる可能性があるため、サイズが確定したタイミングでラインを再描画
+        ViewTreeObserver observer = getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+
+                        //レイアウト確定後は、不要なので本リスナー削除
+                        getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                        //ライン終端位置（自ノードの中心位置)
+                        mCenterPosX = getLeft() + (getWidth() / 2f);
+                        mCenterPosY = getTop()  + (getHeight() / 2f);
+
+                        //ライン再描画（終端位置のみ更新）
+                        mLineView.reDraw();
+                    }
+                }
+        );
     }
 
 
@@ -104,10 +181,6 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
      *   ＠自分自身／親ノード からコールされる
      */
     public void initFollowParent() {
-
-        //タッチ時点のサイズを保持
-        mWidth  = getWidth();
-        mHeight = getHeight();
 
         //子ノード検索
         searchChildNodes();
@@ -193,11 +266,11 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
         int top  = getTop()  + (int) moveY;
 
         //レイアウトに反映
-        layout(left, top, left + mWidth, top + mHeight);
+        layout(left, top, left + getWidth(), top + getHeight());
 
         //ライン終端位置（自ノードの中心位置）を計算
-        mCenterPosX = left + (mWidth / 2f);
-        mCenterPosY = top + (mHeight / 2f);
+        mCenterPosX = left + (getWidth() / 2f);
+        mCenterPosY = top  + (getHeight() / 2f);
 
         Log.i("move", "move Node=" + mNode.getNodeName() + " posx=" + mCenterPosX + " posy=" + mCenterPosY);
 
@@ -221,7 +294,8 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
     public void place(int touchNodePosX) {
 
         //ノードの横幅半分
-        float halfWidth = mWidth / 2f;
+        int width       = getWidth();
+        float halfWidth = width / 2f;
 
         Log.i("place", "反転処理前 反転ノード=" + mNode.getNodeName() + " 自分のX位置=" + mCenterPosX);
 
@@ -234,7 +308,7 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
         int top = getTop();
 
         //位置変更
-        layout(revercePosX, top, revercePosX + mWidth, top + mHeight);
+        layout(revercePosX, top, revercePosX + width, top + getHeight());
 
         Log.i("place", "反転処理後 自分のX位置=" + mCenterPosX);
 
@@ -303,7 +377,9 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
      * ノードタッチリスナー
      */
     //private class NodeTouchListener implements View.OnTouchListener {
-    private class NodeTouchListener extends RootNodeTouchListener {
+    private class NodeTouchListener extends RootNodeTouchListener implements Serializable {
+
+
 
         //親ノードに対する自ノードのX座標における相対位置（親ノードより正側か負側か）
         private int parentRelativePosition;
@@ -432,7 +508,7 @@ public class NodeView extends RootNodeView /*implements View.OnTouchListener*/ {
      * ラインビュー
      *   本ノードと親ノードとの接続ライン
      */
-    public class LineView extends View {
+    public class LineView extends View implements Serializable {
 
         //ペイント情報
         Paint mPaint;

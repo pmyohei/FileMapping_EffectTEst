@@ -5,17 +5,17 @@ import android.util.Log;
 
 import androidx.annotation.RequiresApi;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /*
  * ArrayList：ノード用
  *   任意のマップに所属するノードを保持する目的で使用する
  */
-public class NodeArrayList<E> extends ArrayList<NodeTable> {
+public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializable {
 
     /* 定数 */
     public static final int NO_DATA = -1;   //データなし
-
 
 
     /*
@@ -87,7 +87,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> {
             if (parentPid == node.getPidParentNode()) {
 
                 //ノード名が同じ場合
-                if( node.getNodeName().equals( nodeName ) ){
+                if (node.getNodeName().equals(nodeName)) {
                     return true;
                 }
             }
@@ -95,5 +95,30 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> {
 
         //ノード未保持
         return false;
+    }
+
+    /*
+     *　指定ノード配下のノード取得（指定ノード含む）
+     */
+    public NodeArrayList<NodeTable> getUnderNodes(int pid) {
+
+        NodeArrayList<NodeTable> nodes = new NodeArrayList<>();
+
+        //ノード数分ループ
+        for (NodeTable node : this) {
+            //指定ノード
+            if (pid == node.getPid()) {
+                nodes.add( node );
+            }
+
+            //指定ノードを親ノードとするノード
+            if (pid == node.getPidParentNode()){
+                //このノードの配下ノードを取得
+                NodeArrayList<NodeTable> tmp = getUnderNodes(node.getPid() );
+                nodes.addAll( tmp );
+            }
+        }
+        
+        return nodes;
     }
 }

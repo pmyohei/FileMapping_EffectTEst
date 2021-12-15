@@ -46,6 +46,9 @@ public interface NodeTableDao {
     @Delete
     void delete(NodeTable node);
 
+    @Delete
+    void deleteNodes(NodeTable... nodes);
+
     @Query("DELETE FROM node")
     void deleteAll();
 

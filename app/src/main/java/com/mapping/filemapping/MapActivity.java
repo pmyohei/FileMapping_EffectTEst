@@ -33,15 +33,15 @@ public class MapActivity extends AppCompatActivity {
     /*-- 定数 --*/
     /* 画面遷移-リクエストコード */
     public static final int REQ_NODE_CREATE = 100;
-    public static final int REQ_NODE_EDIT   = 101;
+    public static final int REQ_NODE_EDIT = 101;
 
     /* 画面遷移-キー-種別（遷移先での遷移理由識別用） */
     public static final String INTENT_KIND_CREATE = "Create";
 
     /* 画面遷移-キー */
-    public static String INTENT_MAP_PID  = "MapPid";
+    public static String INTENT_MAP_PID = "MapPid";
     public static String INTENT_NODE_PID = "NodePid";
-    public static String INTENT_NODE     = "Node";
+    public static String INTENT_NODE = "Node";
 
     /* マップ位置操作 */
     //GestureDetector
@@ -241,7 +241,7 @@ public class MapActivity extends AppCompatActivity {
 
             //マージン座標を取得
             int left = rootNodeView.getLeft();
-            int top  = rootNodeView.getTop();
+            int top = rootNodeView.getTop();
 
             //中心座標を保持
             rootNodeView.setCenterPosX(left + (rootNodeView.getWidth() / 2f));
@@ -287,6 +287,14 @@ public class MapActivity extends AppCompatActivity {
         node.setNodeView(nodeView);
     }
 
+    /*
+     * ノード（単体）の再描画
+     */
+/*    private void redrawNode(FrameLayout fl_map, NodeTable node, int lineDrawKind) {
+
+
+
+    }*/
 
     /*
      * 全ラインの描画
@@ -365,10 +373,14 @@ public class MapActivity extends AppCompatActivity {
                 //ノード生成された場合
                 if (resultCode == NodeInformationActivity.RES_NODE_POSITIVE) {
                     //生成されたノードを取得
-                    NodeTable node = (NodeTable) intent.getSerializableExtra(NodeInformationActivity.INTENT_UPDATED_NODE);
+                    //NodeTable node = (NodeTable) intent.getSerializableExtra(NodeInformationActivity.INTENT_UPDATED_NODE);
+                    //リストに追加
+                    MapCommonData mapCommonData = (MapCommonData) getApplication();
+                    NodeTable node = mapCommonData.getEditNode();
 
                     //ノード情報をビューに反映
-                    //★
+                    NodeView nodeView = node.getNodeView();
+                    nodeView.reflectNodeInformation();
                 }
 
                 break;

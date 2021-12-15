@@ -1,6 +1,7 @@
 package com.mapping.filemapping;
 
 import android.app.Application;
+import android.util.Log;
 
 /*
  * マップ共通情報
@@ -13,11 +14,17 @@ public class MapCommonData extends Application {
 
     //マップ内のノードリスト
     private NodeArrayList<NodeTable> mNodes;
-
     //位置変更ノードキュー
     private NodeArrayList<NodeTable> mMovedNodesQue;
+    //削除対象ノード
+    private NodeArrayList<NodeTable> mDeleteNodes;
+    //ツールアイコン表示中ノード
+    private RootNodeView mToolOpeningNode = null;
+    //編集対象ノード
+    private NodeTable mEditNode = null;
 
-    /**
+
+    /*
      * アプリケーションの起動時に呼び出される
      */
     @Override
@@ -26,6 +33,7 @@ public class MapCommonData extends Application {
 
         mNodes = new NodeArrayList<>();
         mMovedNodesQue = new NodeArrayList<>();
+        mDeleteNodes = new NodeArrayList<>();
     }
 
     /**
@@ -37,6 +45,9 @@ public class MapCommonData extends Application {
 
         mNodes = null;
         mMovedNodesQue = null;
+        mToolOpeningNode = null;
+        mEditNode = null;
+        mDeleteNodes = null;
     }
 
     /*
@@ -111,6 +122,61 @@ public class MapCommonData extends Application {
     }
     public float getPinchDistanceRatioY(){
         return pinchDistanceRatioY;
+    }
+
+
+    /*
+     * ツールアイコン表示中ノードの取得／設定
+     */
+    public RootNodeView getToolOpeningNode() {
+        return mToolOpeningNode;
+    }
+    public void setToolOpeningNode(RootNodeView mToolOpeningNode) {
+        this.mToolOpeningNode = mToolOpeningNode;
+    }
+    public void closeToolOpeningNode() {
+        this.mToolOpeningNode.toolDisplayControl();
+    }
+    public boolean isToolOpening() {
+        //ノードあるなら、開き中
+        return (this.mToolOpeningNode != null );
+    }
+
+    /*
+     * 編集対象ノード
+     *   ※編集前/編集後のノードの受け渡しに使用する
+     */
+    public NodeTable getEditNode() {
+        return mEditNode;
+    }
+    public void setEditNode(NodeTable mEditNode) {
+        this.mEditNode = mEditNode;
+    }
+
+    /*
+     * 削除対象ノードリスト取得
+     */
+    public NodeArrayList<NodeTable> getDeleteNodes() {
+        return mDeleteNodes;
+    }
+
+    /*
+     * 削除対象ノードリストの設定
+     *   指定ノード配下のノード（指定ノード含む）を、削除リストに登録する
+     */
+    public void setDeleteNodes(int pid) {
+
+        //念のた初期化
+        mDeleteNodes.clear();
+
+        //指定ノードの配下のノードを取得
+        mDeleteNodes = mNodes.getUnderNodes( pid );
+
+        //log
+        for( NodeTable node: mDeleteNodes ){
+            Log.i("setDeleteNodes", "nodeName=" + node.getNodeName());
+        }
+        //log
     }
 
 }

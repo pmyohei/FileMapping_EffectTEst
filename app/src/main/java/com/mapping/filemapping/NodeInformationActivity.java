@@ -108,7 +108,9 @@ public class NodeInformationActivity extends AppCompatActivity {
         } else {
 
             //編集対象ノード
-            NodeTable node = (NodeTable) intent.getSerializableExtra(MapActivity.INTENT_NODE);
+            //NodeTable node = (NodeTable) intent.getSerializableExtra(MapActivity.INTENT_NODE);
+            MapCommonData mapCommonData = (MapCommonData)getApplication();
+            NodeTable node = mapCommonData.getEditNode();
 
             //親ノードのPid
             int parentPid = node.getPidParentNode();
@@ -145,14 +147,21 @@ public class NodeInformationActivity extends AppCompatActivity {
                         return;
                     }
 
+                    //編集情報をノードに反映
+                    //★編集情報のビュー側への適用をいつ行うか要検討
+                    //★その他編集情報の反映が必要
+                    node.setNodeName( nodeName );
+
                     //DB保存処理
                     AsyncUpdateNode db = new AsyncUpdateNode(view.getContext(), node, new AsyncUpdateNode.OnFinishListener() {
-
                         @Override
                         public void onFinish() {
 
+                            //共通データに編集済みノードを設定
+                            mapCommonData.setEditNode( node );
+
                             //resultコード設定
-                            intent.putExtra( INTENT_UPDATED_NODE, node );
+                            //intent.putExtra( INTENT_UPDATED_NODE, node );
                             setResult( RES_NODE_POSITIVE, intent );
 
                             //元の画面へ戻る
