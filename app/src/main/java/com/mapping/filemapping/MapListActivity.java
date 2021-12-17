@@ -32,6 +32,18 @@ public class MapListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_list);
 
+        //画面遷移ランチャー
+        ActivityResultLauncher<Intent> createMapLauncher =
+                registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    new CreateMapResultCallback());
+
+        ActivityResultLauncher<Intent> editMapLauncher =
+                registerForActivityResult(
+                    new ActivityResultContracts.StartActivityForResult(),
+                    new EditMapResultCallback());
+
+        //コンテキスト
         Context context = this;
 
         //マップ情報取得
@@ -41,17 +53,14 @@ public class MapListActivity extends AppCompatActivity {
             @Override
             public void onRead(ArrayList<MapTable> maps) {
 
+                //DBからの取得結果を保持
                 mMaps = maps;
 
                 //レイアウトからリストビューを取得
                 RecyclerView rv_mapList = findViewById(R.id.rv_mapList);
-
-                //アダプタの生成
-                mMapListAdapter = new MapListAdapter(mMaps);
-
-                //アダプタの設定
+                //アダプタ設定
+                mMapListAdapter = new MapListAdapter(mMaps, editMapLauncher);
                 rv_mapList.setAdapter(mMapListAdapter);
-
                 //レイアウトマネージャの設定
                 rv_mapList.setLayoutManager(new LinearLayoutManager(context));
             }
@@ -59,69 +68,19 @@ public class MapListActivity extends AppCompatActivity {
         //非同期処理開始
         db.execute();
 
-        //マップ新規作成・編集画面遷移ランチャー
-        //※クリックリスナー内で定義しないこと！（ライフサイクルの関係でエラーになるため）
-        ActivityResultLauncher<Intent> startForResult = registerForActivityResult(
-                new ActivityResultContracts.StartActivityForResult(),
-                new ActivityResultCallback<ActivityResult>() {
-
-                    /*
-                     * 画面遷移先からの戻り処理
-                     */
-                    @Override
-                    public void onActivityResult(ActivityResult result) {
-
-                        Log.i("MapListActivity", "onActivityResult()");
-
-                        //インテント
-                        Intent intent = result.getData();
-                        //リザルトコード
-                        int resultCode = result.getResultCode();
-
-                        //マップ新規作成結果
-                        if(resultCode == MapEntryActivity.RESULT_CREATED) {
-
-                            //マップ情報画面からデータを受け取る
-                            MapTable map = (MapTable) intent.getSerializableExtra(MapEntryActivity.KEY_MAP);
-                            Log.i("MapListActivity", "新規生成 map=" + map.getMapName());
-
-                            //マップリストアダプタに追加通知
-                            mMaps.add( map );
-                            mMapListAdapter.notifyItemInserted( mMaps.size() - 1 );
-
-                            //マップ画面へ遷移
-                            intent = new Intent(MapListActivity.this, MapActivity.class);
-                            intent.putExtra(ResourceManager.KEY_MAPID, map.getPid());
-
-                            Log.i("Map", "マップ生成完了。マップ画面へ");
-
-                            startActivity(intent);
-
-                            //編集結果
-                        } else if( resultCode == MapEntryActivity.RESULT_EDITED) {
-
-
-                            //その他
-                        } else {
-                            //do nothing
-                        }
-                    }
-                }
-        );
-
-
-
-        //Create
+        //Createリスナー
         findViewById(R.id.tv_create).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MapListActivity.this, MapEntryActivity.class);
                 intent.putExtra(KEY_ISCREATE, true );
 
-                startForResult.launch( intent );
+                createMapLauncher.launch( intent );
             }
         });
 
+
+        //疑似-動作確認用----------------------------------------------------------------
         //仮；画面遷移
         findViewById(R.id.next).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -158,64 +117,87 @@ public class MapListActivity extends AppCompatActivity {
                 new GIJI_AsyncCreateDBOperaion(view.getContext(), true).execute();
             }
         });
+        //-----------------------------------------------------------------
 
     }
 
-    /*
-     * onRestart()
-     */
-    @Override
-    protected void onRestart() {
-        //必須
-        super.onRestart();
 
-        //リスト再描画
-        //★やる必要がある場合とない場合がある
-        //mMapListAdapter.notifyDataSetChanged();
 
-    }
 
     /*
-     * 画面遷移後の処理
+     * 画面遷移からの戻りのコールバック通知ーマップ新規生成
      */
-/*    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
+    private class CreateMapResultCallback implements ActivityResultCallback<ActivityResult>{
 
-        Log.i("Map", "onActivityResult requestCode=" + requestCode + " resultCode=" + resultCode);
+        /*
+         * 画面遷移先からの戻り処理
+         */
+        @Override
+        public void onActivityResult(ActivityResult result) {
 
-        switch (requestCode) {
+            //インテント
+            Intent intent = result.getData();
+            //リザルトコード
+            int resultCode = result.getResultCode();
 
-            //マップ生成からの戻り
-            case REQ_MAP_CREATE:
+            //マップ新規作成結果
+            if(resultCode == MapEntryActivity.RESULT_CREATED) {
 
-                //マップ生成された場合
-                if (resultCode == MapInformationActivity.RES_CODE_MAP_POSITIVE) {
+                //マップ情報画面からデータを受け取る
+                MapTable map = (MapTable) intent.getSerializableExtra(MapEntryActivity.KEY_MAP);
+                Log.i("MapListActivity", "新規生成 map=" + map.getMapName());
 
-                    //マップ情報画面からデータを受け取る
-                    MapTable map = (MapTable) intent.getSerializableExtra(MapInformationActivity.KEY_CREATED_MAP);
+                //マップリストアダプタに追加通知
+                mMaps.add( map );
+                mMapListAdapter.notifyItemInserted( mMaps.size() - 1 );
 
-                    //マップリストアダプタに追加通知
-                    mMaps.add( map );
-                    mMapListAdapter.notifyItemInserted( mMaps.size() - 1 );
+                //マップ画面へ遷移
+                intent = new Intent(MapListActivity.this, MapActivity.class);
+                intent.putExtra(ResourceManager.KEY_MAPID, map.getPid());
 
-                    //マップ画面へ遷移
-                    intent = new Intent(this, MapActivity.class);
-                    intent.putExtra(ResourceManager.KEY_MAPID, map.getPid());
+                Log.i("Map", "マップ生成完了。マップ画面へ");
 
-                    Log.i("Map", "マップ生成完了。マップ画面へ");
-
-                    startActivity(intent);
-                }
-
-                break;
-
-            //
-            default:
-                break;
+                startActivity(intent);
+            }
         }
     }
-*/
 
+    /*
+     * 画面遷移からの戻りのコールバック通知ーマップ編集
+     */
+    private class EditMapResultCallback implements ActivityResultCallback<ActivityResult>{
 
+        /*
+         * 画面遷移先からの戻り処理
+         */
+        @Override
+        public void onActivityResult(ActivityResult result) {
+
+            //インテント
+            Intent intent = result.getData();
+            //リザルトコード
+            int resultCode = result.getResultCode();
+
+            //マップ編集結果
+            if( resultCode == MapEntryActivity.RESULT_EDITED) {
+
+                //マップ情報画面からデータを受け取る
+                MapTable map = (MapTable) intent.getSerializableExtra(MapEntryActivity.KEY_MAP);
+                Log.i("MapListActivity", "編集 map=" + map.getMapName());
+
+                //リスト上のマップを更新
+                int i = 0;
+                for( MapTable mapData: mMaps ){
+                    if( mapData.getPid() == map.getPid() ){
+                        mapData.setMapName( map.getMapName() );
+                        break;
+                    }
+                    i++;
+                }
+
+                //アダプタに変更通知
+                mMapListAdapter.notifyItemChanged( i );
+            }
+        }
+    }
 }
