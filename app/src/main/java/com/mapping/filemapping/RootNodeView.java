@@ -119,7 +119,7 @@ public class RootNodeView extends FrameLayout implements Serializable {
             @Override
             public void onClick(View view) {
                 //クローズする
-                toolDisplayControl();
+                operationToolIcon();
             }
         });
 
@@ -141,7 +141,7 @@ public class RootNodeView extends FrameLayout implements Serializable {
                 ((Activity)context).startActivityForResult(intent, MapActivity.REQ_NODE_CREATE);
 
                 //クローズする
-                toolDisplayControl();
+                operationToolIcon();
             }
         });
 
@@ -167,7 +167,7 @@ public class RootNodeView extends FrameLayout implements Serializable {
                 ((Activity)context).startActivityForResult(intent, MapActivity.REQ_NODE_EDIT);
 
                 //クローズする
-                toolDisplayControl();
+                operationToolIcon();
             }
         });
 
@@ -197,11 +197,10 @@ public class RootNodeView extends FrameLayout implements Serializable {
     /*
      * ツールアイコン表示制御
      */
-    public void toolDisplayControl() {
+    public void operationToolIcon() {
 
         //共通データ
         MapCommonData mapCommonData = (MapCommonData)((Activity)getContext()).getApplication();
-
 
         //表示制御値
         int visible;
@@ -250,6 +249,8 @@ public class RootNodeView extends FrameLayout implements Serializable {
 
                 //表示・非表示
                 v.setVisibility(visible);
+                //v.setTranslationZ(200);
+                //v.bringToFront();
             }
         }
 
@@ -318,11 +319,7 @@ public class RootNodeView extends FrameLayout implements Serializable {
         public boolean onTouch(View view, MotionEvent event) {
 
             //ダブルタップ処理
-            boolean test = mGestureDetector.onTouchEvent(event);
-
-            //イベント処理完了
-            //return false;
-            return test;
+            return mGestureDetector.onTouchEvent(event);
         }
 
         /*
@@ -341,7 +338,7 @@ public class RootNodeView extends FrameLayout implements Serializable {
                 Log.i("tap", "onDoubleTap getChildCount1 = " + getChildCount());
 
                 //ツールアイコン表示制御
-                toolDisplayControl();
+                operationToolIcon();
 
                 //return super.onDoubleTap(event);
                 return true;

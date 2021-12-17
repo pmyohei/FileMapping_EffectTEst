@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -24,8 +25,8 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
      */
     class MapViewHolder extends RecyclerView.ViewHolder {
 
-        private ConstraintLayout cl_mapItem;
-        private TextView         tv_mapName;
+        private LinearLayout ll_mapItem;
+        private TextView     tv_mapName;
 
         /*
          * コンストラクタ
@@ -33,7 +34,7 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
         public MapViewHolder(View itemView) {
             super(itemView);
 
-            cl_mapItem = (ConstraintLayout)itemView.findViewById(R.id.cl_mapItem);
+            ll_mapItem = (LinearLayout)itemView.findViewById(R.id.ll_mapItem);
             tv_mapName = (TextView)itemView.findViewById(R.id.tv_mapName);
 
         }
@@ -82,7 +83,7 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
         viewHolder.tv_mapName.setText( map.getMapName() );
 
         //クリックリスナー
-        viewHolder.cl_mapItem.setOnClickListener( new View.OnClickListener() {
+        viewHolder.ll_mapItem.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -90,7 +91,7 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
 
                 //マップ画面へ遷移
                 Intent intent = new Intent(context, MapActivity.class);
-                intent.putExtra(ResourceManager.INTENT_ID_MAPLIST_TO_MAP, map.getPid());
+                intent.putExtra(ResourceManager.KEY_MAPID, map.getPid());
 
                 context.startActivity(intent);
             }

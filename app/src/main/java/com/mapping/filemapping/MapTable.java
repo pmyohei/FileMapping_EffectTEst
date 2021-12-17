@@ -4,13 +4,14 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /*
  * マップテーブル
  */
 @Entity(tableName = "map")
-public class MapTable {
+public class MapTable implements Serializable {
 
     //主キー
     @PrimaryKey(autoGenerate = true)

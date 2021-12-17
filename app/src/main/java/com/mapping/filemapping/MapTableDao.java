@@ -4,6 +4,7 @@ import androidx.room.Dao;
 import androidx.room.Delete;
 import androidx.room.Insert;
 import androidx.room.Query;
+import androidx.room.Update;
 
 import java.util.List;
 
@@ -33,6 +34,9 @@ public interface MapTableDao {
 
     @Insert
     long insert(MapTable mapTable);
+
+    @Update
+    void update(MapTable mapTable);
 
     @Delete
     void delete(MapTable mapTable);

@@ -9,27 +9,27 @@ import java.util.concurrent.Executors;
 
 /*
  * DB非同期処理
- *   ノードcreate用
+ *   マップcreate用
  */
-public class AsyncCreateNodeOperaion {
+public class AsyncUpdateMap {
 
-    private final AppDatabase               mDB;
-    private final NodeTable                 mNode;
-    private       int                       mPid;
-    private final OnCreateListener          mOnCreateListener;
+    private final AppDatabase       mDB;
+    private final MapTable          mMap;
+    private final OnFinishListener  mOnFinishListener;
 
     /*
      * コンストラクタ
      */
-    public AsyncCreateNodeOperaion(Context context, NodeTable newNode,OnCreateListener listener) {
+    public AsyncUpdateMap(Context context, MapTable map, OnFinishListener listener) {
         mDB               = AppDatabaseManager.getInstance(context);
-        mOnCreateListener = listener;
-        mNode             = newNode;
+        mOnFinishListener = listener;
+        mMap              = map;
     }
 
-
     /*
+     *
      * 非同期処理
+     *
      */
     private class AsyncRunnable implements Runnable {
 
@@ -54,15 +54,15 @@ public class AsyncCreateNodeOperaion {
         }
 
         /*
-         * DBからデータを取得
+         * DBへ保存
          */
         private void insertDB(){
 
-            //NodeDao
-            NodeTableDao nodeDao = mDB.daoNodeTable();
+            //MapDap
+            MapTableDao mapDao = mDB.daoMapTable();
 
-            //ノードを挿入し、レコードに割り当てられたpidを取得
-            mPid = (int)nodeDao.insert( mNode );
+            //マップを更新
+            mapDao.update( mMap );
         }
     }
 
@@ -93,17 +93,17 @@ public class AsyncCreateNodeOperaion {
     void onPostExecute() {
 
         //読み取り完了
-        mOnCreateListener.onCreate( mPid );
+        mOnFinishListener.onFinish();
     }
 
     /*
      * データ作成完了リスナー
      */
-    public interface OnCreateListener {
+    public interface OnFinishListener {
         /*
          * ノード生成完了時、コールされる
          */
-        void onCreate( int pid );
+        void onFinish();
     }
 
 

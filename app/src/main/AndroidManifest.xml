@@ -12,6 +12,9 @@
         android:name=".MapCommonData">                              <!-- Applicationの使用 -->
 
         <activity
+            android:name=".MapEntryActivity"
+            android:exported="true" />
+        <activity
             android:name=".NodeInformationActivity"
             android:exported="true" />
         <!-- アプリバー無効化 -->

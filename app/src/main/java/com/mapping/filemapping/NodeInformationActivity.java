@@ -4,6 +4,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -12,14 +13,12 @@ public class NodeInformationActivity extends AppCompatActivity {
 
     /*-- 定数 --*/
     /* 画面遷移-レスポンスコード */
-    //ノード生成
-    public static final int RES_NODE_POSITIVE = 100;
-    public static final int RES_NODE_CANCEL   = 101;
+    public static final int RES_CODE_NODE_POSITIVE = 100;
+    public static final int RES_CODE_NODE_CANCEL = 101;
 
     /* 画面遷移-キー */
-    public static String INTENT_CREATED_NODE  = "CreatedNode";
-    public static String INTENT_UPDATED_NODE  = "UpdatedNode";
-
+    public static String KEY_CREATED_NODE = "CreatedNode";
+    public static String KEY_UPDATED_NODE = "UpdatedNode";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +59,7 @@ public class NodeInformationActivity extends AppCompatActivity {
                     if( nodes.hasSameNodeNameAtParent(selectedNodePid, nodeName) ){
                         //既に同じノード名があるなら、メッセージ出力して終了
                         //★
-
+                        Log.i("NodeInformationActivity", "新規生成　ノード名重複を検知");
                         return;
                     }
 
@@ -84,7 +83,7 @@ public class NodeInformationActivity extends AppCompatActivity {
                     //newNode.setTextColor();
 
                     //DB保存処理
-                    AsyncCreateNodeOperaion db = new AsyncCreateNodeOperaion(view.getContext(), newNode, new AsyncCreateNodeOperaion.OnCreateListener() {
+                    AsyncCreateNode db = new AsyncCreateNode(view.getContext(), newNode, new AsyncCreateNode.OnCreateListener() {
 
                         @Override
                         public void onCreate(int pid) {
@@ -92,8 +91,8 @@ public class NodeInformationActivity extends AppCompatActivity {
                             newNode.setPid( pid );
 
                             //resultコード設定
-                            intent.putExtra( INTENT_CREATED_NODE, newNode );
-                            setResult(RES_NODE_POSITIVE, intent );
+                            intent.putExtra(KEY_CREATED_NODE, newNode );
+                            setResult(RES_CODE_NODE_POSITIVE, intent );
 
                             //元の画面へ戻る
                             finish();
@@ -139,11 +138,11 @@ public class NodeInformationActivity extends AppCompatActivity {
                     NodeArrayList<NodeTable> nodes = mapCommonData.getNodes();
 
                     //ノード名重複チェック
-                    //★自分の名前はチェック対象外にする必要あり
-                    if( nodes.hasSameNodeNameAtParent(parentPid, nodeName) ){
+                    //※自分の名前はチェック対象外
+                    if( nodes.hasSameNodeNameAtParent(parentPid, node.getPid(), nodeName) ){
                         //既に同じノード名があるなら、メッセージ出力して終了
                         //★
-
+                        Log.i("NodeInformationActivity", "編集　ノード名重複を検知");
                         return;
                     }
 
@@ -162,7 +161,7 @@ public class NodeInformationActivity extends AppCompatActivity {
 
                             //resultコード設定
                             //intent.putExtra( INTENT_UPDATED_NODE, node );
-                            setResult( RES_NODE_POSITIVE, intent );
+                            setResult(RES_CODE_NODE_POSITIVE, intent );
 
                             //元の画面へ戻る
                             finish();
@@ -181,7 +180,7 @@ public class NodeInformationActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 //resultコード設定
-                setResult(RES_NODE_CANCEL);
+                setResult(RES_CODE_NODE_CANCEL);
 
                 //元の画面へ戻る
                 finish();

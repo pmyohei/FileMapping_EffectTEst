@@ -2,6 +2,7 @@
     <string name="app_name">FileMapping</string>
 
     <!--  ノード  -->
+    <string name="default_rootNode">ルート\nノード</string>
     <string name="title_nodeName">ノード名</string>
     <string name="title_nodeSize">ノードサイズ</string>
     <string name="title_nodeShape">ノードの形</string>

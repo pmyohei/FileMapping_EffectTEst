@@ -30,7 +30,6 @@ import java.util.Objects;
 
 public class MapActivity extends AppCompatActivity {
 
-    /*-- 定数 --*/
     /* 画面遷移-リクエストコード */
     public static final int REQ_NODE_CREATE = 100;
     public static final int REQ_NODE_EDIT = 101;
@@ -127,7 +126,7 @@ public class MapActivity extends AppCompatActivity {
 
         //DBからデータを取得
         Intent intent = getIntent();
-        int mapPid = intent.getIntExtra(ResourceManager.INTENT_ID_MAPLIST_TO_MAP, 0);
+        int mapPid = intent.getIntExtra(ResourceManager.KEY_MAPID, 0);
         AsyncReadNodes db = new AsyncReadNodes(this, mapPid, new AsyncReadNodes.OnReadListener() {
 
             //DB読み取り完了
@@ -354,9 +353,9 @@ public class MapActivity extends AppCompatActivity {
             case REQ_NODE_CREATE:
 
                 //ノード生成された場合
-                if (resultCode == NodeInformationActivity.RES_NODE_POSITIVE) {
+                if (resultCode == NodeInformationActivity.RES_CODE_NODE_POSITIVE) {
                     //生成されたノードを取得
-                    NodeTable node = (NodeTable) intent.getSerializableExtra(NodeInformationActivity.INTENT_CREATED_NODE);
+                    NodeTable node = (NodeTable) intent.getSerializableExtra(NodeInformationActivity.KEY_CREATED_NODE);
                     //リストに追加
                     MapCommonData mapCommonData = (MapCommonData) getApplication();
                     mapCommonData.addNodes(node);
@@ -371,10 +370,8 @@ public class MapActivity extends AppCompatActivity {
             case REQ_NODE_EDIT:
 
                 //ノード生成された場合
-                if (resultCode == NodeInformationActivity.RES_NODE_POSITIVE) {
-                    //生成されたノードを取得
-                    //NodeTable node = (NodeTable) intent.getSerializableExtra(NodeInformationActivity.INTENT_UPDATED_NODE);
-                    //リストに追加
+                if (resultCode == NodeInformationActivity.RES_CODE_NODE_POSITIVE) {
+                    //共通データから、編集ノードを取得
                     MapCommonData mapCommonData = (MapCommonData) getApplication();
                     NodeTable node = mapCommonData.getEditNode();
 

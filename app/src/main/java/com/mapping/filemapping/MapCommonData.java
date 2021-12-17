@@ -135,7 +135,7 @@ public class MapCommonData extends Application {
         this.mToolOpeningNode = mToolOpeningNode;
     }
     public void closeToolOpeningNode() {
-        this.mToolOpeningNode.toolDisplayControl();
+        this.mToolOpeningNode.operationToolIcon();
     }
     public boolean isToolOpening() {
         //ノードあるなら、開き中
@@ -177,6 +177,36 @@ public class MapCommonData extends Application {
             Log.i("setDeleteNodes", "nodeName=" + node.getNodeName());
         }
         //log
+    }
+
+    /*
+     * 削除対象ノードの削除完了処理
+     *   マップ上のノードリストから、削除対象ノードを削除する
+     */
+    public void finishDeleteNode() {
+
+        //log---------------
+        for( NodeTable node: mDeleteNodes ){
+            Log.i("finishDeleteNodes", "削除対象ノード=" + node.getNodeName());
+        }
+        Log.i("finishDeleteNodes", "----------");
+        for( NodeTable node: mNodes ){
+            Log.i("finishDeleteNodes", "マップ内ノード(削除前)=" + node.getNodeName());
+        }
+        Log.i("finishDeleteNodes", "----------");
+        //log---------------
+
+        //マップ内ノードリストから、削除リストのノードを削除する
+        mNodes.deleteNodes( mDeleteNodes );
+
+        //log---------------
+        for( NodeTable node: mNodes ){
+            Log.i("finishDeleteNodes", "マップ内ノード(削除後)=" + node.getNodeName());
+        }
+        //log---------------
+
+        //削除対象クリア
+        mDeleteNodes.clear();
     }
 
 }

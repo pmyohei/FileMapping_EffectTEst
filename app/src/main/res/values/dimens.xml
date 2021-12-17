@@ -5,7 +5,7 @@
 
     <!--  ノード  -->
     <dimen name="node_elevation">8dp</dimen>
-    <dimen name="node_toolIcon_elevation">9dp</dimen>   <!-- ノードより大きい値にすること -->
+    <dimen name="node_toolIcon_elevation">12dp</dimen>   <!-- ノードより大きい値にすること -->
 
     <!--  ノードアイコンマージン  -->
     <dimen name="node_icon_radius">100dp</dimen>

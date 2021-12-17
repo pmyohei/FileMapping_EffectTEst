@@ -111,26 +111,10 @@ public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ 
                                     public void onFinish() {
 
                                         //自身と配下ノードをレイアウトから削除
-                                        removeLayout();
+                                        removeLayoutUnderSelf();
 
-                                        //削除対象ノード分
-/*                                        for (NodeTable node : nodes) {
-                                            //Log.i("setDeleteNodes", "onFinish=" + node.getNodeName());
-
-                                            //★自身削除用のメソッドを作ってそれをコールする形にする
-                                            //★
-                                            //削除するビュー
-                                            NodeView self = node.getNodeView();
-                                            //親レイアウト
-                                            ViewGroup vg_parent = (ViewGroup) self.getParent();
-                                            //レイアウトからノードとラインを削除
-                                            vg_parent.removeView(self.getLineView());
-                                            vg_parent.removeView(self);
-                                        }*/
-
-                                        //ノードリストから削除
-                                        //★
-
+                                        //共通データに削除完了処理を行わせる
+                                        mapCommonData.finishDeleteNode();
                                     }
                                 });
 
@@ -173,6 +157,9 @@ public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ 
 
                         //ライン再描画（終端位置のみ更新）
                         mLineView.reDraw();
+
+                        //子ノード(直下のみ)のラインも再描画
+                        reDrawChildNodeLine();
                     }
                 }
         );
@@ -376,22 +363,36 @@ public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ 
     }
 
     /*
-     * 自身をレイアウトから削除
+     * 自身以下のノードをレイアウトから削除
      * 　　※自身の配下ノードも全て削除する
      */
-    private void removeLayout() {
+    private void removeLayoutUnderSelf() {
 
         //子ノードリスト更新
         searchChildNodes();
 
         //子ノードをレイアウトから削除
         for( NodeTable node: mChildNodes ){
-            node.getNodeView().removeLayout();
+            node.getNodeView().removeLayoutUnderSelf();
         }
 
         //自ノードとラインをレイアウトから削除
         ((ViewGroup)getParent()).removeView(getLineView());
         ((ViewGroup)getParent()).removeView(this);
+    }
+
+    /*
+     * 子ノード(直下)のラインを再描画する
+     */
+    private void reDrawChildNodeLine() {
+
+        //子ノードリスト更新
+        searchChildNodes();
+
+        //子ノードのラインを再描画
+        for( NodeTable node: mChildNodes ){
+            node.getNodeView().getLineView().reDraw(mCenterPosX, mCenterPosY);
+        }
     }
 
     /*
@@ -527,7 +528,7 @@ public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ 
      * ラインビュー
      *   本ノードと親ノードとの接続ライン
      */
-    public class LineView extends View implements Serializable {
+    public class LineView extends View {
 
         //ペイント情報
         Paint mPaint;

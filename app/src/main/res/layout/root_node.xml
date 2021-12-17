@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:background="@drawable/circle_node"
-        android:elevation="@dimen/node_toolIcon_elevation"
+        android:elevation="@dimen/node_elevation"
         android:padding="4dp"
         android:text="@string/sample"
         app:layout_constraintBottom_toBottomOf="parent"
