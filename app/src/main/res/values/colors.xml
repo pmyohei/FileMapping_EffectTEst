@@ -5,9 +5,12 @@
 
     <color name="gray">#FFEAEAEA</color>
 
-
-
-
+    <!--  tmp-カフェ  -->
+    <color name="cafe_1">#4E2613</color>
+    <color name="cafe_2">#D3AE6F</color>
+    <color name="cafe_3">#969734</color>
+    <color name="cafe_4">#F1EDE4</color>
+    <color name="cafe_5">#D36922</color>
 
 
 

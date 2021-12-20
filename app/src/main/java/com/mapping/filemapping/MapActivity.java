@@ -102,6 +102,10 @@ public class MapActivity extends AppCompatActivity {
         mPinchGestureDetector = new ScaleGestureDetector(this, new PinchListener());
         mScrollGestureDetector = new GestureDetector(this, new ScrollListener());
 
+        //暫定--------------
+        //背景色
+        //暫定--------------
+
         //アクティビティ
         Activity activity = this;
 
@@ -236,7 +240,9 @@ public class MapActivity extends AppCompatActivity {
         if (node.getKind() == NodeTable.NODE_KIND_ROOT) {
             //元々レイアウト上にあるルートノード名を変更し、中心座標を保持
             RootNodeView rootNodeView = findViewById(R.id.rnv_rootnode);
+            //★初期化時に各設定項目を設定する
             rootNodeView.setNodeName(node.getNodeName());
+            rootNodeView.setBackgroundColor( getResources().getColor( R.color.cafe_2 ) );
 
             //マージン座標を取得
             int left = rootNodeView.getLeft();
@@ -262,7 +268,7 @@ public class MapActivity extends AppCompatActivity {
         NodeView nodeView = new NodeView(this, node);
 
         //ノード名設定
-        nodeView.setNodeName(node.getNodeName());
+        //nodeView.setNodeName(node.getNodeName());
 
         //ノードをマップに追加
         fl_map.addView(nodeView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));

@@ -82,6 +82,14 @@ public class NodeInformationActivity extends AppCompatActivity {
                     //newNode.setNodeColor();
                     //newNode.setTextColor();
 
+                    //デザイン参考暫定----------
+                    /*String nodeBackground = ((EditText)findViewById(R.id.et_nodeBackground)).getText().toString();
+                    if( !nodeBackground.isEmpty() ){
+                        int color =  Integer.parseInt(nodeBackground, 16);
+                        newNode.setNodeColor( color );
+                    }*/
+                    //----------------------
+
                     //DB保存処理
                     AsyncCreateNode db = new AsyncCreateNode(view.getContext(), newNode, new AsyncCreateNode.OnCreateListener() {
 
@@ -151,6 +159,17 @@ public class NodeInformationActivity extends AppCompatActivity {
                     //★その他編集情報の反映が必要
                     node.setNodeName( nodeName );
 
+                    //デザイン参考暫定----------
+/*                    String nodeBackground = ((EditText)findViewById(R.id.et_nodeBackground)).getText().toString();
+                    if( !nodeBackground.isEmpty() ){
+                        int color =  Integer.parseInt(nodeBackground, 16);
+
+                        node.setNodeColor( color );
+
+                        Log.i("color", "nodeBackground=" + nodeBackground + "→" + color);
+                    }*/
+                    //----------------------
+
                     //DB保存処理
                     AsyncUpdateNode db = new AsyncUpdateNode(view.getContext(), node, new AsyncUpdateNode.OnFinishListener() {
                         @Override
@@ -186,6 +205,16 @@ public class NodeInformationActivity extends AppCompatActivity {
                 finish();
             }
         });
+
+        //ノード背景色-カラーピッカー
+        findViewById(R.id.tv_tmpColor).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //
+
+            }
+        });
+
 
 
     }

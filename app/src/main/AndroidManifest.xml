@@ -3,21 +3,23 @@
     package="com.mapping.filemapping">
 
     <application
+        android:name=".MapCommonData"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.AppCompat.Light.NoActionBar"
-        android:name=".MapCommonData">                              <!-- Applicationの使用 -->
-
+        android:theme="@style/Theme.AppCompat.Light.NoActionBar">
+        <activity
+            android:name=".ColorPickerActivity"
+            android:exported="true" />
+        <!-- Applicationの使用 -->
         <activity
             android:name=".MapEntryActivity"
             android:exported="true" />
         <activity
             android:name=".NodeInformationActivity"
-            android:exported="true" />
-        <!-- アプリバー無効化 -->
+            android:exported="true" /> <!-- アプリバー無効化 -->
         <activity
             android:name=".MapActivity"
             android:exported="true" />

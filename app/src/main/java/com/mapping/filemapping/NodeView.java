@@ -72,6 +72,13 @@ public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ 
 
         Log.i("NodeView", "init");
 
+        //ノード名の設定
+        setNodeName( mNode.getNodeName() );
+        //背景色の設定
+        //setBackgroundColor( mNode.getNodeColor() );
+        Log.i("color", "getColor=" + getResources().getColor(R.color.cafe_1));
+        setBackgroundColor( getResources().getColor(R.color.cafe_1) );
+
         //タッチリスナー
         setOnTouchListener(new NodeTouchListener());
 
@@ -552,8 +559,8 @@ public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ 
 
             //ペイント情報を生成
             mPaint = new Paint();
-            mPaint.setStrokeWidth(2f);
-            mPaint.setColor(Color.LTGRAY);
+            mPaint.setStrokeWidth(4f);
+            mPaint.setColor(getResources().getColor( R.color.cafe_1 ) );
             mPaint.setAntiAlias(true);
             mPaint.setStyle(Paint.Style.STROKE);
 

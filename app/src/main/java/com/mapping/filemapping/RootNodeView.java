@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -182,8 +184,12 @@ public class RootNodeView extends FrameLayout implements Serializable {
         //ノード名
         setNodeName( mNode.getNodeName() );
 
+        //ノード背景色
+        //setBackgroundColor( mNode.getNodeColor() );
+        setBackgroundColor( getResources().getColor( R.color.cafe_3 ) );
 
         //★設定を追加した際に反映
+
     }
 
     /*
@@ -193,6 +199,17 @@ public class RootNodeView extends FrameLayout implements Serializable {
         ((TextView) findViewById(R.id.tv_node)).setText(name);
     }
 
+    /*
+     * ノード背景色の設定
+     */
+    public void setBackgroundColor(int color) {
+        //背景色を設定
+        //ColorDrawable colorDrawable = (ColorDrawable)findViewById(R.id.tv_node).getBackground();
+        //colorDrawable.setColor( color );
+
+        Drawable aa = findViewById(R.id.tv_node).getBackground();
+        aa.setTint( color );
+    }
 
     /*
      * ツールアイコン表示制御
