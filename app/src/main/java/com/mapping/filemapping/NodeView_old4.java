@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
-import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.Log;
@@ -21,7 +20,7 @@ import androidx.activity.result.ActivityResultLauncher;
 
 import java.io.Serializable;
 
-public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ {
+public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListener*/ {
 
     //ピンチ操作後のビュー間の距離の比率
     private float pinchDistanceRatioX;
@@ -41,7 +40,7 @@ public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ 
      * コンストラクタ
      */
     @SuppressLint("ClickableViewAccessibility")
-    public NodeView(Context context, NodeTable node, ActivityResultLauncher<Intent> nodeOperationLauncher) {
+    public NodeView_old4(Context context, NodeTable node, ActivityResultLauncher<Intent> nodeOperationLauncher) {
         super(context, R.layout.node);
 
         Log.i("NodeView", "3");
@@ -98,7 +97,7 @@ public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ 
 
         //削除
         ImageButton ib = findViewById(R.id.ib_delete);
-        ib.setOnClickListener(new View.OnClickListener() {
+        ib.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -332,7 +331,7 @@ public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ 
     public void setLayoutMargin() {
 
         //現在の表示上位置にマージンを設定
-        ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) getLayoutParams();
+        MarginLayoutParams mlp = (MarginLayoutParams) getLayoutParams();
         mlp.setMargins(getLeft(), getTop(), 0, 0);
 
         //Nodetable側の位置情報を更新
@@ -390,7 +389,7 @@ public class NodeView extends RootNodeView  /*implements View.OnTouchListener*/ 
 
         //子ノードをレイアウトから削除
         for( NodeTable node: mChildNodes ){
-            node.getNodeView().removeLayoutUnderSelf();
+            //node.getNodeView().removeLayoutUnderSelf();
         }
 
         //自ノードとラインをレイアウトから削除

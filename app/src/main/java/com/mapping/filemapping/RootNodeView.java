@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.drawable.ColorDrawable;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -17,6 +16,8 @@ import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import androidx.activity.result.ActivityResultLauncher;
 
 import java.io.Serializable;
 
@@ -32,16 +33,15 @@ public class RootNodeView extends FrameLayout implements Serializable {
 
     //ノード情報
     public NodeTable mNode;
-
     //ダブルタップ検知用
     public GestureDetector mGestureDetector;
-
     //ツールアイコン表示
     public boolean misOpenToolIcon;
-
     //データ
     public float mCenterPosX;        //ノード中心座標X
     public float mCenterPosY;        //ノード中心座標Y
+    //ノード操作発生時の画面遷移ランチャー
+    ActivityResultLauncher<Intent> mNodeOperationLauncher;
 
     /*
      * コンストラクタ
@@ -92,16 +92,8 @@ public class RootNodeView extends FrameLayout implements Serializable {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(layoutID, this, attachToRoot);
 
-        //クリックリスナー
-        //※空のクリック処理をオーバーライドしないと、タッチ処理が検出されないため、空処理を入れとく
-        //※「implements View.OnClickListener」で空処理を入れるのはなぜか効果なし
-        setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //do nothing
-            }
-        });
-
+        //※クリックを有効にしないとタッチ処理が検出されない
+        setClickable(true);
         //タッチリスナー
         setOnTouchListener(new RootNodeTouchListener());
 
@@ -132,15 +124,33 @@ public class RootNodeView extends FrameLayout implements Serializable {
             public void onClick(View view) {
                 //ノード情報画面へ遷移
                 Context context = getContext();
-                Intent intent = new Intent(context, NodeInformationActivity.class);
+                Intent intent = new Intent(context, NodeEntryActivity.class);
 
                 //タッチノードの情報を渡す
                 intent.putExtra(MapActivity.INTENT_MAP_PID, mNode.getPidMap());
                 intent.putExtra(MapActivity.INTENT_NODE_PID, mNode.getPid());
-                //生成
-                intent.putExtra( MapActivity.INTENT_KIND_CREATE, true );
+                intent.putExtra(MapActivity.INTENT_KIND_CREATE, true );
 
-                ((Activity)context).startActivityForResult(intent, MapActivity.REQ_NODE_CREATE);
+                //((Activity)context).startActivityForResult(intent, MapActivity.REQ_NODE_CREATE);
+                mNodeOperationLauncher.launch( intent );
+
+                //クローズする
+                operationToolIcon();
+            }
+        });
+
+        //ノード生成(ピクチャ)
+        ib = findViewById(R.id.ib_createPictureNode);
+        ib.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //ノード情報画面へ遷移
+                Context context = getContext();
+                Intent intent = new Intent(context, PictureNodeSelectActivity.class);
+
+                //画面遷移
+                mNodeOperationLauncher.launch( intent );
 
                 //クローズする
                 operationToolIcon();
@@ -154,7 +164,7 @@ public class RootNodeView extends FrameLayout implements Serializable {
             public void onClick(View view) {
                 //ノード情報画面へ遷移
                 Context context = getContext();
-                Intent intent = new Intent(context, NodeInformationActivity.class);
+                Intent intent = new Intent(context, NodeEntryActivity.class);
 
                 //mNode.setNodeView(null);
 
@@ -166,7 +176,8 @@ public class RootNodeView extends FrameLayout implements Serializable {
                 mapCommonData.setEditNode( mNode );
 
                 //画面遷移
-                ((Activity)context).startActivityForResult(intent, MapActivity.REQ_NODE_EDIT);
+                //((Activity)context).startActivityForResult(intent, MapActivity.REQ_NODE_EDIT);
+                mNodeOperationLauncher.launch( intent );
 
                 //クローズする
                 operationToolIcon();
@@ -193,6 +204,18 @@ public class RootNodeView extends FrameLayout implements Serializable {
     }
 
     /*
+     * ノード情報の設定
+     */
+    public void setNodeInformation(NodeTable node) {
+        //ノード名
+        setNodeName(node.getNodeName());
+        //ノード背景色
+        //★仮
+        setBackgroundColor(getResources().getColor( R.color.cafe_2 ));
+
+    }
+
+    /*
      * ノード名の設定
      */
     public void setNodeName(String name) {
@@ -209,6 +232,15 @@ public class RootNodeView extends FrameLayout implements Serializable {
 
         Drawable aa = findViewById(R.id.tv_node).getBackground();
         aa.setTint( color );
+    }
+
+    /*
+     * ノード中心座標の設定
+     */
+    public void calcCenterPos() {
+        //中心座標を計算し、設定
+        this.mCenterPosX = getLeft() + (getWidth() / 2f);
+        this.mCenterPosY = getTop()  + (getHeight() / 2f);
     }
 
     /*
@@ -367,8 +399,11 @@ public class RootNodeView extends FrameLayout implements Serializable {
     public NodeTable getNode() {
         return mNode;
     }
-    public void setNode(NodeTable mNode) {
-        this.mNode = mNode;
+    public void setNode(NodeTable node) {
+        this.mNode = node;
+
+        //ノード情報の設定
+        setNodeInformation(node);
     }
 
     public float getCenterPosX() {
@@ -383,5 +418,9 @@ public class RootNodeView extends FrameLayout implements Serializable {
     }
     public void setCenterPosY(float centerPosY) {
         this.mCenterPosY = centerPosY;
+    }
+
+    public void setNodeOperationLauncher( ActivityResultLauncher<Intent> launcher ) {
+        this.mNodeOperationLauncher = launcher;
     }
 }

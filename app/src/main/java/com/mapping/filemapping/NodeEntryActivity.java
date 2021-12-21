@@ -9,12 +9,12 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
-public class NodeInformationActivity extends AppCompatActivity {
+public class NodeEntryActivity extends AppCompatActivity {
 
     /*-- 定数 --*/
     /* 画面遷移-レスポンスコード */
-    public static final int RES_CODE_NODE_POSITIVE = 100;
-    public static final int RES_CODE_NODE_CANCEL = 101;
+    public static final int RESULT_CREATED = 100;
+    public static final int RESULT_EDITED  = 101;
 
     /* 画面遷移-キー */
     public static String KEY_CREATED_NODE = "CreatedNode";
@@ -100,7 +100,7 @@ public class NodeInformationActivity extends AppCompatActivity {
 
                             //resultコード設定
                             intent.putExtra(KEY_CREATED_NODE, newNode );
-                            setResult(RES_CODE_NODE_POSITIVE, intent );
+                            setResult(RESULT_CREATED, intent );
 
                             //元の画面へ戻る
                             finish();
@@ -180,7 +180,7 @@ public class NodeInformationActivity extends AppCompatActivity {
 
                             //resultコード設定
                             //intent.putExtra( INTENT_UPDATED_NODE, node );
-                            setResult(RES_CODE_NODE_POSITIVE, intent );
+                            setResult(RESULT_EDITED, intent );
 
                             //元の画面へ戻る
                             finish();
@@ -199,7 +199,7 @@ public class NodeInformationActivity extends AppCompatActivity {
             public void onClick(View view) {
 
                 //resultコード設定
-                setResult(RES_CODE_NODE_CANCEL);
+                setResult(RESULT_CANCELED);
 
                 //元の画面へ戻る
                 finish();

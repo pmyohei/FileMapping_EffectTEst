@@ -1,5 +1,9 @@
 package com.mapping.filemapping;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
@@ -9,8 +13,13 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ContentResolver;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -26,6 +35,9 @@ import android.widget.FrameLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
 
+import java.io.FileDescriptor;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Objects;
 
 public class MapActivity extends AppCompatActivity {
@@ -69,6 +81,9 @@ public class MapActivity extends AppCompatActivity {
     //ノード生成ができる状態か
     private boolean mEnableDrawNode = false;
 
+    //ノード操作発生時の画面遷移ランチャー
+    ActivityResultLauncher<Intent> mNodeOperationLauncher;
+
 
     /*
      * 画面生成
@@ -101,6 +116,13 @@ public class MapActivity extends AppCompatActivity {
         //リスナー生成
         mPinchGestureDetector = new ScaleGestureDetector(this, new PinchListener());
         mScrollGestureDetector = new GestureDetector(this, new ScrollListener());
+
+        //画面遷移ランチャー（ノード操作関連）を作成
+        mNodeOperationLauncher = registerForActivityResult(
+                        new ActivityResultContracts.StartActivityForResult(),
+                        new NodeOperationResultCallback()
+        );
+
 
         //暫定--------------
         //背景色
@@ -220,13 +242,13 @@ public class MapActivity extends AppCompatActivity {
 
         //---
         //ノードをマップに追加
-        TextView moveNode = new TextView(this);
-        moveNode.setText("CHECK");
-        fl_map.addView(moveNode, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+        //TextView moveNode = new TextView(this);
+        //moveNode.setText("CHECK");
+        //fl_map.addView(moveNode, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        //位置設定
-        ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) moveNode.getLayoutParams();
-        mlp.setMargins(0, 0, mlp.rightMargin, mlp.bottomMargin);
+        ////位置設定
+        //ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) moveNode.getLayoutParams();
+        //mlp.setMargins(0, 0, mlp.rightMargin, mlp.bottomMargin);
         //---
 
     }
@@ -240,32 +262,44 @@ public class MapActivity extends AppCompatActivity {
         if (node.getKind() == NodeTable.NODE_KIND_ROOT) {
             //元々レイアウト上にあるルートノード名を変更し、中心座標を保持
             RootNodeView rootNodeView = findViewById(R.id.rnv_rootnode);
-            //★初期化時に各設定項目を設定する
-            rootNodeView.setNodeName(node.getNodeName());
-            rootNodeView.setBackgroundColor( getResources().getColor( R.color.cafe_2 ) );
 
+            //ビューにノード情報を設定
+            rootNodeView.setNode(node);
+            //中心座標を設定
+            rootNodeView.calcCenterPos();
+            //ランチャーを設定
+            rootNodeView.setNodeOperationLauncher( mNodeOperationLauncher );
+
+            //★初期化時に各設定項目を設定する
+            //rootNodeView.setNodeName(node.getNodeName());
+            //rootNodeView.setBackgroundColor( getResources().getColor( R.color.cafe_2 ) );
+
+/*
             //マージン座標を取得
             int left = rootNodeView.getLeft();
-            int top = rootNodeView.getTop();
-
+            int top  = rootNodeView.getTop();
             //中心座標を保持
             rootNodeView.setCenterPosX(left + (rootNodeView.getWidth() / 2f));
             rootNodeView.setCenterPosY(top + (rootNodeView.getHeight() / 2f));
+*/
 
             //NodeTable側でノードビューを保持
             node.setRootNodeView(rootNodeView);
 
-            //ビュー側でもノード情報を保持
-            rootNodeView.setNode(node);
-
-            Log.i("drawNodes", "root centerx=" + (left + (rootNodeView.getWidth() / 2f)) + " left=" + left);
-            Log.i("drawNodes", "root centery=" + (top + (rootNodeView.getHeight() / 2f)) + " top=" + top);
+            //Log.i("drawNodes", "root centerx=" + (left + (rootNodeView.getWidth() / 2f)) + " left=" + left);
+            //Log.i("drawNodes", "root centery=" + (top + (rootNodeView.getHeight() / 2f)) + " top=" + top);
 
             return;
         }
 
         //ノード生成
-        NodeView nodeView = new NodeView(this, node);
+        NodeView nodeView = new NodeView(this, node, mNodeOperationLauncher);
+        //RootNodeView nodeView;
+        //if (node.getKind() == NodeTable.NODE_KIND_NODE) {
+        //    nodeView = new NodeView(this, node, mNodeOperationLauncher);
+        //}else{
+        //    nodeView = new NodeView(this, node, mNodeOperationLauncher);
+        //}
 
         //ノード名設定
         //nodeView.setNodeName(node.getNodeName());
@@ -359,16 +393,16 @@ public class MapActivity extends AppCompatActivity {
             case REQ_NODE_CREATE:
 
                 //ノード生成された場合
-                if (resultCode == NodeInformationActivity.RES_CODE_NODE_POSITIVE) {
+/*                if (resultCode == NodeEntryActivity.RES_CODE_NODE_POSITIVE) {
                     //生成されたノードを取得
-                    NodeTable node = (NodeTable) intent.getSerializableExtra(NodeInformationActivity.KEY_CREATED_NODE);
+                    NodeTable node = (NodeTable) intent.getSerializableExtra(NodeEntryActivity.KEY_CREATED_NODE);
                     //リストに追加
                     MapCommonData mapCommonData = (MapCommonData) getApplication();
                     mapCommonData.addNodes(node);
 
                     //ノードを描画
                     drawNode(findViewById(R.id.fl_map), node, NodeGlobalLayoutListener.LINE_SELF);
-                }
+                }*/
 
                 break;
 
@@ -376,7 +410,7 @@ public class MapActivity extends AppCompatActivity {
             case REQ_NODE_EDIT:
 
                 //ノード生成された場合
-                if (resultCode == NodeInformationActivity.RES_CODE_NODE_POSITIVE) {
+/*                if (resultCode == NodeEntryActivity.RES_CODE_NODE_POSITIVE) {
                     //共通データから、編集ノードを取得
                     MapCommonData mapCommonData = (MapCommonData) getApplication();
                     NodeTable node = mapCommonData.getEditNode();
@@ -384,7 +418,7 @@ public class MapActivity extends AppCompatActivity {
                     //ノード情報をビューに反映
                     NodeView nodeView = node.getNodeView();
                     nodeView.reflectNodeInformation();
-                }
+                }*/
 
                 break;
 
@@ -567,16 +601,15 @@ public class MapActivity extends AppCompatActivity {
             //レイアウト確定後は、不要なので本リスナー削除
             mv_node.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-            //中心座標を保持
-            mv_node.setCenterPosX(mv_node.getLeft() + (mv_node.getWidth() / 2f));
-            mv_node.setCenterPosY(mv_node.getTop()  + (mv_node.getHeight() / 2f));
-
-            Log.i("NodeGlobal", "getLeft=" + mv_node.getLeft() + " getTop()=" + mv_node.getTop());
+            //レイアウトが確定したため、このタイミングで中心座標を設定
+            mv_node.calcCenterPos();
+            //mv_node.setCenterPosX(mv_node.getLeft() + (mv_node.getWidth() / 2f));
+            //mv_node.setCenterPosY(mv_node.getTop()  + (mv_node.getHeight() / 2f));
+            //Log.i("NodeGlobal", "getLeft=" + mv_node.getLeft() + " getTop()=" + mv_node.getTop());
 
             if(mLineDrawKind == LINE_ALL){
                 //全ラインを描画
                 drawAllLines();
-
             } else if( mLineDrawKind == LINE_SELF ){
                 //本ノードのラインを描画
                 drawLine( findViewById(R.id.fl_map), mv_node.getNode() );
@@ -799,6 +832,95 @@ public class MapActivity extends AppCompatActivity {
         }
 
     }
+
+    /*
+     * 画面遷移からの戻りのコールバック通知
+     *   ・ノード新規作成
+     *   ・ノード新規作成（ピクチャ）
+     *   ・ノード編集
+     */
+    private class NodeOperationResultCallback implements ActivityResultCallback<ActivityResult> {
+
+        /*
+         * 画面遷移先からの戻り処理
+         */
+        @Override
+        public void onActivityResult(ActivityResult result) {
+
+            //インテント
+            Intent intent = result.getData();
+            //リザルトコード
+            int resultCode = result.getResultCode();
+
+            //ノード新規作成完了
+            if( resultCode == NodeEntryActivity.RESULT_CREATED) {
+
+                //生成されたノードを取得
+                NodeTable node = (NodeTable) intent.getSerializableExtra(NodeEntryActivity.KEY_CREATED_NODE);
+                //リストに追加
+                MapCommonData mapCommonData = (MapCommonData) getApplication();
+                mapCommonData.addNodes(node);
+
+                //ノードを描画
+                drawNode(findViewById(R.id.fl_map), node, NodeGlobalLayoutListener.LINE_SELF);
+
+            //ノード編集完了
+            } else if( resultCode == NodeEntryActivity.RESULT_EDITED) {
+
+                //共通データから、編集ノードを取得
+                MapCommonData mapCommonData = (MapCommonData) getApplication();
+                NodeTable node = mapCommonData.getEditNode();
+
+                //ノード情報をビューに反映
+                NodeView nodeView = node.getNodeView();
+                nodeView.reflectNodeInformation();
+
+            //ノードピクチャ生成完了
+            } else if( resultCode == PictureNodeSelectActivity.RESULT_PICTURE_NODE) {
+
+                //写真URIを取得
+                Uri uri = intent.getParcelableExtra("URI");
+
+                //ContentResolver:コンテンツモデルへのアクセスを提供
+                ContentResolver contentResolver = getContentResolver();
+
+                //URI下のデータにアクセスする
+                ParcelFileDescriptor pfDescriptor = null;
+                try {
+                    pfDescriptor = contentResolver.openFileDescriptor(uri, "r");
+
+                    if(pfDescriptor != null) {
+
+                        //実際のFileDescriptorを取得
+                        FileDescriptor fileDescriptor = pfDescriptor.getFileDescriptor();
+                        Bitmap bmp = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+                        pfDescriptor.close();
+
+                        //
+
+
+                    }
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                } finally {
+                    try{
+                        if(pfDescriptor != null){
+                            pfDescriptor.close();
+                        }
+                    }catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+
+
+            } else {
+
+
+            }
+        }
+    }
+
 
 
 }

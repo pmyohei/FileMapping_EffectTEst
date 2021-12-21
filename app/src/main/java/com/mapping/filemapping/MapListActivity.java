@@ -32,12 +32,12 @@ public class MapListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_list);
 
-        //画面遷移ランチャー
+        //画面遷移ランチャー（マップ新規生成用）
         ActivityResultLauncher<Intent> createMapLauncher =
                 registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
                     new CreateMapResultCallback());
-
+        //画面遷移ランチャー（マップ編集用）
         ActivityResultLauncher<Intent> editMapLauncher =
                 registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),

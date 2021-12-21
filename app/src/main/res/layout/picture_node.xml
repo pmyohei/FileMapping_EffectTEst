@@ -8,21 +8,27 @@
     android:layout_gravity="center">
 
     <!-- ノード -->
-    <TextView
-        android:id="@+id/tv_node"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
-        android:background="@drawable/circle_node"
-        android:elevation="@dimen/node_elevation"
-        android:padding="12dp"
-        android:text="@string/sample"
-        android:textColor="@color/white"
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cv_node"
+        android:layout_height="40dp"
+        android:layout_width="40dp"
+        app:cardBackgroundColor="@color/black"
+        app:cardCornerRadius="20dp"
+        app:cardElevation="0dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"/>
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:id="@+id/iv_node"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:scaleType="centerCrop"
+            android:layout_gravity="center"
+            android:src="@drawable/bmp_sample" />
+
+    </androidx.cardview.widget.CardView>
 
     <!--  ツールアイコン  -->
     <ImageButton

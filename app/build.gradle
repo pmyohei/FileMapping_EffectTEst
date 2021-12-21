@@ -57,4 +57,10 @@ dependencies {
 
     //colorpicker
     implementation 'com.jaredrummler:colorpicker:1.1.0'
+
+    //simplecropview
+    implementation 'com.isseiaoki:simplecropview:1.0.10'
+
+    //CardView
+    implementation 'androidx.cardview:cardview:1.0.0'
 }

@@ -41,7 +41,7 @@
 
 
     <ImageButton
-        android:id="@+id/ib_addPictureNode"
+        android:id="@+id/ib_createPictureNode"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="4dp"

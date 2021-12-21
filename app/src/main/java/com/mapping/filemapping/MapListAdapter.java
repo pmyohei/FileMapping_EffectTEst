@@ -20,7 +20,7 @@ import java.util.ArrayList;
 public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewHolder> {
 
     //マップリスト
-    private ArrayList<MapTable> mData;
+    private final ArrayList<MapTable> mData;
 
     //編集画面遷移ランチャー
     ActivityResultLauncher<Intent> mEditMapLauncher;
@@ -42,10 +42,10 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
         public MapViewHolder(View itemView) {
             super(itemView);
 
-            tv_mapName = (TextView)itemView.findViewById(R.id.tv_mapName);
-            ib_map     = (ImageButton)itemView.findViewById(R.id.ib_map);
-            ib_edit    = (ImageButton)itemView.findViewById(R.id.ib_edit);
-            ib_delete  = (ImageButton)itemView.findViewById(R.id.ib_delete);
+            tv_mapName = itemView.findViewById(R.id.tv_mapName);
+            ib_map     = itemView.findViewById(R.id.ib_map);
+            ib_edit    = itemView.findViewById(R.id.ib_edit);
+            ib_delete  = itemView.findViewById(R.id.ib_delete);
         }
 
         /*
@@ -83,7 +83,6 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
                     Log.i("MapItemView", "map=" + map.getMapName());
 
                     mEditMapLauncher.launch( intent );
-                    //mStartForResult.launch( intent );
                 }
             });
 

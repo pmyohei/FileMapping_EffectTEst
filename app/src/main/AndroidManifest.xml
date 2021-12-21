@@ -11,14 +11,19 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light.NoActionBar">
         <activity
-            android:name=".ColorPickerActivity"
+            android:name=".PictureTrimmingActivity"
             android:exported="true" />
-        <!-- Applicationの使用 -->
+        <activity
+            android:name=".PictureNodeSelectActivity"
+            android:exported="true" />
+        <activity
+            android:name=".ColorPickerActivity"
+            android:exported="true" /> <!-- Applicationの使用 -->
         <activity
             android:name=".MapEntryActivity"
             android:exported="true" />
         <activity
-            android:name=".NodeInformationActivity"
+            android:name=".NodeEntryActivity"
             android:exported="true" /> <!-- アプリバー無効化 -->
         <activity
             android:name=".MapActivity"
