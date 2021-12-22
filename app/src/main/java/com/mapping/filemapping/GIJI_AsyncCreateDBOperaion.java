@@ -134,10 +134,10 @@ public class GIJI_AsyncCreateDBOperaion extends AsyncTask<Void, Void, Integer> {
 
     public void createMapB(MapTableDao mapDao, NodeTableDao nodeDao) {
 
-        MapTable mapA = new MapTable();
-        mapA.setMapName("MapB");
+        MapTable mapB = new MapTable();
+        mapB.setMapName("MapB");
 
-        MapPid = (int)mapDao.insert( mapA );
+        MapPid = (int)mapDao.insert( mapB );
 
         //ノード生成
         NodeTable nodeR = new NodeTable();
@@ -145,30 +145,35 @@ public class GIJI_AsyncCreateDBOperaion extends AsyncTask<Void, Void, Integer> {
         NodeTable nodeB = new NodeTable();
         NodeTable nodeC = new NodeTable();
         NodeTable nodeD = new NodeTable();
+        NodeTable nodeE = new NodeTable();
 
         nodeR.setNodeName("MapB Root");
         nodeA.setNodeName("MapB NodeA__________");
         nodeB.setNodeName("MapB\nNodeB");
         nodeC.setNodeName("M\na\np\nB\nN\no\nd\ne\nC");
         nodeD.setNodeName("MapB NodeD");
+        //nodeE.setNodeName("nodeE");
 
         nodeR.setPidMap((int)MapPid);
         nodeA.setPidMap((int)MapPid);
         nodeB.setPidMap((int)MapPid);
         nodeC.setPidMap((int)MapPid);
         nodeD.setPidMap((int)MapPid);
+        nodeE.setPidMap((int)MapPid);
 
         nodeR.setKind( NodeTable.NODE_KIND_ROOT );
         nodeA.setKind( NodeTable.NODE_KIND_NODE );
         nodeB.setKind( NodeTable.NODE_KIND_NODE );
         nodeC.setKind( NodeTable.NODE_KIND_NODE );
         nodeD.setKind( NodeTable.NODE_KIND_NODE );
+        nodeE.setKind( NodeTable.NODE_KIND_PICTURE );
 
         nodeR.setPos( 4000, 4000 );
         nodeA.setPos( 4100, 4100 );
         nodeB.setPos( 3900, 4100 );
         nodeC.setPos( 4200, 4200 );
         nodeD.setPos( 4300, 4300 );
+        nodeE.setPos( 4400, 4400 );
 
         //レコード追加
         int pidr = (int)nodeDao.insert( nodeR );
@@ -176,12 +181,14 @@ public class GIJI_AsyncCreateDBOperaion extends AsyncTask<Void, Void, Integer> {
         int pidb = (int)nodeDao.insert( nodeB );
         int pidc = (int)nodeDao.insert( nodeC );
         int pidd = (int)nodeDao.insert( nodeD );
+        int pide = (int)nodeDao.insert( nodeE );
 
         nodeR.setPidParentNode( NodeTable.NO_PARENT );
         nodeA.setPidParentNode( pidr );
         nodeB.setPidParentNode( pidr );
         nodeC.setPidParentNode( pida );
         nodeD.setPidParentNode( pidc );
+        nodeE.setPidParentNode( pidd );
 
         Log.i("GIJI", "pidr=" + pidr);
         Log.i("GIJI", "pida=" + pida);
@@ -192,6 +199,7 @@ public class GIJI_AsyncCreateDBOperaion extends AsyncTask<Void, Void, Integer> {
         nodeB.setPid(pidb);
         nodeC.setPid(pidc);
         nodeD.setPid(pidd);
+        nodeE.setPid(pide);
 
         //更新
         nodeDao.updateNode(nodeR);
@@ -199,6 +207,7 @@ public class GIJI_AsyncCreateDBOperaion extends AsyncTask<Void, Void, Integer> {
         nodeDao.updateNode(nodeB);
         nodeDao.updateNode(nodeC);
         nodeDao.updateNode(nodeD);
+        nodeDao.updateNode(nodeE);
 
         List<NodeTable> nodeList = nodeDao.getAll();
 

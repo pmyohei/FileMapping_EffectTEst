@@ -80,6 +80,13 @@ public class MapCommonData extends Application {
     }
 
     /*
+     * マップ内ノードリストから、指定ノードを返す
+     */
+    public NodeTable getNodeInMap(int pid) {
+        return mNodes.getNode(pid);
+    }
+
+    /*
      * 位置移動ノードキュー取得・設定・クリア
      */
     public NodeArrayList<NodeTable> getMovedNodesQue() {

@@ -16,10 +16,6 @@ public class NodeEntryActivity extends AppCompatActivity {
     public static final int RESULT_CREATED = 100;
     public static final int RESULT_EDITED  = 101;
 
-    /* 画面遷移-キー */
-    public static String KEY_CREATED_NODE = "CreatedNode";
-    public static String KEY_UPDATED_NODE = "UpdatedNode";
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -35,6 +31,7 @@ public class NodeEntryActivity extends AppCompatActivity {
         //新規生成の場合
         if( isCreate ){
             //遷移元からの情報
+            //★マップIDは共通情報にする
             int mapPid          = intent.getIntExtra(MapActivity.INTENT_MAP_PID, 0);
             int selectedNodePid = intent.getIntExtra(MapActivity.INTENT_NODE_PID, 0);
 
@@ -64,10 +61,8 @@ public class NodeEntryActivity extends AppCompatActivity {
                     }
 
                     //ノード初期位置を親ノードの中心位置から一定の距離離した位置にする
-                    final int POS_OFFSET = 100;
-
                     NodeTable parentNode = nodes.getNode( selectedNodePid );
-                    int posX = (int)parentNode.getCenterPosX() + POS_OFFSET;
+                    int posX = (int)parentNode.getCenterPosX() + ResourceManager.POS_NODE_INIT_OFFSET;
                     int posY = (int)parentNode.getCenterPosY();
 
                     //ノードを生成
@@ -99,7 +94,7 @@ public class NodeEntryActivity extends AppCompatActivity {
                             newNode.setPid( pid );
 
                             //resultコード設定
-                            intent.putExtra(KEY_CREATED_NODE, newNode );
+                            intent.putExtra(ResourceManager.KEY_CREATED_NODE, newNode );
                             setResult(RESULT_CREATED, intent );
 
                             //元の画面へ戻る

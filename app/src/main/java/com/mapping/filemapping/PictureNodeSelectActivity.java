@@ -32,13 +32,48 @@ public class PictureNodeSelectActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture_node_select);
 
-        //画面遷移ランチャーを生成
-        ActivityResultLauncher<Intent> PictureSelectLauncher = registerForActivityResult(
+        //画面遷移元からの情報
+        Intent intent = getIntent();
+        //★マップIDは共通情報にする
+        int mapPid          = intent.getIntExtra(MapActivity.INTENT_MAP_PID, 0);
+        int selectedNodePid = intent.getIntExtra(MapActivity.INTENT_NODE_PID, 0);
+
+        //画面遷移ランチャー（トリミング画面）
+        ActivityResultLauncher<Intent> trimmingLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new ActivityResultCallback<ActivityResult>() {
 
                     /*
-                     * 画面遷移先からの戻り処理
+                     * トリミング画面からの戻り処理
+                     */
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+
+                        Log.i("PicNodeActivity", "trimmingLauncher onActivityResult()");
+
+                        if(result.getResultCode() == RESULT_OK) {
+
+                            Intent intent = result.getData();
+                            if(intent != null){
+                                //resultコード設定
+                                //※トリミング画面からの戻り値には、intentに入っているためそのまま渡す
+                                setResult(RESULT_PICTURE_NODE, intent );
+                            }
+
+                            //画面終了
+                            finish();
+                        }
+                    }
+                }
+        );
+
+        //画面遷移ランチャー（写真ギャラリー）
+        ActivityResultLauncher<Intent> pictureSelectLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+
+                    /*
+                     * 写真ギャラリー画面からの戻り処理
                      */
                     @Override
                     public void onActivityResult(ActivityResult result) {
@@ -49,61 +84,22 @@ public class PictureNodeSelectActivity extends AppCompatActivity {
 
                             Intent intent = result.getData();
                             if(intent != null){
+                                //コンテンツURIを取得
+                                Uri contentUri = intent.getData();
 
-                                //ファイルを指す
-                                ParcelFileDescriptor pfDescriptor = null;
+                                //トリミング画面へ遷移
+                                Intent nextIntent = new Intent(PictureNodeSelectActivity.this, PictureTrimmingActivity.class);
+                                nextIntent.putExtra( "URI",  contentUri);
+                                nextIntent.putExtra( MapActivity.INTENT_MAP_PID, mapPid);
+                                nextIntent.putExtra( MapActivity.INTENT_NODE_PID, selectedNodePid);
 
-                                try{
-                                    //コンテンツURIを取得
-                                    Uri contentUri = intent.getData();
+                                trimmingLauncher.launch( nextIntent );
 
-                                    // Uriを表示
-                                    //TextView tv_uri = findViewById(R.id.tv_uri);
-                                    //tv_uri.setText(String.format(Locale.US, "Uri:　%s",contentUri.toString()));
-//
-                                    //Log.d("contentUri", "URI=" + tv_uri.getText());
-
-                                    //ContentResolver:コンテンツモデルへのアクセスを提供
-                                    ContentResolver contentResolver = getContentResolver();
-
-                                    //URI下のデータにアクセスする
-                                    pfDescriptor = contentResolver.openFileDescriptor(contentUri, "r");
-                                    if(pfDescriptor != null){
-
-                                        //実際のFileDescriptorを取得
-                                        FileDescriptor fileDescriptor = pfDescriptor.getFileDescriptor();
-                                        Bitmap bmp = BitmapFactory.decodeFileDescriptor(fileDescriptor);
-                                        pfDescriptor.close();
-
-                                        //トリミング画面へ遷移する
-                                        //★一旦後で
-
-
-                                        //URIを元の画面へ
-                                        Intent retrunIntent = getIntent();
-                                        retrunIntent.putExtra( "URI",  contentUri);
-                                        setResult(RESULT_PICTURE_NODE, intent );
-
-                                        //ImageView imageView = findViewById(R.id.imageView);
-                                        //imageView.setImageBitmap(bmp);
-                                    }
-                                } catch (IOException e) {
-                                    e.printStackTrace();
-
-                                } finally {
-                                    try{
-                                        if(pfDescriptor != null){
-                                            pfDescriptor.close();
-                                        }
-                                    }catch (Exception e){
-                                        e.printStackTrace();
-                                    }
-                                }
-
+                            } else{
+                                //画面終了
+                                finish();
                             }
 
-                            //画面終了
-                            finish();
                         }
                     }
                 }
@@ -111,13 +107,13 @@ public class PictureNodeSelectActivity extends AppCompatActivity {
 
 
         //写真を一覧で表示
-        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        //Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
-        intent.addCategory(Intent.CATEGORY_OPENABLE);
-        //intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);     //画像の複数選択を可能にする
-        intent.setType("image/*");
+        Intent pictureIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        //Intent pictureIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
+        pictureIntent.addCategory(Intent.CATEGORY_OPENABLE);
+        //pictureIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);     //画像の複数選択を可能にする
+        pictureIntent.setType("image/*");
 
-        PictureSelectLauncher.launch( intent );
-        //startActivityForResult(intent, 111);
+        pictureSelectLauncher.launch( pictureIntent );
+        //startActivityForResult(pictureIntent, 111);
     }
 }

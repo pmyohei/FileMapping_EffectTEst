@@ -148,6 +148,8 @@ public class RootNodeView extends FrameLayout implements Serializable {
                 //ノード情報画面へ遷移
                 Context context = getContext();
                 Intent intent = new Intent(context, PictureNodeSelectActivity.class);
+                intent.putExtra(MapActivity.INTENT_MAP_PID, mNode.getPidMap() );
+                intent.putExtra(MapActivity.INTENT_NODE_PID,mNode.getPid() );
 
                 //画面遷移
                 mNodeOperationLauncher.launch( intent );
@@ -284,7 +286,7 @@ public class RootNodeView extends FrameLayout implements Serializable {
         //本ビューのレイアウトを取得（※ここで取得しているのは、ノード用レイアウトのルートレイアウト）
         ViewGroup vg_NodeLayout = (ViewGroup)getChildAt(0);
 
-        Log.i("toolOpenControl", mNode.getNodeName() + " before=" + getWidth() + " " + getHeight());
+        Log.i("toolOpenControl", "before=" + getWidth() + " " + getHeight());
 
         //ツールアイコンを表示
         for (int i = 0; i < vg_NodeLayout.getChildCount(); i++) {

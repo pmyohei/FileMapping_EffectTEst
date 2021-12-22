@@ -3,52 +3,39 @@ package com.mapping.filemapping;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Path;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
+import android.os.ParcelFileDescriptor;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 
 import androidx.activity.result.ActivityResultLauncher;
 
-import java.io.Serializable;
+import java.io.FileDescriptor;
+import java.io.IOException;
 
-public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListener*/ {
-
-    //ピンチ操作後のビュー間の距離の比率
-    private float pinchDistanceRatioX;
-    private float pinchDistanceRatioY;
-
-    //前回のタッチ位置
-    private int mPreTouchPosX;
-    private int mPreTouchPosY;
-
-    //親ノードとの接続線
-    private LineView mLineView;
-
-    //子ノードリスト
-    private NodeArrayList<NodeTable> mChildNodes;
+public class PictureNodeView extends ChildNodeView  /*implements View.OnTouchListener*/ {
 
     /*
      * コンストラクタ
      */
     @SuppressLint("ClickableViewAccessibility")
-    public NodeView_old4(Context context, NodeTable node, ActivityResultLauncher<Intent> nodeOperationLauncher) {
-        super(context, R.layout.node);
+    public PictureNodeView(Context context, NodeTable node, ActivityResultLauncher<Intent> nodeOperationLauncher) {
+        super(context, node, nodeOperationLauncher, R.layout.picture_node);
 
-        Log.i("NodeView", "3");
+        Log.i("PictureNodeView", "3");
 
         //ノード情報を保持
-        mNode = node;
-        //ノード操作ランチャーを保持
-        mNodeOperationLauncher = nodeOperationLauncher;
+        //mNode = node;
+        ////ノード操作ランチャーを保持
+        //mNodeOperationLauncher = nodeOperationLauncher;
 
         initNode();
     }
@@ -77,17 +64,62 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
         Log.i("NodeView", "init");
 
         //ノード名の設定
-        setNodeName( mNode.getNodeName() );
+        //setNodeName( mNode.getNodeName() );
         //背景色の設定
         //setBackgroundColor( mNode.getNodeColor() );
-        Log.i("color", "getColor=" + getResources().getColor(R.color.cafe_1));
-        setBackgroundColor( getResources().getColor(R.color.cafe_1) );
+        //Log.i("color", "getColor=" + getResources().getColor(R.color.cafe_1));
+        //setBackgroundColor( getResources().getColor(R.color.cafe_1) );
 
         //タッチリスナー
-        setOnTouchListener(new NodeTouchListener());
+        //setOnTouchListener(new NodeTouchListener());
+
+        //
+
+        //ノードに画像を設定
+        setNodeBitmap();
 
         //ツールアイコン設定
         setNodeToolIcon();
+    }
+
+    /*
+     * ノードに画像を設定
+     */
+    public void setNodeBitmap() {
+
+        //ContentResolver:コンテンツモデルへのアクセスを提供
+        ContentResolver contentResolver = getContext().getContentResolver();
+
+        //URI下のデータにアクセスする
+        ParcelFileDescriptor pfDescriptor = null;
+        try {
+            //URI作成
+            Uri uri = Uri.parse( ResourceManager.URI_PATH + mNode.getUriIdentify() );
+
+            //Descriptor取得
+            pfDescriptor = contentResolver.openFileDescriptor(uri, "r");
+            if(pfDescriptor != null) {
+
+                //実際のFileDescriptorを取得
+                FileDescriptor fileDescriptor = pfDescriptor.getFileDescriptor();
+                Bitmap bmp = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+                pfDescriptor.close();
+
+                //画像を設定
+                ((ImageView)findViewById(R.id.iv_node)).setImageBitmap( bmp );
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        } finally {
+            try{
+                if(pfDescriptor != null){
+                    pfDescriptor.close();
+                }
+            }catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 
     /*
@@ -95,6 +127,7 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
      */
     public void setNodeToolIcon() {
 
+/*
         //削除
         ImageButton ib = findViewById(R.id.ib_delete);
         ib.setOnClickListener(new OnClickListener() {
@@ -137,9 +170,7 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
                         .show();
             }
         });
-
-
-
+*/
 
 
     }
@@ -147,6 +178,7 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
     /*
      * ノードテーブルの情報をノードビューに反映する
      */
+/*
     public void reflectNodeInformation() {
         //必須
         super.reflectNodeInformation();
@@ -180,22 +212,24 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
                 }
         );
     }
+*/
 
 
     /*
      * 親ノード追随処理初期化
      *   ＠自分自身／親ノード からコールされる
      */
-    public void initFollowParent() {
+/*    public void initFollowParent() {
 
         //子ノード検索
         searchChildNodes();
-    }
+    }*/
 
     /*
      * 子ノード検索
      *   自ノードを親とするノードを検索する
      */
+/*
     public void searchChildNodes() {
 
         //マップ共通データ
@@ -217,10 +251,12 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
             v_node.initFollowParent();
         }
     }
+*/
 
     /*
      * 子ノードの移動
      */
+/*
     public void moveChildNodes(float movex, float movey) {
 
         Log.i("test", "moveChildNodes 親=" + mNode.getNodeName() + " 子の数=" + mChildNodes.size());
@@ -235,11 +271,13 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
             v_node.move(movex, movey, mCenterPosX, mCenterPosY, true);
         }
     }
+*/
 
     /*
      * 子ノードの位置(X座標)を反転
      *   ＠自分自身／親ノード からコールされる
      */
+/*
     public void reverceChildNodes(float touchNodePosX) {
 
         //子ノード分ループ
@@ -257,6 +295,7 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
             v_node.reverceChildNodes(touchNodePosX);
         }
     }
+*/
 
 
     /*
@@ -264,6 +303,7 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
      * 　指定された移動量だけ移動させる
      *   ＠自分自身／親ノード からコールされる
      */
+/*
     public void move(float moveX, float moveY, float parentPosX, float parentPosY, boolean isFollowParent) {
 
         //今回イベントでのView移動先の位置
@@ -292,11 +332,13 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
         //子ノード移動
         moveChildNodes(moveX, moveY);
     }
+*/
 
     /*
      * ノードの配置
      *    指定されたX座標にノードを配置する
      */
+/*
     public void place(int touchNodePosX) {
 
         //ノードの横幅半分
@@ -321,6 +363,7 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
         //ライン再描画（終端位置のみ更新）
         mLineView.reDraw();
     }
+*/
 
     /*
      * レイアウトマージンの設定
@@ -328,10 +371,11 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
      * 　　※layout()はあくまで見えている位置を変えているだけ。
      *      本処理を行わないと、ダブルタップ発生時等で全てのノードが初期位置に戻る
      */
+/*
     public void setLayoutMargin() {
 
         //現在の表示上位置にマージンを設定
-        MarginLayoutParams mlp = (MarginLayoutParams) getLayoutParams();
+        ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) getLayoutParams();
         mlp.setMargins(getLeft(), getTop(), 0, 0);
 
         //Nodetable側の位置情報を更新
@@ -345,10 +389,12 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
         //子ノードも同様
         setLayoutMarginChildNodes();
     }
+*/
 
     /*
      * 子ノードのレイアウトマージンの設定
      */
+/*
     public void setLayoutMarginChildNodes() {
 
         //子ノード分ループ
@@ -361,10 +407,12 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
             v_node.setLayoutMargin();
         }
     }
+*/
 
     /*
      * 親ノードのX座標を取得
      */
+/*
     public float getParentPositionX() {
 
         //マップ共通データ
@@ -377,11 +425,13 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
 
         return parentNode.getCenterPosX();
     }
+*/
 
     /*
      * 自身以下のノードをレイアウトから削除
      * 　　※自身の配下ノードも全て削除する
      */
+/*
     private void removeLayoutUnderSelf() {
 
         //子ノードリスト更新
@@ -389,17 +439,19 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
 
         //子ノードをレイアウトから削除
         for( NodeTable node: mChildNodes ){
-            //node.getNodeView().removeLayoutUnderSelf();
+            node.getNodeView().removeLayoutUnderSelf();
         }
 
         //自ノードとラインをレイアウトから削除
         ((ViewGroup)getParent()).removeView(getLineView());
         ((ViewGroup)getParent()).removeView(this);
     }
+*/
 
     /*
      * 子ノード(直下)のラインを再描画する
      */
+/*
     private void reDrawChildNodeLine() {
 
         //子ノードリスト更新
@@ -410,11 +462,13 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
             node.getNodeView().getLineView().reDraw(mCenterPosX, mCenterPosY);
         }
     }
+*/
 
     /*
      * ノードタッチリスナー
      */
     //private class NodeTouchListener implements View.OnTouchListener {
+/*
     private class NodeTouchListener extends RootNodeTouchListener implements Serializable {
 
         //親ノードに対する自ノードのX座標における相対位置（親ノードより正側か負側か）
@@ -423,9 +477,11 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
         //Move発生フラグ
         private boolean isMove;
 
-        /*
+        */
+/*
          * コンストラクタ
-         */
+         *//*
+
         public NodeTouchListener() {
         }
 
@@ -519,9 +575,11 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
             return false;
         }
 
-        /*
+        */
+/*
          * 親ノードに対する自ノードの位置を取得
-         */
+         *//*
+
         public int getParentRelativePosition(float selfX) {
 
             //親ノードの位置
@@ -538,13 +596,14 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
         }
 
     }
+*/
 
 
     /*
      * ラインビュー
      *   本ノードと親ノードとの接続ライン
      */
-    public class LineView extends View {
+/*    public class LineView extends View {
 
         //ペイント情報
         Paint mPaint;
@@ -556,9 +615,9 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
         //描画終端座標（自ノード位置）
         //※NodeView側で定義しているため、ここでは持たない
 
-        /*
+        *//*
          * コンストラクタ
-         */
+         *//*
         public LineView(Context context, float startPosX, float startPosY) {
             super(context);
 
@@ -577,25 +636,9 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
             setTranslationZ(-1);
         }
 
-
-
-/*    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        xZahyou = event.getX();
-        yZahyou = event.getY();
-
-        Log.i("onTouchEvent", "xZahyou=" + xZahyou + " yZahyou=" + yZahyou);
-
-        this.invalidate();
-
-        return true;
-    }*/
-
-
-        /*
+        *//*
          * ライン再描画(始端位置更新あり)
-         */
+         *//*
         public void reDraw(float startPosX, float startPosY) {
 
             //開始位置を更新
@@ -606,9 +649,9 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
             invalidate();
         }
 
-        /*
+        *//*
          * ライン再描画
-         */
+         *//*
         public void reDraw() {
 
             //再描画
@@ -635,14 +678,12 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
             canvas.drawPath(path, mPaint);
         }
 
-    }
-
-
+    }*/
 
 
     /*---- getter／setter ----*/
 
-    public LineView getLineView() {
+/*    public LineView getLineView() {
         return mLineView;
     }
     public void setLineView(LineView lineView) {
@@ -652,6 +693,6 @@ public class NodeView_old4 extends RootNodeView  /*implements View.OnTouchListen
         this.mLineView = new LineView( getContext(), startPosX, startPosY );
 
         return this.mLineView;
-    }
+    }*/
 
 }

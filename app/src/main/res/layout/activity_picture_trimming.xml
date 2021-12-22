@@ -6,12 +6,9 @@
 
     <com.isseiaoki.simplecropview.CropImageView
         android:id="@+id/cropImageView"
-        xmlns:custom="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="250dp"
-        android:padding="16dp"
-        custom:cropMode="ratio_1_1"
-        />
+        android:padding="16dp" />
 
     <Button
         android:id="@+id/crop_button"
@@ -24,10 +21,18 @@
 
     <ImageView
         android:id="@+id/croppedImageView"
-        android:layout_margin="16dp"
-        android:layout_gravity="center"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_margin="16dp"
+        android:layout_gravity="center"
         />
 
+    <Button
+        android:id="@+id/bt_positive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center|bottom"
+        android:layout_margin="16dp"
+        android:text="OK"
+        />
 </LinearLayout>

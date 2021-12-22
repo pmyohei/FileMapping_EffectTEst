@@ -33,10 +33,8 @@ import android.view.ViewTreeObserver;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.Scroller;
-import android.widget.TextView;
 
 import java.io.FileDescriptor;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Objects;
 
@@ -293,13 +291,15 @@ public class MapActivity extends AppCompatActivity {
         }
 
         //ノード生成
-        NodeView nodeView = new NodeView(this, node, mNodeOperationLauncher);
-        //RootNodeView nodeView;
-        //if (node.getKind() == NodeTable.NODE_KIND_NODE) {
-        //    nodeView = new NodeView(this, node, mNodeOperationLauncher);
-        //}else{
-        //    nodeView = new NodeView(this, node, mNodeOperationLauncher);
-        //}
+        //NodeView nodeView = new NodeView(this, node, mNodeOperationLauncher);
+        ChildNodeView nodeView;
+        if (node.getKind() == NodeTable.NODE_KIND_NODE) {
+            //ノード
+            nodeView = new NodeView(this, node, mNodeOperationLauncher);
+        }else{
+            //ピクチャノード
+            nodeView = new PictureNodeView(this, node, mNodeOperationLauncher);
+        }
 
         //ノード名設定
         //nodeView.setNodeName(node.getNodeName());
@@ -323,7 +323,7 @@ public class MapActivity extends AppCompatActivity {
         observer.addOnGlobalLayoutListener(new NodeGlobalLayoutListener(nodeView, lineDrawKind));
 
         //ノードビューを保持
-        node.setNodeView(nodeView);
+        node.setChildNodeView(nodeView);
     }
 
     /*
@@ -371,7 +371,7 @@ public class MapActivity extends AppCompatActivity {
         float parentCenterY = parentNode.getCenterPosY();
 
         //自身の中心座標を取得
-        NodeView nodeView = node.getNodeView();
+        ChildNodeView nodeView = node.getChildNodeView();
 
         //ラインを生成
         NodeView.LineView lineView = nodeView.createLine(parentCenterX, parentCenterY);
@@ -586,10 +586,10 @@ public class MapActivity extends AppCompatActivity {
         public static final int LINE_SELF = 2;
 
         /* フィールド変数 */
-        private final NodeView mv_node;
+        private final ChildNodeView mv_node;
         private final int mLineDrawKind;
 
-        public NodeGlobalLayoutListener( NodeView v_node, int lineDrawKind ){
+        public NodeGlobalLayoutListener( ChildNodeView v_node, int lineDrawKind ){
             mv_node = v_node;
             mLineDrawKind = lineDrawKind;
         }
@@ -856,7 +856,7 @@ public class MapActivity extends AppCompatActivity {
             if( resultCode == NodeEntryActivity.RESULT_CREATED) {
 
                 //生成されたノードを取得
-                NodeTable node = (NodeTable) intent.getSerializableExtra(NodeEntryActivity.KEY_CREATED_NODE);
+                NodeTable node = (NodeTable) intent.getSerializableExtra(ResourceManager.KEY_CREATED_NODE);
                 //リストに追加
                 MapCommonData mapCommonData = (MapCommonData) getApplication();
                 mapCommonData.addNodes(node);
@@ -872,46 +872,22 @@ public class MapActivity extends AppCompatActivity {
                 NodeTable node = mapCommonData.getEditNode();
 
                 //ノード情報をビューに反映
-                NodeView nodeView = node.getNodeView();
+                ChildNodeView nodeView = node.getChildNodeView();
                 nodeView.reflectNodeInformation();
 
-            //ノードピクチャ生成完了
+            //ピクチャノード生成完了
             } else if( resultCode == PictureNodeSelectActivity.RESULT_PICTURE_NODE) {
 
-                //写真URIを取得
-                Uri uri = intent.getParcelableExtra("URI");
+                //新規ピクチャノードを取得
+                NodeTable pictureNode = (NodeTable)intent.getSerializableExtra(ResourceManager.KEY_CREATED_NODE);
+                //URI識別子を取得
+                //String uriIdentify = intent.getStringExtra( ResourceManager.KEY_URI );
+                //URIを生成
+                //Uri uri = Uri.parse( ResourceManager.URI_PATH + uriIdentify );
 
-                //ContentResolver:コンテンツモデルへのアクセスを提供
-                ContentResolver contentResolver = getContentResolver();
-
-                //URI下のデータにアクセスする
-                ParcelFileDescriptor pfDescriptor = null;
-                try {
-                    pfDescriptor = contentResolver.openFileDescriptor(uri, "r");
-
-                    if(pfDescriptor != null) {
-
-                        //実際のFileDescriptorを取得
-                        FileDescriptor fileDescriptor = pfDescriptor.getFileDescriptor();
-                        Bitmap bmp = BitmapFactory.decodeFileDescriptor(fileDescriptor);
-                        pfDescriptor.close();
-
-                        //
-
-
-                    }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } finally {
-                    try{
-                        if(pfDescriptor != null){
-                            pfDescriptor.close();
-                        }
-                    }catch (Exception e){
-                        e.printStackTrace();
-                    }
-                }
+                //ノードを描画
+                //Log.i("Callback", "uri=" + uri);
+                drawNode(findViewById(R.id.fl_map), pictureNode, NodeGlobalLayoutListener.LINE_SELF);
 
 
             } else {

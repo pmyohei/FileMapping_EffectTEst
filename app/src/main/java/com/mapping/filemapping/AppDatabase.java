@@ -10,6 +10,7 @@ import androidx.room.RoomDatabase;
         entities = {
                 MapTable.class,         //マップテーブル
                 NodeTable.class,        //ノードテーブル
+                PictureTable.class,     //ピクチャテーブル
         },
         version = 1,
         exportSchema = false)
@@ -18,5 +19,5 @@ public abstract class AppDatabase extends RoomDatabase {
     //DAO
     public abstract MapTableDao        daoMapTable();               //マップテーブル
     public abstract NodeTableDao       daoNodeTable();              //ノードテーブル
-
+    public abstract PictureTableDao    daoPictureTable();           //ピクチャテーブル
 }

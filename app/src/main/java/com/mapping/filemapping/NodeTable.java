@@ -14,13 +14,9 @@ import java.io.Serializable;
  *   Serializable：intentによるデータの受け渡しを行うために実装
  */
 @Entity(tableName = "node",
-        foreignKeys = { @ForeignKey
-                        (entity = MapTable.class,
-                        parentColumns = "pid",
-                        childColumns  = "pid_map",
-                        onDelete = ForeignKey.CASCADE)},
-        indices = { @Index
-                        (value = {"pid_map"})}
+        foreignKeys = { @ForeignKey(entity = MapTable.class,     parentColumns = "pid", childColumns  = "pid_map",     onDelete = ForeignKey.CASCADE),},
+        indices = { @Index(value = {"pid_map"})}
+                    //@Index(value = {"pid_picture"})}
 )
 public class NodeTable implements Serializable {
 
@@ -35,6 +31,11 @@ public class NodeTable implements Serializable {
     //プライマリーID-親ノード
     @ColumnInfo(name = "pid_parent_node")
     private int pidParentNode;
+
+    //Uri識別子-ピクチャ（ピクチャノードのみ）
+    //※エラーになるため、外部キーとして（Pid）は持たない
+    @ColumnInfo(name = "uri_identify")
+    private String uriIdentify;
 
     //ノード種別
     @ColumnInfo(name = "kind")
@@ -100,7 +101,7 @@ public class NodeTable implements Serializable {
     @Ignore
     private float centerPosY;                   //ノード中心座標Y*/
     @Ignore
-    private NodeView nodeView;                  //ノードビュー
+    private ChildNodeView childNodeView;        //ノードビュー
     @Ignore
     private RootNodeView rootNodeView;          //ルートノードビュー
 
@@ -174,6 +175,13 @@ public class NodeTable implements Serializable {
         this.textColor = textColor;
     }
 
+    public String getUriIdentify() {
+        return uriIdentify;
+    }
+    public void setUriIdentify(String uriIdentify) {
+        this.uriIdentify = uriIdentify;
+    }
+
     /*-- getter setter（非レコードフィールド） --*/
 
     /*
@@ -184,14 +192,14 @@ public class NodeTable implements Serializable {
         if( kind == NODE_KIND_ROOT ){
             return rootNodeView.getCenterPosX();
         } else {
-            return nodeView.getCenterPosX();
+            return childNodeView.getCenterPosX();
         }
     }
     public float getCenterPosY() {
         if( kind == NODE_KIND_ROOT ){
             return rootNodeView.getCenterPosY();
         } else {
-            return nodeView.getCenterPosY();
+            return childNodeView.getCenterPosY();
         }
     }
 
@@ -219,11 +227,11 @@ public class NodeTable implements Serializable {
     }
 */
 
-    public NodeView getNodeView() {
-        return nodeView;
+    public ChildNodeView getChildNodeView() {
+        return childNodeView;
     }
-    public void setNodeView(NodeView nodeView) {
-        this.nodeView = nodeView;
+    public void setChildNodeView(ChildNodeView childNodeView) {
+        this.childNodeView = childNodeView;
     }
 
     public RootNodeView getRootNodeView() {
