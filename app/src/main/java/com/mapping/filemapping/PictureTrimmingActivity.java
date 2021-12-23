@@ -11,7 +11,6 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -49,13 +48,13 @@ public class PictureTrimmingActivity extends AppCompatActivity {
                 pfDescriptor.close();
 
                 //トリミング用のビューにセット
-                final CropImageView cropImageView = (CropImageView)findViewById(R.id.cropImageView);
+                final CropImageView cropImageView = findViewById(R.id.cropImageView);
                 cropImageView.setImageBitmap(bmp);
                 //トリミング結果画像
-                final ImageView croppedImageView = (ImageView)findViewById(R.id.croppedImageView);
+                final ImageView croppedImageView = findViewById(R.id.croppedImageView);
 
                 //ボタン押下
-                Button cropButton = (Button)findViewById(R.id.crop_button);
+                Button cropButton = findViewById(R.id.crop_button);
                 cropButton.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
@@ -106,6 +105,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
                         //ピクチャ情報を生成
                         //※本ノード自体のpidはこの時点では確定していないため、DB処理完了後に設定
                         PictureTable picture = new PictureTable();
+                        picture.setPidMap( mapPid );
                         picture.setPidParentNode( selectedNodePid );
                         picture.setTrimmingInfo( rectInfo );
                         picture.setUriIdentify( uriIdentify );
@@ -122,7 +122,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
                                 //resultコード設定
                                 Intent retIntent = getIntent();
                                 retIntent.putExtra(ResourceManager.KEY_CREATED_NODE, newNode );    //生成したピクチャノード
-                                //retIntent.putExtra(ResourceManager.KEY_URI, uriSplit[1] );         //Uri識別子
+                                retIntent.putExtra(ResourceManager.KEY_THUMBNAIL, picture );       //生成したサムネピクチャ
                                 setResult(RESULT_OK, retIntent );
 
                                 //元の画面へ戻る

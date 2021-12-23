@@ -1,5 +1,6 @@
 package com.mapping.filemapping;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
@@ -71,6 +72,7 @@ public class AsyncCreateMap {
         /*
          * DBへ保存
          */
+        @SuppressLint("ResourceType")
         private void insertDB(){
 
             //MapDap
@@ -87,6 +89,7 @@ public class AsyncCreateMap {
             rootNode.setNodeName( mContext.getString( R.string.default_rootNode ) );
             rootNode.setPidParentNode( NodeTable.NO_PARENT );
             rootNode.setKind( NodeTable.NODE_KIND_ROOT );
+            rootNode.setNodeColor( mContext.getString( R.color.node_default ) );
 
             //新規挿入
             nodeDao.insert( rootNode );

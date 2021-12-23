@@ -59,6 +59,7 @@ public class NodeView extends ChildNodeView  /*implements View.OnTouchListener*/
     /*
      * 初期化処理
      */
+    @SuppressLint("ResourceType")
     private void initNode() {
 
         Log.i("NodeView", "init");
@@ -66,9 +67,13 @@ public class NodeView extends ChildNodeView  /*implements View.OnTouchListener*/
         //ノード名の設定
         setNodeName( mNode.getNodeName() );
         //背景色の設定
-        //setBackgroundColor( mNode.getNodeColor() );
-        Log.i("color", "getColor=" + getResources().getColor(R.color.cafe_1));
-        setBackgroundColor( getResources().getColor(R.color.cafe_1) );
+        String color = mNode.getNodeColor();
+        if( color == null ){
+            color = getResources().getString(R.color.node_default);
+        }
+        //Log.i("color", "getColor=" + getResources().getColor(R.color.cafe_1));
+        //setBackgroundColor( getResources().getColor(R.color.cafe_1) );
+        setBackgroundColor( Color.parseColor(color) );
 
         //タッチリスナー
         //setOnTouchListener(new NodeTouchListener());
@@ -82,8 +87,6 @@ public class NodeView extends ChildNodeView  /*implements View.OnTouchListener*/
      */
     public void setNodeToolIcon() {
 
-
-/*
         //削除
         ImageButton ib = findViewById(R.id.ib_delete);
         ib.setOnClickListener(new View.OnClickListener() {
@@ -126,7 +129,7 @@ public class NodeView extends ChildNodeView  /*implements View.OnTouchListener*/
                         .show();
             }
         });
-*/
+
 
     }
 

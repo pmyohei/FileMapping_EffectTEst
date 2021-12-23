@@ -228,11 +228,11 @@ public class GIJI_AsyncCreateDBOperaion extends AsyncTask<Void, Void, Integer> {
         NodeTable nodeC = new NodeTable();
         NodeTable nodeD = new NodeTable();
 
-        nodeR.setNodeName("MapC Root");
-        nodeA.setNodeName("MapC NodeA__________");
-        nodeB.setNodeName("MapC\nNodeB");
-        nodeC.setNodeName("M\na\np\nC\nN\no\nd\ne\nC");
-        nodeD.setNodeName("MapC NodeD");
+        nodeR.setNodeName("Cafe");
+        nodeA.setNodeName("新宿");
+        nodeB.setNodeName("原宿");
+        nodeC.setNodeName("Cafe\nABC");
+        nodeD.setNodeName("抹茶");
 
         nodeR.setPidMap((int)MapPid);
         nodeA.setPidMap((int)MapPid);
@@ -245,6 +245,13 @@ public class GIJI_AsyncCreateDBOperaion extends AsyncTask<Void, Void, Integer> {
         nodeB.setKind( NodeTable.NODE_KIND_NODE );
         nodeC.setKind( NodeTable.NODE_KIND_NODE );
         nodeD.setKind( NodeTable.NODE_KIND_NODE );
+
+        //ノード背景色
+        nodeR.setNodeColor( "#D3AE6F" );
+        nodeA.setNodeColor( "#4E2613" );
+        nodeB.setNodeColor( "#4E2613" );
+        nodeC.setNodeColor( "#4E2613" );
+        nodeD.setNodeColor( "#969734" );
 
         nodeR.setPos( 7000, 7000 );
         nodeA.setPos( 7100, 7100 );

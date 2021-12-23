@@ -3,10 +3,19 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
-        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable-v24/baseline_import_contacts_24.xml" value="0.26927083333333335" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/frame_item_map.xml" value="0.11666666666666667" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_color_picker.xml" value="0.1140625" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_map.xml" value="0.13376168224299065" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_map_list.xml" value="0.1" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_node_information.xml" value="0.264" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_picture_trimming.xml" value="0.17083333333333334" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/item_map.xml" value="0.1" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/map_item.xml" value="0.22864583333333333" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node.xml" value="0.17481884057971014" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/picture_node.xml" value="0.23731884057971014" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/root_node.xml" value="0.23007246376811594" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_close_24.xml" value="0.19722222222222222" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/circle.xml" value="0.22135416666666666" />
-        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/circle_node.xml" value="0.1" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/circle_tool.xml" value="0.18958333333333333" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/circle_toolIcon.xml" value="0.296875" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/circle_tool_icon.xml" value="0.16666666666666666" />
@@ -14,15 +23,9 @@
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/frame_item_map.xml" value="0.21979166666666666" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_main.xml" value="0.2318840579710145" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_map.xml" value="0.1261904761904762" />
-        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_map_information.xml" value="0.25364583333333335" />
-        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_map_list.xml" value="0.264" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_map_list.xml" value="0.176" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_node_information.xml" value="0.20625" />
-        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_picture_node_select.xml" value="0.21354166666666666" />
-        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_picture_trimming.xml" value="0.19947916666666668" />
-        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/confirm_dialog.xml" value="0.2140625" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/item_map.xml" value="0.20364583333333333" />
-        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/item_map_old.xml" value="0.1703125" />
-        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/map_item.xml" value="0.2755208333333333" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node.xml" value="0.4" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node_cl.xml" value="0.264" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node_cl_2.xml" value="0.264" />
@@ -35,7 +38,6 @@
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node_root_old.xml" value="0.15833333333333333" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node_root_old2.xml" value="0.146875" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node_root_test.xml" value="0.146875" />
-        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/picture_node.xml" value="0.21354166666666666" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/root_node.xml" value="0.3" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/menu/toolbar_map.xml" value="0.23697916666666666" />
       </map>

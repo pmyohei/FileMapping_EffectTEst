@@ -9,6 +9,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.RectF;
 import android.net.Uri;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
@@ -27,7 +28,7 @@ public class PictureNodeView extends ChildNodeView  /*implements View.OnTouchLis
      * コンストラクタ
      */
     @SuppressLint("ClickableViewAccessibility")
-    public PictureNodeView(Context context, NodeTable node, ActivityResultLauncher<Intent> nodeOperationLauncher) {
+    public PictureNodeView(Context context, NodeTable node, PictureTable thumbnail, ActivityResultLauncher<Intent> nodeOperationLauncher) {
         super(context, node, nodeOperationLauncher, R.layout.picture_node);
 
         Log.i("PictureNodeView", "3");
@@ -37,31 +38,15 @@ public class PictureNodeView extends ChildNodeView  /*implements View.OnTouchLis
         ////ノード操作ランチャーを保持
         //mNodeOperationLauncher = nodeOperationLauncher;
 
-        initNode();
+        initNode(thumbnail);
     }
-
-/*    public NodeView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-
-        Log.i("NodeView", "2");
-
-        init();
-    }
-
-    public NodeView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-
-        Log.i("NodeView", "3");
-
-        init();
-    }*/
 
     /*
      * 初期化処理
      */
-    private void initNode() {
+    private void initNode(PictureTable thumbnail) {
 
-        Log.i("NodeView", "init");
+        Log.i("PictureNodeView", "init");
 
         //ノード名の設定
         //setNodeName( mNode.getNodeName() );
@@ -76,7 +61,7 @@ public class PictureNodeView extends ChildNodeView  /*implements View.OnTouchLis
         //
 
         //ノードに画像を設定
-        setNodeBitmap();
+        setNodeBitmap(thumbnail);
 
         //ツールアイコン設定
         setNodeToolIcon();
@@ -85,7 +70,13 @@ public class PictureNodeView extends ChildNodeView  /*implements View.OnTouchLis
     /*
      * ノードに画像を設定
      */
-    public void setNodeBitmap() {
+    public void setNodeBitmap(PictureTable thumbnail) {
+
+        //仮ガード-----
+        if( mNode.getUriIdentify() == null ){
+            return;
+        }
+        //-----
 
         //ContentResolver:コンテンツモデルへのアクセスを提供
         ContentResolver contentResolver = getContext().getContentResolver();
@@ -96,6 +87,8 @@ public class PictureNodeView extends ChildNodeView  /*implements View.OnTouchLis
             //URI作成
             Uri uri = Uri.parse( ResourceManager.URI_PATH + mNode.getUriIdentify() );
 
+            Log.i("setNodeBitmap", "uri=" + uri);
+
             //Descriptor取得
             pfDescriptor = contentResolver.openFileDescriptor(uri, "r");
             if(pfDescriptor != null) {
@@ -104,6 +97,13 @@ public class PictureNodeView extends ChildNodeView  /*implements View.OnTouchLis
                 FileDescriptor fileDescriptor = pfDescriptor.getFileDescriptor();
                 Bitmap bmp = BitmapFactory.decodeFileDescriptor(fileDescriptor);
                 pfDescriptor.close();
+
+                Log.i("setNodeBitmap", "bmp.getHeight()=" + bmp.getHeight() + " bmp.width()=" + bmp.getWidth());
+
+                //トリミング情報を反映
+                RectF rectF = thumbnail.getTrimmingInfo();
+                Log.i("setNodeBitmap", "rectF.getHeight()=" + rectF.height() + " rectF.width()=" + rectF.width());
+                bmp = Bitmap.createBitmap( bmp, (int)rectF.left, (int)rectF.top, (int)rectF.width(), (int)rectF.height() );
 
                 //画像を設定
                 ((ImageView)findViewById(R.id.iv_node)).setImageBitmap( bmp );

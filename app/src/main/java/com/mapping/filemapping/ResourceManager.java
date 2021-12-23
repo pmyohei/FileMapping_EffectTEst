@@ -16,7 +16,7 @@ public class ResourceManager {
     public static final String KEY_MAPID = "MapID";
     public static final String KEY_CREATED_NODE = "CreatedNode";
     public static final String KEY_UPDATED_NODE = "UpdatedNode";
-    public static final String KEY_URI = "uri";
+    public static final String KEY_THUMBNAIL = "thumbnail";
 
 
 

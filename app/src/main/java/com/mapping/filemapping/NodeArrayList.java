@@ -114,8 +114,9 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
 
         //ノード数分ループ
         for (NodeTable node : nodes) {
+
             //ノード名が同じ場合
-            if (node.getNodeName().equals(nodeName)) {
+            if ( (node.getKind() != NodeTable.NODE_KIND_PICTURE) && (node.getNodeName().equals(nodeName)) ) {
                 return true;
             }
         }

@@ -13,13 +13,8 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.ContentResolver;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
 import android.os.Bundle;
-import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -34,8 +29,6 @@ import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.Scroller;
 
-import java.io.FileDescriptor;
-import java.io.IOException;
 import java.util.Objects;
 
 public class MapActivity extends AppCompatActivity {
@@ -74,6 +67,7 @@ public class MapActivity extends AppCompatActivity {
 
     //マップ内ノードリスト
     private NodeArrayList<NodeTable> mNodes;
+    private PictureArrayList<PictureTable> mThumbnails;
 
     /* 制御 */
     //ノード生成ができる状態か
@@ -155,14 +149,15 @@ public class MapActivity extends AppCompatActivity {
 
             //DB読み取り完了
             @Override
-            public void onRead(NodeArrayList<NodeTable> nodeList) {
+            public void onRead(NodeArrayList<NodeTable> nodeList, PictureArrayList<PictureTable> thumbnailList) {
 
                 //マップ共通データ
                 MapCommonData mapCommonData = (MapCommonData) getApplication();
                 mapCommonData.setNodes(nodeList);
 
-                //フィールド変数としても保持する
+                //フィールド変数として保持
                 mNodes = nodeList;
+                mThumbnails = thumbnailList;
 
                 if (mEnableDrawNode) {
                     //ノード生成可能なら、マップ上にノードを生成
@@ -298,11 +293,12 @@ public class MapActivity extends AppCompatActivity {
             nodeView = new NodeView(this, node, mNodeOperationLauncher);
         }else{
             //ピクチャノード
-            nodeView = new PictureNodeView(this, node, mNodeOperationLauncher);
-        }
+            //該当サムネイル取得
+            //★nullの場合の考慮を行う
+            PictureTable thumbnail = mThumbnails.getThumbnail( node.getPidParentNode(), node.getUriIdentify() );
 
-        //ノード名設定
-        //nodeView.setNodeName(node.getNodeName());
+            nodeView = new PictureNodeView(this, node, thumbnail, mNodeOperationLauncher);
+        }
 
         //ノードをマップに追加
         fl_map.addView(nodeView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -880,15 +876,21 @@ public class MapActivity extends AppCompatActivity {
 
                 //新規ピクチャノードを取得
                 NodeTable pictureNode = (NodeTable)intent.getSerializableExtra(ResourceManager.KEY_CREATED_NODE);
+                PictureTable picture  = (PictureTable)intent.getSerializableExtra(ResourceManager.KEY_THUMBNAIL);
                 //URI識別子を取得
                 //String uriIdentify = intent.getStringExtra( ResourceManager.KEY_URI );
                 //URIを生成
                 //Uri uri = Uri.parse( ResourceManager.URI_PATH + uriIdentify );
 
+                //リストに追加
+                MapCommonData mapCommonData = (MapCommonData) getApplication();
+                mapCommonData.addNodes(pictureNode);
+                //リストに追加
+                mThumbnails.add(picture);
+
                 //ノードを描画
                 //Log.i("Callback", "uri=" + uri);
                 drawNode(findViewById(R.id.fl_map), pictureNode, NodeGlobalLayoutListener.LINE_SELF);
-
 
             } else {
 

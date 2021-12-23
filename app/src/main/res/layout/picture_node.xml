@@ -26,7 +26,7 @@
             android:layout_height="match_parent"
             android:scaleType="centerCrop"
             android:layout_gravity="center"
-            android:src="@drawable/bmp_sample" />
+            android:src="@drawable/bmp_sample_cafe" />
 
     </androidx.cardview.widget.CardView>
 

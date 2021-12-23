@@ -18,10 +18,11 @@ import java.util.concurrent.ExecutorService;
  */
 public class AsyncReadNodes {
 
-    private final AppDatabase               mDB;
-    private final OnReadListener            mOnReadListener;
-    private final int                       mMapPid;
-    private       NodeArrayList<NodeTable>  mNodeList;
+    private final AppDatabase                       mDB;
+    private final OnReadListener                    mOnReadListener;
+    private final int                               mMapPid;
+    private       NodeArrayList<NodeTable>          mNodeList;
+    private       PictureArrayList<PictureTable>    mThumbnailList;
 
     /*
      * コンストラクタ
@@ -32,6 +33,7 @@ public class AsyncReadNodes {
         mMapPid         = mapPid;
 
         mNodeList       = new NodeArrayList<>();
+        mThumbnailList  = new PictureArrayList<>();
     }
 
 
@@ -67,10 +69,16 @@ public class AsyncReadNodes {
 
             //NodeDao
             NodeTableDao nodeDao = mDB.daoNodeTable();
+            //PictureDao
+            PictureTableDao pictureDao = mDB.daoPictureTable();
 
             //指定マップに所属するノードを取得
             List<NodeTable> nodeList = nodeDao.getMapNodes( mMapPid );
             mNodeList.addAll( nodeList );
+
+            //マップ内のサムネイル写真のみを取得
+            List<PictureTable> thumbnailPictureList = pictureDao.getThumbnailPicture(mMapPid);
+            mThumbnailList.addAll( thumbnailPictureList );
         }
 
     }
@@ -104,14 +112,14 @@ public class AsyncReadNodes {
         Log.i("AsyncReadNodeOperaion", "onPostExecute=" + mNodeList.size());
 
         //読み取り完了
-        mOnReadListener.onRead( mNodeList );
+        mOnReadListener.onRead( mNodeList, mThumbnailList );
     }
 
     /*
      * データ読み取り完了リスナー
      */
     public interface OnReadListener {
-        void onRead( NodeArrayList<NodeTable> nodeList );
+        void onRead( NodeArrayList<NodeTable> nodeList, PictureArrayList<PictureTable> thumbnailList );
     }
 
 

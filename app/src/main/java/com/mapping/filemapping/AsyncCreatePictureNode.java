@@ -66,10 +66,10 @@ public class AsyncCreatePictureNode {
             //PictureDao
             PictureTableDao pictureDao = mDB.daoPictureTable();
 
-            //ピクチャを挿入
-            mPicturePid = (int)pictureDao.insert( mPicture );
             //ノードを挿入
             mNodePid = (int)nodeDao.insert( mNode );
+            //ピクチャを挿入
+            mPicturePid = (int)pictureDao.insert( mPicture );
         }
     }
 

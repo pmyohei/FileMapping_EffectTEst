@@ -25,6 +25,13 @@ public interface PictureTableDao {
     @Query("SELECT * FROM picture WHERE pid=(:pid)")
     PictureTable getPicture(int pid);
 
+    /*
+     * 取得：サムネイル写真
+     *   指定マップに所属する写真の内、サムネイルとして登録された写真を取得
+     */
+    @Query("SELECT * FROM picture WHERE pid_map=(:mapPid) AND trg_left>=(0)")
+    List<PictureTable> getThumbnailPicture(int mapPid);
+
     @Insert
     long insert(PictureTable PictureTable);
 

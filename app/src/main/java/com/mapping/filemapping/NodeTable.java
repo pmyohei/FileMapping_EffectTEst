@@ -59,11 +59,11 @@ public class NodeTable implements Serializable {
 
     //色：ノード背景色
     @ColumnInfo(name = "node_color")
-    private int nodeColor;
+    private String nodeColor;
 
     //色：ノード文字色
     @ColumnInfo(name = "text_color")
-    private int textColor;
+    private String textColor;
 
     //ライン-形状
 
@@ -161,17 +161,17 @@ public class NodeTable implements Serializable {
         this.posY = posY;
     }
 
-    public int getNodeColor() {
+    public String getNodeColor() {
         return nodeColor;
     }
-    public void setNodeColor(int nodeColor) {
+    public void setNodeColor(String nodeColor) {
         this.nodeColor = nodeColor;
     }
 
-    public int getTextColor() {
+    public String getTextColor() {
         return textColor;
     }
-    public void setTextColor(int textColor) {
+    public void setTextColor(String textColor) {
         this.textColor = textColor;
     }
 

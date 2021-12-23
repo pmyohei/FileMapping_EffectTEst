@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -199,7 +200,8 @@ public class RootNodeView extends FrameLayout implements Serializable {
 
         //ノード背景色
         //setBackgroundColor( mNode.getNodeColor() );
-        setBackgroundColor( getResources().getColor( R.color.cafe_3 ) );
+        //setBackgroundColor( getResources().getColor( R.color.cafe_3 ) );
+        //setBackgroundColor( Color.parseColor("0x969734") );
 
         //★設定を追加した際に反映
 
@@ -213,7 +215,9 @@ public class RootNodeView extends FrameLayout implements Serializable {
         setNodeName(node.getNodeName());
         //ノード背景色
         //★仮
-        setBackgroundColor(getResources().getColor( R.color.cafe_2 ));
+        //setBackgroundColor(getResources().getColor( R.color.cafe_2 ));
+        Log.i("setNodeInformation", "getNodeColor()=" + node.getNodeColor());
+        setBackgroundColor( Color.parseColor(node.getNodeColor()) );
 
     }
 
