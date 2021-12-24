@@ -26,13 +26,12 @@ import java.io.Serializable;
  *  ルートノード
  *    Serializable：intentによるデータの受け渡しを行うために実装
  */
-public class RootNodeView extends BaseNode implements Serializable {
+public class BaseNode extends FrameLayout {
 
     /* フィールド */
     //シリアルID
-    private static final long serialVersionUID = ResourceManager.SERIAL_VERSION_UID_NODE_VIEW;
+    //private static final long serialVersionUID = ResourceManager.SERIAL_VERSION_UID_NODE_VIEW;
 
-/*
     //ノード情報
     public NodeTable mNode;
     //ダブルタップ検知用
@@ -43,128 +42,92 @@ public class RootNodeView extends BaseNode implements Serializable {
     public float mCenterPosX;        //ノード中心座標X
     public float mCenterPosY;        //ノード中心座標Y
     //ノード操作発生時の画面遷移ランチャー
-    ActivityResultLauncher<Intent> mNodeOperationLauncher;
-*/
+    public ActivityResultLauncher<Intent> mNodeOperationLauncher;
+
+
 
     /*
      * コンストラクタ
-     *   NodeViewからのコール用
      */
-/*    @SuppressLint("ClickableViewAccessibility")
-    public RootNodeView(Context context, int layoutID) {
-        super(context);
+    public BaseNode(Context context, AttributeSet attrs, int layoutID) {
+        super(context, attrs);
 
-        Log.i("RootNodeView", "1");
+        Log.i("BaseNode", "1");
 
-        init(layoutID, true);
-    }*/
+        init(layoutID);
+    }
 
     /*
-     *  コンストラクタ
-     * 　 レイアウトに埋め込んだビューの生成時は、本コンストラクタがコールされる
+     * コンストラクタ
      */
-    public RootNodeView(Context context, AttributeSet attrs) {
-        super(context, attrs, R.layout.root_node);
+    @SuppressLint("ClickableViewAccessibility")
+    public BaseNode(Context context, NodeTable node, ActivityResultLauncher<Intent> launcher, int layoutID) {
+        super(context);
 
-        Log.i("RootNodeView", "2");
+        Log.i("BaseNode", "2");
 
-        //init(R.layout.root_node, true);
+        //ノード情報を保持
+        mNode = node;
+        //ノード操作ランチャーを保持
+        mNodeOperationLauncher = launcher;
 
         //レイアウト生成
         //LayoutInflater inflater = LayoutInflater.from(getContext());
-        //inflater.inflate(R.layout.root_node, this, true);
+        //inflater.inflate(layoutID, this, true);
 
-        //ツールアイコン設定
-        //setToolIcon();
+        init(layoutID);
     }
+
 
     /*
      * 初期化処理
      */
-/*    private void init( int layoutID, boolean attachToRoot ) {
+    private void init( int layoutID ) {
 
-        Log.i("RootNodeView", "init");
+        //レイアウト生成
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        inflater.inflate(layoutID, this, true);
+
+        Log.i("BaseNode", "init");
 
         //ツールアイコン非表示
         misOpenToolIcon = false;
 
         Log.i("init", "root getChildCount = " + getChildCount());
 
-        //レイアウト生成
-        LayoutInflater inflater = LayoutInflater.from(getContext());
-        inflater.inflate(layoutID, this, attachToRoot);
-
         //※クリックを有効にしないとタッチ処理が検出されない
         setClickable(true);
         //タッチリスナー
         setOnTouchListener(new RootNodeTouchListener());
 
+        //ノード情報をビューに設定
+        reflectViewNodeInfo();
+
         //ツールアイコン設定
-        setToolIcon();
-    }*/
+        setCommonToolIcon();
+        setParentToolIcon();
+    }
 
 
     /*
      * ツールアイコン設定
+     *   ・クローズ
+     *   ・配下の写真の一覧表示
+     *   ・ノード編集
      */
-/*
-    public void setToolIcon() {
+    public void setCommonToolIcon() {
 
         //クローズ
-        ImageButton ib = findViewById(R.id.ib_close);
-        ib.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.ib_close).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
-                //クローズする
-                operationToolIcon();
-            }
-        });
-
-        //ノード生成
-        ib = findViewById(R.id.ib_createNode);
-        ib.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //ノード情報画面へ遷移
-                Context context = getContext();
-                Intent intent = new Intent(context, NodeEntryActivity.class);
-
-                //タッチノードの情報を渡す
-                intent.putExtra(MapActivity.INTENT_MAP_PID, mNode.getPidMap());
-                intent.putExtra(MapActivity.INTENT_NODE_PID, mNode.getPid());
-                intent.putExtra(MapActivity.INTENT_KIND_CREATE, true );
-
-                //((Activity)context).startActivityForResult(intent, MapActivity.REQ_NODE_CREATE);
-                mNodeOperationLauncher.launch( intent );
-
-                //クローズする
-                operationToolIcon();
-            }
-        });
-
-        //ノード生成(ピクチャ)
-        ib = findViewById(R.id.ib_createPictureNode);
-        ib.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //ノード情報画面へ遷移
-                Context context = getContext();
-                Intent intent = new Intent(context, PictureNodeSelectActivity.class);
-                intent.putExtra(MapActivity.INTENT_MAP_PID, mNode.getPidMap() );
-                intent.putExtra(MapActivity.INTENT_NODE_PID,mNode.getPid() );
-
-                //画面遷移
-                mNodeOperationLauncher.launch( intent );
-
                 //クローズする
                 operationToolIcon();
             }
         });
 
         //ノード編集
-        ib = findViewById(R.id.ib_edit);
-        ib.setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.ib_edit).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
                 //ノード情報画面へ遷移
@@ -190,22 +153,99 @@ public class RootNodeView extends BaseNode implements Serializable {
         });
 
     }
-*/
+
+    /*
+     * ツールアイコン設定
+     *   ・子ノードの追加
+     *   ・写真ノードの追加
+     */
+    public void setParentToolIcon() {
+
+        //ピクチャノードなら、何もしない
+        if( (mNode == null) || (mNode.getKind() == NodeTable.NODE_KIND_PICTURE) ){
+            return;
+        }
+
+        //ノード生成
+        findViewById(R.id.ib_createNode).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //ノード情報画面へ遷移
+                Context context = getContext();
+                Intent intent = new Intent(context, NodeEntryActivity.class);
+
+                //タッチノードの情報を渡す
+                intent.putExtra(MapActivity.INTENT_MAP_PID, mNode.getPidMap());
+                intent.putExtra(MapActivity.INTENT_NODE_PID, mNode.getPid());
+                intent.putExtra(MapActivity.INTENT_KIND_CREATE, true );
+
+                //((Activity)context).startActivityForResult(intent, MapActivity.REQ_NODE_CREATE);
+                mNodeOperationLauncher.launch( intent );
+
+                //クローズする
+                operationToolIcon();
+            }
+        });
+
+        //ノード生成(ピクチャ)
+        findViewById(R.id.ib_createPictureNode).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //ノード情報画面へ遷移
+                Context context = getContext();
+                Intent intent = new Intent(context, PictureNodeSelectActivity.class);
+                intent.putExtra( MapActivity.INTENT_MAP_PID, mNode.getPidMap() );
+                intent.putExtra( MapActivity.INTENT_NODE_PID,mNode.getPid() );
+
+                //画面遷移
+                mNodeOperationLauncher.launch( intent );
+
+                //クローズする
+                operationToolIcon();
+            }
+        });
+
+    }
+
 
 
     /*
      * ノードテーブルの情報をノードビューに反映する
      */
-/*    public void reflectViewNodeInfo() {
+    public void reflectViewNodeInfo() {
 
-        //★設定を追加した際に反映
-
-    }*/
+        //ノードデザインの更新
+        setNodeDesign( mNode );
+        setParentNodeInfo( mNode );
+    }
 
     /*
-     * ノード情報の設定
+     * ノードデザインの設定
      */
-/*    public void setNodeInformation(NodeTable node) {
+    public void setNodeDesign(NodeTable node) {
+
+        if( node == null ){
+            //ノード情報未保持なら、何もしない
+            return;
+        }
+
+        //ノードデザイン
+        //ノードの形
+        //ノードの大きさ
+
+    }
+
+    /*
+     * 親ノード情報の設定
+     */
+    public void setParentNodeInfo(NodeTable node) {
+
+        //ピクチャノードなら、何もしない
+        if( (node == null) || (node.getKind() == NodeTable.NODE_KIND_PICTURE) ){
+            return;
+        }
+
         //ノード名
         setNodeName(node.getNodeName());
         //ノード背景色
@@ -213,45 +253,39 @@ public class RootNodeView extends BaseNode implements Serializable {
         //setBackgroundColor(getResources().getColor( R.color.cafe_2 ));
         Log.i("setNodeInformation", "getNodeColor()=" + node.getNodeColor());
         setBackgroundColor( Color.parseColor(node.getNodeColor()) );
-
-    }*/
+    }
 
     /*
      * ノード名の設定
      */
-/*
     public void setNodeName(String name) {
         ((TextView) findViewById(R.id.tv_node)).setText(name);
     }
-*/
 
     /*
      * ノード背景色の設定
      */
-/*
     public void setBackgroundColor(int color) {
         //背景色を設定
         //ColorDrawable colorDrawable = (ColorDrawable)findViewById(R.id.tv_node).getBackground();
         //colorDrawable.setColor( color );
 
-        Drawable aa = findViewById(R.id.tv_node).getBackground();
-        aa.setTint( color );
+        Drawable drawable = findViewById(R.id.tv_node).getBackground();
+        drawable.setTint( color );
     }
-*/
 
     /*
      * ノード中心座標の設定
      */
-/*    public void calcCenterPos() {
+    public void calcCenterPos() {
         //中心座標を計算し、設定
         this.mCenterPosX = getLeft() + (getWidth() / 2f);
         this.mCenterPosY = getTop()  + (getHeight() / 2f);
-    }*/
+    }
 
     /*
      * ツールアイコン表示制御
      */
-/*
     public void operationToolIcon() {
 
         //共通データ
@@ -342,7 +376,7 @@ public class RootNodeView extends BaseNode implements Serializable {
                         layout( left, top, left + newWidth, top + newHeight );
 
                         //現在の表示上位置をマージンに反映
-                        ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams)getLayoutParams();
+                        MarginLayoutParams mlp = (MarginLayoutParams)getLayoutParams();
                         mlp.setMargins(getLeft(), getTop(), 0, 0);
 
                         Log.i("toolOpenControl", mNode.getNodeName() + " global=" + getWidth() + " " + getHeight());
@@ -350,24 +384,20 @@ public class RootNodeView extends BaseNode implements Serializable {
                 }
         );
     }
-*/
 
 
 
     /*
      * ノードタッチリスナー
      */
-/*
-    public class RootNodeTouchListener implements View.OnTouchListener, Serializable {
+    public class RootNodeTouchListener implements OnTouchListener, Serializable {
 
         //シリアルID
         private static final long serialVersionUID = 3L;
 
-        */
-/*
+        /*
          * コンストラクタ
-         *//*
-
+         */
         public RootNodeTouchListener() {
 
             //ダブルタップリスナーを実装したGestureDetector
@@ -381,20 +411,16 @@ public class RootNodeView extends BaseNode implements Serializable {
             return mGestureDetector.onTouchEvent(event);
         }
 
-        */
-/*
+        /*
          * ダブルタップリスナー
-         *//*
-
+         */
         private class DoubleTapListener extends GestureDetector.SimpleOnGestureListener implements Serializable{
 
-            */
-/*
+            /*
              * ダブルタップリスナー
              *   ツールアイコンの表示制御を行う。
              *   ※他ノードがオープン中であれば、クローズしてタップされたノードのツールアイコンを表示する
-             *//*
-
+             */
             @Override
             public boolean onDoubleTap(MotionEvent event) {
 
@@ -408,8 +434,37 @@ public class RootNodeView extends BaseNode implements Serializable {
             }
         }
     }
-*/
 
     /*-- getter／setter --*/
+    public NodeTable getNode() {
+        return mNode;
+    }
+    public void setNode(NodeTable node) {
+        this.mNode = node;
 
+        //ノード情報の設定
+        setNodeDesign(node);
+        setParentNodeInfo(node);
+
+        //ツールアイコンの設定
+        setParentToolIcon();
+    }
+
+    public float getCenterPosX() {
+        return mCenterPosX;
+    }
+    public void setCenterPosX(float centerPosX) {
+        this.mCenterPosX = centerPosX;
+    }
+
+    public float getCenterPosY() {
+        return mCenterPosY;
+    }
+    public void setCenterPosY(float centerPosY) {
+        this.mCenterPosY = centerPosY;
+    }
+
+    public void setNodeOperationLauncher( ActivityResultLauncher<Intent> launcher ) {
+        this.mNodeOperationLauncher = launcher;
+    }
 }

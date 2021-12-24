@@ -14,13 +14,12 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.widget.ImageButton;
 
 import androidx.activity.result.ActivityResultLauncher;
 
 import java.io.Serializable;
 
-public class ChildNodeView extends RootNodeView  /*implements View.OnTouchListener*/ {
+public class ChildNode extends BaseNode {
 
     //ピンチ操作後のビュー間の距離の比率
     private float pinchDistanceRatioX;
@@ -40,57 +39,28 @@ public class ChildNodeView extends RootNodeView  /*implements View.OnTouchListen
      * コンストラクタ
      */
     @SuppressLint("ClickableViewAccessibility")
-    public ChildNodeView(Context context, NodeTable node, ActivityResultLauncher<Intent> nodeOperationLauncher, int layoutID) {
-        super(context, layoutID);
+    public ChildNode(Context context, NodeTable node, ActivityResultLauncher<Intent> launcher, int layoutID) {
+        super(context, node, launcher, layoutID );
 
-        Log.i("NodeView", "3");
-
-        //ノード情報を保持
-        mNode = node;
-        //ノード操作ランチャーを保持
-        mNodeOperationLauncher = nodeOperationLauncher;
-
-        initNode();
-    }
-
-/*    public NodeView(Context context, AttributeSet attrs) {
-        super(context, attrs);
-
-        Log.i("NodeView", "2");
-
-        init();
-    }
-
-    public NodeView(Context context, AttributeSet attrs, int defStyleAttr) {
-        super(context, attrs, defStyleAttr);
-
-        Log.i("NodeView", "3");
-
-        init();
-    }*/
-
-    /*
-     * 初期化処理
-     */
-    private void initNode() {
-
-        Log.i("NodeView", "init");
+        Log.i("ChildNode", "3");
 
         //タッチリスナー
         setOnTouchListener(new NodeTouchListener());
 
         //ツールアイコン設定
-        setNodeToolIcon();
+        setChildToolIcon();
     }
+
 
     /*
      * ツールアイコン設定
+     * ・ノード削除
+     * ・親ノードの変更
      */
-    public void setNodeToolIcon() {
+    public void setChildToolIcon() {
 
-        //削除
-        ImageButton ib = findViewById(R.id.ib_delete);
-        ib.setOnClickListener(new OnClickListener() {
+        //ノード削除
+        findViewById(R.id.ib_delete).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -137,9 +107,9 @@ public class ChildNodeView extends RootNodeView  /*implements View.OnTouchListen
     /*
      * ノードテーブルの情報をノードビューに反映する
      */
-    public void reflectNodeInformation() {
-        //必須
-        super.reflectNodeInformation();
+    public void reflectChildNodeInfo() {
+        //BaseNode
+        super.reflectViewNodeInfo();
 
         //★設定を追加した際に反映
 
@@ -199,7 +169,7 @@ public class ChildNodeView extends RootNodeView  /*implements View.OnTouchListen
         for (NodeTable childNode : mChildNodes) {
 
             //子ノードのノードビュー
-            ChildNodeView v_node = childNode.getChildNodeView();
+            ChildNode v_node = childNode.getChildNodeView();
 
             Log.i("test", "searchChildNodes 初期化対象の子ノード=" + v_node.getNode().getNodeName());
 
@@ -219,7 +189,7 @@ public class ChildNodeView extends RootNodeView  /*implements View.OnTouchListen
         for (NodeTable childNode : mChildNodes) {
 
             //子ノードのノードビュー
-            ChildNodeView v_node = childNode.getChildNodeView();
+            ChildNode v_node = childNode.getChildNodeView();
 
             //子ノードの子ノードを移動させる
             v_node.move(movex, movey, mCenterPosX, mCenterPosY, true);
@@ -236,7 +206,7 @@ public class ChildNodeView extends RootNodeView  /*implements View.OnTouchListen
         for (NodeTable childNode : mChildNodes) {
 
             //子ノードのノードビュー
-            ChildNodeView v_node = childNode.getChildNodeView();
+            ChildNode v_node = childNode.getChildNodeView();
 
             Log.i("test", "反転時の自ノード情報 自分=" + mNode.getNodeName() + " 自分のX位置=" + mCenterPosX);
 
@@ -345,7 +315,7 @@ public class ChildNodeView extends RootNodeView  /*implements View.OnTouchListen
         for (NodeTable childNode : mChildNodes) {
 
             //子ノードのノードビュー
-            ChildNodeView v_node = childNode.getChildNodeView();
+            ChildNode v_node = childNode.getChildNodeView();
 
             //子ノードの子ノードを移動させる
             v_node.setLayoutMargin();
@@ -379,7 +349,7 @@ public class ChildNodeView extends RootNodeView  /*implements View.OnTouchListen
 
         //子ノードをレイアウトから削除
         for( NodeTable node: mChildNodes ){
-            ((ChildNodeView)node.getChildNodeView()).removeLayoutUnderSelf();
+            ((ChildNode)node.getChildNodeView()).removeLayoutUnderSelf();
         }
 
         //自ノードとラインをレイアウトから削除
@@ -638,9 +608,9 @@ public class ChildNodeView extends RootNodeView  /*implements View.OnTouchListen
     public void setLineView(LineView lineView) {
         this.mLineView = lineView;
     }
+
     public LineView createLine(float startPosX, float startPosY) {
         this.mLineView = new LineView( getContext(), startPosX, startPosY );
-
         return this.mLineView;
     }
 

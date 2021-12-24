@@ -19,7 +19,7 @@ public class MapCommonData extends Application {
     //削除対象ノード
     private NodeArrayList<NodeTable> mDeleteNodes;
     //ツールアイコン表示中ノード
-    private RootNodeView mToolOpeningNode = null;
+    private BaseNode mToolOpeningNode = null;
     //編集対象ノード
     private NodeTable mEditNode = null;
 
@@ -135,10 +135,10 @@ public class MapCommonData extends Application {
     /*
      * ツールアイコン表示中ノードの取得／設定
      */
-    public RootNodeView getToolOpeningNode() {
+    public BaseNode getToolOpeningNode() {
         return mToolOpeningNode;
     }
-    public void setToolOpeningNode(RootNodeView mToolOpeningNode) {
+    public void setToolOpeningNode(BaseNode mToolOpeningNode) {
         this.mToolOpeningNode = mToolOpeningNode;
     }
     public void closeToolOpeningNode() {

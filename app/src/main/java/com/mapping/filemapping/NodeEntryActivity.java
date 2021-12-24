@@ -74,6 +74,7 @@ public class NodeEntryActivity extends AppCompatActivity {
                     newNode.setPidParentNode( selectedNodePid );
                     newNode.setKind(NodeTable.NODE_KIND_NODE);
                     newNode.setPos( posX, posY );
+                    newNode.setNodeColor( "#4E2613" ); //★暫定
                     //newNode.setNodeColor();
                     //newNode.setTextColor();
 

@@ -16,7 +16,8 @@ import java.io.Serializable;
 @Entity(tableName = "picture",
         foreignKeys = { @ForeignKey (entity = NodeTable.class, parentColumns = "pid", childColumns  = "pid_parent_node", onDelete = ForeignKey.CASCADE),
                         @ForeignKey (entity = MapTable.class,  parentColumns = "pid", childColumns  = "pid_map",         onDelete = ForeignKey.CASCADE)},
-        indices = { @Index (value = {"pid_parent_node", "pid_map"})}
+        indices = { @Index (value = {"pid_parent_node"}),
+                    @Index (value = {"pid_map"}),}
 )
 public class PictureTable implements Serializable {
 

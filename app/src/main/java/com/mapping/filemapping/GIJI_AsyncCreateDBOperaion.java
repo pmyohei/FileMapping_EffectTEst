@@ -147,12 +147,12 @@ public class GIJI_AsyncCreateDBOperaion extends AsyncTask<Void, Void, Integer> {
         NodeTable nodeD = new NodeTable();
         NodeTable nodeE = new NodeTable();
 
-        nodeR.setNodeName("MapB Root");
-        nodeA.setNodeName("MapB NodeA__________");
-        nodeB.setNodeName("MapB\nNodeB");
-        nodeC.setNodeName("M\na\np\nB\nN\no\nd\ne\nC");
-        nodeD.setNodeName("MapB NodeD");
-        //nodeE.setNodeName("nodeE");
+        nodeR.setNodeName("Cafe");
+        nodeA.setNodeName("新宿");
+        nodeB.setNodeName("原宿");
+        nodeC.setNodeName("Cafe\nABC");
+        nodeD.setNodeName("Cafe\nXYZ");
+        nodeE.setNodeName("Cafe");
 
         nodeR.setPidMap((int)MapPid);
         nodeA.setPidMap((int)MapPid);
@@ -166,7 +166,7 @@ public class GIJI_AsyncCreateDBOperaion extends AsyncTask<Void, Void, Integer> {
         nodeB.setKind( NodeTable.NODE_KIND_NODE );
         nodeC.setKind( NodeTable.NODE_KIND_NODE );
         nodeD.setKind( NodeTable.NODE_KIND_NODE );
-        nodeE.setKind( NodeTable.NODE_KIND_PICTURE );
+        nodeE.setKind( NodeTable.NODE_KIND_NODE );
 
         nodeR.setPos( 4000, 4000 );
         nodeA.setPos( 4100, 4100 );
@@ -174,6 +174,14 @@ public class GIJI_AsyncCreateDBOperaion extends AsyncTask<Void, Void, Integer> {
         nodeC.setPos( 4200, 4200 );
         nodeD.setPos( 4300, 4300 );
         nodeE.setPos( 4400, 4400 );
+
+        //ノード背景色
+        nodeR.setNodeColor( "#D3AE6F" );
+        nodeA.setNodeColor( "#4E2613" );
+        nodeB.setNodeColor( "#4E2613" );
+        nodeC.setNodeColor( "#11265F" );
+        nodeD.setNodeColor( "#969734" );
+        nodeE.setNodeColor( "#D36922" );
 
         //レコード追加
         int pidr = (int)nodeDao.insert( nodeR );
@@ -187,8 +195,8 @@ public class GIJI_AsyncCreateDBOperaion extends AsyncTask<Void, Void, Integer> {
         nodeA.setPidParentNode( pidr );
         nodeB.setPidParentNode( pidr );
         nodeC.setPidParentNode( pida );
-        nodeD.setPidParentNode( pidc );
-        nodeE.setPidParentNode( pidd );
+        nodeD.setPidParentNode( pida );
+        nodeE.setPidParentNode( pidb );
 
         Log.i("GIJI", "pidr=" + pidr);
         Log.i("GIJI", "pida=" + pida);

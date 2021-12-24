@@ -173,16 +173,16 @@ public class MapActivity extends AppCompatActivity {
         db.execute();
 
         //ルートノード
-        RootNodeView rnv_rootnode = findViewById(R.id.rnv_rootnode);
+        RootNodeView v_rootnode = findViewById(R.id.v_rootnode);
 
-        ViewTreeObserver observer = rnv_rootnode.getViewTreeObserver();
+        ViewTreeObserver observer = v_rootnode.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
 
                         //レイアウト確定後は、不要なので本リスナー削除
-                        rnv_rootnode.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        v_rootnode.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
                         if (mEnableDrawNode) {
                             //ノード生成可能なら、マップ上にノードを生成
@@ -232,18 +232,6 @@ public class MapActivity extends AppCompatActivity {
             //ノードを描画
             drawNode(fl_map, node, lineDrawKind);
         }
-
-        //---
-        //ノードをマップに追加
-        //TextView moveNode = new TextView(this);
-        //moveNode.setText("CHECK");
-        //fl_map.addView(moveNode, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        ////位置設定
-        //ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) moveNode.getLayoutParams();
-        //mlp.setMargins(0, 0, mlp.rightMargin, mlp.bottomMargin);
-        //---
-
     }
 
     /*
@@ -254,7 +242,7 @@ public class MapActivity extends AppCompatActivity {
         //ルートノード
         if (node.getKind() == NodeTable.NODE_KIND_ROOT) {
             //元々レイアウト上にあるルートノード名を変更し、中心座標を保持
-            RootNodeView rootNodeView = findViewById(R.id.rnv_rootnode);
+            RootNodeView rootNodeView = findViewById(R.id.v_rootnode);
 
             //ビューにノード情報を設定
             rootNodeView.setNode(node);
@@ -287,7 +275,7 @@ public class MapActivity extends AppCompatActivity {
 
         //ノード生成
         //NodeView nodeView = new NodeView(this, node, mNodeOperationLauncher);
-        ChildNodeView nodeView;
+        ChildNode nodeView;
         if (node.getKind() == NodeTable.NODE_KIND_NODE) {
             //ノード
             nodeView = new NodeView(this, node, mNodeOperationLauncher);
@@ -367,7 +355,7 @@ public class MapActivity extends AppCompatActivity {
         float parentCenterY = parentNode.getCenterPosY();
 
         //自身の中心座標を取得
-        ChildNodeView nodeView = node.getChildNodeView();
+        ChildNode nodeView = node.getChildNodeView();
 
         //ラインを生成
         NodeView.LineView lineView = nodeView.createLine(parentCenterX, parentCenterY);
@@ -582,10 +570,10 @@ public class MapActivity extends AppCompatActivity {
         public static final int LINE_SELF = 2;
 
         /* フィールド変数 */
-        private final ChildNodeView mv_node;
+        private final ChildNode mv_node;
         private final int mLineDrawKind;
 
-        public NodeGlobalLayoutListener( ChildNodeView v_node, int lineDrawKind ){
+        public NodeGlobalLayoutListener(ChildNode v_node, int lineDrawKind ){
             mv_node = v_node;
             mLineDrawKind = lineDrawKind;
         }
@@ -644,7 +632,7 @@ public class MapActivity extends AppCompatActivity {
          */
         public PinchListener() {
             mfl_map  = findViewById(R.id.fl_map);
-            rnv_rootnode = findViewById(R.id.rnv_rootnode);
+            rnv_rootnode = findViewById(R.id.v_rootnode);
             mv_base  = findViewById(R.id.v_base);
         }
 
@@ -868,8 +856,14 @@ public class MapActivity extends AppCompatActivity {
                 NodeTable node = mapCommonData.getEditNode();
 
                 //ノード情報をビューに反映
-                ChildNodeView nodeView = node.getChildNodeView();
-                nodeView.reflectNodeInformation();
+                //★微妙
+                if( node.getKind() == NodeTable.NODE_KIND_ROOT ){
+                    node.getRootNodeView().reflectViewNodeInfo();
+                } else{
+                    node.getChildNodeView().reflectChildNodeInfo();
+                }
+                //ChildNode nodeView = node.getChildNodeView();
+                //nodeView.reflectChildNodeInfo();
 
             //ピクチャノード生成完了
             } else if( resultCode == PictureNodeSelectActivity.RESULT_PICTURE_NODE) {
@@ -892,10 +886,8 @@ public class MapActivity extends AppCompatActivity {
                 //Log.i("Callback", "uri=" + uri);
                 drawNode(findViewById(R.id.fl_map), pictureNode, NodeGlobalLayoutListener.LINE_SELF);
 
-            } else {
-
-
             }
+
         }
     }
 

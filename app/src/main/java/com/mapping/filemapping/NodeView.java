@@ -6,22 +6,16 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
-import android.graphics.Path;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageButton;
 
 import androidx.activity.result.ActivityResultLauncher;
 
 import java.io.Serializable;
 
-public class NodeView extends ChildNodeView  /*implements View.OnTouchListener*/ {
+public class NodeView extends ChildNode implements Serializable {
 
     /*
      * コンストラクタ
@@ -59,11 +53,11 @@ public class NodeView extends ChildNodeView  /*implements View.OnTouchListener*/
     /*
      * 初期化処理
      */
-    @SuppressLint("ResourceType")
     private void initNode() {
 
         Log.i("NodeView", "init");
 
+/*
         //ノード名の設定
         setNodeName( mNode.getNodeName() );
         //背景色の設定
@@ -77,6 +71,7 @@ public class NodeView extends ChildNodeView  /*implements View.OnTouchListener*/
 
         //タッチリスナー
         //setOnTouchListener(new NodeTouchListener());
+*/
 
         //ツールアイコン設定
         setNodeToolIcon();
@@ -87,51 +82,10 @@ public class NodeView extends ChildNodeView  /*implements View.OnTouchListener*/
      */
     public void setNodeToolIcon() {
 
-        //削除
-        ImageButton ib = findViewById(R.id.ib_delete);
-        ib.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //本ノード配下のノード（本ノード含む）を全て取得する
-                MapCommonData mapCommonData = (MapCommonData) ((Activity) getContext()).getApplication();
-                mapCommonData.setDeleteNodes(mNode.getPid());
-
-                //削除確認ダイアログを表示
-                new AlertDialog.Builder(getContext())
-                        .setTitle("ノード削除確認")
-                        .setMessage("配下のノードも全て削除されます。\nなお、端末上から写真は削除されません。")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                                //削除対象ノード
-                                NodeArrayList<NodeTable> nodes = mapCommonData.getDeleteNodes();
-
-                                //DBからノード削除
-                                AsyncDeleteNode db = new AsyncDeleteNode(getContext(), nodes, new AsyncDeleteNode.OnFinishListener() {
-                                    @Override
-                                    public void onFinish() {
-
-                                        //自身と配下ノードをレイアウトから削除
-                                        removeLayoutUnderSelf();
-
-                                        //共通データに削除完了処理を行わせる
-                                        mapCommonData.finishDeleteNode();
-                                    }
-                                });
-
-                                //非同期処理開始
-                                db.execute();
-                            }
-                        })
-                        .setNegativeButton("Cancel", null)
-                        .show();
-            }
-        });
-
+        //ノードの別マップ化
 
     }
+
 
     /*
      * ノードテーブルの情報をノードビューに反映する

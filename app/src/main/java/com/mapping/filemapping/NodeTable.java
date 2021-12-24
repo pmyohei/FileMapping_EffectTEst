@@ -101,7 +101,7 @@ public class NodeTable implements Serializable {
     @Ignore
     private float centerPosY;                   //ノード中心座標Y*/
     @Ignore
-    private ChildNodeView childNodeView;        //ノードビュー
+    private ChildNode childNodeView;        //ノードビュー
     @Ignore
     private RootNodeView rootNodeView;          //ルートノードビュー
 
@@ -227,10 +227,10 @@ public class NodeTable implements Serializable {
     }
 */
 
-    public ChildNodeView getChildNodeView() {
+    public ChildNode getChildNodeView() {
         return childNodeView;
     }
-    public void setChildNodeView(ChildNodeView childNodeView) {
+    public void setChildNodeView(ChildNode childNodeView) {
         this.childNodeView = childNodeView;
     }
 
