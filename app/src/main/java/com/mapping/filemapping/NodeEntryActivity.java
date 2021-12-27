@@ -1,13 +1,19 @@
 package com.mapping.filemapping;
 
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 
 public class NodeEntryActivity extends AppCompatActivity {
 
@@ -20,6 +26,8 @@ public class NodeEntryActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_node_information);
+
+
 
         //遷移元からの情報
         Intent intent = getIntent();
@@ -64,6 +72,8 @@ public class NodeEntryActivity extends AppCompatActivity {
                     NodeTable parentNode = nodes.getNode( selectedNodePid );
                     int posX = (int)parentNode.getCenterPosX() + ResourceManager.POS_NODE_INIT_OFFSET;
                     int posY = (int)parentNode.getCenterPosY();
+
+                    //ノード色
 
                     //ノードを生成
                     //★
@@ -202,15 +212,48 @@ public class NodeEntryActivity extends AppCompatActivity {
             }
         });
 
+        //画面遷移ランチャー（カラーピッカー画面）
+        ActivityResultLauncher<Intent> colorPickerLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+
+                    /*
+                     * トリミング画面からの戻り処理
+                     */
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+
+                        Log.i("colorPickerLauncher", "onActivityResult()");
+
+                        if(result.getResultCode() == RESULT_OK) {
+
+                            Intent intent = result.getData();
+                            if(intent != null){
+                                //resultコード設定
+                                String color = intent.getStringExtra( "COLOR" );
+
+                                //設定色を反映
+                                //★仮
+                                ((TextView)findViewById(R.id.tv_tmpNodeColor)).setTextColor( Color.parseColor(color) );
+
+                            }
+                        }
+
+                    }
+                }
+        );
+
+
+
         //ノード背景色-カラーピッカー
-        findViewById(R.id.tv_tmpColor).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.tv_tmpNodeColor).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //
-
+                //カラーピッカー画面へ遷移
+                Intent intent = new Intent( NodeEntryActivity.this, ColorPickerActivity.class );
+                colorPickerLauncher.launch(intent);
             }
         });
-
 
 
     }

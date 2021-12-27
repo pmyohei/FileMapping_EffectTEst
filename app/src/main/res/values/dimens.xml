@@ -15,5 +15,7 @@
     <dimen name="node_icon_margin_middle2">60dp</dimen>
 
 
+    <dimen name="tmp_cardCornerRadius">12dp</dimen>
+
 
 </resources>

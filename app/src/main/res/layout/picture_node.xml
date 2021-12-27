@@ -10,11 +10,11 @@
     <!-- ノード -->
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_node"
-        android:layout_height="40dp"
-        android:layout_width="40dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:cardBackgroundColor="@color/black"
-        app:cardCornerRadius="20dp"
-        app:cardElevation="0dp"
+        app:cardCornerRadius="@dimen/tmp_cardCornerRadius"
+        app:cardElevation="@dimen/node_elevation"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,8 +22,8 @@
 
         <ImageView
             android:id="@+id/iv_node"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:scaleType="centerCrop"
             android:layout_gravity="center"
             android:src="@drawable/bmp_sample_cafe" />

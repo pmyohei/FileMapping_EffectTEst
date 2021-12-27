@@ -7,6 +7,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -191,9 +192,37 @@ public class MapActivity extends AppCompatActivity {
 
                         //レイアウト側は確定したため、フラグ更新
                         mEnableDrawNode = true;
+
+                        //ノードを円形にする
+                        CardView cv_node = v_rootnode.findViewById(R.id.cv_node);
+                        makeNodeCircle( cv_node );
                     }
                 }
         );
+    }
+
+
+    /*
+     * ノードの形を円形にする
+     */
+    private void makeNodeCircle(CardView cv_node) {
+
+        //CardView cv_node = findViewById(R.id.cv_node);
+        Log.i("Card", "width=" + cv_node.getWidth() + " height=" + cv_node.getHeight());
+
+        int max;
+        int width  = cv_node.getWidth();
+        int height = cv_node.getHeight();
+        if( width > height ){
+            cv_node.setMinimumHeight( width );
+            max = width;
+        } else {
+            cv_node.setMinimumWidth( height );
+            max = height;
+        }
+
+        //int max = Math.max( cv_node.getWidth(), cv_node.getHeight() );
+        cv_node.setRadius( max / 2.0f );
     }
 
     /*
@@ -573,10 +602,10 @@ public class MapActivity extends AppCompatActivity {
         public static final int LINE_SELF = 2;
 
         /* フィールド変数 */
-        private final ChildNode mv_node;
+        private final BaseNode mv_node;
         private final int mLineDrawKind;
 
-        public NodeGlobalLayoutListener(ChildNode v_node, int lineDrawKind ){
+        public NodeGlobalLayoutListener(BaseNode v_node, int lineDrawKind ){
             mv_node = v_node;
             mLineDrawKind = lineDrawKind;
         }
@@ -587,6 +616,10 @@ public class MapActivity extends AppCompatActivity {
 
             //レイアウト確定後は、不要なので本リスナー削除
             mv_node.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+            //ノードの形を設定
+            CardView cv_node = mv_node.findViewById(R.id.cv_node);
+            makeNodeCircle( cv_node );
 
             //レイアウトが確定したため、このタイミングで中心座標を設定
             mv_node.calcCenterPos();

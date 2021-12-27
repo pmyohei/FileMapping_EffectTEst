@@ -19,6 +19,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
+import androidx.cardview.widget.CardView;
 
 import java.io.Serializable;
 
@@ -255,7 +256,8 @@ public class BaseNode extends FrameLayout {
         //★仮
         //setBackgroundColor(getResources().getColor( R.color.cafe_2 ));
         Log.i("setNodeInformation", "getNodeColor()=" + node.getNodeColor());
-        setBackgroundColor( Color.parseColor(node.getNodeColor()) );
+        //setBackgroundColor( Color.parseColor(node.getNodeColor()) );
+        setBackgroundColor( node.getNodeColor() );
     }
 
     /*
@@ -268,13 +270,16 @@ public class BaseNode extends FrameLayout {
     /*
      * ノード背景色の設定
      */
-    public void setBackgroundColor(int color) {
+    public void setBackgroundColor(String color) {
         //背景色を設定
         //ColorDrawable colorDrawable = (ColorDrawable)findViewById(R.id.tv_node).getBackground();
         //colorDrawable.setColor( color );
 
-        Drawable drawable = findViewById(R.id.tv_node).getBackground();
-        drawable.setTint( color );
+        //Drawable drawable = findViewById(R.id.tv_node).getBackground();
+        //drawable.setTint( color );
+        CardView cv_node = findViewById(R.id.cv_node);
+        //cv_node.setBackgroundColor( Color.parseColor(color) );
+        cv_node.setCardBackgroundColor( Color.parseColor(color) );
     }
 
     /*

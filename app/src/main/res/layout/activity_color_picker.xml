@@ -9,7 +9,7 @@
         android:id="@+id/tvCategory"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="背景色" />
+        android:text="ノード背景色" />
 
     <EditText
         android:id="@+id/etCategoryName"
@@ -22,5 +22,12 @@
         android:id="@+id/colorPicker"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"/>
+
+    <Button
+        android:id="@+id/bt_positive"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ems="10"
+        android:text="OK" />
 
 </LinearLayout>
