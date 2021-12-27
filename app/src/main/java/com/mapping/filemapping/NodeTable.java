@@ -15,7 +15,7 @@ import java.io.Serializable;
  */
 @Entity(tableName = "node",
         foreignKeys = { @ForeignKey(entity = MapTable.class,     parentColumns = "pid", childColumns  = "pid_map",     onDelete = ForeignKey.CASCADE),},
-        indices = { @Index(value = {"pid_map"})}
+        indices     = { @Index(value = {"pid_map"})}
                     //@Index(value = {"pid_picture"})}
 )
 public class NodeTable implements Serializable {
@@ -100,10 +100,12 @@ public class NodeTable implements Serializable {
     private float centerPosX;                   //ノード中心座標X
     @Ignore
     private float centerPosY;                   //ノード中心座標Y*/
-    @Ignore
+/*    @Ignore
     private ChildNode childNodeView;        //ノードビュー
     @Ignore
-    private RootNodeView rootNodeView;          //ルートノードビュー
+    private RootNodeView rootNodeView;          //ルートノードビュー*/
+    @Ignore
+    private BaseNode baseNode;          //ルートノードビュー
 
     /*-- getter setter --*/
 
@@ -188,19 +190,23 @@ public class NodeTable implements Serializable {
      * 自身のノード種別に応じて、適切な値を返す
      */
     public float getCenterPosX() {
-
+        return baseNode.getCenterPosX();
+/*
         if( kind == NODE_KIND_ROOT ){
             return rootNodeView.getCenterPosX();
         } else {
             return childNodeView.getCenterPosX();
         }
+*/
     }
     public float getCenterPosY() {
-        if( kind == NODE_KIND_ROOT ){
+        return baseNode.getCenterPosY();
+
+/*        if( kind == NODE_KIND_ROOT ){
             return rootNodeView.getCenterPosY();
         } else {
             return childNodeView.getCenterPosY();
-        }
+        }*/
     }
 
 /*    public float getCenterPosX() {
@@ -227,7 +233,7 @@ public class NodeTable implements Serializable {
     }
 */
 
-    public ChildNode getChildNodeView() {
+/*    public ChildNode getChildNodeView() {
         return childNodeView;
     }
     public void setChildNodeView(ChildNode childNodeView) {
@@ -239,6 +245,13 @@ public class NodeTable implements Serializable {
     }
     public void setRootNodeView(RootNodeView RootNodeView) {
         this.rootNodeView = RootNodeView;
+    }*/
+
+    public BaseNode getNodeView() {
+        return this.baseNode;
+    }
+    public void setNodeView(BaseNode node) {
+        this.baseNode = node;
     }
 
 }

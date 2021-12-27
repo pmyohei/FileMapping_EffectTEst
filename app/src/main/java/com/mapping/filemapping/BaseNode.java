@@ -37,7 +37,7 @@ public class BaseNode extends FrameLayout {
     //ダブルタップ検知用
     public GestureDetector mGestureDetector;
     //ツールアイコン表示
-    public boolean misOpenToolIcon;
+    public boolean mIsOpenToolIcon;
     //データ
     public float mCenterPosX;        //ノード中心座標X
     public float mCenterPosY;        //ノード中心座標Y
@@ -45,9 +45,9 @@ public class BaseNode extends FrameLayout {
     public ActivityResultLauncher<Intent> mNodeOperationLauncher;
 
 
-
     /*
      * コンストラクタ
+     * 　 レイアウトに埋め込んだビューの生成時用
      */
     public BaseNode(Context context, AttributeSet attrs, int layoutID) {
         super(context, attrs);
@@ -59,6 +59,7 @@ public class BaseNode extends FrameLayout {
 
     /*
      * コンストラクタ
+     * 　　new用
      */
     @SuppressLint("ClickableViewAccessibility")
     public BaseNode(Context context, NodeTable node, ActivityResultLauncher<Intent> launcher, int layoutID) {
@@ -91,7 +92,7 @@ public class BaseNode extends FrameLayout {
         Log.i("BaseNode", "init");
 
         //ツールアイコン非表示
-        misOpenToolIcon = false;
+        mIsOpenToolIcon = false;
 
         Log.i("init", "root getChildCount = " + getChildCount());
 
@@ -215,6 +216,8 @@ public class BaseNode extends FrameLayout {
      */
     public void reflectViewNodeInfo() {
 
+        Log.i("BaseNode", "reflectViewNodeInfo");
+
         //ノードデザインの更新
         setNodeDesign( mNode );
         setParentNodeInfo( mNode );
@@ -295,7 +298,7 @@ public class BaseNode extends FrameLayout {
         int visible;
 
         //オープン状態チェック
-        if( misOpenToolIcon ){
+        if(mIsOpenToolIcon){
 
             //クローズする
             visible = View.GONE;
@@ -344,9 +347,9 @@ public class BaseNode extends FrameLayout {
         }
 
         //ツールアイコンのオープン状態変更
-        misOpenToolIcon = !misOpenToolIcon;
+        mIsOpenToolIcon = !mIsOpenToolIcon;
 
-        Log.i("toolOpenControl", "after =" + getWidth() + " " + getHeight() + " misOpenToolIcon=" + misOpenToolIcon);
+        Log.i("toolOpenControl", "after =" + getWidth() + " " + getHeight() + " misOpenToolIcon=" + mIsOpenToolIcon);
 
         //ルートノード
         if( mNode.getKind() == NodeTable.NODE_KIND_ROOT ){

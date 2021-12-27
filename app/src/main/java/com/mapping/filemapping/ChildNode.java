@@ -107,9 +107,19 @@ public class ChildNode extends BaseNode {
     /*
      * ノードテーブルの情報をノードビューに反映する
      */
-    public void reflectChildNodeInfo() {
+    @Override
+    public void reflectViewNodeInfo() {
         //BaseNode
         super.reflectViewNodeInfo();
+
+        Log.i("ChildNode", "reflectViewNodeInfo 1");
+
+        if( mLineView == null ){
+            //子ノードとしての処理が未完了なら、ここで終了
+            return;
+        }
+
+        Log.i("ChildNode", "reflectViewNodeInfo 2");
 
         //★設定を追加した際に反映
 
@@ -126,6 +136,8 @@ public class ChildNode extends BaseNode {
 
                         //レイアウト確定後は、不要なので本リスナー削除
                         getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                        Log.i("ChildNode", "reflectViewNodeInfo onGlobalLayout");
 
                         //ライン終端位置（自ノードの中心位置)
                         mCenterPosX = getLeft() + (getWidth() / 2f);
@@ -169,7 +181,8 @@ public class ChildNode extends BaseNode {
         for (NodeTable childNode : mChildNodes) {
 
             //子ノードのノードビュー
-            ChildNode v_node = childNode.getChildNodeView();
+            //ChildNode v_node = childNode.getChildNodeView();
+            ChildNode v_node = (ChildNode)childNode.getNodeView();
 
             Log.i("test", "searchChildNodes 初期化対象の子ノード=" + v_node.getNode().getNodeName());
 
@@ -189,7 +202,8 @@ public class ChildNode extends BaseNode {
         for (NodeTable childNode : mChildNodes) {
 
             //子ノードのノードビュー
-            ChildNode v_node = childNode.getChildNodeView();
+            //ChildNode v_node = childNode.getChildNodeView();
+            ChildNode v_node = (ChildNode)childNode.getNodeView();
 
             //子ノードの子ノードを移動させる
             v_node.move(movex, movey, mCenterPosX, mCenterPosY, true);
@@ -206,7 +220,8 @@ public class ChildNode extends BaseNode {
         for (NodeTable childNode : mChildNodes) {
 
             //子ノードのノードビュー
-            ChildNode v_node = childNode.getChildNodeView();
+            //ChildNode v_node = childNode.getChildNodeView();
+            ChildNode v_node = (ChildNode)childNode.getNodeView();
 
             Log.i("test", "反転時の自ノード情報 自分=" + mNode.getNodeName() + " 自分のX位置=" + mCenterPosX);
 
@@ -315,7 +330,8 @@ public class ChildNode extends BaseNode {
         for (NodeTable childNode : mChildNodes) {
 
             //子ノードのノードビュー
-            ChildNode v_node = childNode.getChildNodeView();
+            //ChildNode v_node = childNode.getChildNodeView();
+            ChildNode v_node = (ChildNode)childNode.getNodeView();
 
             //子ノードの子ノードを移動させる
             v_node.setLayoutMargin();
@@ -349,7 +365,8 @@ public class ChildNode extends BaseNode {
 
         //子ノードをレイアウトから削除
         for( NodeTable node: mChildNodes ){
-            ((ChildNode)node.getChildNodeView()).removeLayoutUnderSelf();
+            //((ChildNode)node.getChildNodeView()).removeLayoutUnderSelf();
+            ((ChildNode)node.getNodeView()).removeLayoutUnderSelf();
         }
 
         //自ノードとラインをレイアウトから削除
@@ -367,7 +384,8 @@ public class ChildNode extends BaseNode {
 
         //子ノードのラインを再描画
         for( NodeTable node: mChildNodes ){
-            node.getChildNodeView().getLineView().reDraw(mCenterPosX, mCenterPosY);
+            //node.getChildNodeView().getLineView().reDraw(mCenterPosX, mCenterPosY);
+            ((ChildNode)node.getNodeView()).getLineView().reDraw(mCenterPosX, mCenterPosY);
         }
     }
 
@@ -528,7 +546,7 @@ public class ChildNode extends BaseNode {
 
             //ペイント情報を生成
             mPaint = new Paint();
-            mPaint.setStrokeWidth(4f);
+            mPaint.setStrokeWidth(3f);
             mPaint.setColor(getResources().getColor( R.color.cafe_1 ) );
             mPaint.setAntiAlias(true);
             mPaint.setStyle(Paint.Style.STROKE);

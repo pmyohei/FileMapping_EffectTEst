@@ -265,7 +265,8 @@ public class MapActivity extends AppCompatActivity {
 */
 
             //NodeTable側でノードビューを保持
-            node.setRootNodeView(rootNodeView);
+            //node.setRootNodeView(rootNodeView);
+            node.setNodeView(rootNodeView);
 
             //Log.i("drawNodes", "root centerx=" + (left + (rootNodeView.getWidth() / 2f)) + " left=" + left);
             //Log.i("drawNodes", "root centery=" + (top + (rootNodeView.getHeight() / 2f)) + " top=" + top);
@@ -307,7 +308,8 @@ public class MapActivity extends AppCompatActivity {
         observer.addOnGlobalLayoutListener(new NodeGlobalLayoutListener(nodeView, lineDrawKind));
 
         //ノードビューを保持
-        node.setChildNodeView(nodeView);
+        //node.setChildNodeView(nodeView);
+        node.setNodeView(nodeView);
     }
 
     /*
@@ -355,7 +357,8 @@ public class MapActivity extends AppCompatActivity {
         float parentCenterY = parentNode.getCenterPosY();
 
         //自身の中心座標を取得
-        ChildNode nodeView = node.getChildNodeView();
+        //ChildNode nodeView = node.getChildNodeView();
+        ChildNode nodeView = (ChildNode)node.getNodeView();
 
         //ラインを生成
         NodeView.LineView lineView = nodeView.createLine(parentCenterX, parentCenterY);
@@ -400,7 +403,7 @@ public class MapActivity extends AppCompatActivity {
                     NodeTable node = mapCommonData.getEditNode();
 
                     //ノード情報をビューに反映
-                    NodeView nodeView = node.getNodeView();
+                    NodeView nodeView = nodreflectViewNodeInfoe.getNodeView();
                     nodeView.reflectNodeInformation();
                 }*/
 
@@ -856,14 +859,18 @@ public class MapActivity extends AppCompatActivity {
                 NodeTable node = mapCommonData.getEditNode();
 
                 //ノード情報をビューに反映
-                //★微妙
+/*                //★微妙
                 if( node.getKind() == NodeTable.NODE_KIND_ROOT ){
-                    node.getRootNodeView().reflectViewNodeInfo();
+                    //node.getRootNodeView().reflectViewNodeInfo();
+                    node.getNodeView().reflectViewNodeInfo();
                 } else{
-                    node.getChildNodeView().reflectChildNodeInfo();
-                }
+                    //node.getChildNodeView().reflectChildNodeInfo();
+                    //((ChildNode)node.getNodeView()).reflectViewNodeInfo();
+                    node.getNodeView().reflectViewNodeInfo();
+                }*/
                 //ChildNode nodeView = node.getChildNodeView();
                 //nodeView.reflectChildNodeInfo();
+                node.getNodeView().reflectViewNodeInfo();
 
             //ピクチャノード生成完了
             } else if( resultCode == PictureNodeSelectActivity.RESULT_PICTURE_NODE) {

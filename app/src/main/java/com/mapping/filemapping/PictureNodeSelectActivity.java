@@ -61,8 +61,11 @@ public class PictureNodeSelectActivity extends AppCompatActivity {
                             }
 
                             //画面終了
-                            finish();
+                            //finish();
                         }
+
+                        //画面終了
+                        finish();
                     }
                 }
         );
@@ -100,6 +103,9 @@ public class PictureNodeSelectActivity extends AppCompatActivity {
                                 finish();
                             }
 
+                        } else{
+                            //画面終了
+                            finish();
                         }
                     }
                 }
