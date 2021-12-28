@@ -93,7 +93,7 @@
         app:layout_constraintCircleRadius="@dimen/node_icon_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:srcCompat="@drawable/baseline_delete_outline_24" />
+        app:srcCompat="@drawable/baseline_delete_24" />
 
 
     <ImageButton

@@ -12,6 +12,7 @@
         android:id="@+id/cv_node"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:translationZ="0dp"
         app:cardBackgroundColor="@color/black"
         app:cardCornerRadius="@dimen/tmp_cardCornerRadius"
         app:cardElevation="@dimen/node_elevation"
@@ -20,7 +21,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
-        <!-- ノード -->
         <TextView
             android:id="@+id/tv_node"
             android:layout_width="wrap_content"
@@ -97,7 +97,7 @@
         app:layout_constraintCircleRadius="@dimen/node_icon_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:srcCompat="@drawable/baseline_delete_outline_24" />
+        app:srcCompat="@drawable/baseline_delete_24" />
 
 
     <ImageButton

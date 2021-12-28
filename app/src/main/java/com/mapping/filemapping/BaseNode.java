@@ -351,6 +351,9 @@ public class BaseNode extends FrameLayout {
             }
         }
 
+        //findViewById(R.id.cl_node).setTranslationZ(20.0f);
+        //findViewById(R.id.cl_node).setElevation(100);
+
         //ツールアイコンのオープン状態変更
         mIsOpenToolIcon = !mIsOpenToolIcon;
 

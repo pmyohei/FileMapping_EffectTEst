@@ -12,7 +12,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="12dp"
+        android:fontFamily="serif"
         android:text="Sample"
+        android:textColor="@color/black"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -37,7 +39,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:elevation="4dp"
-            app:srcCompat="@drawable/baseline_import_contacts_24" />
+            android:background="@color/white"
+            app:srcCompat="@drawable/baseline_open_map_24" />
 
         <ImageButton
             android:id="@+id/ib_edit"
@@ -45,6 +48,7 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:elevation="4dp"
+            android:background="@color/white"
             app:srcCompat="@drawable/baseline_edit_24" />
 
         <ImageButton
@@ -53,7 +57,8 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:elevation="4dp"
-            app:srcCompat="@drawable/baseline_delete_outline_24" />
+            android:background="@color/white"
+            app:srcCompat="@drawable/baseline_delete_24" />
 
     </LinearLayout>
 
