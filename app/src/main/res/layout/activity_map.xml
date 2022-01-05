@@ -63,7 +63,8 @@
         android:layout_height="match_parent"
         android:layout_gravity="end"
         android:background="@color/clear"
-        android:fitsSystemWindows="true">
+        android:fitsSystemWindows="true"
+        app:insetForeground="@android:color/transparent">
 
     </com.google.android.material.navigation.NavigationView>
 

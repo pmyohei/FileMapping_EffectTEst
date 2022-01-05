@@ -10,6 +10,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.Fragment;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
@@ -513,8 +514,8 @@ public class MapActivity extends AppCompatActivity {
                 Log.i("MenuItem", "action_folder_tree");
 
                 DrawerLayout drawer = findViewById(R.id.dl_map);
-                drawer.openDrawer(GravityCompat.END);
 
+                drawer.openDrawer(GravityCompat.END);
 
                 return true;
 

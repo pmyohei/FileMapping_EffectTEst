@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
+import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -20,6 +21,10 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.cardview.widget.CardView;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
+import androidx.fragment.app.FragmentManager;
 
 import java.io.Serializable;
 
@@ -182,7 +187,17 @@ public class BaseNode extends FrameLayout {
                 intent.putExtra(MapActivity.INTENT_KIND_CREATE, true );
 
                 //((Activity)context).startActivityForResult(intent, MapActivity.REQ_NODE_CREATE);
-                mNodeOperationLauncher.launch( intent );
+                //mNodeOperationLauncher.launch( intent );
+
+                //Bundle生成
+                //Bundle bundle = new Bundle();
+                //FragmentManager生成
+                //FragmentManager transaction = getSupportFragmentManager();
+
+                //ダイアログを生成
+                DialogFragment dialog = new NodeDesignDialog();
+                //dialog.setArguments(bundle);
+                dialog.show( ((FragmentActivity)getContext()).getSupportFragmentManager(), "New Node");
 
                 //クローズする
                 operationToolIcon();

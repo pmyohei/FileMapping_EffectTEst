@@ -27,8 +27,6 @@ public class NodeEntryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_node_information);
 
-
-
         //遷移元からの情報
         Intent intent = getIntent();
         boolean isCreate = intent.getBooleanExtra( MapActivity.INTENT_KIND_CREATE, false );

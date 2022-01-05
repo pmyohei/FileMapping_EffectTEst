@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_guide"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:gravity="center"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <!-- ガイド -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp2_guide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/ib_help" />
+
+    <!-- インジケータ -->
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tab_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        app:tabBackground="@drawable/selector_guide_indicator"
+        app:tabGravity="center"
+        app:tabIndicatorHeight="0dp"
+        app:tabIndicatorFullWidth="false"
+        app:tabRippleColor="@null" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <Button
+            android:id="@+id/bt_positive"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/node_createButtom" />
+
+        <Button
+            android:id="@+id/bt_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/node_cancelButtom" />
+
+    </LinearLayout>
+
+</LinearLayout>
