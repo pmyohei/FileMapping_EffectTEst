@@ -4,6 +4,7 @@ import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -64,6 +65,12 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
      */
     @Override
     public void onBindViewHolder(@NonNull GuideViewHolder viewHolder, final int i) {
+
+        if( i == 0 ){
+            //EditText ed = viewHolder.findViewById(R.id.et_nodeName);
+            //ed.getText();
+        }
+
     }
 
     /*

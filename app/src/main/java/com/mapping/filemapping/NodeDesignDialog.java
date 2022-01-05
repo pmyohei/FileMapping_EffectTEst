@@ -1,10 +1,13 @@
 package com.mapping.filemapping;
 
+import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -83,6 +86,8 @@ public class NodeDesignDialog extends DialogFragment {
         new TabLayoutMediator(tabLayout, vp,
                 (tab, position) -> tab.setText("")
         ).attach();
+
+
 
 
     }

@@ -4,49 +4,57 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ll_guide"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:gravity="center"
-    android:background="@color/white"
+    android:background="@color/little_transparent"
     android:orientation="vertical">
 
-    <!-- ガイド -->
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/vp2_guide"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/ib_help" />
+        android:layout_marginTop="2dp"
+        android:layout_marginBottom="2dp"
+        android:gravity="center_horizontal"
+        android:orientation="horizontal">
+
+        <TextView
+            android:id="@+id/bt_positive"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:fontFamily="serif"
+            android:text="OK"
+            android:textColor="@color/black" />
+
+        <TextView
+            android:id="@+id/bt_cancel"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:gravity="center"
+            android:fontFamily="serif"
+            android:text="CANCEL"
+            android:textColor="@color/black" />
+
+    </LinearLayout>
 
     <!-- インジケータ -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@color/white"
+        android:background="@color/little_transparent"
         app:tabBackground="@drawable/selector_guide_indicator"
         app:tabGravity="center"
         app:tabIndicatorHeight="0dp"
         app:tabIndicatorFullWidth="false"
         app:tabRippleColor="@null" />
 
-    <LinearLayout
+    <!-- 各種ノード情報の入力 -->
+    <androidx.viewpager2.widget.ViewPager2
+        android:id="@+id/vp2_guide"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/bt_positive"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/node_createButtom" />
-
-        <Button
-            android:id="@+id/bt_cancel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/node_cancelButtom" />
-
-    </LinearLayout>
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

@@ -2,11 +2,14 @@
 <resources>
 
     <color name="clear">#CCFFFFFF</color>
+    <color name="little_transparent">#F2FFFFFF</color>
 
     <color name="gray">#FFEAEAEA</color>
 
     <!--  ノード  -->
     <color name="node_default">#222831</color>
+
+
 
     <!--  tmp-カフェ  -->
     <color name="cafe_1">#4E2613</color>
