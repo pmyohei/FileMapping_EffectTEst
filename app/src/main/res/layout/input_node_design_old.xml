@@ -17,15 +17,11 @@
             android:orientation="vertical">
 
             <TextView
-                android:id="@+id/tv_titleNodeDesign"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
                 android:layout_gravity="center_horizontal"
-                android:text="ノードデザイン"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="parent" />
+                android:text="ノードデザイン" />
 
             <TextView
                 android:id="@+id/tv_titleNodeBackground"
@@ -34,9 +30,8 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
                 android:text="@string/title_nodeBackgroundColor"
-                android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_titleNodeDesign" />
+                app:layout_constraintTop_toBottomOf="@+id/et_nodeName" />
 
             <TextView
                 android:id="@+id/tv_bgColorCode"
@@ -44,11 +39,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
-                android:padding="8dp"
-                android:elevation="4dp"
-                android:background="@drawable/bt_create"
                 android:text="Code"
-                android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_titleNodeBackground" />
 
@@ -58,11 +49,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
-                android:padding="8dp"
-                android:elevation="4dp"
-                android:background="@drawable/bt_create"
                 android:text="Graphic"
-                android:textColor="@color/black"
                 app:layout_constraintStart_toEndOf="@+id/tv_bgColorCode"
                 app:layout_constraintTop_toBottomOf="@+id/tv_titleNodeBackground" />
 
@@ -73,37 +60,8 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
                 android:text="@string/title_nodeTextColor"
-                android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_bgColorGraphic" />
-
-            <TextView
-                android:id="@+id/tv_txColorCode"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="12dp"
-                android:padding="8dp"
-                android:elevation="4dp"
-                android:background="@drawable/bt_create"
-                android:text="Code"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_titleNodeBackground" />
-
-            <TextView
-                android:id="@+id/tv_txColorGraphic"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="12dp"
-                android:layout_marginTop="12dp"
-                android:padding="8dp"
-                android:elevation="4dp"
-                android:background="@drawable/bt_create"
-                android:text="Graphic"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toEndOf="@+id/tv_bgColorCode"
-                app:layout_constraintTop_toBottomOf="@+id/tv_titleNodeBackground" />
 
             <TextView
                 android:id="@+id/textView5"
@@ -112,7 +70,6 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
                 android:text="@string/title_nodeSize"
-                android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_titleNodeTextColor" />
 
@@ -123,14 +80,9 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
                 android:text="@string/title_nodeShape"
-                android:textColor="@color/black"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/textView5" />
-
-<!--            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="test" />
+            
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -158,7 +110,11 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="test" />-->
+                android:text="test" />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="test" />
 
         </LinearLayout>
 

@@ -10,11 +10,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentActivity;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -113,8 +116,8 @@ public class MapActivity extends AppCompatActivity {
 
         //画面遷移ランチャー（ノード操作関連）を作成
         mNodeOperationLauncher = registerForActivityResult(
-                        new ActivityResultContracts.StartActivityForResult(),
-                        new NodeOperationResultCallback()
+                new ActivityResultContracts.StartActivityForResult(),
+                new NodeOperationResultCallback()
         );
 
 
@@ -196,7 +199,7 @@ public class MapActivity extends AppCompatActivity {
 
                         //ノードを円形にする
                         CardView cv_node = v_rootnode.findViewById(R.id.cv_node);
-                        makeNodeCircle( cv_node );
+                        makeNodeCircle(cv_node);
                     }
                 }
         );
@@ -212,18 +215,18 @@ public class MapActivity extends AppCompatActivity {
         Log.i("Card", "width=" + cv_node.getWidth() + " height=" + cv_node.getHeight());
 
         int max;
-        int width  = cv_node.getWidth();
+        int width = cv_node.getWidth();
         int height = cv_node.getHeight();
-        if( width > height ){
-            cv_node.setMinimumHeight( width );
+        if (width > height) {
+            cv_node.setMinimumHeight(width);
             max = width;
         } else {
-            cv_node.setMinimumWidth( height );
+            cv_node.setMinimumWidth(height);
             max = height;
         }
 
         //int max = Math.max( cv_node.getWidth(), cv_node.getHeight() );
-        cv_node.setRadius( max / 2.0f );
+        cv_node.setRadius(max / 2.0f);
     }
 
     /*
@@ -279,7 +282,9 @@ public class MapActivity extends AppCompatActivity {
             //中心座標を設定
             rootNodeView.calcCenterPos();
             //ランチャーを設定
-            rootNodeView.setNodeOperationLauncher( mNodeOperationLauncher );
+            rootNodeView.setNodeOperationLauncher(mNodeOperationLauncher);
+            //ノード生成／編集クリックリスナー
+            rootNodeView.setOnNodeDesignClickListener( new NodeDesignClickListener() );
 
             //★初期化時に各設定項目を設定する
             //rootNodeView.setNodeName(node.getNodeName());
@@ -310,11 +315,11 @@ public class MapActivity extends AppCompatActivity {
         if (node.getKind() == NodeTable.NODE_KIND_NODE) {
             //ノード
             nodeView = new NodeView(this, node, mNodeOperationLauncher);
-        }else{
+        } else {
             //ピクチャノード
             //該当サムネイル取得
             //★nullの場合の考慮を行う
-            PictureTable thumbnail = mThumbnails.getThumbnail( node.getPidParentNode(), node.getUriIdentify() );
+            PictureTable thumbnail = mThumbnails.getThumbnail(node.getPidParentNode(), node.getUriIdentify());
 
             nodeView = new PictureNodeView(this, node, thumbnail, mNodeOperationLauncher);
         }
@@ -325,7 +330,7 @@ public class MapActivity extends AppCompatActivity {
         //位置設定
         //※レイアウト追加後に行うこと（MarginLayoutParamsがnullになってしまうため）
         int left = node.getPosX();
-        int top  = node.getPosY();
+        int top = node.getPosY();
 
         ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) nodeView.getLayoutParams();
         mlp.setMargins(left, top, mlp.rightMargin, mlp.bottomMargin);
@@ -336,6 +341,9 @@ public class MapActivity extends AppCompatActivity {
         //レイアウト確定後の処理を設定
         ViewTreeObserver observer = nodeView.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(new NodeGlobalLayoutListener(nodeView, lineDrawKind));
+
+        //ノード生成／編集クリックリスナー
+        nodeView.setOnNodeDesignClickListener( new NodeDesignClickListener() );
 
         //ノードビューを保持
         //node.setChildNodeView(nodeView);
@@ -388,7 +396,7 @@ public class MapActivity extends AppCompatActivity {
 
         //自身の中心座標を取得
         //ChildNode nodeView = node.getChildNodeView();
-        ChildNode nodeView = (ChildNode)node.getNodeView();
+        ChildNode nodeView = (ChildNode) node.getNodeView();
 
         //ラインを生成
         NodeView.LineView lineView = nodeView.createLine(parentCenterX, parentCenterY);
@@ -397,53 +405,6 @@ public class MapActivity extends AppCompatActivity {
         fl_map.addView(lineView);
     }
 
-    /*
-     * 画面遷移後の処理
-     */
-    @Override
-    public void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        super.onActivityResult(requestCode, resultCode, intent);
-
-        switch (requestCode) {
-
-            //ノード生成からの戻り
-            case REQ_NODE_CREATE:
-
-                //ノード生成された場合
-/*                if (resultCode == NodeEntryActivity.RES_CODE_NODE_POSITIVE) {
-                    //生成されたノードを取得
-                    NodeTable node = (NodeTable) intent.getSerializableExtra(NodeEntryActivity.KEY_CREATED_NODE);
-                    //リストに追加
-                    MapCommonData mapCommonData = (MapCommonData) getApplication();
-                    mapCommonData.addNodes(node);
-
-                    //ノードを描画
-                    drawNode(findViewById(R.id.fl_map), node, NodeGlobalLayoutListener.LINE_SELF);
-                }*/
-
-                break;
-
-            //ノード編集からの戻り
-            case REQ_NODE_EDIT:
-
-                //ノード生成された場合
-/*                if (resultCode == NodeEntryActivity.RES_CODE_NODE_POSITIVE) {
-                    //共通データから、編集ノードを取得
-                    MapCommonData mapCommonData = (MapCommonData) getApplication();
-                    NodeTable node = mapCommonData.getEditNode();
-
-                    //ノード情報をビューに反映
-                    NodeView nodeView = nodreflectViewNodeInfoe.getNodeView();
-                    nodeView.reflectNodeInformation();
-                }*/
-
-                break;
-
-            default:
-                break;
-        }
-
-    }
 
     /*
      * onStop()
@@ -454,13 +415,13 @@ public class MapActivity extends AppCompatActivity {
         super.onStop();
 
         //位置情報を保存
-        MapCommonData mapCommonData = (MapCommonData)getApplication();
+        MapCommonData mapCommonData = (MapCommonData) getApplication();
         NodeArrayList<NodeTable> nodeQue = mapCommonData.getMovedNodesQue();
 
         Log.i("onStop", "nodeQue.size()=" + nodeQue.size());
 
         //座標移動したノードがあれば
-        if( nodeQue.size() > 0 ){
+        if (nodeQue.size() > 0) {
             AsyncUpdateNodePosition db = new AsyncUpdateNodePosition(this, nodeQue, new AsyncUpdateNodePosition.OnFinishListener() {
                 //DB処理完了
                 @Override
@@ -527,7 +488,7 @@ public class MapActivity extends AppCompatActivity {
 
 
     /*
-     * タッチイベントの実装
+     * タッチイベント
      */
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
@@ -589,6 +550,56 @@ public class MapActivity extends AppCompatActivity {
         mScrollGestureDetector.onTouchEvent(motionEvent);
 
         return false;
+    }
+
+    /*
+     *
+     */
+    public class NodeDesignClickListener implements View.OnClickListener {
+
+        //アイコン操作ノード
+        private BaseNode mTouchNode;
+
+        /*
+         * コンストラクタ
+         */
+/*
+        public NodeDesignClickListener( BaseNode node ){
+            mTouchNode = node;
+        }
+*/
+
+        public void setTouchNode( BaseNode node ){
+            mTouchNode = node;
+        }
+
+        public void test( BaseNode node, View view ){
+
+            mTouchNode = node;
+
+            this.onClick( view );
+        }
+
+        @Override
+        public void onClick(View view) {
+
+            if( mTouchNode == null ){
+                //ノード新規生成
+
+
+
+            } else {
+                //ノード編集
+
+                //ダイアログを生成
+                DialogFragment dialog = new NodeDesignDialog( mTouchNode );
+                dialog.show(((FragmentActivity) view.getContext()).getSupportFragmentManager(), "Edit");
+            }
+
+            //画面上部中央にノードがくるようにする
+
+
+        }
     }
 
 

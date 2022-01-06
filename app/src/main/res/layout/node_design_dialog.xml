@@ -2,7 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/ll_guide"
+    android:id="@+id/ll_root"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:gravity="center"
@@ -14,6 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="2dp"
         android:layout_marginBottom="2dp"
+        android:background="@color/black"
         android:gravity="center_horizontal"
         android:orientation="horizontal">
 
@@ -25,7 +26,7 @@
             android:gravity="center"
             android:fontFamily="serif"
             android:text="OK"
-            android:textColor="@color/black" />
+            android:textColor="@color/white" />
 
         <TextView
             android:id="@+id/bt_cancel"
@@ -35,7 +36,7 @@
             android:gravity="center"
             android:fontFamily="serif"
             android:text="CANCEL"
-            android:textColor="@color/black" />
+            android:textColor="@color/white" />
 
     </LinearLayout>
 

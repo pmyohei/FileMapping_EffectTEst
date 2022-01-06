@@ -16,6 +16,9 @@
     <string name="node_createButtom">作成</string>
     <string name="node_cancelButtom">キャンセル</string>a
 
+    <!-- ダイアログ -->
+    <string name="coloeCodeHint">001122</string>
+
     <!--  レイアウト確認用（実際にユーザーに表示されることはない） -->
     <string name="sample">Sample</string>
 

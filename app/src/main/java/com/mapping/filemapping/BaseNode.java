@@ -5,8 +5,6 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
-import android.graphics.drawable.Drawable;
-import android.os.Bundle;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -21,10 +19,6 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.fragment.app.FragmentManager;
 
 import java.io.Serializable;
 
@@ -49,6 +43,10 @@ public class BaseNode extends FrameLayout {
     public float mCenterPosY;        //ノード中心座標Y
     //ノード操作発生時の画面遷移ランチャー
     public ActivityResultLauncher<Intent> mNodeOperationLauncher;
+
+    //ノード生成／編集クリックリスナー
+    private MapActivity.NodeDesignClickListener mNodeDesignClickListener;
+
 
 
     /*
@@ -89,7 +87,7 @@ public class BaseNode extends FrameLayout {
     /*
      * 初期化処理
      */
-    private void init( int layoutID ) {
+    private void init(int layoutID) {
 
         //レイアウト生成
         LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -133,10 +131,18 @@ public class BaseNode extends FrameLayout {
             }
         });
 
+        //自分自身
+        BaseNode self = this;
+
         //ノード編集
         findViewById(R.id.ib_edit).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //mNodeDesignClickListener.setTouchNode( self );
+                mNodeDesignClickListener.test( self, view );
+
+/*
                 //ノード情報画面へ遷移
                 Context context = getContext();
                 Intent intent = new Intent(context, NodeEntryActivity.class);
@@ -147,12 +153,13 @@ public class BaseNode extends FrameLayout {
                 //intent.putExtra( MapActivity.INTENT_NODE, mNode );
 
                 //タッチノードを共通データとして設定
-                MapCommonData mapCommonData = (MapCommonData)((Activity)getContext()).getApplication();
-                mapCommonData.setEditNode( mNode );
+                MapCommonData mapCommonData = (MapCommonData) ((Activity) getContext()).getApplication();
+                mapCommonData.setEditNode(mNode);
 
                 //画面遷移
                 //((Activity)context).startActivityForResult(intent, MapActivity.REQ_NODE_EDIT);
-                mNodeOperationLauncher.launch( intent );
+                mNodeOperationLauncher.launch(intent);
+*/
 
                 //クローズする
                 operationToolIcon();
@@ -169,7 +176,7 @@ public class BaseNode extends FrameLayout {
     public void setParentToolIcon() {
 
         //ピクチャノードなら、何もしない
-        if( (mNode == null) || (mNode.getKind() == NodeTable.NODE_KIND_PICTURE) ){
+        if ((mNode == null) || (mNode.getKind() == NodeTable.NODE_KIND_PICTURE)) {
             return;
         }
 
@@ -177,6 +184,10 @@ public class BaseNode extends FrameLayout {
         findViewById(R.id.ib_createNode).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                mNodeDesignClickListener.onClick( view );
+
+/*
                 //ノード情報画面へ遷移
                 Context context = getContext();
                 Intent intent = new Intent(context, NodeEntryActivity.class);
@@ -184,20 +195,16 @@ public class BaseNode extends FrameLayout {
                 //タッチノードの情報を渡す
                 intent.putExtra(MapActivity.INTENT_MAP_PID, mNode.getPidMap());
                 intent.putExtra(MapActivity.INTENT_NODE_PID, mNode.getPid());
-                intent.putExtra(MapActivity.INTENT_KIND_CREATE, true );
+                intent.putExtra(MapActivity.INTENT_KIND_CREATE, true);
 
                 //((Activity)context).startActivityForResult(intent, MapActivity.REQ_NODE_CREATE);
                 //mNodeOperationLauncher.launch( intent );
 
-                //Bundle生成
-                //Bundle bundle = new Bundle();
-                //FragmentManager生成
-                //FragmentManager transaction = getSupportFragmentManager();
-
                 //ダイアログを生成
                 DialogFragment dialog = new NodeDesignDialog();
                 //dialog.setArguments(bundle);
-                dialog.show( ((FragmentActivity)getContext()).getSupportFragmentManager(), "New Node");
+                dialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "New Node");
+*/
 
                 //クローズする
                 operationToolIcon();
@@ -212,11 +219,11 @@ public class BaseNode extends FrameLayout {
                 //ノード情報画面へ遷移
                 Context context = getContext();
                 Intent intent = new Intent(context, PictureNodeSelectActivity.class);
-                intent.putExtra( MapActivity.INTENT_MAP_PID, mNode.getPidMap() );
-                intent.putExtra( MapActivity.INTENT_NODE_PID,mNode.getPid() );
+                intent.putExtra(MapActivity.INTENT_MAP_PID, mNode.getPidMap());
+                intent.putExtra(MapActivity.INTENT_NODE_PID, mNode.getPid());
 
                 //画面遷移
-                mNodeOperationLauncher.launch( intent );
+                mNodeOperationLauncher.launch(intent);
 
                 //クローズする
                 operationToolIcon();
@@ -225,7 +232,12 @@ public class BaseNode extends FrameLayout {
 
     }
 
-
+    /*
+     * ツールアイコン-ノード生成／編集クリックリスナー
+     */
+    public void setOnNodeDesignClickListener( MapActivity.NodeDesignClickListener listener ) {
+        mNodeDesignClickListener = listener;
+    }
 
     /*
      * ノードテーブルの情報をノードビューに反映する
@@ -272,7 +284,7 @@ public class BaseNode extends FrameLayout {
         //setBackgroundColor(getResources().getColor( R.color.cafe_2 ));
         Log.i("setNodeInformation", "getNodeColor()=" + node.getNodeColor());
         //setBackgroundColor( Color.parseColor(node.getNodeColor()) );
-        setBackgroundColor( node.getNodeColor() );
+        setNodeBackgroundColor( node.getNodeColor() );
     }
 
     /*
@@ -284,8 +296,9 @@ public class BaseNode extends FrameLayout {
 
     /*
      * ノード背景色の設定
+     *   para：例)#123456
      */
-    public void setBackgroundColor(String color) {
+    public void setNodeBackgroundColor(String color) {
         //背景色を設定
         //ColorDrawable colorDrawable = (ColorDrawable)findViewById(R.id.tv_node).getBackground();
         //colorDrawable.setColor( color );
@@ -295,6 +308,15 @@ public class BaseNode extends FrameLayout {
         CardView cv_node = findViewById(R.id.cv_node);
         //cv_node.setBackgroundColor( Color.parseColor(color) );
         cv_node.setCardBackgroundColor( Color.parseColor(color) );
+    }
+
+    /*
+     * ノード名のテキスト色の設定
+     *   para：例)#123456
+     */
+    public void setNodeTextColor(String color) {
+        TextView tv_node = findViewById(R.id.tv_node);
+        tv_node.setTextColor( Color.parseColor(color) );
     }
 
     /*
