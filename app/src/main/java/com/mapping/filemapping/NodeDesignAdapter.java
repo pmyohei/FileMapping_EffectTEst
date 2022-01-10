@@ -5,6 +5,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -29,6 +31,11 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
      */
     static class GuideViewHolder extends RecyclerView.ViewHolder {
 
+        //カラー指定
+        private final int NODE_BACKGROUNG_COLOR = 0;
+        private final int NODE_TEXT_COLOR = 1;
+        private final int LINE_COLOR = 2;
+
         //設定対象ノードビュー
         private final BaseNode        mv_node;
         //FragmentManager
@@ -44,6 +51,9 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
         private TextView tv_txColorGraphic;
 
         //ラインデザイン
+        private TextView tv_lineColorCode;
+        private TextView tv_lineColorGraphic;
+        private RadioGroup rg_lineSize;
 
 
         /*
@@ -67,6 +77,11 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
                 tv_txColorGraphic = itemView.findViewById(R.id.tv_txColorGraphic);
 
             } else if (position == 2) {
+                //色
+                tv_lineColorCode    = itemView.findViewById(R.id.tv_lineColorCode);
+                tv_lineColorGraphic = itemView.findViewById(R.id.tv_lineColorGraphic);
+
+                rg_lineSize = itemView.findViewById(R.id.rg_lineSize);
 
             }
         }
@@ -83,7 +98,7 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
                 setPage1();
 
             } else if (position == 2) {
-
+                setPage2();
             }
 
         }
@@ -101,14 +116,40 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
         public void setPage1() {
 
             //背景色-カラーコード
-            tv_bgColorCode.setOnClickListener(new ClickColorCode(true) );
+            tv_bgColorCode.setOnClickListener(new ClickColorCode(NODE_BACKGROUNG_COLOR) );
             //背景色-カラーピッカー
-            tv_bgColorGraphic.setOnClickListener( new ClickColorPicker(true) );
+            tv_bgColorGraphic.setOnClickListener( new ClickColorPicker(NODE_BACKGROUNG_COLOR) );
 
             //テキスト色-カラーコード
-            tv_txColorCode.setOnClickListener(new ClickColorCode(false) );
+            tv_txColorCode.setOnClickListener(new ClickColorCode(NODE_TEXT_COLOR) );
             //テキスト色-カラーピッカー
-            tv_txColorGraphic.setOnClickListener( new ClickColorPicker(false) );
+            tv_txColorGraphic.setOnClickListener( new ClickColorPicker(NODE_TEXT_COLOR) );
+        }
+
+        /*
+         * ページ設定（２）
+         */
+        public void setPage2() {
+
+            //ラインカラー-カラーコード
+            tv_lineColorCode.setOnClickListener(new ClickColorCode(LINE_COLOR) );
+            //ラインカラー-カラーピッカー
+            tv_lineColorGraphic.setOnClickListener( new ClickColorPicker(LINE_COLOR) );
+
+            //ラインサイズ
+            rg_lineSize.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                    //選択されたindexを取得
+                    RadioButton rb = radioGroup.findViewById( checkedId );
+                    int idx = radioGroup.indexOfChild( rb );
+
+                    //ラインサイズ設定
+                    Log.i("NodeDesign", "ラインサイズ設定値=" + (idx + 1));
+                    ((ChildNode)mv_node).setLineSize( idx + 1 );
+                }
+            });
+
         }
 
         /*
@@ -118,13 +159,13 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
          */
         private class ClickColorCode implements View.OnClickListener {
 
-            private boolean mIsBg;
+            private final int mColorKind;
 
             /*
              * コンストラクタ
              */
-            public ClickColorCode( boolean isBg ){
-                mIsBg = isBg;
+            public ClickColorCode( int kind ){
+                mColorKind = kind;
             }
 
             @Override
@@ -143,12 +184,15 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
                         //カラーコード文字列
                         String code = "#" + ((EditText)view).getText().toString();
 
-                        if( mIsBg ){
-                            //背景色
+                        if( mColorKind == NODE_BACKGROUNG_COLOR ){
+                            //ノード背景色
                             mv_node.setNodeBackgroundColor( code );
-                        } else {
-                            //テキストカラー
+                        } else if ( mColorKind == NODE_TEXT_COLOR ){
+                            //ノードテキストカラー
                             mv_node.setNodeTextColor( code );
+                        } else {
+                            //ラインカラー
+                            ((ChildNode)mv_node).setLineColor( code );
                         }
 
                         dialog.dismiss();
@@ -166,13 +210,13 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
          */
         private class ClickColorPicker implements View.OnClickListener {
 
-            private boolean mIsBg;
+            private final int mColorKind;
 
             /*
              * コンストラクタ
              */
-            public ClickColorPicker( boolean isBg ){
-                mIsBg = isBg;
+            public ClickColorPicker( int kind ){
+                mColorKind = kind;
             }
 
             @Override
@@ -189,12 +233,15 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
                         //カラーコード文字列
                         String code = "#" + Integer.toHexString( ((ColorPickerView)view).getColor() );
 
-                        if( mIsBg ){
+                        if( mColorKind == NODE_BACKGROUNG_COLOR ){
                             //背景色
                             mv_node.setNodeBackgroundColor( code );
-                        } else {
+                        } else if ( mColorKind == NODE_TEXT_COLOR ){
                             //テキストカラー
                             mv_node.setNodeTextColor( code );
+                        } else {
+                            //ラインカラー
+                            ((ChildNode)mv_node).setLineColor( code );
                         }
 
                         dialog.dismiss();

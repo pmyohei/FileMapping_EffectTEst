@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.Log;
@@ -153,6 +154,21 @@ public class ChildNode extends BaseNode {
         );
     }
 
+    /*
+     * ラインカラーの設定
+     */
+    public void setLineColor( String color ) {
+
+        mLineView.setColor( color );
+    }
+
+    /*
+     * ラインサイズ（太さ）の設定
+     */
+    public void setLineSize( int thick ) {
+
+        mLineView.setSize( thick );
+    }
 
     /*
      * 親ノード追随処理初期化
@@ -547,7 +563,7 @@ public class ChildNode extends BaseNode {
             //ペイント情報を生成
             mPaint = new Paint();
             mPaint.setStrokeWidth(3f);
-            mPaint.setColor(getResources().getColor( R.color.cafe_1 ) );
+            mPaint.setColor(getResources().getColor(R.color.cafe_1));
             mPaint.setAntiAlias(true);
             mPaint.setStyle(Paint.Style.STROKE);
 
@@ -555,7 +571,27 @@ public class ChildNode extends BaseNode {
             setTranslationZ(-1);
         }
 
+        /*
+         * ラインカラーの設定
+         */
+        public void setColor( String color ) {
+            //色設定
+            mPaint.setColor( Color.parseColor(color) );
+            //再描画
+            invalidate();
+        }
 
+        /*
+         * ラインサイズ（太さ）の設定
+         */
+        public void setSize( int thick ) {
+
+            //太さ設定（指定値の５倍の太さを指定）
+            //★５倍は暫定値
+            mPaint.setStrokeWidth( thick * 5f );
+            //再描画
+            invalidate();
+        }
 
 /*    @Override
     public boolean onTouchEvent(MotionEvent event) {
@@ -614,9 +650,6 @@ public class ChildNode extends BaseNode {
         }
 
     }
-
-
-
 
     /*---- getter／setter ----*/
 
