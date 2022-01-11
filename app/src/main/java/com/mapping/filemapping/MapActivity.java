@@ -270,7 +270,7 @@ public class MapActivity extends AppCompatActivity {
     /*
      * ノード（単体）の描画
      */
-    private void drawNode(FrameLayout fl_map, NodeTable node, int lineDrawKind) {
+    private BaseNode drawNode(FrameLayout fl_map, NodeTable node, int lineDrawKind) {
 
         //ルートノード
         if (node.getKind() == NodeTable.NODE_KIND_ROOT) {
@@ -306,7 +306,7 @@ public class MapActivity extends AppCompatActivity {
             //Log.i("drawNodes", "root centerx=" + (left + (rootNodeView.getWidth() / 2f)) + " left=" + left);
             //Log.i("drawNodes", "root centery=" + (top + (rootNodeView.getHeight() / 2f)) + " top=" + top);
 
-            return;
+            return rootNodeView;
         }
 
         //ノード生成
@@ -348,6 +348,8 @@ public class MapActivity extends AppCompatActivity {
         //ノードビューを保持
         //node.setChildNodeView(nodeView);
         node.setNodeView(nodeView);
+
+        return nodeView;
     }
 
     /*
@@ -553,12 +555,14 @@ public class MapActivity extends AppCompatActivity {
     }
 
     /*
-     *
+     * ノード生成／編集アイコンクリックリスナー
      */
     public class NodeDesignClickListener implements View.OnClickListener {
 
         //アイコン操作ノード
         private BaseNode mTouchNode;
+        //新規生成 or 編集
+        private boolean misNew;
 
         /*
          * コンストラクタ
@@ -573,20 +577,46 @@ public class MapActivity extends AppCompatActivity {
             mTouchNode = node;
         }
 
-        public void test( BaseNode node, View view ){
-
+        /*
+         * アイコンクリック処理
+         */
+        public void onClickIcon(BaseNode node, View view, boolean isNew ){
+            //操作対象ノード
             mTouchNode = node;
+            //新規か編集か
+            misNew = isNew;
 
+            //本来のクリック処理
             this.onClick( view );
         }
 
         @Override
         public void onClick(View view) {
 
-            if( mTouchNode == null ){
+            if( misNew ){
                 //ノード新規生成
 
+                //親ノード
+                NodeTable parentNode = mTouchNode.getNode();
 
+                //初期生成位置
+                int posX = (int)parentNode.getCenterPosX() + ResourceManager.POS_NODE_INIT_OFFSET;
+                int posY = (int)parentNode.getCenterPosY();
+
+                //マップ上にノードを生成
+                NodeTable newNode = new NodeTable();
+                newNode.setNodeName("");
+                newNode.setPidMap( parentNode.getPidMap() );
+                newNode.setPidParentNode( parentNode.getPid() );
+                newNode.setKind( NodeTable.NODE_KIND_NODE );
+                newNode.setPos( posX, posY );
+                newNode.setNodeColor( "#000000" );      //★初期値はデフォルト値がある形にしたい
+
+                BaseNode v_node = drawNode(findViewById(R.id.fl_map), newNode, NodeGlobalLayoutListener.LINE_SELF);
+
+                //ダイアログを生成
+                DialogFragment dialog = new NodeDesignDialog( v_node );
+                dialog.show(((FragmentActivity) view.getContext()).getSupportFragmentManager(), "New");
 
             } else {
                 //ノード編集
@@ -635,9 +665,6 @@ public class MapActivity extends AppCompatActivity {
 
             //レイアウトが確定したため、このタイミングで中心座標を設定
             mv_node.calcCenterPos();
-            //mv_node.setCenterPosX(mv_node.getLeft() + (mv_node.getWidth() / 2f));
-            //mv_node.setCenterPosY(mv_node.getTop()  + (mv_node.getHeight() / 2f));
-            //Log.i("NodeGlobal", "getLeft=" + mv_node.getLeft() + " getTop()=" + mv_node.getTop());
 
             if(mLineDrawKind == LINE_ALL){
                 //全ラインを描画

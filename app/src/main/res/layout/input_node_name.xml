@@ -18,7 +18,7 @@
             android:gravity="center">
 
             <TextView
-                android:id="@+id/tv_titleMap"
+                android:id="@+id/tv_titleNodeText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/title_nodeName"
@@ -35,6 +35,15 @@
                 android:maxLength="16"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_titleMap" />
+
+            <TextView
+                android:id="@+id/tv_font"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="フォント"
+                android:textColor="@color/black"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
 
         </LinearLayout>
 

@@ -132,15 +132,15 @@ public class BaseNode extends FrameLayout {
         });
 
         //自分自身
-        BaseNode self = this;
+        BaseNode bn_self = this;
 
         //ノード編集
         findViewById(R.id.ib_edit).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                //mNodeDesignClickListener.setTouchNode( self );
-                mNodeDesignClickListener.test( self, view );
+                //mNodeDesignClickListener.setTouchNode( bn_self );
+                mNodeDesignClickListener.onClickIcon( bn_self, view, false );
 
 /*
                 //ノード情報画面へ遷移
@@ -180,12 +180,15 @@ public class BaseNode extends FrameLayout {
             return;
         }
 
+        //自分自身
+        BaseNode bn_self = this;
+
         //ノード生成
         findViewById(R.id.ib_createNode).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
 
-                mNodeDesignClickListener.onClick( view );
+                mNodeDesignClickListener.onClickIcon( bn_self, view, true );
 
 /*
                 //ノード情報画面へ遷移
@@ -248,7 +251,7 @@ public class BaseNode extends FrameLayout {
 
         //ノードデザインの更新
         setNodeDesign( mNode );
-        setParentNodeInfo( mNode );
+        setAsParentNodeInfo( mNode );
     }
 
     /*
@@ -268,9 +271,9 @@ public class BaseNode extends FrameLayout {
     }
 
     /*
-     * 親ノード情報の設定
+     * 親ノードとしての情報の設定
      */
-    public void setParentNodeInfo(NodeTable node) {
+    public void setAsParentNodeInfo(NodeTable node) {
 
         //ピクチャノードなら、何もしない
         if( (node == null) || (node.getKind() == NodeTable.NODE_KIND_PICTURE) ){
@@ -292,6 +295,12 @@ public class BaseNode extends FrameLayout {
      */
     public void setNodeName(String name) {
         ((TextView) findViewById(R.id.tv_node)).setText(name);
+
+        //レイアウト確定後処理
+        //★
+        //・ノードを円形にする
+        //・中心位置を再設定
+        //・ラインを再描画
     }
 
     /*
@@ -492,7 +501,7 @@ public class BaseNode extends FrameLayout {
 
         //ノード情報の設定
         setNodeDesign(node);
-        setParentNodeInfo(node);
+        setAsParentNodeInfo(node);
 
         //ツールアイコンの設定
         setParentToolIcon();

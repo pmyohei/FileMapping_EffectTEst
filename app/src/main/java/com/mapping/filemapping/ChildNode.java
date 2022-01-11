@@ -566,6 +566,7 @@ public class ChildNode extends BaseNode {
             mPaint.setColor(getResources().getColor(R.color.cafe_1));
             mPaint.setAntiAlias(true);
             mPaint.setStyle(Paint.Style.STROKE);
+            //mPaint.setShadowLayer(20, 4, 4, Color.RED);
 
             //ノードに対して背面になるようにする（デフォルト値は0のため、0未満の値を指定）
             setTranslationZ(-1);

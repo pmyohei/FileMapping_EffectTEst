@@ -1,5 +1,7 @@
 package com.mapping.filemapping;
 
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,7 +31,7 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
      */
-    static class GuideViewHolder extends RecyclerView.ViewHolder {
+    static class GuideViewHolder extends RecyclerView.ViewHolder implements TextWatcher {
 
         //カラー指定
         private final int NODE_BACKGROUNG_COLOR = 0;
@@ -107,7 +109,8 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
          * ページ設定（０）
          */
         public void setPage0() {
-
+            //文字入力リスナーを設定
+            et_nodeName.addTextChangedListener(this);
         }
 
         /*
@@ -150,6 +153,22 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
                 }
             });
 
+        }
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+            //ノードに反映
+            mv_node.setNodeName( charSequence.toString() );
+        }
+
+        @Override
+        public void afterTextChanged(Editable editable) {
+            //ノードに反映
+            mv_node.setNodeName( editable.toString() );
         }
 
         /*
