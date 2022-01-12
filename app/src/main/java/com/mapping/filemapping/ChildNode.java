@@ -15,6 +15,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.FrameLayout;
 
 import androidx.activity.result.ActivityResultLauncher;
 
@@ -405,6 +406,61 @@ public class ChildNode extends BaseNode {
         }
     }
 
+
+    /*
+     * レイアウト確定後処理の設定（子ノード用）
+     */
+    public void addOnNodeGlobalLayoutListener() {
+        //ノード共通の確定処理
+        super.addOnNodeGlobalLayoutListener();
+
+        //マップ共通データ
+        MapCommonData mapCommonData = (MapCommonData) ((Activity) getContext()).getApplication();
+        NodeArrayList<NodeTable> nodes = mapCommonData.getNodes();
+        //親ノード
+        NodeTable parentNode = nodes.getNode( mNode.getPidParentNode() );
+
+        //レイアウト確定待ち処理
+        ViewTreeObserver observer = getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+
+                        if( mLineView == null ){
+
+                            //親の中心座標を取得
+                            float parentCenterX = parentNode.getCenterPosX();
+                            float parentCenterY = parentNode.getCenterPosY();
+
+                            if( parentCenterY == INIT_CENTER_POS ){
+                                //親ノードのレイアウトが未確定なら何もしない
+                                Log.i("OnGlobalLayoutListener", "親未確定");
+                                return;
+                            }
+
+                            //ライン未生成なら、生成
+                            LineView line = createLine( parentCenterX, parentCenterY );
+
+                            Log.i("OnGlobalLayoutListener", "通過チェック");
+
+                            //マップ上にラインを追加
+                            ViewGroup vg = (ViewGroup) getRootView();
+                            FrameLayout fl_map = (FrameLayout) vg.findViewById(R.id.fl_map);
+                            fl_map.addView( line );
+
+                        } else {
+                            //ライン生成済みなら、再描画
+                            mLineView.reDraw();
+                        }
+
+                        //レイアウト確定後は、不要なので本リスナー削除
+                        getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                }
+        );
+    }
+
     /*
      * ノードタッチリスナー
      */
@@ -643,6 +699,7 @@ public class ChildNode extends BaseNode {
 
             //制御点X, 制御点Y, 終点X, 終点Y
             path.quadTo(mStartPosX, (mStartPosY + mCenterPosY) / 2, mCenterPosX, mCenterPosY);
+            //path.quadTo( (mStartPosX + mCenterPosX) / 2, (mStartPosY + mCenterPosY) / 2, mCenterPosX, mCenterPosY);
 
             Log.i("onDraw", "mParentPosX=" + mStartPosX + " mParentPosY=" + mStartPosY);
 

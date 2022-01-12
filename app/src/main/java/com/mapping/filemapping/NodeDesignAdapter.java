@@ -9,9 +9,12 @@ import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -51,6 +54,7 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
         private TextView tv_bgColorGraphic;
         private TextView tv_txColorCode;
         private TextView tv_txColorGraphic;
+        private SeekBar  sb_nodeSize;
 
         //ラインデザイン
         private TextView tv_lineColorCode;
@@ -77,6 +81,8 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
                 //テキスト色
                 tv_txColorCode    = itemView.findViewById(R.id.tv_txColorCode);
                 tv_txColorGraphic = itemView.findViewById(R.id.tv_txColorGraphic);
+                //ノードサイズ
+                sb_nodeSize       = itemView.findViewById(R.id.sb_nodeSize);
 
             } else if (position == 2) {
                 //色
@@ -127,6 +133,45 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
             tv_txColorCode.setOnClickListener(new ClickColorCode(NODE_TEXT_COLOR) );
             //テキスト色-カラーピッカー
             tv_txColorGraphic.setOnClickListener( new ClickColorPicker(NODE_TEXT_COLOR) );
+
+            //ノードサイズ
+            sb_nodeSize.setMax(100);
+            sb_nodeSize.setProgress(50);
+            sb_nodeSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+
+                @Override
+                public void onStopTrackingTouch(SeekBar seekbar) {
+                }
+
+                @Override
+                public void onStartTrackingTouch(SeekBar seekbar) {
+                }
+
+                @Override
+                public void onProgressChanged(SeekBar seekbar, int i, boolean flag) {
+
+                    ConstraintLayout cv = mv_node.findViewById( R.id.cl_node );
+
+                    //Log.i("size", "getWidth=" + cv.getWidth());
+
+                    float value;
+
+                    //0.1～10.0　の範囲
+                    //★暫定
+                    if( i < 50 ){
+                        value = (0.9f / 50) * i + 0.1f;
+                    } else{
+                        value = (9f / 50) * (i - 50) + 1;
+                    }
+
+                    //Log.i("size", "i=" + i + " value=" + value);
+
+                    cv.setScaleX( value );
+                    cv.setScaleY( value );
+                }
+            });
+
+
         }
 
         /*
@@ -169,6 +214,7 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
         public void afterTextChanged(Editable editable) {
             //ノードに反映
             mv_node.setNodeName( editable.toString() );
+            mv_node.addOnNodeGlobalLayoutListener();
         }
 
         /*

@@ -18,12 +18,14 @@ public class ResourceManager {
     public static final String KEY_UPDATED_NODE = "UpdatedNode";
     public static final String KEY_THUMBNAIL = "thumbnail";
 
-
-
     //serialVersionUID
     public static final long SERIAL_VERSION_UID_NODE_TABLE = 1L;
     public static final long SERIAL_VERSION_UID_NODE_VIEW  = 2L;
 
     //ノード初期生成位置（親ノードからのオフセット）
     public static final int POS_NODE_INIT_OFFSET = 120;
+
+    //ノード生成ダイアログの表示領域の割合
+    public static final float NODE_CREATE_DIALOG_RATIO = 0.5f;
+
 }

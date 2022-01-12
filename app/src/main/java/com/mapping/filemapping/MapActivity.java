@@ -5,6 +5,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
@@ -19,7 +20,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Insets;
+import android.os.Build;
 import android.os.Bundle;
+import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.Menu;
@@ -30,6 +34,9 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.WindowInsets;
+import android.view.WindowManager;
+import android.view.WindowMetrics;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.Scroller;
@@ -61,8 +68,11 @@ public class MapActivity extends AppCompatActivity {
     private float pinchDistanceRatioX;
     private float pinchDistanceRatioY;
     //ピンチ操作時のズレ値
-    private float mPinchShiftX = 0;
-    private float mPinchShiftY = 0;
+    private float mPinchShiftX = 1.0f;
+    private float mPinchShiftY = 1.0f;
+    //スクリーン上部の中心座標(ノード生成ダイアログ表示時の残りの画面領域の中心)
+    private int mTopScreanX = 0;
+    private int mTopScreanY = 0;
     //ピンチ操作発生フラグ
     private boolean mIsPinch = false;
     //フリング用Scroller
@@ -120,6 +130,31 @@ public class MapActivity extends AppCompatActivity {
                 new NodeOperationResultCallback()
         );
 
+        int screenWidth;
+        int screenHeight;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            //
+            WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
+            WindowMetrics windowMetrics = windowManager.getCurrentWindowMetrics();
+
+            screenWidth = windowMetrics.getBounds().width();
+            screenHeight = windowMetrics.getBounds().height();
+            Log.d("screenWidth=>>>", screenWidth + "");
+            Log.d("screenHeight=>>", screenHeight + "");
+
+        } else {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
+            screenWidth = displayMetrics.widthPixels;
+            screenHeight = displayMetrics.heightPixels;
+        }
+
+        //画面上部の中心位置
+        mTopScreanX = screenWidth / 2;
+        mTopScreanY = (int) (screenHeight * (1f - ResourceManager.NODE_CREATE_DIALOG_RATIO)) / 2;
+
+        Log.d("移動", "mTopScreanX=" + mTopScreanX);
+        Log.d("移動", "mTopScreanY=" + mTopScreanY);
 
         //暫定--------------
         //背景色
@@ -209,6 +244,7 @@ public class MapActivity extends AppCompatActivity {
     /*
      * ノードの形を円形にする
      */
+    //★ノードビューに作ったため廃止予定
     private void makeNodeCircle(CardView cv_node) {
 
         //CardView cv_node = findViewById(R.id.cv_node);
@@ -280,24 +316,12 @@ public class MapActivity extends AppCompatActivity {
             //ビューにノード情報を設定
             rootNodeView.setNode(node);
             //中心座標を設定
-            rootNodeView.calcCenterPos();
+            //rootNodeView.calcCenterPos();
+            rootNodeView.addOnNodeGlobalLayoutListener();
             //ランチャーを設定
             rootNodeView.setNodeOperationLauncher(mNodeOperationLauncher);
             //ノード生成／編集クリックリスナー
-            rootNodeView.setOnNodeDesignClickListener( new NodeDesignClickListener() );
-
-            //★初期化時に各設定項目を設定する
-            //rootNodeView.setNodeName(node.getNodeName());
-            //rootNodeView.setBackgroundColor( getResources().getColor( R.color.cafe_2 ) );
-
-/*
-            //マージン座標を取得
-            int left = rootNodeView.getLeft();
-            int top  = rootNodeView.getTop();
-            //中心座標を保持
-            rootNodeView.setCenterPosX(left + (rootNodeView.getWidth() / 2f));
-            rootNodeView.setCenterPosY(top + (rootNodeView.getHeight() / 2f));
-*/
+            rootNodeView.setOnNodeDesignClickListener(new NodeDesignClickListener());
 
             //NodeTable側でノードビューを保持
             //node.setRootNodeView(rootNodeView);
@@ -339,14 +363,14 @@ public class MapActivity extends AppCompatActivity {
         Log.i("createNode", "getWidth=" + nodeView.getWidth() + " getHeight=" + nodeView.getHeight());
 
         //レイアウト確定後の処理を設定
-        ViewTreeObserver observer = nodeView.getViewTreeObserver();
-        observer.addOnGlobalLayoutListener(new NodeGlobalLayoutListener(nodeView, lineDrawKind));
+        //ViewTreeObserver observer = nodeView.getViewTreeObserver();
+        //observer.addOnGlobalLayoutListener(new NodeGlobalLayoutListener(nodeView, lineDrawKind));
+        ((ChildNode) nodeView).addOnNodeGlobalLayoutListener();
 
         //ノード生成／編集クリックリスナー
-        nodeView.setOnNodeDesignClickListener( new NodeDesignClickListener() );
+        nodeView.setOnNodeDesignClickListener(new NodeDesignClickListener());
 
         //ノードビューを保持
-        //node.setChildNodeView(nodeView);
         node.setNodeView(nodeView);
 
         return nodeView;
@@ -364,6 +388,7 @@ public class MapActivity extends AppCompatActivity {
     /*
      * 全ラインの描画
      */
+    //★不要になる見込み
     private void drawAllLines() {
 
         //ビュー
@@ -380,6 +405,7 @@ public class MapActivity extends AppCompatActivity {
     /*
      * ライン（単体）の描画
      */
+    //★不要になる見込み
     private void drawLine(FrameLayout fl_map, NodeTable node) {
 
         //親ノードPid
@@ -405,6 +431,75 @@ public class MapActivity extends AppCompatActivity {
 
         //レイアウトに追加
         fl_map.addView(lineView);
+    }
+
+    /*
+     *　マップ中心移動
+     */
+    private void mapToCenter(float nodeLeft, float nodeTop) {
+
+        //float nodeLeft = v_node.getCenterPosX();
+        //float nodeTop = v_node.getCenterPosY();
+
+        //スクロール開始位置（現在のマップ絶対位置）（ピンチ操作のずれを考慮）
+        FrameLayout fl_map = findViewById(R.id.fl_map);
+        float mapAbsX = fl_map.getTranslationX() + mPinchShiftX;
+        float mapAbsY = fl_map.getTranslationY() + mPinchShiftY;
+
+        //ピンチ倍率１倍のマップ座標位置
+        float mapAbs1xX = mapAbsX / pinchDistanceRatioX;
+        float mapAbs1xY = mapAbsY / pinchDistanceRatioY;
+
+        //マップ絶対位置のマージンを取得（ルートノードを基準に算出）
+        RootNodeView v_rootnode = findViewById(R.id.v_rootnode);
+        float mapLeft = v_rootnode.getNodeLeft() - mapAbs1xX ;      //※ルートノードが操作対象の場合を考慮し、getNodeLeft()を使用
+        float mapTop  = v_rootnode.getNodeTop()  - mapAbs1xY ;
+
+        //移動量
+        float moveDistanceX = (int)(pinchDistanceRatioX * (nodeLeft - mapLeft ));
+        float moveDistanceY = (int)(pinchDistanceRatioY * (nodeTop  - mapTop + mTopScreanY ));
+
+        //スクロール時間 [milliseconds]
+        final int MOVE_DURATION = 600;
+
+        Log.i("move中心", "移動先ノード nodeLeft=" + nodeLeft + " nodeTop=" + nodeTop);
+        Log.i("move中心", "mapLeft=" + mapLeft + " mapTop=" + mapTop);
+        Log.i("move中心", "スクロール開始位置 x=" + mapAbsX + " y=" + mapAbsY);
+
+        //スクローラーを設定
+        Scroller scroller = new Scroller(this, new DecelerateInterpolator());
+        scroller.startScroll(
+                (int) mapAbsX,
+                (int) mapAbsY,
+                (int) -moveDistanceX,
+                (int) -moveDistanceY,
+                MOVE_DURATION
+        );
+
+        //アニメーションを開始
+        ValueAnimator scrollAnimator = ValueAnimator.ofFloat(0, 1).setDuration(MOVE_DURATION);
+        scrollAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+
+                Log.i("Scroller", "onAnimationUpdate");
+
+                if ( !scroller.isFinished() ) {
+                    scroller.computeScrollOffset();
+
+                    fl_map.setTranslationX(scroller.getCurrX());
+                    fl_map.setTranslationY(scroller.getCurrY());
+
+                } else {
+                    scrollAnimator.cancel();
+                }
+            }
+        });
+        scrollAnimator.start();
+
+        //ピンチ操作のズレをクリア
+        mPinchShiftX = 0;
+        mPinchShiftY = 0;
     }
 
 
@@ -593,6 +688,13 @@ public class MapActivity extends AppCompatActivity {
         @Override
         public void onClick(View view) {
 
+            //生成／編集対象のノード
+            BaseNode v_node;
+
+            //ノード位置
+            float marginLeft;
+            float marginTop;
+
             if( misNew ){
                 //ノード新規生成
 
@@ -603,7 +705,7 @@ public class MapActivity extends AppCompatActivity {
                 int posX = (int)parentNode.getCenterPosX() + ResourceManager.POS_NODE_INIT_OFFSET;
                 int posY = (int)parentNode.getCenterPosY();
 
-                //マップ上にノードを生成
+                //ノードを生成
                 NodeTable newNode = new NodeTable();
                 newNode.setNodeName("");
                 newNode.setPidMap( parentNode.getPidMap() );
@@ -611,24 +713,29 @@ public class MapActivity extends AppCompatActivity {
                 newNode.setKind( NodeTable.NODE_KIND_NODE );
                 newNode.setPos( posX, posY );
                 newNode.setNodeColor( "#000000" );      //★初期値はデフォルト値がある形にしたい
+                //ノードをマップに追加
+                v_node = drawNode(findViewById(R.id.fl_map), newNode, NodeGlobalLayoutListener.LINE_SELF);
 
-                BaseNode v_node = drawNode(findViewById(R.id.fl_map), newNode, NodeGlobalLayoutListener.LINE_SELF);
-
-                //ダイアログを生成
-                DialogFragment dialog = new NodeDesignDialog( v_node );
-                dialog.show(((FragmentActivity) view.getContext()).getSupportFragmentManager(), "New");
+                marginLeft = posX;
+                marginTop  = posY;
 
             } else {
                 //ノード編集
+                //タッチされたノードが編集対象
+                v_node = mTouchNode;
 
-                //ダイアログを生成
-                DialogFragment dialog = new NodeDesignDialog( mTouchNode );
-                dialog.show(((FragmentActivity) view.getContext()).getSupportFragmentManager(), "Edit");
+                //ノード本体のマージンを取得
+                //※このタイミングではツールアイコン込みのマージンが取得されるため、以下のメソッドを使用
+                marginLeft = v_node.getNodeLeft();
+                marginTop  = v_node.getNodeTop();
             }
 
+            //ダイアログを開く
+            DialogFragment dialog = new NodeDesignDialog( v_node );
+            dialog.show(((FragmentActivity) view.getContext()).getSupportFragmentManager(), "");
+
             //画面上部中央にノードがくるようにする
-
-
+            mapToCenter(marginLeft, marginTop);
         }
     }
 
@@ -636,6 +743,7 @@ public class MapActivity extends AppCompatActivity {
     /*
      * OnGlobalLayoutListener（ノード用）
      */
+    //★不要のため削除←レイアウト確定待ちはノード自身に行わせる
     private class NodeGlobalLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener {
 
         /* ライン描画指定 */
@@ -657,7 +765,7 @@ public class MapActivity extends AppCompatActivity {
             Log.i("NodeGlobal", "レイアウト確定ノード=" + mv_node.getNode().getNodeName());
 
             //レイアウト確定後は、不要なので本リスナー削除
-            mv_node.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            //mv_node.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
             //ノードの形を設定
             CardView cv_node = mv_node.findViewById(R.id.cv_node);

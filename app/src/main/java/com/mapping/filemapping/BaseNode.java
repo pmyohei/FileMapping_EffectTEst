@@ -32,21 +32,23 @@ public class BaseNode extends FrameLayout {
     //シリアルID
     //private static final long serialVersionUID = ResourceManager.SERIAL_VERSION_UID_NODE_VIEW;
 
+    //中心座標の初期値
+    public static float INIT_CENTER_POS = -0.1f;
+
     //ノード情報
     public NodeTable mNode;
     //ダブルタップ検知用
     public GestureDetector mGestureDetector;
     //ツールアイコン表示
     public boolean mIsOpenToolIcon;
-    //データ
-    public float mCenterPosX;        //ノード中心座標X
-    public float mCenterPosY;        //ノード中心座標Y
+    //ノード中心座標
+    public float mCenterPosX = INIT_CENTER_POS;
+    public float mCenterPosY = INIT_CENTER_POS;
     //ノード操作発生時の画面遷移ランチャー
     public ActivityResultLauncher<Intent> mNodeOperationLauncher;
 
     //ノード生成／編集クリックリスナー
     private MapActivity.NodeDesignClickListener mNodeDesignClickListener;
-
 
 
     /*
@@ -140,7 +142,7 @@ public class BaseNode extends FrameLayout {
             public void onClick(View view) {
 
                 //mNodeDesignClickListener.setTouchNode( bn_self );
-                mNodeDesignClickListener.onClickIcon( bn_self, view, false );
+                mNodeDesignClickListener.onClickIcon(bn_self, view, false);
 
 /*
                 //ノード情報画面へ遷移
@@ -188,7 +190,7 @@ public class BaseNode extends FrameLayout {
             @Override
             public void onClick(View view) {
 
-                mNodeDesignClickListener.onClickIcon( bn_self, view, true );
+                mNodeDesignClickListener.onClickIcon(bn_self, view, true);
 
 /*
                 //ノード情報画面へ遷移
@@ -238,7 +240,7 @@ public class BaseNode extends FrameLayout {
     /*
      * ツールアイコン-ノード生成／編集クリックリスナー
      */
-    public void setOnNodeDesignClickListener( MapActivity.NodeDesignClickListener listener ) {
+    public void setOnNodeDesignClickListener(MapActivity.NodeDesignClickListener listener) {
         mNodeDesignClickListener = listener;
     }
 
@@ -250,8 +252,8 @@ public class BaseNode extends FrameLayout {
         Log.i("BaseNode", "reflectViewNodeInfo");
 
         //ノードデザインの更新
-        setNodeDesign( mNode );
-        setAsParentNodeInfo( mNode );
+        setNodeDesign(mNode);
+        setAsParentNodeInfo(mNode);
     }
 
     /*
@@ -259,7 +261,7 @@ public class BaseNode extends FrameLayout {
      */
     public void setNodeDesign(NodeTable node) {
 
-        if( node == null ){
+        if (node == null) {
             //ノード情報未保持なら、何もしない
             return;
         }
@@ -276,7 +278,7 @@ public class BaseNode extends FrameLayout {
     public void setAsParentNodeInfo(NodeTable node) {
 
         //ピクチャノードなら、何もしない
-        if( (node == null) || (node.getKind() == NodeTable.NODE_KIND_PICTURE) ){
+        if ((node == null) || (node.getKind() == NodeTable.NODE_KIND_PICTURE)) {
             return;
         }
 
@@ -287,7 +289,7 @@ public class BaseNode extends FrameLayout {
         //setBackgroundColor(getResources().getColor( R.color.cafe_2 ));
         Log.i("setNodeInformation", "getNodeColor()=" + node.getNodeColor());
         //setBackgroundColor( Color.parseColor(node.getNodeColor()) );
-        setNodeBackgroundColor( node.getNodeColor() );
+        setNodeBackgroundColor(node.getNodeColor());
     }
 
     /*
@@ -316,7 +318,7 @@ public class BaseNode extends FrameLayout {
         //drawable.setTint( color );
         CardView cv_node = findViewById(R.id.cv_node);
         //cv_node.setBackgroundColor( Color.parseColor(color) );
-        cv_node.setCardBackgroundColor( Color.parseColor(color) );
+        cv_node.setCardBackgroundColor(Color.parseColor(color));
     }
 
     /*
@@ -325,7 +327,7 @@ public class BaseNode extends FrameLayout {
      */
     public void setNodeTextColor(String color) {
         TextView tv_node = findViewById(R.id.tv_node);
-        tv_node.setTextColor( Color.parseColor(color) );
+        tv_node.setTextColor(Color.parseColor(color));
     }
 
     /*
@@ -334,8 +336,79 @@ public class BaseNode extends FrameLayout {
     public void calcCenterPos() {
         //中心座標を計算し、設定
         this.mCenterPosX = getLeft() + (getWidth() / 2f);
-        this.mCenterPosY = getTop()  + (getHeight() / 2f);
+        this.mCenterPosY = getTop() + (getHeight() / 2f);
     }
+
+    /*
+     * ノード本体の左マージンを取得
+     *  ※本メソッドはツールアイコンオープン時にノード本体のマージンを取得したい場合に
+     *    使用される想定
+     */
+    public int getNodeLeft() {
+        return (int)(mCenterPosX - (findViewById(R.id.cv_node).getWidth() / 2f));
+    }
+    /*
+     * ノード本体の上マージンを取得
+     *  ※本メソッドはツールアイコンオープン時にノード本体のマージンを取得したい場合に
+     *    使用される想定
+     */
+    public int getNodeTop() {
+        return (int)(mCenterPosY - (findViewById(R.id.cv_node).getHeight() / 2f));
+    }
+
+    /*
+     * ノードの形を円形にする
+     */
+    private void makeNodeCircle() {
+
+        CardView cv_node = findViewById(R.id.cv_node);
+
+        //CardView cv_node = findViewById(R.id.cv_node);
+        Log.i("Card", "width=" + cv_node.getWidth() + " height=" + cv_node.getHeight());
+
+        int max;
+        int width = cv_node.getWidth();
+        int height = cv_node.getHeight();
+        if (width > height) {
+            cv_node.setMinimumHeight(width);
+            max = width;
+        } else {
+            cv_node.setMinimumWidth(height);
+            max = height;
+        }
+
+        //int max = Math.max( cv_node.getWidth(), cv_node.getHeight() );
+        cv_node.setRadius(max / 2.0f);
+    }
+
+
+    /*
+     * レイアウト確定後処理の設定
+     */
+    public void addOnNodeGlobalLayoutListener() {
+
+        ViewTreeObserver observer = getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+
+                        Log.i("OnGlobalLayoutListener", "Base側通過チェック");
+
+                        //中心座標の計算
+                        calcCenterPos();
+
+                        //ノードの形状
+                        //★Cardにするかcanvasにするか決める
+                        makeNodeCircle();
+
+                        //レイアウト確定後は、不要なので本リスナー削除
+                        getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                }
+        );
+    }
+
 
     /*
      * ツールアイコン表示制御
@@ -491,6 +564,9 @@ public class BaseNode extends FrameLayout {
             }
         }
     }
+
+
+
 
     /*-- getter／setter --*/
     public NodeTable getNode() {

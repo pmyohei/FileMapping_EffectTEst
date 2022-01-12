@@ -124,8 +124,8 @@ public class NodeDesignDialog extends DialogFragment  {
 
         //レイアウトパラメータ
         WindowManager.LayoutParams lp = window.getAttributes();
-        lp.height = metrics.heightPixels / 2;
-        lp.width = metrics.widthPixels;
+        lp.height  = (int)(metrics.heightPixels * ResourceManager.NODE_CREATE_DIALOG_RATIO);
+        lp.width   = metrics.widthPixels;
         lp.gravity = Gravity.BOTTOM;
 
         //サイズ設定
