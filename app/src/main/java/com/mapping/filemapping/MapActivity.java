@@ -1,5 +1,7 @@
 package com.mapping.filemapping;
 
+import static java.security.AccessController.getContext;
+
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -26,6 +28,7 @@ import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -39,7 +42,10 @@ import android.view.WindowManager;
 import android.view.WindowMetrics;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
+import android.widget.HorizontalScrollView;
+import android.widget.LinearLayout;
 import android.widget.Scroller;
+import android.widget.TextView;
 
 import java.util.Objects;
 
@@ -56,6 +62,10 @@ public class MapActivity extends AppCompatActivity {
     public static String INTENT_MAP_PID = "MapPid";
     public static String INTENT_NODE_PID = "NodePid";
     public static String INTENT_NODE = "Node";
+
+    //ノードフォーカス処理
+    public static final int MOVE_CENTER = 0;
+    public static final int MOVE_UPPER = 1;
 
     /* マップ位置操作 */
     //GestureDetector
@@ -166,6 +176,8 @@ public class MapActivity extends AppCompatActivity {
         //DrawerLayout
         DrawerLayout dl_map = findViewById(R.id.dl_map);
         dl_map.addDrawerListener(new MapDrawerListener());
+        //※アクティビティにタッチ処理を渡す設定
+        //※LOCK_MODE_LOCKED_OPNEではダメ
         dl_map.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
@@ -181,6 +193,8 @@ public class MapActivity extends AppCompatActivity {
                 }
             }
         });
+        //スライドでは閉じないようにする
+        dl_map.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         //DBからデータを取得
         Intent intent = getIntent();
@@ -436,7 +450,13 @@ public class MapActivity extends AppCompatActivity {
     /*
      *　マップ中心移動
      */
-    private void mapToCenter(float nodeLeft, float nodeTop) {
+    private void mapToCenter(float nodeLeft, float nodeTop, int POS_KIND) {
+
+        int height = 0;
+        
+        if( POS_KIND == MOVE_UPPER ){
+            height = mTopScreanY;
+        }
 
         //float nodeLeft = v_node.getCenterPosX();
         //float nodeTop = v_node.getCenterPosY();
@@ -457,7 +477,7 @@ public class MapActivity extends AppCompatActivity {
 
         //移動量
         float moveDistanceX = (int)(pinchDistanceRatioX * (nodeLeft - mapLeft ));
-        float moveDistanceY = (int)(pinchDistanceRatioY * (nodeTop  - mapTop + mTopScreanY ));
+        float moveDistanceY = (int)(pinchDistanceRatioY * (nodeTop  - mapTop + height ));
 
         //スクロール時間 [milliseconds]
         final int MOVE_DURATION = 600;
@@ -735,7 +755,7 @@ public class MapActivity extends AppCompatActivity {
             dialog.show(((FragmentActivity) view.getContext()).getSupportFragmentManager(), "");
 
             //画面上部中央にノードがくるようにする
-            mapToCenter(marginLeft, marginTop);
+            mapToCenter(marginLeft, marginTop, MOVE_UPPER);
         }
     }
 
@@ -978,6 +998,9 @@ public class MapActivity extends AppCompatActivity {
         public void onDrawerOpened(@NonNull View drawerView) {
             Log.i("DrawerListener", "onDrawerOpened");
             mDrawerIsOpen = true;
+
+            //ノードを階層化して表示
+            setNodeHierarchy();
         }
 
         @Override
@@ -985,18 +1008,79 @@ public class MapActivity extends AppCompatActivity {
             Log.i("DrawerListener", "onDrawerClosed");
 
             mDrawerIsOpen = false;
+
+            //階層化ノードを削除
+            LinearLayout ll_toAdd = findViewById(R.id.ll_toAdd);
+            ll_toAdd.removeAllViews();
         }
 
         @Override
         public void onDrawerStateChanged(int newState) {
-            Log.i("DrawerListener", "onDrawerStateChanged newState=" + newState);
+            //Log.i("DrawerListener", "onDrawerStateChanged newState=" + newState);
         }
-
         @Override
         public void onDrawerSlide(@NonNull View drawerView, float slideOffset) {
-            Log.i("DrawerListener", "onDrawerSlide");
-
+            //Log.i("DrawerListener", "onDrawerSlide");
         }
+
+
+        /*
+         * ノードを階層化してレイアウトに追加
+         */
+        private void setNodeHierarchy() {
+
+            //共通データ
+            MapCommonData commonData = (MapCommonData) getApplication();
+            NodeArrayList<NodeTable> nodes = commonData.getNodes();
+            //階層化ノードを取得
+            NodeArrayList<NodeTable> hierarchyNodes = nodes.getHierarchyList();
+
+            LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+            //追加先
+            LinearLayout ll_toAdd = findViewById(R.id.ll_toAdd);
+
+            //階層毎のマージン差分
+            final int MARGIN_SIZE = 100;
+
+            for (NodeTable node : hierarchyNodes) {
+                //1行分のレイアウトをビュー化
+                ViewGroup item = (ViewGroup) inflater.inflate(R.layout.hierarchy_node_item, null);
+                //追加
+                ll_toAdd.addView(item);
+
+                //ノード情報を設定
+                setNodeItem( item, node );
+
+                //階層に対応するマージン値を算出
+                int marginLeft = MARGIN_SIZE * hierarchyNodes.getHierarchyLevel(node);
+
+                //レイアウトパラメータ
+                ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) item.getLayoutParams();
+                mlp.setMargins(marginLeft, mlp.topMargin, mlp.rightMargin, mlp.bottomMargin);
+            }
+        }
+
+        /*
+         * 各ノードの設定
+         */
+        private void setNodeItem( ViewGroup vg_item, NodeTable node ){
+
+            //ノード名を設定
+            TextView tv_node = vg_item.findViewById(R.id.tv_node);
+            //tv_node.setText( node.getNodeName() );
+            tv_node.setText("1234567890123456789012345678901234567890");
+
+            //クリックリスナー
+            vg_item.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //ノードを画面中央に持ってくる
+                    mapToCenter( node.getNodeView().getLeft(), node.getNodeView().getTop(), MOVE_CENTER);
+                }
+            });
+        }
+
 
     }
 

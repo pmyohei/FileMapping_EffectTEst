@@ -1,12 +1,5 @@
 package com.mapping.filemapping;
 
-import android.os.Build;
-import android.util.Log;
-
-import androidx.annotation.RequiresApi;
-
-import org.w3c.dom.Node;
-
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -125,31 +118,56 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
         return false;
     }
 
-
     /*
-     *　指定ノード配下のノード取得（指定ノード含む）
+     *　指定ノードの直下のノード取得（孫ノードは対象外）
      */
-    public NodeArrayList<NodeTable> getUnderNodes(int pid) {
+    public NodeArrayList<NodeTable> getDirectlyBelow(int pid) {
 
         NodeArrayList<NodeTable> nodes = new NodeArrayList<>();
 
         //ノード数分ループ
         for (NodeTable node : this) {
+            //指定ノードを親ノードとするノード
+            if (pid == node.getPidParentNode()) {
+                //このノードの配下ノードを取得
+                nodes.add( node );
+            }
+        }
+
+        return nodes;
+    }
+
+    /*
+     *　指定ノード配下のノード取得（指定ノード含む）
+     *   param：指定ノードもリストに含めるかどうか
+     *          true ：含める
+     *          false：含めない
+     */
+    public NodeArrayList<NodeTable> getUnderNodes(int pid, boolean isMyself) {
+
+        NodeArrayList<NodeTable> nodes = new NodeArrayList<>();
+
+        //ノード数分ループ
+        for (NodeTable node : this) {
+
             //指定ノードもリストに追加
-            if (pid == node.getPid()) {
+            if( isMyself && (pid == node.getPid()) ){
                 nodes.add(node);
             }
 
             //指定ノードを親ノードとするノード
             if (pid == node.getPidParentNode()) {
                 //このノードの配下ノードを取得
-                NodeArrayList<NodeTable> tmp = getUnderNodes(node.getPid());
+                NodeArrayList<NodeTable> tmp = getUnderNodes(node.getPid(), isMyself);
                 nodes.addAll(tmp);
             }
         }
 
         return nodes;
     }
+
+
+
 
     /*
      *　指定ノードをリストから削除
@@ -177,6 +195,111 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
             //削除
             deleteNode(node.getPid() );
         }
+    }
+
+    /*
+     *　階層化されたリストを取得
+     *   例）ルートノード
+     *     　ノードＡ
+     *       ノードa1（親ノードＡ）
+     *       ノードa2（親ノードＡ）
+     *     　ノードＢ
+     *       ノードb1（親ノードＢ）
+     *     　ノードＣ
+     *     　ノードＤ
+     */
+    public NodeArrayList<NodeTable> getHierarchyList() {
+
+        //階層化リスト
+        NodeArrayList<NodeTable> hierarchyList = new NodeArrayList<>();
+        //ルートノード
+        NodeTable root = getRootNode();
+
+        //階層化リストを生成
+        createHierarchyList( hierarchyList, root );
+
+        return hierarchyList;
+    }
+
+    /*
+     *　階層化リストを生成
+     */
+    public void createHierarchyList(NodeArrayList<NodeTable> addList, NodeTable node ) {
+
+        //指定ノードをリストに追加
+        addList.add( node );
+
+        //指定ノードの直下ノードを取得
+        NodeArrayList<NodeTable> directlyBelowNodes = getDirectlyBelow( node.getPid() );
+
+        //直下ノード分ループ
+        for( NodeTable childNode: directlyBelowNodes ){
+            createHierarchyList( addList, childNode );
+        }
+    }
+    
+    /*
+     *　ノードの階層を取得
+     *   ＜階層レベル参考＞
+     *     　・ルートノード　：１
+     *       　・ノードA　　：２
+     *       　　・ノードa　：３
+     *       　　・ノードa　：３
+     *       　・ノードB　　：２
+     *       　　・ノードb　：３
+     */
+    public int getHierarchyLevel( NodeTable targetNode ) {
+
+        //ルートノード
+        if( targetNode.getKind() == NodeTable.NODE_KIND_ROOT ){
+            //1階層を返す
+            return 1;
+        }
+
+        //階層レベル
+        int level = 1;
+
+        //親の階層レベルを取得
+        NodeTable parentNode = getNode( targetNode.getPidParentNode() );
+        level += getHierarchyLevel( parentNode, level );
+
+        //このルートは通らない想定（ルートノードは必ず存在するため）
+        return level;
+    }
+
+    /*
+     *　ノードの階層を取得
+     */
+    private int getHierarchyLevel( NodeTable targetNode, int level ) {
+
+        //ルートノード
+        if( targetNode.getKind() == NodeTable.NODE_KIND_ROOT ){
+            //1階層を返す
+            return 1;
+        }
+
+        //親ノード
+        NodeTable parentNode = getNode( targetNode.getPidParentNode() );
+        level += getHierarchyLevel( parentNode, level );
+
+        //このルートは通らない想定（ルートノードは必ず存在するため）
+        return level;
+    }
+
+
+    /*
+     *　本リストからルートノードを取得
+     */
+    public NodeTable getRootNode() {
+        //指定ノード分ループ
+        for( NodeTable node: this ){
+            if( node.getKind() == NodeTable.NODE_KIND_ROOT ){
+                return node;
+            }
+        }
+
+        //このルートは通らない想定（ルートノードは必ず存在するため）
+        return null;
     }
 
 }

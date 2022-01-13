@@ -64,7 +64,11 @@
         android:layout_gravity="end"
         android:background="@color/clear"
         android:fitsSystemWindows="true"
-        app:insetForeground="@android:color/transparent">
+        android:isScrollContainer="true"
+        app:insetForeground="@color/little_transparent">
+
+        <include
+            layout="@layout/hierarchy_node" />
 
     </com.google.android.material.navigation.NavigationView>
 
