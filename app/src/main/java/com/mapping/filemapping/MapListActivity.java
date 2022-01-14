@@ -103,7 +103,8 @@ public class MapListActivity extends AppCompatActivity {
                     public void onCreate(int mapPid) {
                         mMapPid = mapPid;
 
-                        mMapListAdapter.notifyDataSetChanged();
+                        //mMapListAdapter.notifyDataSetChanged();
+                        mMapListAdapter.notifyAll();
                     }
                 }).execute();
             }
@@ -115,6 +116,8 @@ public class MapListActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //疑似データ削除
                 new GIJI_AsyncCreateDBOperaion(view.getContext(), true).execute();
+
+                //mMapListAdapter.notifyAll();
             }
         });
         //-----------------------------------------------------------------

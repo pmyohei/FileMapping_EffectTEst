@@ -5,7 +5,7 @@
     android:orientation="vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/little_transparent">
+    android:background="@color/transparent_navi">
 
     <ScrollView
         android:layout_width="match_parent"

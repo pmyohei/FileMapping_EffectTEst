@@ -11,6 +11,7 @@
 
     <!--  マップ画面全体  -->
     <FrameLayout
+        android:id="@+id/fl_screenMap"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/cafe_4"

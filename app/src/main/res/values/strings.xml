@@ -3,6 +3,13 @@
 
     <!--  ノード  -->
     <string name="default_rootNode">ルート\nノード</string>
+
+    <string name="node_createButtom">作成</string>
+    <string name="node_cancelButtom">キャンセル</string>a
+
+    <!-- ダイアログ -->
+    <string name="coloeCodeHint">123456</string>
+    <string name="node_nameHint">最大16文字</string>
     <string name="title_nodeName">ノード名</string>
     <string name="title_nodeSize">ノードサイズ</string>
     <string name="title_nodeShape">ノードの形</string>
@@ -11,13 +18,9 @@
     <string name="title_lineShape">ラインの形</string>
     <string name="title_lineThickness">ラインの太さ</string>
     <string name="title_lineColor">ラインの色</string>
-    <string name="node_nameHint">最大16文字</string>
 
-    <string name="node_createButtom">作成</string>
-    <string name="node_cancelButtom">キャンセル</string>a
-
-    <!-- ダイアログ -->
-    <string name="coloeCodeHint">001122</string>
+    <string name="title_mapDesign">マップデザイン</string>
+    <string name="title_mapBackgroundColor">マップの色</string>
 
     <!--  レイアウト確認用（実際にユーザーに表示されることはない） -->
     <string name="sample">Sample</string>

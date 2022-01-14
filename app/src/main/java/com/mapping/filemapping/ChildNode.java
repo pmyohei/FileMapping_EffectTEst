@@ -23,6 +23,10 @@ import java.io.Serializable;
 
 public class ChildNode extends BaseNode {
 
+    //反転
+    private final int FLIP_X = 0;   //左右反転
+    private final int FLIP_Y = 1;   //上下反転
+
     //ピンチ操作後のビュー間の距離の比率
     private float pinchDistanceRatioX;
     private float pinchDistanceRatioY;
@@ -228,28 +232,30 @@ public class ChildNode extends BaseNode {
     }
 
     /*
-     * 子ノードの位置(X座標)を反転
+     * 子ノードの位置を反転
      *   ＠自分自身／親ノード からコールされる
      */
-    public void reverceChildNodes(float touchNodePosX) {
+    public void flipChildNodes(float touchNodePos, int flip) {
 
         //子ノード分ループ
         for (NodeTable childNode : mChildNodes) {
 
             //子ノードのノードビュー
-            //ChildNode v_node = childNode.getChildNodeView();
             ChildNode v_node = (ChildNode)childNode.getNodeView();
 
             Log.i("test", "反転時の自ノード情報 自分=" + mNode.getNodeName() + " 自分のX位置=" + mCenterPosX);
 
             //移動先の位置を反映
-            v_node.place((int) touchNodePosX);
+            if( flip == FLIP_X ){
+                v_node.placeX((int)touchNodePos);
+            }else{
+                v_node.placeY((int)touchNodePos);
+            }
 
             //この子ノードの子ノードも対象
-            v_node.reverceChildNodes(touchNodePosX);
+            v_node.flipChildNodes(touchNodePos, flip);
         }
     }
-
 
     /*
      * ノードの移動
@@ -289,7 +295,7 @@ public class ChildNode extends BaseNode {
      * ノードの配置
      *    指定されたX座標にノードを配置する
      */
-    public void place(int touchNodePosX) {
+    public void placeX(int pos) {
 
         //ノードの横幅半分
         int width = getWidth();
@@ -298,17 +304,42 @@ public class ChildNode extends BaseNode {
         Log.i("place", "反転処理前 反転ノード=" + mNode.getNodeName() + " 自分のX位置=" + mCenterPosX);
 
         //反転後の中心位置＝「タッチノード位置」＋（「タッチノード位置」ー「自ノード位置」）
-        mCenterPosX = touchNodePosX + (touchNodePosX - (int) mCenterPosX);
+        mCenterPosX = pos + (pos - (int) mCenterPosX);
         //反転後の中心位置にノードを置くためのレフトマージン
-        int revercePosX = (int) (mCenterPosX - halfWidth);
+        int reverceLeft = (int) (mCenterPosX - halfWidth);
 
         //トップマージン
         int top = getTop();
 
         //位置変更
-        layout(revercePosX, top, revercePosX + width, top + getHeight());
+        layout(reverceLeft, top, reverceLeft + width, top + getHeight());
 
         Log.i("place", "反転処理後 自分のX位置=" + mCenterPosX);
+
+        //ライン再描画（終端位置のみ更新）
+        mLineView.reDraw();
+    }
+
+    /*
+     * ノードの配置
+     *    指定されたY座標にノードを配置する
+     */
+    public void placeY(int pos) {
+
+        //ノードの横幅半分
+        int height = getHeight();
+        float halfHeight = height / 2f;
+
+        //反転後の中心位置＝「タッチノード位置」＋（「タッチノード位置」ー「自ノード位置」）
+        mCenterPosY = pos + (pos - (int) mCenterPosY);
+        //反転後の中心位置にノードを置くためのトップマージン
+        int reverceTop = (int) (mCenterPosY - halfHeight);
+
+        //左マージン
+        int left = getLeft();
+
+        //位置変更
+        layout(left, reverceTop, left + getWidth(), reverceTop + getHeight());
 
         //ライン再描画（終端位置のみ更新）
         mLineView.reDraw();
@@ -369,6 +400,22 @@ public class ChildNode extends BaseNode {
         NodeTable parentNode = nodes.getNode(parentPid);
 
         return parentNode.getCenterPosX();
+    }
+
+    /*
+     * 親ノードのY座標を取得
+     */
+    public float getParentPositionY() {
+
+        //マップ共通データ
+        MapCommonData mapCommonData = (MapCommonData) ((Activity) getContext()).getApplication();
+        NodeArrayList<NodeTable> nodes = mapCommonData.getNodes();
+
+        //親ノード
+        int parentPid = mNode.getPidParentNode();
+        NodeTable parentNode = nodes.getNode(parentPid);
+
+        return parentNode.getCenterPosY();
     }
 
     /*
@@ -467,8 +514,13 @@ public class ChildNode extends BaseNode {
     //private class NodeTouchListener implements View.OnTouchListener {
     private class NodeTouchListener extends RootNodeTouchListener implements Serializable {
 
+        //方向ビット
+        final int BIT_X = 0x01;    //自ノードが親ノードより右にいる場合
+        final int BIT_Y = 0x10;    //自ノードが親ノードより上にいる場合
+        final int OFF  = 0x00;    //オフ
+
         //親ノードに対する自ノードのX座標における相対位置（親ノードより正側か負側か）
-        private int parentRelativePosition;
+        private int mParentRelative;
 
         //Move発生フラグ
         private boolean isMove;
@@ -514,7 +566,7 @@ public class ChildNode extends BaseNode {
                     mPreTouchPosY = y;
 
                     //親ノードに対する自ノードの位置
-                    parentRelativePosition = getParentRelativePosition(mCenterPosX);
+                    mParentRelative = getParentRelativePosition(mCenterPosX, mCenterPosY);
 
                     //Moveフラグ初期化
                     isMove = false;
@@ -530,19 +582,8 @@ public class ChildNode extends BaseNode {
                     //自身を移動
                     move(moveX, moveY, 0, 0, false);
 
-                    //位置反転判定
-                    int currentPos = getParentRelativePosition(mCenterPosX);
-                    if (parentRelativePosition != currentPos) {
-
-                        Log.i("ParentRelativePos", "switch");
-
-                        //子ノードの位置を反転
-                        //タッチノードの位置を基準として、反転位置を計算する
-                        reverceChildNodes(mCenterPosX);
-
-                        //位置更新
-                        parentRelativePosition = currentPos;
-                    }
+                    //位置反転処理
+                    flipNode();
 
                     //今回のタッチ位置を保持
                     mPreTouchPosX = x;
@@ -572,23 +613,63 @@ public class ChildNode extends BaseNode {
         /*
          * 親ノードに対する自ノードの位置を取得
          */
-        public int getParentRelativePosition(float selfX) {
+        public int getParentRelativePosition(float selfX, float selfY) {
 
             //親ノードの位置
             float parentX = getParentPositionX();
+            float parentY = getParentPositionY();
 
-            Log.i("ParentRelativePos", "selfX=" + selfX + " parentX=" + parentX);
-
-            //親ノードに対する自ノードの位置定数
-            final int POSITIVE = 1;     //正側（右）
-            final int NEGATIVE = -1;    //負側（左）
-
-            //自ノードが親ノードより大きければ正、そうでなければ負を返す
-            return ((selfX > parentX) ? POSITIVE : NEGATIVE);
+            //親ノードとの位置を返す
+            //X軸：親より右なら1bit目をON
+            //Y軸：親より上なら2bit目をON
+            return ((selfX > parentX) ? BIT_X : OFF) | ((selfY > parentY) ? BIT_Y : OFF);
         }
 
-    }
+        /*
+         * 親ノードに対して自ノードが左右上下反転したかどうか
+         * 　※左右か上下かの判定は、para2にて制御
+         */
+        public boolean whetherFlip(int currentPos, int bit) {
 
+            //1ビット目（X軸の方向の値）の値を比較
+            //不一致なら、反転あり
+            return ( (mParentRelative & bit) != (currentPos & bit) );
+        }
+
+        /*
+         * ノード反転処理
+         */
+        public void flipNode() {
+
+            boolean isFlip = false;
+
+            int currentPos = getParentRelativePosition(mCenterPosX, mCenterPosY);
+            if ( whetherFlip( currentPos, BIT_X) ) {
+
+                //子ノードの位置を左右反転
+                //タッチノードの位置を基準として、反転位置を計算する
+                flipChildNodes(mCenterPosX, FLIP_X);
+
+                isFlip = true;
+            }
+            if ( whetherFlip( currentPos, BIT_Y) ) {
+
+                //子ノードの位置を上下反転
+                //タッチノードの位置を基準として、反転位置を計算する
+                flipChildNodes(mCenterPosY, FLIP_Y);
+
+                isFlip = true;
+            }
+
+            if( isFlip ){
+                //位置更新
+                mParentRelative = currentPos;
+            }
+        }
+
+
+
+    }
 
     /*
      * ラインビュー

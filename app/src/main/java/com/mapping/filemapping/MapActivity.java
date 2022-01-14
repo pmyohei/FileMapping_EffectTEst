@@ -1,20 +1,16 @@
 package com.mapping.filemapping;
 
-import static java.security.AccessController.getContext;
-
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentActivity;
 
 import android.animation.ValueAnimator;
@@ -22,7 +18,7 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Insets;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -37,12 +33,10 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.view.WindowMetrics;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
-import android.widget.HorizontalScrollView;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
@@ -582,6 +576,11 @@ public class MapActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_palette:
+
+                //ダイアログを開く
+                DialogFragment dialog = new DesignDialog( (View)findViewById(R.id.fl_screenMap) );
+                dialog.show( getSupportFragmentManager(), DesignDialog.TAG_MAP );
+
                 return true;
 
             case R.id.action_search:
@@ -751,8 +750,8 @@ public class MapActivity extends AppCompatActivity {
             }
 
             //ダイアログを開く
-            DialogFragment dialog = new NodeDesignDialog( v_node );
-            dialog.show(((FragmentActivity) view.getContext()).getSupportFragmentManager(), "");
+            DialogFragment dialog = new DesignDialog( v_node );
+            dialog.show(((FragmentActivity) view.getContext()).getSupportFragmentManager(), DesignDialog.TAG_NODE);
 
             //画面上部中央にノードがくるようにする
             mapToCenter(marginLeft, marginTop, MOVE_UPPER);
@@ -1055,6 +1054,9 @@ public class MapActivity extends AppCompatActivity {
                 //階層に対応するマージン値を算出
                 int marginLeft = MARGIN_SIZE * hierarchyNodes.getHierarchyLevel(node);
 
+                //背景色
+                ll_toAdd.setBackgroundColor( Color.TRANSPARENT );
+
                 //レイアウトパラメータ
                 ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) item.getLayoutParams();
                 mlp.setMargins(marginLeft, mlp.topMargin, mlp.rightMargin, mlp.bottomMargin);
@@ -1068,8 +1070,8 @@ public class MapActivity extends AppCompatActivity {
 
             //ノード名を設定
             TextView tv_node = vg_item.findViewById(R.id.tv_node);
-            //tv_node.setText( node.getNodeName() );
-            tv_node.setText("1234567890123456789012345678901234567890");
+            tv_node.setText( node.getNodeName() );
+            //tv_node.setText("1234567890123456789012345678901234567890");
 
             //クリックリスナー
             vg_item.setOnClickListener(new View.OnClickListener() {

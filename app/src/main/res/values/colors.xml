@@ -22,7 +22,8 @@
     <color name="sample_node1">#FF841c45</color>
     <color name="sample_node2">#FF7bedbd</color>
 
-
+    <!--  ナビゲーションビュー用  -->
+    <color name="transparent_navi">#80FFFFFF</color>
 
     <!--  デフォルト  -->
     <color name="purple_200">#FFBB86FC</color>

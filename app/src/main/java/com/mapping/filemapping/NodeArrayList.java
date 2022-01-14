@@ -198,7 +198,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
     }
 
     /*
-     *　階層化されたリストを取得
+     *　階層化された順番のリストを取得
      *   例）ルートノード
      *     　ノードＡ
      *       ノードa1（親ノードＡ）
@@ -302,4 +302,68 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
         return null;
     }
 
+    /*
+     *　全ノードの背景色の設定
+     */
+    public void setAllNodeBgColor( String color ) {
+
+        //リストの内のノードすべて
+        for( NodeTable node: this ){
+            node.setNodeColor( color );
+            node.getNodeView().setNodeBackgroundColor( color );
+        }
+    }
+
+    /*
+     *　全ノードのテキスト色の設定
+     */
+    public void setAllNodeTxColor( String color ) {
+
+        //リストの内のノードすべて
+        for( NodeTable node: this ){
+            //★テーブルにも反映必要
+            //node.
+            node.getNodeView().setNodeTextColor( color );
+        }
+    }
+
+    /*
+     *　全ノードのライン色の設定
+     */
+    public void setAllNodeLineColor( String color ) {
+
+        //リストの内の子ノードすべて
+        for( NodeTable node: this ){
+
+            if( node.getKind() == NodeTable.NODE_KIND_ROOT ){
+                //ルートはライン情報を持たないためスキップ
+                continue;
+            }
+
+            //★テーブルにも反映必要
+            //node.
+            ChildNode childNode = (ChildNode)node.getNodeView();
+            childNode.setLineColor( color );
+        }
+    }
+
+    /*
+     *　全ノードのラインサイズの設定
+     */
+    public void setAllNodeLineSize( int idx ) {
+
+        //リストの内の子ノードすべて
+        for( NodeTable node: this ){
+
+            if( node.getKind() == NodeTable.NODE_KIND_ROOT ){
+                //ルートはライン情報を持たないためスキップ
+                continue;
+            }
+
+            //★テーブルにも反映必要
+            //node.
+            ChildNode childNode = (ChildNode)node.getNodeView();
+            childNode.setLineSize( idx + 1 );
+        }
+    }
 }
