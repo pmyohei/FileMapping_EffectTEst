@@ -34,7 +34,7 @@ public class MapItemView_old extends LinearLayout {
 
         //レイアウトを割り当て
         LayoutInflater inflater = LayoutInflater.from(context);
-        inflater.inflate(R.layout.map_item, this, true);
+        inflater.inflate(R.layout.item_map, this, true);
 
         //マップ新規作成・編集画面遷移ランチャー
         //※クリックリスナー内で定義しないこと！（ライフサイクルの関係でエラーになるため）

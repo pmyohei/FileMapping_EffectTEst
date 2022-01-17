@@ -1,5 +1,7 @@
 package com.mapping.filemapping;
 
+import android.content.Context;
+import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -13,10 +15,11 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.jaredrummler.android.colorpicker.ColorPickerView;
 
@@ -30,11 +33,13 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
     private final BaseNode        mv_node;
     //FragmentManager
     private final FragmentManager mFragmentManager;
+    //ViewPager2
+    private final ViewPager2 mvp2;
 
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
      */
-    static class GuideViewHolder extends RecyclerView.ViewHolder implements TextWatcher {
+    class GuideViewHolder extends RecyclerView.ViewHolder implements TextWatcher {
 
         //カラー指定
         private final int NODE_BACKGROUNG_COLOR = 0;
@@ -45,10 +50,16 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
         private final BaseNode        mv_node;
         //FragmentManager
         private final FragmentManager mFragmentManager;
+        //ViewPager2
+        private final ViewPager2      mvp2;
 
+        /*--- ノードテキスト ---*/
         //ノード名
         private EditText et_nodeName;
+        private RecyclerView rv_fontAlphabet;
+        private RecyclerView rv_fontjapanese;
 
+        /*--- ノード ---*/
         //ノードデザイン
         private TextView tv_bgColorCode;
         private TextView tv_bgColorGraphic;
@@ -56,6 +67,7 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
         private TextView tv_txColorGraphic;
         private SeekBar  sb_nodeSize;
 
+        /*--- ライン ---*/
         //ラインデザイン
         private TextView tv_lineColorCode;
         private TextView tv_lineColorGraphic;
@@ -65,14 +77,17 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
         /*
          * コンストラクタ
          */
-        public GuideViewHolder(View itemView, int position, BaseNode node, FragmentManager fragmentManager) {
+        public GuideViewHolder(View itemView, int position, BaseNode node, FragmentManager fragmentManager, ViewPager2 vp2) {
             super(itemView);
 
             mv_node = node;
             mFragmentManager = fragmentManager;
+            mvp2 = vp2;
 
             if (position == 0) {
                 et_nodeName = itemView.findViewById(R.id.et_nodeName);
+                rv_fontAlphabet = itemView.findViewById(R.id.rv_fontAlphabet);
+                rv_fontjapanese   = itemView.findViewById(R.id.rv_fontJapanese);
 
             } else if (position == 1) {
                 //背景色
@@ -117,6 +132,30 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
         public void setPage0() {
             //文字入力リスナーを設定
             et_nodeName.addTextChangedListener(this);
+
+            Context context = mv_node.getContext();
+
+            //フォントアダプタ
+            //レイアウトマネージャの生成・設定（横スクロール）
+            LinearLayoutManager ll_manager = new LinearLayoutManager(context);
+            ll_manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            LinearLayoutManager ll_manager2 = new LinearLayoutManager(context);
+            ll_manager2.setOrientation(LinearLayoutManager.HORIZONTAL);
+
+            rv_fontAlphabet.setLayoutManager(ll_manager);
+            rv_fontjapanese.setLayoutManager(ll_manager2);
+
+            //フォントリソースリストを取得
+            List<Typeface> alphaFonts = ResourceManager.getAlphabetFonts( context );
+            List<Typeface> jpFonts = ResourceManager.getJapaneseFonts( context );
+
+            //RecyclerViewにアダプタを設定
+            rv_fontAlphabet.setAdapter( new FontAdapter( alphaFonts, mv_node, null, FontAdapter.ALPHABET ) );
+            rv_fontjapanese.setAdapter( new FontAdapter( jpFonts, mv_node, null, FontAdapter.JAPANESE ) );
+
+            //スクロールリスナー（ViewPager2のタブ切り替えを制御）
+            rv_fontAlphabet.addOnItemTouchListener( new Vp2OnItemTouchListener( mvp2 ) );
+            rv_fontjapanese.addOnItemTouchListener( new Vp2OnItemTouchListener( mvp2 ) );
         }
 
         /*
@@ -321,10 +360,11 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
     /*
      * コンストラクタ
      */
-    public NodeDesignAdapter(List<Integer> layoutIdList, BaseNode v_node, FragmentManager fragmentManager) {
+    public NodeDesignAdapter(List<Integer> layoutIdList, BaseNode v_node, FragmentManager fragmentManager, ViewPager2 vp) {
         mData            = layoutIdList;
         mv_node          = v_node;
         mFragmentManager = fragmentManager;
+        mvp2             = vp;
     }
 
     /*
@@ -348,7 +388,7 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
         LayoutInflater inflater = LayoutInflater.from( viewGroup.getContext() );
         View view = inflater.inflate(mData.get(position), viewGroup, false);
 
-        return new GuideViewHolder(view, position, mv_node, mFragmentManager);
+        return new GuideViewHolder(view, position, mv_node, mFragmentManager, mvp2);
     }
 
     /*

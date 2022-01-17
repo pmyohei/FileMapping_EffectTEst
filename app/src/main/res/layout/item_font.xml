@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_fontItem"
+    android:layout_width="80dp"
+    android:layout_height="80dp"
+    android:layout_margin="12dp"
+    android:gravity="center"
+    android:orientation="vertical"
+    android:background="@drawable/frame_font">
+
+    <TextView
+        android:id="@+id/tv_sampleFont"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/font_sample_alphabet"
+        android:textSize="32sp"
+        android:textColor="@color/black"/>
+
+</LinearLayout>

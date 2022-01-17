@@ -72,7 +72,7 @@ public class MapListAdapter_cutum_old extends RecyclerView.Adapter<MapListAdapte
 
         //ビューを生成
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        View view = inflater.inflate(R.layout.map_item, viewGroup, false);
+        View view = inflater.inflate(R.layout.item_map, viewGroup, false);
         //View view = new MapItemView( mContext, mData.get(viewType), this );
 
         return new MapViewHolder(view);

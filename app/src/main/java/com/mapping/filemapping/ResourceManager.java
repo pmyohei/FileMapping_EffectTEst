@@ -1,5 +1,13 @@
 package com.mapping.filemapping;
 
+import android.content.Context;
+import android.graphics.Typeface;
+
+import androidx.core.content.res.ResourcesCompat;
+
+import java.util.ArrayList;
+import java.util.List;
+
 /*
  * 共通リソース管理
  */
@@ -28,4 +36,37 @@ public class ResourceManager {
     //ノード生成ダイアログの表示領域の割合
     public static final float NODE_CREATE_DIALOG_RATIO = 0.5f;
 
+    /*
+     * 本アプリケーション内のフォントリスト
+     */
+    public static List<Typeface> getAlphabetFonts(Context context){
+
+        List<Typeface> fonts = new ArrayList<>();
+        fonts.add( ResourcesCompat.getFont(context, R.font.luxurious_roman_regular) );
+        fonts.add( ResourcesCompat.getFont(context, R.font.roboto_regular) );
+        fonts.add( ResourcesCompat.getFont(context, R.font.the_nautigal_regular) );
+        fonts.add( ResourcesCompat.getFont(context, R.font.dongle_regular) );
+        fonts.add( ResourcesCompat.getFont(context, R.font.oswald_variable_font_wght) );
+        fonts.add( ResourcesCompat.getFont(context, R.font.mochiy_pop_p_one_regular) );
+        fonts.add( ResourcesCompat.getFont(context, R.font.moon_dance_regular) );
+        fonts.add( ResourcesCompat.getFont(context, R.font.josefin_sans_variable_font_wght) );
+
+        return fonts;
+    }
+
+    /*
+     * 本アプリケーション内のフォントリスト
+     */
+    public static List<Typeface> getJapaneseFonts(Context context){
+
+        List<Typeface> fonts = new ArrayList<>();
+        fonts.add( ResourcesCompat.getFont(context, R.font.ipaexm) );
+        fonts.add( ResourcesCompat.getFont(context, R.font.ipaexg) );
+        fonts.add( ResourcesCompat.getFont(context, R.font.hannari_mincho_regular) );
+        fonts.add( ResourcesCompat.getFont(context, R.font.senobi_gothic_medium) );
+        fonts.add( ResourcesCompat.getFont(context, R.font.jk_maru_gothic_m) );
+        fonts.add( ResourcesCompat.getFont(context, R.font.pixel_mplus10_regular) );
+
+        return fonts;
+    }
 }

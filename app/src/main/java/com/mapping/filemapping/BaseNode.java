@@ -5,6 +5,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -328,6 +329,14 @@ public class BaseNode extends FrameLayout {
     public void setNodeTextColor(String color) {
         TextView tv_node = findViewById(R.id.tv_node);
         tv_node.setTextColor(Color.parseColor(color));
+    }
+
+    /*
+     * ノード名のフォント設定
+     */
+    public void setNodeFont(Typeface font) {
+        TextView tv_node = findViewById(R.id.tv_node);
+        tv_node.setTypeface( font );
     }
 
     /*

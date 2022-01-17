@@ -1,11 +1,9 @@
 package com.mapping.filemapping;
 
-import static java.security.AccessController.getContext;
-
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.Color;
-import android.text.Editable;
-import android.text.TextWatcher;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,13 +12,13 @@ import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.jaredrummler.android.colorpicker.ColorPickerView;
 
@@ -34,6 +32,8 @@ public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.Guid
     private View     mv_map;
     //FragmentManager
     private final FragmentManager mFragmentManager;
+    //ViewPager2
+    private final ViewPager2 mvp2;
 
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
@@ -47,9 +47,11 @@ public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.Guid
         private final int MAP_COLOR = 3;
 
         //マップ
-        private View     mv_map;
+        private final View            mv_map;
         //FragmentManager
         private final FragmentManager mFragmentManager;
+        //ViewPager2
+        private final ViewPager2      mvp2;
 
         //マップデザイン
         private TextView tv_bgMapColorCode;
@@ -61,6 +63,8 @@ public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.Guid
         private TextView tv_txColorCode;
         private TextView tv_txColorGraphic;
         private LinearLayout ll_nodeSize;
+        private RecyclerView rv_fontAlphabet;
+        private RecyclerView rv_fontjapanese;
 
         //ラインデザイン
         private TextView tv_lineColorCode;
@@ -71,11 +75,12 @@ public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.Guid
         /*
          * コンストラクタ
          */
-        public GuideViewHolder(View itemView, int position, View v_map, FragmentManager fragmentManager) {
+        public GuideViewHolder(View itemView, int position, View v_map, FragmentManager fragmentManager, ViewPager2 vp2) {
             super(itemView);
 
             mv_map           = v_map;
             mFragmentManager = fragmentManager;
+            mvp2 = vp2;
 
             if (position == 0) {
                 //マップ色
@@ -91,6 +96,9 @@ public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.Guid
                 tv_txColorGraphic = itemView.findViewById(R.id.tv_txColorGraphic);
                 //ノードサイズ
                 ll_nodeSize       = itemView.findViewById(R.id.ll_nodeSize);
+                //フォント
+                rv_fontAlphabet   = itemView.findViewById(R.id.rv_fontAlphabet);
+                rv_fontjapanese   = itemView.findViewById(R.id.rv_fontJapanese);
 
             } else if (position == 2) {
                 //色
@@ -146,6 +154,31 @@ public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.Guid
 
             //ノードサイズは設定対象外のため、非表示
             ll_nodeSize.setVisibility( View.GONE );
+
+
+            Context context = mv_map.getContext();
+
+            //フォントアダプタ
+            //レイアウトマネージャの生成・設定（横スクロール）
+            LinearLayoutManager ll_manager = new LinearLayoutManager(context);
+            ll_manager.setOrientation(LinearLayoutManager.HORIZONTAL);
+            LinearLayoutManager ll_manager2 = new LinearLayoutManager(context);
+            ll_manager2.setOrientation(LinearLayoutManager.HORIZONTAL);
+
+            rv_fontAlphabet.setLayoutManager(ll_manager);
+            rv_fontjapanese.setLayoutManager(ll_manager2);
+
+            //フォントリソースリストを取得
+            List<Typeface> alphaFonts = ResourceManager.getAlphabetFonts( context );
+            List<Typeface> jpFonts = ResourceManager.getJapaneseFonts( context );
+
+            //RecyclerViewにアダプタを設定
+            rv_fontAlphabet.setAdapter( new FontAdapter( alphaFonts, null, mv_map, FontAdapter.ALPHABET ) );
+            rv_fontjapanese.setAdapter( new FontAdapter( jpFonts, null, mv_map, FontAdapter.JAPANESE ) );
+
+            //スクロールリスナー（ViewPager2のタブ切り替えを制御）
+            rv_fontAlphabet.addOnItemTouchListener( new Vp2OnItemTouchListener( mvp2 ) );
+            rv_fontjapanese.addOnItemTouchListener( new Vp2OnItemTouchListener( mvp2 ) );
         }
 
         /*
@@ -295,10 +328,11 @@ public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.Guid
     /*
      * コンストラクタ
      */
-    public MapDesignAdapter(List<Integer> layoutIdList, View v_map, FragmentManager fragmentManager) {
+    public MapDesignAdapter(List<Integer> layoutIdList, View v_map, FragmentManager fragmentManager, ViewPager2 vp2) {
         mData            = layoutIdList;
         mv_map           = v_map;
         mFragmentManager = fragmentManager;
+        mvp2             = vp2;
     }
 
     /*
@@ -322,7 +356,7 @@ public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.Guid
         LayoutInflater inflater = LayoutInflater.from( viewGroup.getContext() );
         View view = inflater.inflate(mData.get(position), viewGroup, false);
 
-        return new GuideViewHolder(view, position, mv_map, mFragmentManager);
+        return new GuideViewHolder(view, position, mv_map, mFragmentManager, mvp2);
     }
 
     /*

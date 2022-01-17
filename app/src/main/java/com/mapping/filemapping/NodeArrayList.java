@@ -1,5 +1,7 @@
 package com.mapping.filemapping;
 
+import android.graphics.Typeface;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -328,6 +330,19 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
     }
 
     /*
+     *　全ノードのテキストフォントの設定
+     */
+    public void setAllNodeTxFont( Typeface font ) {
+
+        //リストの内のノードすべて
+        for( NodeTable node: this ){
+            //★テーブルにも反映必要
+            //node.
+            node.getNodeView().setNodeFont( font );
+        }
+    }
+
+    /*
      *　全ノードのライン色の設定
      */
     public void setAllNodeLineColor( String color ) {
@@ -366,4 +381,6 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
             childNode.setLineSize( idx + 1 );
         }
     }
+
+
 }

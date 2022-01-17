@@ -50,7 +50,7 @@ public class DesignDialog extends DialogFragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //ダイアログにレイアウトを設定
-        return inflater.inflate(R.layout.node_design_dialog, container, false);
+        return inflater.inflate(R.layout.design_dialog, container, false);
     }
 
     @Override
@@ -140,16 +140,16 @@ public class DesignDialog extends DialogFragment {
     private ViewPager2 setupNodeDesignLayout() {
         //ノードデザイン設定レイアウト
         List<Integer> layoutIdList = new ArrayList<>();
-        layoutIdList.add(R.layout.input_node_name);
+        layoutIdList.add(R.layout.input_node_text);
         layoutIdList.add(R.layout.input_node_design);
         layoutIdList.add(R.layout.input_node_line_design);
 
-        NodeDesignAdapter adapter = new NodeDesignAdapter(layoutIdList, mv_node, ((FragmentActivity) getContext()).getSupportFragmentManager());
+        ViewPager2 vp2 = getDialog().findViewById(R.id.vp2_design);
 
-        ViewPager2 vp = getDialog().findViewById(R.id.vp2_design);
-        vp.setAdapter(adapter);
+        NodeDesignAdapter adapter = new NodeDesignAdapter(layoutIdList, mv_node, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp2);
+        vp2.setAdapter(adapter);
 
-        return vp;
+        return vp2;
     }
 
     /*
@@ -159,12 +159,11 @@ public class DesignDialog extends DialogFragment {
         //ノードデザイン設定レイアウト
         List<Integer> layoutIdList = new ArrayList<>();
         layoutIdList.add(R.layout.input_map_design);
-        layoutIdList.add(R.layout.input_node_design);
+        layoutIdList.add(R.layout.input_all_node_design);
         layoutIdList.add(R.layout.input_node_line_design);
 
-        MapDesignAdapter adapter = new MapDesignAdapter(layoutIdList, mv_map, ((FragmentActivity) getContext()).getSupportFragmentManager());
-
         ViewPager2 vp = getDialog().findViewById(R.id.vp2_design);
+        MapDesignAdapter adapter = new MapDesignAdapter(layoutIdList, mv_map, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp);
         vp.setAdapter(adapter);
 
         return vp;

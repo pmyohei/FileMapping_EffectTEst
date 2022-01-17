@@ -64,7 +64,7 @@ public class MapListAdapter_old extends RecyclerView.Adapter<MapListAdapter_old.
 
         //ビューを生成
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        View view = inflater.inflate(R.layout.map_item, viewGroup, false);
+        View view = inflater.inflate(R.layout.item_map, viewGroup, false);
 
         return new MapViewHolder(view);
     }
