@@ -41,6 +41,8 @@ public class PictureNodeView extends ChildNode implements Serializable  /*implem
        //ノードに画像を設定
         setNodeBitmap(thumbnail);
 
+        //
+
         //ツールアイコン設定
         setNodeToolIcon();
     }

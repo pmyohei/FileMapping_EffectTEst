@@ -155,7 +155,7 @@ public class MapActivity extends AppCompatActivity {
 
         //画面上部の中心位置
         mTopScreanX = screenWidth / 2;
-        mTopScreanY = (int) (screenHeight * (1f - ResourceManager.NODE_CREATE_DIALOG_RATIO)) / 2;
+        mTopScreanY = (int) (screenHeight * (1f - ResourceManager.NODE_DESIGN_DIALOG_RATIO)) / 2;
 
         Log.d("移動", "mTopScreanX=" + mTopScreanX);
         Log.d("移動", "mTopScreanY=" + mTopScreanY);
@@ -1139,15 +1139,11 @@ public class MapActivity extends AppCompatActivity {
                 node.getNodeView().reflectViewNodeInfo();
 
             //ピクチャノード生成完了
-            } else if( resultCode == PictureNodeSelectActivity.RESULT_PICTURE_NODE) {
+            } else if( resultCode == PictureTrimmingActivity.RESULT_PICTURE_NODE) {
 
                 //新規ピクチャノードを取得
                 NodeTable pictureNode = (NodeTable)intent.getSerializableExtra(ResourceManager.KEY_CREATED_NODE);
                 PictureTable picture  = (PictureTable)intent.getSerializableExtra(ResourceManager.KEY_THUMBNAIL);
-                //URI識別子を取得
-                //String uriIdentify = intent.getStringExtra( ResourceManager.KEY_URI );
-                //URIを生成
-                //Uri uri = Uri.parse( ResourceManager.URI_PATH + uriIdentify );
 
                 //リストに追加
                 MapCommonData mapCommonData = (MapCommonData) getApplication();
@@ -1156,14 +1152,11 @@ public class MapActivity extends AppCompatActivity {
                 mThumbnails.add(picture);
 
                 //ノードを描画
-                //Log.i("Callback", "uri=" + uri);
                 drawNode(findViewById(R.id.fl_map), pictureNode, NodeGlobalLayoutListener.LINE_SELF);
-
             }
 
         }
     }
-
 
 
 }

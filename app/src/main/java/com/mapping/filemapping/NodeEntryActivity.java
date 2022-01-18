@@ -32,7 +32,7 @@ public class NodeEntryActivity extends AppCompatActivity {
         boolean isCreate = intent.getBooleanExtra( MapActivity.INTENT_KIND_CREATE, false );
 
         //ポジティブボタン
-        Button bt_positive = findViewById(R.id.bt_positive);
+        Button bt_positive = findViewById(R.id.bt_create);
 
         //新規生成の場合
         if( isCreate ){

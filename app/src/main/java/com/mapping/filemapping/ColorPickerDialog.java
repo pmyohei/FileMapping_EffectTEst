@@ -11,8 +11,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.EditText;
-import android.widget.TextView;
 
 import androidx.fragment.app.DialogFragment;
 
@@ -77,7 +75,7 @@ public class ColorPickerDialog extends DialogFragment {
         });
 
         //OKボタン
-        dialog.findViewById(R.id.bt_positive).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.bt_create).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //リスナーに渡すビューを、カラーピッカーに入れ替え

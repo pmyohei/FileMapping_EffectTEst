@@ -34,7 +34,7 @@ public class MapEntryActivity extends AppCompatActivity {
 
         if( isCreate ){
             //OKボタンリスナー
-            findViewById(R.id.bt_positive).setOnClickListener( new PositiveClickListener(null) );
+            findViewById(R.id.bt_create).setOnClickListener( new PositiveClickListener(null) );
 
         } else {
             //編集対象のマップを取得
@@ -44,7 +44,7 @@ public class MapEntryActivity extends AppCompatActivity {
             ((EditText)findViewById(R.id.et_mapName)).setText( map.getMapName() );
 
             //OKボタンリスナー
-            findViewById(R.id.bt_positive).setOnClickListener( new PositiveClickListener(map) );
+            findViewById(R.id.bt_create).setOnClickListener( new PositiveClickListener(map) );
         }
 
 

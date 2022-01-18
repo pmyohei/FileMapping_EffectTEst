@@ -3,7 +3,6 @@ package com.mapping.filemapping;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -35,7 +34,7 @@ public class ColorPickerActivity extends AppCompatActivity {
         });
 
         //OK
-        findViewById(R.id.bt_positive).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.bt_create).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 

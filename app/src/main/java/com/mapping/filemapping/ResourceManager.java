@@ -34,7 +34,7 @@ public class ResourceManager {
     public static final int POS_NODE_INIT_OFFSET = 120;
 
     //ノード生成ダイアログの表示領域の割合
-    public static final float NODE_CREATE_DIALOG_RATIO = 0.5f;
+    public static final float NODE_DESIGN_DIALOG_RATIO = 0.5f;
 
     /*
      * 本アプリケーション内のフォントリスト

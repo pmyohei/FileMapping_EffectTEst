@@ -27,6 +27,7 @@ public class DesignDialog extends DialogFragment {
     //タグ
     public static final String TAG_NODE = "node";
     public static final String TAG_MAP = "map";
+    public static final String TAG_ONLY_SIZE = "size";
 
     //設定対象ノードビュー
     private View     mv_map;
@@ -88,9 +89,12 @@ public class DesignDialog extends DialogFragment {
         if( getTag().equals( TAG_NODE ) ){
             //ノードデザイン指定
             vp = setupNodeDesignLayout();
-        } else {
+        } else if( getTag().equals( TAG_MAP ) ) {
             //マップデザイン指定
             vp = setupMapDesignLayout();
+        } else {
+            //ノードサイズのみの指定
+            vp = setupNodeSizeLayout();
         }
 
         //インジケータの設定
@@ -125,7 +129,7 @@ public class DesignDialog extends DialogFragment {
 
         //レイアウトパラメータ
         WindowManager.LayoutParams lp = window.getAttributes();
-        lp.height = (int) (metrics.heightPixels * ResourceManager.NODE_CREATE_DIALOG_RATIO);
+        lp.height = (int) (metrics.heightPixels * ResourceManager.NODE_DESIGN_DIALOG_RATIO);
         lp.width = metrics.widthPixels;
         lp.gravity = Gravity.BOTTOM;
 
@@ -140,9 +144,9 @@ public class DesignDialog extends DialogFragment {
     private ViewPager2 setupNodeDesignLayout() {
         //ノードデザイン設定レイアウト
         List<Integer> layoutIdList = new ArrayList<>();
-        layoutIdList.add(R.layout.input_node_text);
-        layoutIdList.add(R.layout.input_node_design);
-        layoutIdList.add(R.layout.input_node_line_design);
+        layoutIdList.add(R.layout.page_node_text);
+        layoutIdList.add(R.layout.page_node_design);
+        layoutIdList.add(R.layout.page_node_line_design);
 
         ViewPager2 vp2 = getDialog().findViewById(R.id.vp2_design);
 
@@ -158,9 +162,9 @@ public class DesignDialog extends DialogFragment {
     private ViewPager2 setupMapDesignLayout() {
         //ノードデザイン設定レイアウト
         List<Integer> layoutIdList = new ArrayList<>();
-        layoutIdList.add(R.layout.input_map_design);
-        layoutIdList.add(R.layout.input_all_node_design);
-        layoutIdList.add(R.layout.input_node_line_design);
+        layoutIdList.add(R.layout.page_map_design);
+        layoutIdList.add(R.layout.page_all_node_design);
+        layoutIdList.add(R.layout.page_node_line_design);
 
         ViewPager2 vp = getDialog().findViewById(R.id.vp2_design);
         MapDesignAdapter adapter = new MapDesignAdapter(layoutIdList, mv_map, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp);
@@ -169,4 +173,18 @@ public class DesignDialog extends DialogFragment {
         return vp;
     }
 
+    /*
+     * ノードサイズ限定のレイアウトを設定
+     */
+    private ViewPager2 setupNodeSizeLayout() {
+        //ノードデザイン設定レイアウト
+        List<Integer> layoutIdList = new ArrayList<>();
+        layoutIdList.add(R.layout.page_node_shape);
+
+        ViewPager2 vp = getDialog().findViewById(R.id.vp2_design);
+        NodeShapeAdapter adapter = new NodeShapeAdapter(layoutIdList, mv_node, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp);
+        vp.setAdapter(adapter);
+
+        return vp;
+    }
 }

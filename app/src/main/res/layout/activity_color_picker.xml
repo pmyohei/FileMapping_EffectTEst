@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"/>
 
     <Button
-        android:id="@+id/bt_positive"
+        android:id="@+id/bt_create"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:ems="10"

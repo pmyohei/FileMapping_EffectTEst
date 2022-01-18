@@ -22,8 +22,8 @@
 
         <ImageView
             android:id="@+id/iv_node"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="@dimen/picture_node_default_size"
+            android:layout_height="@dimen/picture_node_default_size"
             android:scaleType="centerCrop"
             android:layout_gravity="center"
             android:src="@drawable/bmp_sample_cafe" />

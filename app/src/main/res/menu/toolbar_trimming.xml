@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:id="@+id/action_garally"
+        android:icon="@drawable/baseline_photo_library_24"
+        android:title="写真変更"
+        android:layout_gravity="left"
+        app:showAsAction="ifRoom"/>
+
+    <item
+        android:id="@+id/action_shape"
+        android:icon="@drawable/baseline_node_shape_24"
+        android:title="ノードの形状"
+        app:showAsAction="ifRoom"/>
+
+</menu>

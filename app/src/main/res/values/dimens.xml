@@ -6,6 +6,8 @@
     <!--  ノード  -->
     <dimen name="node_elevation">4dp</dimen>
     <dimen name="node_toolIcon_elevation">8dp</dimen>   <!-- ノードより大きい値にすること -->
+    <dimen name="picture_node_default_size">100dp</dimen>   <!-- ノードより大きい値にすること -->
+    <dimen name="node_shape_sample_size">60dp</dimen>   <!-- ノードより大きい値にすること -->
 
     <!--  ノードアイコンマージン  -->
     <dimen name="node_icon_radius">100dp</dimen>

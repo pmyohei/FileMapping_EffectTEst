@@ -224,7 +224,7 @@ public class BaseNode extends FrameLayout {
 
                 //ノード情報画面へ遷移
                 Context context = getContext();
-                Intent intent = new Intent(context, PictureNodeSelectActivity.class);
+                Intent intent = new Intent(context, PictureTrimmingActivity.class);
                 intent.putExtra(MapActivity.INTENT_MAP_PID, mNode.getPidMap());
                 intent.putExtra(MapActivity.INTENT_NODE_PID, mNode.getPid());
 

@@ -1,6 +1,9 @@
 <resources>
     <string name="app_name">FileMapping</string>
 
+    <!--  共通  -->
+    <string name="bt_create">Create</string>
+
     <!--  ノード  -->
     <string name="default_rootNode">ルート\nノード</string>
 

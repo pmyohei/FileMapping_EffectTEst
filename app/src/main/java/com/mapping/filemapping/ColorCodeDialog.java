@@ -54,7 +54,7 @@ public class ColorCodeDialog extends DialogFragment {
         }
 
         //OKボタン
-        dialog.findViewById(R.id.bt_positive).setOnClickListener(new View.OnClickListener() {
+        dialog.findViewById(R.id.bt_create).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //リスナーに渡すビューを、カラーコードのビューに入れ替え
