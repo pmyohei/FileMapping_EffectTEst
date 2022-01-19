@@ -30,8 +30,12 @@ public class ResourceManager {
     public static final long SERIAL_VERSION_UID_NODE_TABLE = 1L;
     public static final long SERIAL_VERSION_UID_NODE_VIEW  = 2L;
 
+    /* ノード共通情報 */
     //ノード初期生成位置（親ノードからのオフセット）
     public static final int POS_NODE_INIT_OFFSET = 120;
+    //ノード形状；四角形の場合の角丸サイズ（四角形の辺に対する割合）
+    public static final float SQUARE_CORNER_RATIO = 0.1f;
+
 
     //ノード生成ダイアログの表示領域の割合
     public static final float NODE_DESIGN_DIALOG_RATIO = 0.5f;

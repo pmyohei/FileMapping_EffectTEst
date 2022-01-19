@@ -29,6 +29,7 @@ import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.isseiaoki.simplecropview.CropImageView;
 
 import java.io.FileDescriptor;
@@ -123,17 +124,34 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         //トリミング結果の画像
         final ImageView iv_cropped = findViewById(R.id.iv_cropped);
 
+        //レイアウト確定待ち
+        ViewTreeObserver observer = iv_cropped.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+
+                        //形状（円）を設定
+                        MaterialCardView mcv = findViewById(R.id.mcv);
+                        mcv.setRadius( iv_cropped.getWidth() / 2f );
+
+                        //レイアウト確定後は、不要なので本リスナー削除
+                        iv_cropped.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                }
+        );
+
         //トリミング対象の画像
         final CropImageView iv_cropTarget = findViewById(R.id.iv_cropTarget);
         iv_cropTarget.setImageBitmap(bmp);
 
         //レイアウト確定待ち
-        ViewTreeObserver observer = iv_cropTarget.getViewTreeObserver();
+        observer = iv_cropTarget.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-                        //初期位置のトリミング範囲で表示
+                        //初期位置のトリミング範囲を「トリミング結果の画像」に適用
                         iv_cropped.setImageBitmap(iv_cropTarget.getCroppedBitmap());
 
                         //レイアウト確定後は、不要なので本リスナー削除
@@ -328,7 +346,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
             case R.id.action_shape:
 
                 //ノードの形状設定
-                DialogFragment dialog = new DesignDialog( (View)findViewById(R.id.fl_screenMap) );
+                DialogFragment dialog = new DesignDialog( (View)findViewById(R.id.mcv) );
                 dialog.show( getSupportFragmentManager(), DesignDialog.TAG_ONLY_SIZE );
 
                 return true;

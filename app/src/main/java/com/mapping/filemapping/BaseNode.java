@@ -4,7 +4,9 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -47,9 +49,10 @@ public class BaseNode extends FrameLayout {
     public float mCenterPosY = INIT_CENTER_POS;
     //ノード操作発生時の画面遷移ランチャー
     public ActivityResultLauncher<Intent> mNodeOperationLauncher;
-
     //ノード生成／編集クリックリスナー
     private MapActivity.NodeDesignClickListener mNodeDesignClickListener;
+    //シャドウペイント
+    private Paint mShadowPaint;
 
 
     /*
@@ -114,6 +117,9 @@ public class BaseNode extends FrameLayout {
         //ツールアイコン設定
         setCommonToolIcon();
         setParentToolIcon();
+
+        //シャドウペイント設定
+        //setShadowPaint();
     }
 
 
@@ -243,6 +249,18 @@ public class BaseNode extends FrameLayout {
      */
     public void setOnNodeDesignClickListener(MapActivity.NodeDesignClickListener listener) {
         mNodeDesignClickListener = listener;
+    }
+
+    /*
+     * ノードデザインの設定
+     */
+    public void setShadowPaint() {
+
+/*        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+
+        mShadowPaint = new Paint();
+        mShadowPaint.setColor(Color.TRANSPARENT);
+        mShadowPaint.setAntiAlias(true);*/
     }
 
     /*
@@ -419,6 +437,20 @@ public class BaseNode extends FrameLayout {
     }
 
 
+/*    @Override
+    protected void onDraw(Canvas canvas) {
+
+        int width = findViewById(R.id.cv_node).getWidth();
+
+        Log.i("サイズチェック", "onDraw レイアウト確定＝" + width);
+
+        //paint.setShadowLayer( (width / 4f), width / 4, getHeight() / 4, Color.RED );
+        mShadowPaint.setShadowLayer((width / 5f), 0, 0, Color.RED);
+
+        //paint.setColor(getResources().getColor(R.color.mark_5));
+        canvas.drawCircle(getWidth() / 2, getHeight() / 2, (width / 2), mShadowPaint);
+    }*/
+
     /*
      * ツールアイコン表示制御
      */
@@ -523,6 +555,10 @@ public class BaseNode extends FrameLayout {
                 }
         );
     }
+
+
+
+
 
 
 

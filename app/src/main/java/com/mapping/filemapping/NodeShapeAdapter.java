@@ -10,14 +10,16 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.card.MaterialCardView;
+
 import java.util.List;
 
 public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.GuideViewHolder> {
 
     //フィールド変数
     private final List<Integer>     mData;
-    //マップ
-    private BaseNode                mv_node;
+    //サンプルノード用
+    private View                    mView;
     //FragmentManager
     private final FragmentManager   mFragmentManager;
     //ViewPager2
@@ -32,8 +34,8 @@ public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.Guid
         private final int CIRCLE = 0;
         private final int SQUARE = 1;
 
-        //マップ
-        private final View mv_node;
+        //サンプルノード用
+        private final View mView;
         //FragmentManager
         private final FragmentManager mFragmentManager;
         //ViewPager2
@@ -47,10 +49,10 @@ public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.Guid
         /*
          * コンストラクタ
          */
-        public GuideViewHolder(View itemView, int position, View v_map, FragmentManager fragmentManager, ViewPager2 vp2) {
+        public GuideViewHolder(View itemView, int position, View view, FragmentManager fragmentManager, ViewPager2 vp2) {
             super(itemView);
 
-            mv_node = v_map;
+            mView = view;
             mFragmentManager = fragmentManager;
             mvp2 = vp2;
 
@@ -102,8 +104,22 @@ public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.Guid
             @Override
             public void onClick(View view) {
 
-                //ノードに対して、形状を適用
+                //トリミング結果の画像
+                int croppedWidth = mView.findViewById(R.id.iv_cropped).getWidth();
 
+                float radius;
+
+                //ノードに対して、形状を適用
+                if( mShapeKind == CIRCLE ){
+                    //円
+                    radius = croppedWidth / 2f;
+                } else {
+                    //四角形
+                    radius = croppedWidth * ResourceManager.SQUARE_CORNER_RATIO;
+                }
+
+                //角丸設定
+                ((MaterialCardView)mView).setRadius( radius );
             }
         }
     }
@@ -111,9 +127,9 @@ public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.Guid
     /*
      * コンストラクタ
      */
-    public NodeShapeAdapter(List<Integer> layoutIdList, BaseNode v_node, FragmentManager fragmentManager, ViewPager2 vp2) {
+    public NodeShapeAdapter(List<Integer> layoutIdList, View view, FragmentManager fragmentManager, ViewPager2 vp2) {
         mData            = layoutIdList;
-        mv_node           = v_node;
+        mView            = view;
         mFragmentManager = fragmentManager;
         mvp2             = vp2;
     }
@@ -139,7 +155,7 @@ public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.Guid
         LayoutInflater inflater = LayoutInflater.from( viewGroup.getContext() );
         View view = inflater.inflate(mData.get(position), viewGroup, false);
 
-        return new GuideViewHolder(view, position, mv_node, mFragmentManager, mvp2);
+        return new GuideViewHolder(view, position, mView, mFragmentManager, mvp2);
     }
 
     /*

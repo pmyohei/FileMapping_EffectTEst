@@ -182,7 +182,7 @@ public class DesignDialog extends DialogFragment {
         layoutIdList.add(R.layout.page_node_shape);
 
         ViewPager2 vp = getDialog().findViewById(R.id.vp2_design);
-        NodeShapeAdapter adapter = new NodeShapeAdapter(layoutIdList, mv_node, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp);
+        NodeShapeAdapter adapter = new NodeShapeAdapter(layoutIdList, mv_map, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp);
         vp.setAdapter(adapter);
 
         return vp;

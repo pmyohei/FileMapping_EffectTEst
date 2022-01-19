@@ -32,14 +32,46 @@
         android:layout_marginEnd="12dp"
         android:background="@color/black"/>
 
-    <ImageView
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/mcv"
+        android:theme="@style/Theme.MaterialComponents.Light"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_margin="12dp"
+        android:layout_gravity="center"
+        app:cardCornerRadius="@dimen/tmp_cardCornerRadius"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/black">
+
+        <!--  クリップイメージ  -->
+        <ImageView
+            android:id="@+id/iv_cropped"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:adjustViewBounds="true"
+            android:scaleType="centerCrop"
+            android:src="@drawable/bmp_sample_cafe" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+<!--    <include
+        android:id="@+id/iv_cropped"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="2"
+        android:layout_gravity="center"
+        layout="@layout/node_design" />-->
+
+<!--    <ImageView
         android:id="@+id/iv_cropped"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_weight="2"
         android:adjustViewBounds="true"
         android:padding="20dp"
-        android:layout_gravity="center" />
+        android:layout_gravity="center" />-->
 
     <Button
         android:id="@+id/bt_create"

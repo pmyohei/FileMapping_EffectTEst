@@ -181,7 +181,6 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
                 @Override
                 public void onStopTrackingTouch(SeekBar seekbar) {
                 }
-
                 @Override
                 public void onStartTrackingTouch(SeekBar seekbar) {
                 }
@@ -189,7 +188,8 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
                 @Override
                 public void onProgressChanged(SeekBar seekbar, int i, boolean flag) {
 
-                    ConstraintLayout cv = mv_node.findViewById( R.id.cl_node );
+                    //ConstraintLayout cv = mv_node.findViewById( R.id.cl_node );
+                    View cv = mv_node.findViewById( R.id.cv_node );
 
                     //Log.i("size", "getWidth=" + cv.getWidth());
 
