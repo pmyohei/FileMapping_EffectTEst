@@ -58,6 +58,10 @@ public class PictureNodeView extends ChildNode implements Serializable  /*implem
         }
         //-----
 
+        //ノードの中身の表示を変更
+        findViewById(R.id.tv_node).setVisibility( GONE );
+        findViewById(R.id.iv_node).setVisibility( VISIBLE );
+
         //ContentResolver:コンテンツモデルへのアクセスを提供
         ContentResolver contentResolver = getContext().getContentResolver();
 

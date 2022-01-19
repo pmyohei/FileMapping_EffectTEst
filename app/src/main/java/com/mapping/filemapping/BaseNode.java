@@ -52,7 +52,7 @@ public class BaseNode extends FrameLayout {
     //ノード生成／編集クリックリスナー
     private MapActivity.NodeDesignClickListener mNodeDesignClickListener;
     //シャドウペイント
-    private Paint mShadowPaint;
+    //private Paint mShadowPaint;
 
 
     /*
@@ -254,14 +254,14 @@ public class BaseNode extends FrameLayout {
     /*
      * ノードデザインの設定
      */
-    public void setShadowPaint() {
+/*    public void setShadowPaint() {
 
-/*        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
         mShadowPaint = new Paint();
-        mShadowPaint.setColor(Color.TRANSPARENT);
-        mShadowPaint.setAntiAlias(true);*/
-    }
+        mShadowPaint.setColor(Color.WHITE);
+        mShadowPaint.setAntiAlias(true);
+    }*/
 
     /*
      * ノードテーブルの情報をノードビューに反映する
@@ -440,15 +440,15 @@ public class BaseNode extends FrameLayout {
 /*    @Override
     protected void onDraw(Canvas canvas) {
 
-        int width = findViewById(R.id.cv_node).getWidth();
+        int nodeWidth = findViewById(R.id.cv_node).getWidth();
 
-        Log.i("サイズチェック", "onDraw レイアウト確定＝" + width);
+        Log.i("サイズチェック", "BaseView レイアウト確定＝" + nodeWidth);
 
-        //paint.setShadowLayer( (width / 4f), width / 4, getHeight() / 4, Color.RED );
-        mShadowPaint.setShadowLayer((width / 5f), 0, 0, Color.RED);
+        //paint.setShadowLayer( (nodeWidth / 4f), nodeWidth / 4, getHeight() / 4, Color.RED );
+        mShadowPaint.setShadowLayer((nodeWidth / 5f), 0, 0, Color.RED);
 
         //paint.setColor(getResources().getColor(R.color.mark_5));
-        canvas.drawCircle(getWidth() / 2, getHeight() / 2, (width / 2), mShadowPaint);
+        canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, (nodeWidth / 2f), mShadowPaint);
     }*/
 
     /*

@@ -7,31 +7,16 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center">
 
-    <!-- ノード -->
-    <androidx.cardview.widget.CardView
-        android:id="@+id/cv_node"
+    <!--  ノード本体  -->
+    <include
+        layout="@layout/node_body"
+        android:id="@+id/l_nodeBody"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/black"
-        app:cardCornerRadius="@dimen/tmp_cardCornerRadius"
-        app:cardElevation="@dimen/node_elevation"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-        <!-- ノード -->
-        <TextView
-            android:id="@+id/tv_node"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:gravity="center"
-            android:padding="12dp"
-            android:text="@string/sample"
-            android:textColor="@color/white"/>
-
-    </androidx.cardview.widget.CardView>
+        app:layout_constraintTop_toTopOf="parent" />
 
     <!--  ツールアイコン  -->
     <ImageButton
@@ -42,7 +27,7 @@
         android:elevation="@dimen/node_toolIcon_elevation"
         android:background="@drawable/circle_tool_icon"
         android:visibility="gone"
-        app:layout_constraintCircle="@id/cv_node"
+        app:layout_constraintCircle="@id/l_nodeBody"
         app:layout_constraintCircleAngle="30"
         app:layout_constraintCircleRadius="@dimen/node_icon_radius"
         app:layout_constraintEnd_toEndOf="parent"
@@ -58,7 +43,7 @@
         android:elevation="@dimen/node_toolIcon_elevation"
         android:background="@drawable/circle_tool_icon"
         android:visibility="gone"
-        app:layout_constraintCircle="@id/cv_node"
+        app:layout_constraintCircle="@id/l_nodeBody"
         app:layout_constraintCircleAngle="82.5"
         app:layout_constraintCircleRadius="@dimen/node_icon_radius"
         app:layout_constraintEnd_toEndOf="parent"
@@ -75,7 +60,7 @@
         android:elevation="@dimen/node_toolIcon_elevation"
         android:padding="4dp"
         android:visibility="gone"
-        app:layout_constraintCircle="@id/cv_node"
+        app:layout_constraintCircle="@id/l_nodeBody"
         app:layout_constraintCircleAngle="135"
         app:layout_constraintCircleRadius="@dimen/node_icon_radius"
         app:layout_constraintEnd_toEndOf="parent"
@@ -91,7 +76,7 @@
         android:elevation="@dimen/node_toolIcon_elevation"
         android:background="@drawable/circle_tool_icon"
         android:visibility="gone"
-        app:layout_constraintCircle="@id/cv_node"
+        app:layout_constraintCircle="@id/l_nodeBody"
         app:layout_constraintCircleAngle="187.5"
         app:layout_constraintCircleRadius="@dimen/node_icon_radius"
         app:layout_constraintStart_toStartOf="parent"
@@ -106,7 +91,7 @@
         android:elevation="@dimen/node_toolIcon_elevation"
         android:background="@drawable/circle_tool_icon"
         android:visibility="gone"
-        app:layout_constraintCircle="@id/cv_node"
+        app:layout_constraintCircle="@id/l_nodeBody"
         app:layout_constraintCircleAngle="200"
         app:layout_constraintCircleRadius="@dimen/node_icon_radius"
         app:layout_constraintEnd_toEndOf="parent"
@@ -121,7 +106,7 @@
         android:elevation="@dimen/node_toolIcon_elevation"
         android:background="@drawable/circle_tool_icon"
         android:visibility="gone"
-        app:layout_constraintCircle="@id/cv_node"
+        app:layout_constraintCircle="@id/l_nodeBody"
         app:layout_constraintCircleAngle="240"
         app:layout_constraintCircleRadius="@dimen/node_icon_radius"
         app:layout_constraintStart_toStartOf="parent"

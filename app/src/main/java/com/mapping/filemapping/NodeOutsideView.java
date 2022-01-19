@@ -56,7 +56,7 @@ public class NodeOutsideView extends LinearLayout {
         Log.i("サイズチェック", "onDraw レイアウト確定＝" + width);
 
         //paint.setShadowLayer( (width / 4f), width / 4, getHeight() / 4, Color.RED );
-        paint.setShadowLayer((width / 5f), 0, 0, Color.RED);
+        paint.setShadowLayer((width / 5f), 0, 0, Color.LTGRAY);
 
         //paint.setColor(getResources().getColor(R.color.mark_5));
         canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, (width / 2f), paint);
