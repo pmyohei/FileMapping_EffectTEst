@@ -437,15 +437,14 @@ public class BaseNode extends FrameLayout {
      */
     public void setShadowColor( String color ) {
         //影色を設定
-        ((NodeOutsideView)findViewById( R.id.nov_shadow )).setShadowColor( Color.parseColor(color) );
+        ((NodeOutsideView)findViewById( R.id.l_nodeBody )).setShadowColor( Color.parseColor(color) );
     }
 
     /*
      * ノード影色の取得
      */
     public String getShadowColor() {
-
-        return ((NodeOutsideView)findViewById( R.id.nov_shadow )).getShadowColor();
+        return ((NodeOutsideView)findViewById( R.id.l_nodeBody )).getShadowColor();
     }
 
     /*
