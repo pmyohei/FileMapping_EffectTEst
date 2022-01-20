@@ -82,6 +82,10 @@ public class NodeTable implements Serializable {
     //親ノードIDなし
     public static int NO_PARENT = -1;
 
+    //ノード形
+    public static final int CIRCLE = 0;
+    public static final int SQUARE = 1;
+
     //中心座標の連想配列文字列
 /*
     public static String CENTER_POS_X = "X";

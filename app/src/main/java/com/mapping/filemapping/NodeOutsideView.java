@@ -48,6 +48,31 @@ public class NodeOutsideView extends LinearLayout {
         invalidate();
     }
 
+    /*
+     * 影色の設定
+     */
+    public void setShadowColor(int colorHex) {
+
+        //影色の設定
+        int width = findViewById(R.id.cv_node).getWidth();
+        paint.setShadowLayer((width / 5f), 0, 0, colorHex);
+
+        //再描画
+        invalidate();
+    }
+
+    /*
+     * 影色の取得
+     */
+    public String getShadowColor() {
+
+        //★色は保持しておく
+        //getShadowLayerColor()はAPIレベル対応が必要のため
+        //return ( "#" + Integer.toHexString( (int)paint.getShadowLayerColorLong() ) );
+        return "#aaaaaa";
+    }
+
+
     @Override
     protected void onDraw(Canvas canvas) {
 

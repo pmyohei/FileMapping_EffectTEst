@@ -442,9 +442,9 @@ public class MapActivity extends AppCompatActivity {
     }
 
     /*
-     *　マップ中心移動
+     *　ノードにフォーカスをあてる（画面中心に指定座標をもってくる）
      */
-    private void mapToCenter(float nodeLeft, float nodeTop, int POS_KIND) {
+    private void focusNodeToCenterScreen(float nodeLeft, float nodeTop, int POS_KIND) {
 
         int height = 0;
         
@@ -754,7 +754,7 @@ public class MapActivity extends AppCompatActivity {
             dialog.show(((FragmentActivity) view.getContext()).getSupportFragmentManager(), DesignDialog.TAG_NODE);
 
             //画面上部中央にノードがくるようにする
-            mapToCenter(marginLeft, marginTop, MOVE_UPPER);
+            focusNodeToCenterScreen(marginLeft, marginTop, MOVE_UPPER);
         }
     }
 
@@ -1078,7 +1078,7 @@ public class MapActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     //ノードを画面中央に持ってくる
-                    mapToCenter( node.getNodeView().getLeft(), node.getNodeView().getTop(), MOVE_CENTER);
+                    focusNodeToCenterScreen( node.getNodeView().getLeft(), node.getNodeView().getTop(), MOVE_CENTER);
                 }
             });
         }

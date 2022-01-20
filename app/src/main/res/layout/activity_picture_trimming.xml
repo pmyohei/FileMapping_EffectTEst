@@ -16,22 +16,6 @@
         app:titleTextAppearance="@style/Toolbar.TitleText"
         app:menu="@menu/toolbar_trimming"/>
 
-    <com.isseiaoki.simplecropview.CropImageView
-        android:id="@+id/iv_cropTarget"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="3"
-        android:layout_marginTop="4dp" />
-
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
-        android:background="@color/black"/>
-
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/mcv"
         android:theme="@style/Theme.MaterialComponents.Light"
@@ -56,22 +40,24 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-<!--    <include
-        android:id="@+id/iv_cropped"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:layout_gravity="center"
-        layout="@layout/node_design" />-->
 
-<!--    <ImageView
-        android:id="@+id/iv_cropped"
+    <!--  仕切り線  -->
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:background="@color/black"/>
+
+    <!--  選択した写真  -->
+    <com.isseiaoki.simplecropview.CropImageView
+        android:id="@+id/iv_cropTarget"
         android:layout_width="wrap_content"
         android:layout_height="0dp"
-        android:layout_weight="2"
-        android:adjustViewBounds="true"
-        android:padding="20dp"
-        android:layout_gravity="center" />-->
+        android:layout_weight="3"
+        android:layout_marginTop="4dp" />
 
     <Button
         android:id="@+id/bt_create"

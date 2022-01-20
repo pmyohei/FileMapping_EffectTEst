@@ -1,7 +1,10 @@
 package com.mapping.filemapping;
 
 import android.app.Dialog;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -13,14 +16,19 @@ import android.widget.EditText;
 
 import androidx.fragment.app.DialogFragment;
 
-public class ColorCodeDialog extends DialogFragment {
+public class ColorCodeDialog extends ColorDialog implements TextWatcher {
 
-    private View.OnClickListener mPositiveClickListener;    //ボタンクリックリスナー
 
     /*
      * コンストラクタ
      */
-    public ColorCodeDialog() { }
+    public ColorCodeDialog( String color ) {
+        super(color);
+    }
+
+    public ColorCodeDialog(  ) {
+        super("test");
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -53,18 +61,47 @@ public class ColorCodeDialog extends DialogFragment {
             return;
         }
 
+        //初期色の設定
+        setInitColor();
+
+        //入力されたRGBを色確認用ビューに反映させる
+        EditText et_colorCode = dialog.findViewById(R.id.et_colorCode);
+        et_colorCode.addTextChangedListener(this);
+
         //OKボタン
         dialog.findViewById(R.id.bt_create).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //リスナーに渡すビューを、カラーコードのビューに入れ替え
-                EditText et_colorCode = dialog.findViewById(R.id.et_colorCode);
-
-                //★入力チェックが必要
-
-                mPositiveClickListener.onClick(et_colorCode);
+                //色確定
+                mPositiveClickListener.onClick( dialog.findViewById(R.id.v_checkColor) );
             }
         });
+    }
+
+    @Override
+    public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+    }
+    @Override
+    public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+    }
+
+    @Override
+    public void afterTextChanged(Editable editable) {
+        //リスナーに渡すビューを、カラーコードのビューに入れ替え
+        EditText et_colorCode = getDialog().findViewById(R.id.et_colorCode);
+        String rgb = et_colorCode.getText().toString();
+
+        //6文字未満なら、何もしない
+        if( rgb.length() < 6 ){
+            return;
+        }
+
+        //「例）#123456」を作成
+        String code = "#" + et_colorCode.getText().toString();
+
+        //確認用ビューに反映
+        getDialog().findViewById(R.id.v_checkColor).setBackgroundColor( Color.parseColor( code ) );
+
     }
 
     /*
@@ -89,11 +126,17 @@ public class ColorCodeDialog extends DialogFragment {
     }
 
     /*
-     * ダイアログサイズ設定
+     * 初期色の設定
      */
-    public void setOnPositiveClickListener(View.OnClickListener listener) {
-        mPositiveClickListener = listener;
+    @Override
+    public void setInitColor() {
+        super.setInitColor();
+
+        //「#」を取り除く
+        String rgb = mInitColorStr.replace("#", "");
+
+        //RGB文字列を設定
+        EditText et_colorCode = getDialog().findViewById(R.id.et_colorCode);
+        et_colorCode.setText( rgb );
     }
-
-
 }

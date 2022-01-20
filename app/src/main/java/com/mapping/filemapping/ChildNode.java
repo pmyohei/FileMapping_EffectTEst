@@ -168,6 +168,13 @@ public class ChildNode extends BaseNode {
     }
 
     /*
+     * ラインカラーの取得
+     */
+    public String getLineColor() {
+        return mLineView.getColor();
+    }
+
+    /*
      * ラインサイズ（太さ）の設定
      */
     public void setLineSize( int thick ) {
@@ -717,6 +724,14 @@ public class ChildNode extends BaseNode {
             mPaint.setColor( Color.parseColor(color) );
             //再描画
             invalidate();
+        }
+
+        /*
+         * ラインカラーの取得
+         */
+        public String getColor() {
+
+            return ( "#" + Integer.toHexString( mPaint.getColor() ) );
         }
 
         /*

@@ -17,8 +17,8 @@
     <dimen name="node_icon_margin_middle2">60dp</dimen>
 
     <!--  ダイアログ  -->
-    <dimen name="color_picker_check_circle">32dp</dimen>
-    <dimen name="color_picker_check_circle_half">16dp</dimen>
+    <dimen name="color_picker_check_circle">60dp</dimen>
+    <dimen name="color_picker_check_circle_half">30dp</dimen>
 
     <!--  tmp  -->
     <dimen name="tmp_cardCornerRadius">12dp</dimen>

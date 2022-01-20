@@ -30,10 +30,6 @@ public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.Guid
      */
     static class GuideViewHolder extends RecyclerView.ViewHolder {
 
-        //カラー指定
-        private final int CIRCLE = 0;
-        private final int SQUARE = 1;
-
         //サンプルノード用
         private final View mView;
         //FragmentManager
@@ -80,9 +76,9 @@ public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.Guid
         public void setPage0() {
 
             //円形
-            iv_circle.setOnClickListener(new ClickShapeImage(CIRCLE) );
+            iv_circle.setOnClickListener(new ClickShapeImage( NodeTable.CIRCLE) );
             //四角形
-            iv_square.setOnClickListener( new ClickShapeImage(SQUARE) );
+            iv_square.setOnClickListener( new ClickShapeImage( NodeTable.SQUARE) );
         }
 
         /*
@@ -110,7 +106,7 @@ public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.Guid
                 float radius;
 
                 //ノードに対して、形状を適用
-                if( mShapeKind == CIRCLE ){
+                if( mShapeKind == NodeTable.CIRCLE ){
                     //円
                     radius = croppedWidth / 2f;
                 } else {

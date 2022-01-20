@@ -4,12 +4,13 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.LinearLayout;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.TextView;
@@ -20,11 +21,9 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
-import com.jaredrummler.android.colorpicker.ColorPickerView;
-
 import java.util.List;
 
-public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.GuideViewHolder> {
+public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdapter.GuideViewHolder> {
 
     //フィールド変数
     private final List<Integer>   mData;
@@ -41,10 +40,12 @@ public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.Guid
     static class GuideViewHolder extends RecyclerView.ViewHolder {
 
         //カラー指定
-        private final int NODE_BACKGROUNG_COLOR = 0;
-        private final int NODE_TEXT_COLOR = 1;
-        private final int LINE_COLOR = 2;
-        private final int MAP_COLOR = 3;
+        private final int COLOR_BACKGROUNG = 0;
+        private final int COLOR_TEXT = 1;
+        private final int COLOR_BORDER = 2;
+        private final int COLOR_SHADOW = 3;
+        private final int COLOR_LINE = 4;
+        private final int COLOR_MAP = 5;
 
         //マップ
         private final View            mv_map;
@@ -62,9 +63,15 @@ public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.Guid
         private TextView tv_bgColorGraphic;
         private TextView tv_txColorCode;
         private TextView tv_txColorGraphic;
-        private LinearLayout ll_nodeSize;
         private RecyclerView rv_fontAlphabet;
         private RecyclerView rv_fontjapanese;
+        private ImageView iv_circle;
+        private ImageView iv_square;
+        private TextView tv_borderColorCode;
+        private TextView tv_borderColorGraphic;
+        private RadioGroup rg_borderSize;
+        private TextView tv_shadowColorCode;
+        private TextView tv_shadowColorGraphic;
 
         //ラインデザイン
         private TextView tv_lineColorCode;
@@ -94,11 +101,20 @@ public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.Guid
                 //テキスト色
                 tv_txColorCode    = itemView.findViewById(R.id.tv_txColorCode);
                 tv_txColorGraphic = itemView.findViewById(R.id.tv_txColorGraphic);
-                //ノードサイズ
-                ll_nodeSize       = itemView.findViewById(R.id.ll_nodeSize);
                 //フォント
                 rv_fontAlphabet   = itemView.findViewById(R.id.rv_fontAlphabet);
                 rv_fontjapanese   = itemView.findViewById(R.id.rv_fontJapanese);
+                //ノード形
+                iv_circle    = itemView.findViewById(R.id.iv_circle);
+                iv_square    = itemView.findViewById(R.id.iv_square);
+                //枠線色
+                tv_borderColorCode    = itemView.findViewById(R.id.tv_borderColorCode);
+                tv_borderColorGraphic = itemView.findViewById(R.id.tv_borderColorGraphic);
+                //枠線サイズ
+                rg_borderSize = itemView.findViewById(R.id.rg_borderSize);
+                //影色
+                tv_shadowColorCode    = itemView.findViewById(R.id.tv_shadowColorCode);
+                tv_shadowColorGraphic = itemView.findViewById(R.id.tv_shadowColorGraphic);
 
             } else if (position == 2) {
                 //色
@@ -132,9 +148,9 @@ public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.Guid
         public void setPage0() {
 
             //背景色-カラーコード
-            tv_bgMapColorCode.setOnClickListener(new ClickColorCode(MAP_COLOR) );
+            tv_bgMapColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_MAP) );
             //背景色-カラーピッカー
-            tv_bgMapColorGraphic.setOnClickListener( new ClickColorPicker(MAP_COLOR) );
+            tv_bgMapColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_MAP) );
         }
 
         /*
@@ -142,19 +158,13 @@ public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.Guid
          */
         public void setPage1() {
 
-            //背景色-カラーコード
-            tv_bgColorCode.setOnClickListener(new ClickColorCode(NODE_BACKGROUNG_COLOR) );
-            //背景色-カラーピッカー
-            tv_bgColorGraphic.setOnClickListener( new ClickColorPicker(NODE_BACKGROUNG_COLOR) );
+            //背景色
+            tv_bgColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_BACKGROUNG) );
+            tv_bgColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_BACKGROUNG) );
 
-            //テキスト色-カラーコード
-            tv_txColorCode.setOnClickListener(new ClickColorCode(NODE_TEXT_COLOR) );
-            //テキスト色-カラーピッカー
-            tv_txColorGraphic.setOnClickListener( new ClickColorPicker(NODE_TEXT_COLOR) );
-
-            //ノードサイズは設定対象外のため、非表示
-            ll_nodeSize.setVisibility( View.GONE );
-
+            //テキスト色
+            tv_txColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_TEXT) );
+            tv_txColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_TEXT) );
 
             Context context = mv_map.getContext();
 
@@ -179,6 +189,36 @@ public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.Guid
             //スクロールリスナー（ViewPager2のタブ切り替えを制御）
             rv_fontAlphabet.addOnItemTouchListener( new Vp2OnItemTouchListener( mvp2 ) );
             rv_fontjapanese.addOnItemTouchListener( new Vp2OnItemTouchListener( mvp2 ) );
+
+            //ノード形
+            iv_circle.setOnClickListener(new ClickShapeImage(NodeTable.CIRCLE) );
+            iv_square.setOnClickListener( new ClickShapeImage(NodeTable.SQUARE) );
+
+            //枠色
+            tv_borderColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_BORDER) );
+            tv_borderColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_BORDER) );
+
+            //枠サイズ
+            //★UIをラジオボタンにするなら、ライン側と統一させる
+            rg_borderSize.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                    //選択されたindexを取得
+                    RadioButton rb = radioGroup.findViewById( checkedId );
+                    int idx = radioGroup.indexOfChild( rb );
+
+                    //マップ共通データ
+                    MapCommonData commonData = (MapCommonData)((Activity)mv_map.getContext()).getApplication();
+                    NodeArrayList<NodeTable> nodes = commonData.getNodes();
+
+                    nodes.setAllNodeBorderSize( idx + 1 );
+                }
+            });
+
+            //影色
+            tv_shadowColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_SHADOW) );
+            tv_shadowColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_SHADOW) );
+
         }
 
         /*
@@ -187,9 +227,9 @@ public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.Guid
         public void setPage2() {
 
             //ラインカラー-カラーコード
-            tv_lineColorCode.setOnClickListener(new ClickColorCode(LINE_COLOR) );
+            tv_lineColorCode.setOnClickListener(new ClickColor(ClickColor.RGB, COLOR_LINE) );
             //ラインカラー-カラーピッカー
-            tv_lineColorGraphic.setOnClickListener( new ClickColorPicker(LINE_COLOR) );
+            tv_lineColorGraphic.setOnClickListener( new ClickColor(ClickColor.PICKER, COLOR_LINE) );
 
             //ラインサイズ
             rg_lineSize.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -209,19 +249,167 @@ public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.Guid
 
         }
 
+        /*
+         * カラー入力ダイアログ表示リスナー
+         */
+        private class ClickColor implements View.OnClickListener {
+
+            //カラー入力方法
+            public static final int RGB = 0;
+            public static final int PICKER = 1;
+
+            //カラー入力方法
+            private final int mInputKind;
+            //設定対象
+            private final int mSetTarget;
+
+            /*
+             * コンストラクタ
+             */
+            public ClickColor( int colorKind, int setTarget ){
+                mInputKind = colorKind;
+                mSetTarget = setTarget;
+            }
+
+            @Override
+            public void onClick(View view) {
+
+                //設定中の色を取得
+                String currentColor = getCurrentColor();
+
+                //ダイアログ
+                ColorDialog dialog;
+                if( mInputKind == RGB ){
+                    dialog = new ColorCodeDialog( currentColor );
+                } else {
+                    dialog = new ColorPickerDialog( currentColor );
+                }
+
+                //OKボタンリスナー
+                dialog.setOnPositiveClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        //Log.i("Design", "カラーコード=" + ((EditText)view).getText());
+
+                        //カラーコード文字列
+                        ColorDrawable colorDrawable = (ColorDrawable) view.getBackground();
+                        int colorInt = colorDrawable.getColor();
+                        String code = "#" + Integer.toHexString( colorInt );
+
+                        //マップ共通データ
+                        MapCommonData commonData = (MapCommonData)((Activity)mv_map.getContext()).getApplication();
+                        NodeArrayList<NodeTable> nodes = commonData.getNodes();
+
+                        switch (mSetTarget){
+
+                            case COLOR_MAP:
+                                //マップ色
+                                mv_map.setBackgroundColor( Color.parseColor(code) );
+                                break;
+
+                            case COLOR_BACKGROUNG:
+                                //ノード背景色
+                                nodes.setAllNodeBgColor( code );
+                                break;
+
+                            case COLOR_TEXT:
+                                //ノードテキストカラー
+                                nodes.setAllNodeTxColor( code );
+                                break;
+
+                            case COLOR_BORDER:
+                                //枠線カラー
+                                nodes.setAllNodeBorderColor( code );
+                                break;
+
+                            case COLOR_SHADOW:
+                                //影カラー
+                                nodes.setAllNodeShadowColor( code );
+                                break;
+
+                            case COLOR_LINE:
+                                //ラインカラー
+                                nodes.setAllNodeLineColor( code );
+                                break;
+                        }
+
+                        dialog.dismiss();
+                    }
+                });
+
+                dialog.show(mFragmentManager, "ColorCode");
+            }
+
+            /*
+             * 設定中のカラーを取得
+             */
+            private String getCurrentColor(){
+
+                //マップ共通データ
+                MapCommonData commonData = (MapCommonData)((Activity)mv_map.getContext()).getApplication();
+                NodeArrayList<NodeTable> nodes = commonData.getNodes();
+
+                //ルートノード
+                BaseNode rootNode = nodes.getRootNode().getNodeView();
+
+                //色設定の対象毎に処理
+                switch (mSetTarget){
+                    case COLOR_MAP:
+                        //マップ色
+                        ColorDrawable colorDrawable = (ColorDrawable)mv_map.getBackground();
+                        return "#" + Integer.toHexString( colorDrawable.getColor() );
+
+                    case COLOR_BACKGROUNG:
+                        //ノード背景色
+                        return rootNode.getNodeBackgroundColor();
+
+                    case COLOR_TEXT:
+                        //ノードテキストカラー
+                        return rootNode.getNodeTextColor();
+
+                    case COLOR_BORDER:
+                        //枠線カラー
+                        return rootNode.getBorderColor();
+
+                    case COLOR_SHADOW:
+                        //影カラー
+                        return rootNode.getShadowColor();
+
+                    case COLOR_LINE:
+                        //ラインカラー
+
+                        //先頭ノード（ルートを除く）
+                        ChildNode topChildNode = (ChildNode)nodes.getTopChildNode().getNodeView();
+                        if(topChildNode == null){
+                            return ResourceManager.NODE_INVALID_COLOR;
+                        }
+
+                        return topChildNode.getLineColor();
+
+                    default:
+                        //該当なし(フェールセーフ)
+                        return ResourceManager.NODE_INVALID_COLOR;
+                }
+            }
+
+        }
 
         /*
          *
          * カラーコード表示リスナー
          *
          */
+/*
         private class ClickColorCode implements View.OnClickListener {
 
             private final int mColorKind;
 
-            /*
+            */
+/*
              * コンストラクタ
-             */
+             *//*
+
             public ClickColorCode( int kind ){
                 mColorKind = kind;
             }
@@ -246,13 +434,13 @@ public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.Guid
                         //カラーコード文字列
                         String code = "#" + ((EditText)view).getText().toString();
 
-                        if( mColorKind == MAP_COLOR ){
+                        if( mColorKind == COLOR_MAP){
                             //マップ色
                             mv_map.setBackgroundColor( Color.parseColor(code) );
-                        } else if( mColorKind == NODE_BACKGROUNG_COLOR ){
+                        } else if( mColorKind == COLOR_BACKGROUNG){
                             //ノード背景色
                             nodes.setAllNodeBgColor( code );
-                        } else if ( mColorKind == NODE_TEXT_COLOR ){
+                        } else if ( mColorKind == COLOR_TEXT){
                             //ノードテキストカラー
                             nodes.setAllNodeTxColor( code );
                         } else {
@@ -267,19 +455,23 @@ public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.Guid
                 dialog.show(mFragmentManager, "ColorCode");
             }
         }
+*/
 
         /*
          *
          * カラーピッカー表示リスナー
          *
          */
+/*
         private class ClickColorPicker implements View.OnClickListener {
 
             private final int mColorKind;
 
-            /*
+            */
+/*
              * コンストラクタ
-             */
+             *//*
+
             public ClickColorPicker( int kind ){
                 mColorKind = kind;
             }
@@ -302,13 +494,13 @@ public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.Guid
                         //カラーコード文字列
                         String code = "#" + Integer.toHexString( ((ColorPickerView)view).getColor() );
 
-                        if( mColorKind == MAP_COLOR ){
+                        if( mColorKind == COLOR_MAP){
                             //マップ色
                             mv_map.setBackgroundColor( Color.parseColor(code) );
-                        } else if( mColorKind == NODE_BACKGROUNG_COLOR ){
+                        } else if( mColorKind == COLOR_BACKGROUNG){
                             //ノード背景色
                             nodes.setAllNodeBgColor( code );
-                        } else if ( mColorKind == NODE_TEXT_COLOR ){
+                        } else if ( mColorKind == COLOR_TEXT){
                             //ノードテキストカラー
                             nodes.setAllNodeTxColor( code );
                         } else {
@@ -323,12 +515,41 @@ public class MapDesignAdapter extends RecyclerView.Adapter<MapDesignAdapter.Guid
                 dialog.show(mFragmentManager, "ColorGraphic");
             }
         }
+*/
+
+        /*
+         *
+         * ノード形状イメージリスナー
+         *
+         */
+        private class ClickShapeImage implements View.OnClickListener {
+
+            private final int mShapeKind;
+
+            /*
+             * コンストラクタ
+             */
+            public ClickShapeImage(int kind ){
+                mShapeKind = kind;
+            }
+
+            @Override
+            public void onClick(View view) {
+
+                //マップ共通データ
+                MapCommonData commonData = (MapCommonData)((Activity)mv_map.getContext()).getApplication();
+                NodeArrayList<NodeTable> nodes = commonData.getNodes();
+
+                //全ノードに形状を設定
+                nodes.setAllNodeShape( mShapeKind );
+            }
+        }
     }
 
     /*
      * コンストラクタ
      */
-    public MapDesignAdapter(List<Integer> layoutIdList, View v_map, FragmentManager fragmentManager, ViewPager2 vp2) {
+    public DesignMapPageAdapter(List<Integer> layoutIdList, View v_map, FragmentManager fragmentManager, ViewPager2 vp2) {
         mData            = layoutIdList;
         mv_map           = v_map;
         mFragmentManager = fragmentManager;

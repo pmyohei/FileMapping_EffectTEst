@@ -288,12 +288,10 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
         return level;
     }
 
-
     /*
      *　本リストからルートノードを取得
      */
     public NodeTable getRootNode() {
-        //指定ノード分ループ
         for( NodeTable node: this ){
             if( node.getKind() == NodeTable.NODE_KIND_ROOT ){
                 return node;
@@ -301,6 +299,21 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
         }
 
         //このルートは通らない想定（ルートノードは必ず存在するため）
+        return null;
+    }
+
+    /*
+     *　先頭の子ノードを返す
+     */
+    public NodeTable getTopChildNode() {
+
+        for( NodeTable node: this ){
+            if( node.getKind() != NodeTable.NODE_KIND_ROOT ){
+                //ルート以外があれば、返す
+                return node;
+            }
+        }
+
         return null;
     }
 
@@ -332,13 +345,65 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
     /*
      *　全ノードのテキストフォントの設定
      */
-    public void setAllNodeTxFont( Typeface font ) {
+    public void setAllNodeFont(Typeface font ) {
 
         //リストの内のノードすべて
         for( NodeTable node: this ){
             //★テーブルにも反映必要
             //node.
             node.getNodeView().setNodeFont( font );
+        }
+    }
+
+    /*
+     *　全ノードの形の設定
+     */
+    public void setAllNodeShape( int shapeKind ) {
+
+        //リストの内のノードすべて
+        for( NodeTable node: this ){
+            //★テーブルにも反映必要
+            //node.
+            node.getNodeView().setNodeShape( shapeKind );
+        }
+    }
+
+    /*
+     *　全ノードの枠色の設定
+     */
+    public void setAllNodeBorderColor( String color ) {
+
+        //リストの内のノードすべて
+        for( NodeTable node: this ){
+            //★テーブルにも反映必要
+            //node.
+            node.getNodeView().setBorderColor( color );
+        }
+    }
+
+    /*
+     *　全ノードの枠サイズの設定
+     */
+    public void setAllNodeBorderSize( int thick ) {
+
+        //リストの内のノードすべて
+        for( NodeTable node: this ){
+            //★テーブルにも反映必要
+            //node.
+            node.getNodeView().setBorderSize( thick );
+        }
+    }
+
+    /*
+     *　全ノードの枠サイズの設定
+     */
+    public void setAllNodeShadowColor( String color ) {
+
+        //リストの内のノードすべて
+        for( NodeTable node: this ){
+            //★テーブルにも反映必要
+            //node.
+            node.getNodeView().setShadowColor( color );
         }
     }
 

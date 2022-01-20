@@ -36,9 +36,15 @@ public class ResourceManager {
     //ノード形状；四角形の場合の角丸サイズ（四角形の辺に対する割合）
     public static final float SQUARE_CORNER_RATIO = 0.1f;
 
-
     //ノード生成ダイアログの表示領域の割合
     public static final float NODE_DESIGN_DIALOG_RATIO = 0.5f;
+
+    //ノード色（フェールセーフ用）
+    public static final String NODE_INVALID_COLOR = "#000000";
+
+
+
+
 
     /*
      * 本アプリケーション内のフォントリスト

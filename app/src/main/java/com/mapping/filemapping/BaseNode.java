@@ -4,10 +4,10 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Canvas;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -22,6 +22,8 @@ import android.widget.TextView;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.cardview.widget.CardView;
+
+import com.google.android.material.card.MaterialCardView;
 
 import java.io.Serializable;
 
@@ -341,6 +343,19 @@ public class BaseNode extends FrameLayout {
     }
 
     /*
+     * ノード背景色の取得
+     */
+    public String getNodeBackgroundColor() {
+
+        MaterialCardView cv_node = findViewById(R.id.cv_node);
+
+        ColorStateList colorStateList = cv_node.getCardBackgroundColor();
+        int colorInt = colorStateList.getDefaultColor();
+
+        return ( "#" + Integer.toHexString( colorInt ) );
+    }
+
+    /*
      * ノード名のテキスト色の設定
      *   para：例)#123456
      */
@@ -350,11 +365,87 @@ public class BaseNode extends FrameLayout {
     }
 
     /*
+     * ノード名のテキスト色の取得
+     *   para：例)#123456
+     */
+    public String getNodeTextColor() {
+
+        TextView tv_node = findViewById(R.id.tv_node);
+
+        ColorStateList colorStateList = tv_node.getTextColors();
+        int colorInt = colorStateList.getDefaultColor();
+
+        return ( "#" + Integer.toHexString( colorInt ) );
+    }
+
+    /*
      * ノード名のフォント設定
      */
     public void setNodeFont(Typeface font) {
         TextView tv_node = findViewById(R.id.tv_node);
         tv_node.setTypeface( font );
+    }
+
+    /*
+     * ノード形の設定
+     */
+    public void setNodeShape( int shapeKind ) {
+
+        if( shapeKind == NodeTable.CIRCLE ){
+            setShapeCircle();
+        } else {
+            setShapeSquare();
+        }
+
+    }
+
+    /*
+     * ノード枠線サイズの設定
+     */
+    public void setBorderSize( int thick ) {
+        //枠サイズを設定
+        ((MaterialCardView)findViewById( R.id.cv_node )).setStrokeWidth( thick );
+    }
+
+    /*
+     * ノード枠色の設定
+     */
+    public void setBorderColor( String color ) {
+        //枠色を設定
+        ((MaterialCardView)findViewById( R.id.cv_node )).setStrokeColor( Color.parseColor(color) );
+    }
+
+    /*
+     * ノード枠色の取得
+     */
+    public String getBorderColor() {
+        MaterialCardView cv_node = findViewById(R.id.cv_node);
+
+        ColorStateList colorStateList = cv_node.getStrokeColorStateList();
+
+        if( colorStateList == null ){
+            //取得失敗なら、無効値用の色を返す
+            return ResourceManager.NODE_INVALID_COLOR;
+        }
+
+        int colorInt = colorStateList.getDefaultColor();
+        return ( "#" + Integer.toHexString( colorInt ) );
+    }
+
+    /*
+     * ノード影色の設定
+     */
+    public void setShadowColor( String color ) {
+        //影色を設定
+        ((NodeOutsideView)findViewById( R.id.nov_shadow )).setShadowColor( Color.parseColor(color) );
+    }
+
+    /*
+     * ノード影色の取得
+     */
+    public String getShadowColor() {
+
+        return ((NodeOutsideView)findViewById( R.id.nov_shadow )).getShadowColor();
     }
 
     /*
@@ -386,15 +477,15 @@ public class BaseNode extends FrameLayout {
     /*
      * ノードの形を円形にする
      */
-    private void makeNodeCircle() {
+    private void setShapeCircle() {
 
-        CardView cv_node = findViewById(R.id.cv_node);
+        MaterialCardView cv_node = findViewById(R.id.cv_node);
 
         //CardView cv_node = findViewById(R.id.cv_node);
         Log.i("Card", "width=" + cv_node.getWidth() + " height=" + cv_node.getHeight());
 
         int max;
-        int width = cv_node.getWidth();
+        int width  = cv_node.getWidth();
         int height = cv_node.getHeight();
         if (width > height) {
             cv_node.setMinimumHeight(width);
@@ -408,6 +499,17 @@ public class BaseNode extends FrameLayout {
         cv_node.setRadius(max / 2.0f);
     }
 
+    /*
+     * ノードの形を四角（角丸）にする
+     */
+    private void setShapeSquare() {
+
+        MaterialCardView cv_node = findViewById(R.id.cv_node);
+
+        //短い辺から角丸値を計算
+        int min = Math.min( cv_node.getWidth(), cv_node.getHeight() );
+        cv_node.setRadius(min * ResourceManager.SQUARE_CORNER_RATIO);
+    }
 
     /*
      * レイアウト確定後処理の設定
@@ -427,7 +529,7 @@ public class BaseNode extends FrameLayout {
 
                         //ノードの形状
                         //★Cardにするかcanvasにするか決める
-                        makeNodeCircle();
+                        setShapeCircle();
 
                         //レイアウト確定後は、不要なので本リスナー削除
                         getViewTreeObserver().removeOnGlobalLayoutListener(this);

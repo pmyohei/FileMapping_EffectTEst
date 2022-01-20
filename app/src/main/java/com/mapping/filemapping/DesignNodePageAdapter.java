@@ -2,6 +2,7 @@ package com.mapping.filemapping;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -9,13 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -25,7 +26,7 @@ import com.jaredrummler.android.colorpicker.ColorPickerView;
 
 import java.util.List;
 
-public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.GuideViewHolder> {
+public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAdapter.GuideViewHolder> {
 
     //フィールド変数
     private final List<Integer>   mData;
@@ -42,9 +43,11 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
     class GuideViewHolder extends RecyclerView.ViewHolder implements TextWatcher {
 
         //カラー指定
-        private final int NODE_BACKGROUNG_COLOR = 0;
-        private final int NODE_TEXT_COLOR = 1;
-        private final int LINE_COLOR = 2;
+        private final int COLOR_BACKGROUNG = 0;
+        private final int COLOR_TEXT = 1;
+        private final int COLOR_BORDER = 2;
+        private final int COLOR_SHADOW = 3;
+        private final int COLOR_LINE = 4;
 
         //設定対象ノードビュー
         private final BaseNode        mv_node;
@@ -54,21 +57,25 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
         private final ViewPager2      mvp2;
 
         /*--- ノードテキスト ---*/
-        //ノード名
         private EditText et_nodeName;
+        private TextView tv_txColorCode;
+        private TextView tv_txColorGraphic;
         private RecyclerView rv_fontAlphabet;
         private RecyclerView rv_fontjapanese;
 
-        /*--- ノード ---*/
-        //ノードデザイン
+        /*--- ノードデザイン ---*/
         private TextView tv_bgColorCode;
         private TextView tv_bgColorGraphic;
-        private TextView tv_txColorCode;
-        private TextView tv_txColorGraphic;
+        private ImageView iv_circle;
+        private ImageView iv_square;
         private SeekBar  sb_nodeSize;
+        private TextView tv_borderColorCode;
+        private TextView tv_borderColorGraphic;
+        private RadioGroup rg_borderSize;
+        private TextView tv_shadowColorCode;
+        private TextView tv_shadowColorGraphic;
 
         /*--- ライン ---*/
-        //ラインデザイン
         private TextView tv_lineColorCode;
         private TextView tv_lineColorGraphic;
         private RadioGroup rg_lineSize;
@@ -85,7 +92,12 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
             mvp2 = vp2;
 
             if (position == 0) {
+                //ノード名
                 et_nodeName = itemView.findViewById(R.id.et_nodeName);
+                //テキスト色
+                tv_txColorCode    = itemView.findViewById(R.id.tv_txColorCode);
+                tv_txColorGraphic = itemView.findViewById(R.id.tv_txColorGraphic);
+                //フォント
                 rv_fontAlphabet = itemView.findViewById(R.id.rv_fontAlphabet);
                 rv_fontjapanese   = itemView.findViewById(R.id.rv_fontJapanese);
 
@@ -93,19 +105,26 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
                 //背景色
                 tv_bgColorCode    = itemView.findViewById(R.id.tv_bgColorCode);
                 tv_bgColorGraphic = itemView.findViewById(R.id.tv_bgColorGraphic);
-                //テキスト色
-                tv_txColorCode    = itemView.findViewById(R.id.tv_txColorCode);
-                tv_txColorGraphic = itemView.findViewById(R.id.tv_txColorGraphic);
+                //ノード形
+                iv_circle    = itemView.findViewById(R.id.iv_circle);
+                iv_square    = itemView.findViewById(R.id.iv_square);
                 //ノードサイズ
                 sb_nodeSize       = itemView.findViewById(R.id.sb_nodeSize);
+                //枠線色
+                tv_borderColorCode    = itemView.findViewById(R.id.tv_borderColorCode);
+                tv_borderColorGraphic = itemView.findViewById(R.id.tv_borderColorGraphic);
+                //枠線サイズ
+                rg_borderSize = itemView.findViewById(R.id.rg_borderSize);
+                //影色
+                tv_shadowColorCode    = itemView.findViewById(R.id.tv_shadowColorCode);
+                tv_shadowColorGraphic = itemView.findViewById(R.id.tv_shadowColorGraphic);
 
             } else if (position == 2) {
                 //色
                 tv_lineColorCode    = itemView.findViewById(R.id.tv_lineColorCode);
                 tv_lineColorGraphic = itemView.findViewById(R.id.tv_lineColorGraphic);
-
+                //サイズ
                 rg_lineSize = itemView.findViewById(R.id.rg_lineSize);
-
             }
         }
 
@@ -132,6 +151,11 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
         public void setPage0() {
             //文字入力リスナーを設定
             et_nodeName.addTextChangedListener(this);
+
+            //テキスト色-カラーコード
+            tv_txColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_TEXT) );
+            //テキスト色-カラーピッカー
+            tv_txColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_TEXT) );
 
             Context context = mv_node.getContext();
 
@@ -163,15 +187,13 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
          */
         public void setPage1() {
 
-            //背景色-カラーコード
-            tv_bgColorCode.setOnClickListener(new ClickColorCode(NODE_BACKGROUNG_COLOR) );
-            //背景色-カラーピッカー
-            tv_bgColorGraphic.setOnClickListener( new ClickColorPicker(NODE_BACKGROUNG_COLOR) );
+            //背景色
+            tv_bgColorCode.setOnClickListener(new ClickColor( ClickColor.RGB,COLOR_BACKGROUNG) );
+            tv_bgColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_BACKGROUNG) );
 
-            //テキスト色-カラーコード
-            tv_txColorCode.setOnClickListener(new ClickColorCode(NODE_TEXT_COLOR) );
-            //テキスト色-カラーピッカー
-            tv_txColorGraphic.setOnClickListener( new ClickColorPicker(NODE_TEXT_COLOR) );
+            //ノード形
+            iv_circle.setOnClickListener(new ClickShapeImage(NodeTable.CIRCLE) );
+            iv_square.setOnClickListener( new ClickShapeImage(NodeTable.SQUARE) );
 
             //ノードサイズ
             sb_nodeSize.setMax(100);
@@ -210,6 +232,29 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
                 }
             });
 
+            //枠色
+            tv_borderColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_BORDER) );
+            tv_borderColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_BORDER) );
+
+            //枠サイズ
+            //★UIをラジオボタンにするなら、ライン側と統一させる
+            rg_borderSize.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
+                    //選択されたindexを取得
+                    RadioButton rb = radioGroup.findViewById( checkedId );
+                    int idx = radioGroup.indexOfChild( rb );
+
+                    //ラインサイズ設定
+                    Log.i("NodeDesign", "枠サイズ設定値=" + (idx + 1));
+                    mv_node.setBorderSize( idx + 1 );
+                }
+            });
+
+            //影色
+            tv_shadowColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_SHADOW) );
+            tv_shadowColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_SHADOW) );
+
 
         }
 
@@ -218,10 +263,9 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
          */
         public void setPage2() {
 
-            //ラインカラー-カラーコード
-            tv_lineColorCode.setOnClickListener(new ClickColorCode(LINE_COLOR) );
-            //ラインカラー-カラーピッカー
-            tv_lineColorGraphic.setOnClickListener( new ClickColorPicker(LINE_COLOR) );
+            //ラインカラー
+            tv_lineColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_LINE) );
+            tv_lineColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_LINE) );
 
             //ラインサイズ
             rg_lineSize.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -257,46 +301,80 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
         }
 
         /*
-         *
-         * カラーコード表示リスナー
-         *
+         * カラー入力ダイアログ表示リスナー
          */
-        private class ClickColorCode implements View.OnClickListener {
+        private class ClickColor implements View.OnClickListener {
 
-            private final int mColorKind;
+            //カラー入力方法
+            public static final int RGB = 0;
+            public static final int PICKER = 1;
+
+            //カラー入力方法
+            private final int mInputKind;
+            //設定対象
+            private final int mSetTarget;
 
             /*
              * コンストラクタ
              */
-            public ClickColorCode( int kind ){
-                mColorKind = kind;
+            public ClickColor( int colorKind, int setTarget ){
+                mInputKind = colorKind;
+                mSetTarget = setTarget;
             }
 
             @Override
             public void onClick(View view) {
 
-                //ダイアログを生成
-                ColorCodeDialog dialog = new ColorCodeDialog();
+                //設定中の色を取得
+                String settingColor = getSettingColor();
+
+                //ダイアログ
+                ColorDialog dialog;
+                if( mInputKind == RGB ){
+                    dialog = new ColorCodeDialog( settingColor );
+                } else {
+                    dialog = new ColorPickerDialog( settingColor );
+                }
 
                 //OKボタンリスナー
                 dialog.setOnPositiveClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
 
-                        Log.i("Design", "カラーコード=" + ((EditText)view).getText());
+                        //Log.i("Design", "カラーコード=" + ((EditText)view).getText());
 
                         //カラーコード文字列
-                        String code = "#" + ((EditText)view).getText().toString();
+                        ColorDrawable colorDrawable = (ColorDrawable) view.getBackground();
+                        int colorInt = colorDrawable.getColor();
+                        String code = "#" + Integer.toHexString( colorInt );
 
-                        if( mColorKind == NODE_BACKGROUNG_COLOR ){
-                            //ノード背景色
-                            mv_node.setNodeBackgroundColor( code );
-                        } else if ( mColorKind == NODE_TEXT_COLOR ){
-                            //ノードテキストカラー
-                            mv_node.setNodeTextColor( code );
-                        } else {
-                            //ラインカラー
-                            ((ChildNode)mv_node).setLineColor( code );
+                        //色設定の対象毎に処理
+                        switch (mSetTarget){
+
+                            case COLOR_BACKGROUNG:
+                                //ノード背景色
+                                mv_node.setNodeBackgroundColor( code );
+                                break;
+
+                            case COLOR_TEXT:
+                                //ノードテキストカラー
+                                mv_node.setNodeTextColor( code );
+                                break;
+
+                            case COLOR_BORDER:
+                                //枠線カラー
+                                mv_node.setBorderColor( code );
+                                break;
+
+                            case COLOR_SHADOW:
+                                //影カラー
+                                mv_node.setShadowColor( code );
+                                break;
+
+                            case COLOR_LINE:
+                                //ラインカラー
+                                ((ChildNode)mv_node).setLineColor( code );
+                                break;
                         }
 
                         dialog.dismiss();
@@ -305,54 +383,63 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
 
                 dialog.show(mFragmentManager, "ColorCode");
             }
+
+            /*
+             * 設定中のカラーを取得
+             */
+            private String getSettingColor(){
+
+                //色設定の対象毎に処理
+                switch (mSetTarget){
+
+                    case COLOR_BACKGROUNG:
+                        //ノード背景色
+                        return mv_node.getNodeBackgroundColor();
+
+                    case COLOR_TEXT:
+                        //ノードテキストカラー
+                        return mv_node.getNodeTextColor();
+
+                    case COLOR_BORDER:
+                        //枠線カラー
+                        return mv_node.getBorderColor();
+
+                    case COLOR_SHADOW:
+                        //影カラー
+                        return mv_node.getShadowColor();
+
+                    case COLOR_LINE:
+                        //ラインカラー
+                        return ((ChildNode)mv_node).getLineColor();
+
+                    default:
+                        //該当なし(フェールセーフ)
+                        return ResourceManager.NODE_INVALID_COLOR;
+                }
+            }
+
         }
 
         /*
          *
-         * カラーピッカー表示リスナー
+         * ノード形状イメージリスナー
          *
          */
-        private class ClickColorPicker implements View.OnClickListener {
+        private class ClickShapeImage implements View.OnClickListener {
 
-            private final int mColorKind;
+            private final int mShapeKind;
 
             /*
              * コンストラクタ
              */
-            public ClickColorPicker( int kind ){
-                mColorKind = kind;
+            public ClickShapeImage(int kind ){
+                mShapeKind = kind;
             }
 
             @Override
             public void onClick(View view) {
-
-                //ダイアログを生成
-                ColorPickerDialog dialog = new ColorPickerDialog();
-
-                //OKボタンリスナー
-                dialog.setOnPositiveClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        //カラーコード文字列
-                        String code = "#" + Integer.toHexString( ((ColorPickerView)view).getColor() );
-
-                        if( mColorKind == NODE_BACKGROUNG_COLOR ){
-                            //背景色
-                            mv_node.setNodeBackgroundColor( code );
-                        } else if ( mColorKind == NODE_TEXT_COLOR ){
-                            //テキストカラー
-                            mv_node.setNodeTextColor( code );
-                        } else {
-                            //ラインカラー
-                            ((ChildNode)mv_node).setLineColor( code );
-                        }
-
-                        dialog.dismiss();
-                    }
-                });
-
-                dialog.show(mFragmentManager, "ColorGraphic");
+                //ノードに形状を設定
+                mv_node.setNodeShape( mShapeKind );
             }
         }
     }
@@ -360,7 +447,7 @@ public class NodeDesignAdapter extends RecyclerView.Adapter<NodeDesignAdapter.Gu
     /*
      * コンストラクタ
      */
-    public NodeDesignAdapter(List<Integer> layoutIdList, BaseNode v_node, FragmentManager fragmentManager, ViewPager2 vp) {
+    public DesignNodePageAdapter(List<Integer> layoutIdList, BaseNode v_node, FragmentManager fragmentManager, ViewPager2 vp) {
         mData            = layoutIdList;
         mv_node          = v_node;
         mFragmentManager = fragmentManager;

@@ -150,7 +150,7 @@ public class DesignDialog extends DialogFragment {
 
         ViewPager2 vp2 = getDialog().findViewById(R.id.vp2_design);
 
-        NodeDesignAdapter adapter = new NodeDesignAdapter(layoutIdList, mv_node, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp2);
+        DesignNodePageAdapter adapter = new DesignNodePageAdapter(layoutIdList, mv_node, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp2);
         vp2.setAdapter(adapter);
 
         return vp2;
@@ -167,7 +167,7 @@ public class DesignDialog extends DialogFragment {
         layoutIdList.add(R.layout.page_node_line_design);
 
         ViewPager2 vp = getDialog().findViewById(R.id.vp2_design);
-        MapDesignAdapter adapter = new MapDesignAdapter(layoutIdList, mv_map, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp);
+        DesignMapPageAdapter adapter = new DesignMapPageAdapter(layoutIdList, mv_map, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp);
         vp.setAdapter(adapter);
 
         return vp;

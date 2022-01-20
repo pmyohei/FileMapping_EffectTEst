@@ -71,7 +71,7 @@ public class FontAdapter extends RecyclerView.Adapter<FontAdapter.FontItemViewHo
                         MapCommonData commonData = (MapCommonData)((Activity)mView.getContext()).getApplication();
                         NodeArrayList<NodeTable> nodes = commonData.getNodes();
 
-                        nodes.setAllNodeTxFont( font );
+                        nodes.setAllNodeFont( font );
 
                     } else {
                         //指定ノードへ適用

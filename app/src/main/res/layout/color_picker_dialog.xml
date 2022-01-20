@@ -3,15 +3,16 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:padding="64dp"
+    android:padding="20dp"
     android:gravity="center"
     android:background="@color/white"
     android:orientation="vertical">
 
     <com.jaredrummler.android.colorpicker.ColorPickerView
         android:id="@+id/colorPicker"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"/>
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"/>
 
     <!-- 色確認用 -->
     <androidx.cardview.widget.CardView

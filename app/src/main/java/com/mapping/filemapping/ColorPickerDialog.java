@@ -11,19 +11,26 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.EditText;
 
 import androidx.fragment.app.DialogFragment;
 
 import com.jaredrummler.android.colorpicker.ColorPickerView;
 
-public class ColorPickerDialog extends DialogFragment {
+public class ColorPickerDialog extends ColorDialog {
 
-    private View.OnClickListener mPositiveClickListener;    //ボタンクリックリスナー
 
     /*
      * コンストラクタ
      */
-    public ColorPickerDialog() { }
+    public ColorPickerDialog( String color ) {
+        super(color);
+    }
+
+
+    public ColorPickerDialog() {
+        super("test");
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -56,6 +63,12 @@ public class ColorPickerDialog extends DialogFragment {
             return;
         }
 
+        //サイズ設定
+        setupDialogSize();
+
+        //初期色の設定
+        setInitColor();
+
         //カラーピッカー
         ColorPickerView cpv = dialog.findViewById(R.id.colorPicker);
         cpv.setOnColorChangedListener( new ColorPickerView.OnColorChangedListener() {
@@ -64,23 +77,22 @@ public class ColorPickerDialog extends DialogFragment {
                 Log.i("onColorChanged", "getColor=" + cpv.getColor());
                 Log.i("onColorChanged", "getColor(Hex)=" + Integer.toHexString(cpv.getColor()) );
 
+                //「例）#123456」を作成
                 //cpv.getColor()で取得できる値「ARGB」 例）ffb58d8d
                 String code = "#" + Integer.toHexString( cpv.getColor() );
 
                 //選択された色をチェック用のビューに反映
                 dialog.findViewById(R.id.v_checkColor).setBackgroundColor( Color.parseColor( code ) );
-
-                dialog.findViewById(R.id.v_checkColor).getBackground();
             }
         });
+
 
         //OKボタン
         dialog.findViewById(R.id.bt_create).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //リスナーに渡すビューを、カラーピッカーに入れ替え
-                Log.i("onColorChanged", "OK getColor(Hex)=" + Integer.toHexString(cpv.getColor()) );
-                mPositiveClickListener.onClick( cpv );
+                //色確定
+                mPositiveClickListener.onClick( dialog.findViewById(R.id.v_checkColor) );
             }
         });
     }
@@ -88,30 +100,31 @@ public class ColorPickerDialog extends DialogFragment {
     /*
      * ダイアログサイズ設定
      */
-    private void setupDialogSize(Dialog dialog) {
+    private void setupDialogSize() {
 
-        Window window = dialog.getWindow();
+        Window window = getDialog().getWindow();
 
         //画面メトリクスの取得
         DisplayMetrics metrics = getResources().getDisplayMetrics();
 
         //レイアウトパラメータ
         WindowManager.LayoutParams lp = window.getAttributes();
-        lp.height = metrics.heightPixels / 2;
-        lp.width = metrics.widthPixels;
-        lp.gravity = Gravity.BOTTOM;
+        lp.height = (int)(metrics.heightPixels * 0.8f);
+        lp.width  = (int)(metrics.widthPixels * 0.8f);
 
         //サイズ設定
         window.setAttributes(lp);
-        //window.setFlags( 0 , WindowManager.LayoutParams.FLAG_DIM_BEHIND);
     }
 
     /*
-     * ダイアログサイズ設定
+     * 初期色の設定
      */
-    public void setOnPositiveClickListener(View.OnClickListener listener) {
-        mPositiveClickListener = listener;
+    @Override
+    public void setInitColor() {
+        super.setInitColor();
+
+        //カラーピッカーに初期値を設定
+        ColorPickerView cpv = getDialog().findViewById(R.id.colorPicker);
+        cpv.setColor( Color.parseColor( mInitColorStr ) );
     }
-
-
 }
