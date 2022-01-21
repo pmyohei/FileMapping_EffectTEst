@@ -14,7 +14,7 @@ import android.widget.LinearLayout;
  *   主に影／発光の役割を果たす
  */
 public class NodeOutsideView extends LinearLayout {
-    private final Paint paint;
+    private final Paint mPaint;
 
     float mRadius = 0.0f;
 
@@ -26,25 +26,25 @@ public class NodeOutsideView extends LinearLayout {
 
         setLayerType(View.LAYER_TYPE_SOFTWARE, null);
 
-        paint = new Paint();
+        mPaint = new Paint();
         //paint.setColor( getResources().getColor( R.color.fill ) );
-        paint.setColor(Color.WHITE);
+        mPaint.setColor(Color.WHITE);
 
-        paint.setAntiAlias(true);
+        mPaint.setAntiAlias(true);
     }
 
 
     public void setColorID(int colorID) {
-        paint.setColor(getResources().getColor(colorID));
+        mPaint.setColor(getResources().getColor(colorID));
         invalidate();
     }
 
     public int getColorHex() {
-        return paint.getColor();
+        return mPaint.getColor();
     }
 
     public void setColorHex(int colorHex) {
-        paint.setColor(colorHex);
+        mPaint.setColor(colorHex);
         invalidate();
     }
 
@@ -55,7 +55,7 @@ public class NodeOutsideView extends LinearLayout {
 
         //影色の設定
         int width = findViewById(R.id.cv_node).getWidth();
-        paint.setShadowLayer((width / 5f), 0, 0, colorHex);
+        mPaint.setShadowLayer((width / 6f), 0, 0, colorHex);
 
         //再描画
         invalidate();
@@ -81,10 +81,10 @@ public class NodeOutsideView extends LinearLayout {
         Log.i("サイズチェック", "onDraw レイアウト確定＝" + width);
 
         //paint.setShadowLayer( (width / 4f), width / 4, getHeight() / 4, Color.RED );
-        paint.setShadowLayer((width / 5f), 0, 0, Color.LTGRAY);
+        mPaint.setShadowLayer((width / 5f), 0, 0, Color.GRAY);
 
         //paint.setColor(getResources().getColor(R.color.mark_5));
-        canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, (width / 2f), paint);
+        canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, (width / 2f), mPaint);
     }
 
 }

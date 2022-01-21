@@ -55,6 +55,15 @@
 
         </FrameLayout>
 
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom">
+
+            <include layout="@layout/design_bottom_sheet" />
+
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
     </FrameLayout>
 
     <!--  ナビゲーションビュー  -->

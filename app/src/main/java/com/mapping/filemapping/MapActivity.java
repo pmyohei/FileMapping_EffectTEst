@@ -41,6 +41,8 @@ import android.widget.LinearLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
 
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+
 import java.util.Objects;
 
 public class MapActivity extends AppCompatActivity {
@@ -128,6 +130,9 @@ public class MapActivity extends AppCompatActivity {
         mPinchGestureDetector = new ScaleGestureDetector(this, new PinchListener());
         mScrollGestureDetector = new GestureDetector(this, new ScrollListener());
 
+        //BottomSheet初期設定
+        initDesignBottomSheet();
+        
         //画面遷移ランチャー（ノード操作関連）を作成
         mNodeOperationLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -447,8 +452,8 @@ public class MapActivity extends AppCompatActivity {
     private void focusNodeToCenterScreen(float nodeLeft, float nodeTop, int POS_KIND) {
 
         int height = 0;
-        
-        if( POS_KIND == MOVE_UPPER ){
+
+        if (POS_KIND == MOVE_UPPER) {
             height = mTopScreanY;
         }
 
@@ -466,12 +471,12 @@ public class MapActivity extends AppCompatActivity {
 
         //マップ絶対位置のマージンを取得（ルートノードを基準に算出）
         RootNodeView v_rootnode = findViewById(R.id.v_rootnode);
-        float mapLeft = v_rootnode.getNodeLeft() - mapAbs1xX ;      //※ルートノードが操作対象の場合を考慮し、getNodeLeft()を使用
-        float mapTop  = v_rootnode.getNodeTop()  - mapAbs1xY ;
+        float mapLeft = v_rootnode.getNodeLeft() - mapAbs1xX;      //※ルートノードが操作対象の場合を考慮し、getNodeLeft()を使用
+        float mapTop = v_rootnode.getNodeTop() - mapAbs1xY;
 
         //移動量
-        float moveDistanceX = (int)(pinchDistanceRatioX * (nodeLeft - mapLeft ));
-        float moveDistanceY = (int)(pinchDistanceRatioY * (nodeTop  - mapTop + height ));
+        float moveDistanceX = (int) (pinchDistanceRatioX * (nodeLeft - mapLeft));
+        float moveDistanceY = (int) (pinchDistanceRatioY * (nodeTop - mapTop + height));
 
         //スクロール時間 [milliseconds]
         final int MOVE_DURATION = 600;
@@ -498,7 +503,7 @@ public class MapActivity extends AppCompatActivity {
 
                 Log.i("Scroller", "onAnimationUpdate");
 
-                if ( !scroller.isFinished() ) {
+                if (!scroller.isFinished()) {
                     scroller.computeScrollOffset();
 
                     fl_map.setTranslationX(scroller.getCurrX());
@@ -516,6 +521,43 @@ public class MapActivity extends AppCompatActivity {
         mPinchShiftY = 0;
     }
 
+    /*
+     * 画面縦サイズの取得
+     */
+    private int getWindowHeight() {
+        DisplayMetrics displayMetrics= new DisplayMetrics();
+        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        return displayMetrics.heightPixels;
+    }
+
+    /*
+     * デザインボトムシートの初期設定
+     */
+    private void initDesignBottomSheet() {
+
+        //BottomSheet
+        View bs_design = findViewById(R.id.bs_design);
+
+        //高さを設定
+        ViewGroup.LayoutParams layoutParams= bs_design.getLayoutParams();
+        int windowHeight= getWindowHeight();
+        if (layoutParams != null) {
+            //画面の高さの半分
+            layoutParams.height = windowHeight / 2;
+        }
+        bs_design.setLayoutParams(layoutParams);
+    }
+
+    /*
+     * デザインボトムシートを開く
+     */
+    private void openDesignBottomSheet() {
+        //BottomSheet
+        View bs_design = findViewById(R.id.bs_design);
+        //オープン
+        BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bs_design);
+        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
+    }
 
     /*
      * onStop()
@@ -584,6 +626,7 @@ public class MapActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_search:
+                openDesignBottomSheet();
                 return true;
 
             case R.id.action_folder_tree:
