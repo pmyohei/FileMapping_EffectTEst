@@ -23,9 +23,7 @@
                 android:layout_marginTop="12dp"
                 android:layout_gravity="center_horizontal"
                 android:text="全てのノードデザイン"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="parent" />
+                android:textColor="@color/black"/>
 
             <TextView
                 android:id="@+id/tv_titleNodeBackground"
@@ -34,11 +32,14 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
                 android:text="@string/title_nodeBackgroundColor"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_titleNodeDesign" />
+                android:textColor="@color/black" />
 
-            <TextView
+            <com.mapping.filemapping.ColorSelectionView
+                android:id="@+id/csv_background"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+<!--            <TextView
                 android:id="@+id/tv_bgColorCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -64,7 +65,7 @@
                 android:text="Graphic"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toEndOf="@+id/tv_bgColorCode"
-                app:layout_constraintTop_toBottomOf="@+id/tv_titleNodeBackground" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_titleNodeBackground" />-->
 
             <TextView
                 android:id="@+id/tv_titleNodeTextColor"
@@ -73,11 +74,14 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
                 android:text="@string/title_nodeTextColor"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_bgColorGraphic" />
+                android:textColor="@color/black" />
 
-            <TextView
+            <com.mapping.filemapping.ColorSelectionView
+                android:id="@+id/csv_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!--<TextView
                 android:id="@+id/tv_txColorCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -104,7 +108,7 @@
                 android:textColor="@color/black"
                 app:layout_constraintStart_toEndOf="@+id/tv_bgColorCode"
                 app:layout_constraintTop_toBottomOf="@+id/tv_titleNodeBackground" />
-
+-->
             <!-- フォント -->
             <TextView
                 android:layout_width="wrap_content"
@@ -152,9 +156,7 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="24dp"
                 android:text="@string/title_nodeShape"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView5" />
+                android:textColor="@color/black" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -186,9 +188,13 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
                 android:text="ノードの枠線の色"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_titleNodeDesign" />
+                android:textColor="@color/black" />
+
+            <com.mapping.filemapping.ColorSelectionView
+                android:id="@+id/csv_border"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+<!--
 
             <TextView
                 android:id="@+id/tv_borderColorCode"
@@ -217,6 +223,7 @@
                 android:textColor="@color/black"
                 app:layout_constraintStart_toEndOf="@+id/tv_bgColorCode"
                 app:layout_constraintTop_toBottomOf="@+id/tv_titleNodeBackground" />
+-->
 
             <!--  ノード境界線サイズ  -->
             <TextView
@@ -277,9 +284,13 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="12dp"
                 android:text="影の色"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_titleNodeDesign" />
+                android:textColor="@color/black" />
+
+            <com.mapping.filemapping.ColorSelectionView
+                android:id="@+id/csv_shadow"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+<!--
 
             <TextView
                 android:id="@+id/tv_shadowColorCode"
@@ -308,6 +319,7 @@
                 android:textColor="@color/black"
                 app:layout_constraintStart_toEndOf="@+id/tv_bgColorCode"
                 app:layout_constraintTop_toBottomOf="@+id/tv_titleNodeBackground" />
+-->
 
 
         </LinearLayout>

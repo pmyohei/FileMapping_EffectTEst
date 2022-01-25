@@ -5,15 +5,12 @@ import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.ColorDrawable;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
@@ -55,27 +52,33 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         private final ViewPager2      mvp2;
 
         //マップデザイン
-        private TextView tv_bgMapColorCode;
-        private TextView tv_bgMapColorGraphic;
+        //private TextView tv_bgMapColorCode;
+        //private TextView tv_bgMapColorGraphic;
+        private ColorSelectionView csv_map;
 
         //ノードデザイン
-        private TextView tv_bgColorCode;
-        private TextView tv_bgColorGraphic;
-        private TextView tv_txColorCode;
-        private TextView tv_txColorGraphic;
+        //private TextView tv_bgColorCode;
+        //private TextView tv_bgColorGraphic;
+        //private TextView tv_txColorCode;
+        //private TextView tv_txColorGraphic;
+        private ColorSelectionView csv_background;
+        private ColorSelectionView csv_text;
         private RecyclerView rv_fontAlphabet;
         private RecyclerView rv_fontjapanese;
         private ImageView iv_circle;
         private ImageView iv_square;
-        private TextView tv_borderColorCode;
-        private TextView tv_borderColorGraphic;
+        //private TextView tv_borderColorCode;
+        //private TextView tv_borderColorGraphic;
+        private ColorSelectionView csv_border;
         private RadioGroup rg_borderSize;
-        private TextView tv_shadowColorCode;
-        private TextView tv_shadowColorGraphic;
+        //private TextView tv_shadowColorCode;
+        //private TextView tv_shadowColorGraphic;
+        private ColorSelectionView csv_shadow;
 
         //ラインデザイン
-        private TextView tv_lineColorCode;
-        private TextView tv_lineColorGraphic;
+        //private TextView tv_lineColorCode;
+        //private TextView tv_lineColorGraphic;
+        private ColorSelectionView csv_line;
         private RadioGroup rg_lineSize;
 
 
@@ -91,16 +94,19 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
 
             if (position == 0) {
                 //マップ色
-                tv_bgMapColorCode    = itemView.findViewById(R.id.tv_bgMapColorCode);
-                tv_bgMapColorGraphic = itemView.findViewById(R.id.tv_bgMapColorGraphic);
+                //tv_bgMapColorCode    = itemView.findViewById(R.id.tv_bgMapColorCode);
+                //tv_bgMapColorGraphic = itemView.findViewById(R.id.tv_bgMapColorGraphic);
+                csv_map = itemView.findViewById(R.id.csv_map);
 
             } else if (position == 1) {
                 //背景色
-                tv_bgColorCode    = itemView.findViewById(R.id.tv_bgColorCode);
-                tv_bgColorGraphic = itemView.findViewById(R.id.tv_bgColorGraphic);
+                //tv_bgColorCode    = itemView.findViewById(R.id.tv_bgColorCode);
+                //tv_bgColorGraphic = itemView.findViewById(R.id.tv_bgColorGraphic);
+                csv_background = itemView.findViewById(R.id.csv_background);
                 //テキスト色
-                tv_txColorCode    = itemView.findViewById(R.id.tv_txColorCode);
-                tv_txColorGraphic = itemView.findViewById(R.id.tv_txColorGraphic);
+               //tv_txColorCode    = itemView.findViewById(R.id.tv_txColorCode);
+               //tv_txColorGraphic = itemView.findViewById(R.id.tv_txColorGraphic);
+                csv_text = itemView.findViewById(R.id.csv_text);
                 //フォント
                 rv_fontAlphabet   = itemView.findViewById(R.id.rv_fontAlphabet);
                 rv_fontjapanese   = itemView.findViewById(R.id.rv_fontJapanese);
@@ -108,18 +114,21 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
                 iv_circle    = itemView.findViewById(R.id.iv_circle);
                 iv_square    = itemView.findViewById(R.id.iv_square);
                 //枠線色
-                tv_borderColorCode    = itemView.findViewById(R.id.tv_borderColorCode);
-                tv_borderColorGraphic = itemView.findViewById(R.id.tv_borderColorGraphic);
+                //tv_borderColorCode    = itemView.findViewById(R.id.tv_borderColorCode);
+                //tv_borderColorGraphic = itemView.findViewById(R.id.tv_borderColorGraphic);
+                csv_border = itemView.findViewById(R.id.csv_border);
                 //枠線サイズ
                 rg_borderSize = itemView.findViewById(R.id.rg_borderSize);
                 //影色
-                tv_shadowColorCode    = itemView.findViewById(R.id.tv_shadowColorCode);
-                tv_shadowColorGraphic = itemView.findViewById(R.id.tv_shadowColorGraphic);
+                //tv_shadowColorCode    = itemView.findViewById(R.id.tv_shadowColorCode);
+                //tv_shadowColorGraphic = itemView.findViewById(R.id.tv_shadowColorGraphic);
+                csv_shadow = itemView.findViewById(R.id.csv_shadow);
 
             } else if (position == 2) {
                 //色
-                tv_lineColorCode    = itemView.findViewById(R.id.tv_lineColorCode);
-                tv_lineColorGraphic = itemView.findViewById(R.id.tv_lineColorGraphic);
+                //tv_lineColorCode    = itemView.findViewById(R.id.tv_lineColorCode);
+                //tv_lineColorGraphic = itemView.findViewById(R.id.tv_lineColorGraphic);
+                csv_line = itemView.findViewById(R.id.csv_line);
                 //サイズ
                 rg_lineSize = itemView.findViewById(R.id.rg_lineSize);
             }
@@ -148,9 +157,8 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         public void setPage0() {
 
             //背景色-カラーコード
-            tv_bgMapColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_MAP) );
-            //背景色-カラーピッカー
-            tv_bgMapColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_MAP) );
+            //tv_bgMapColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_MAP) );
+            csv_map.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_MAP, mv_map );
         }
 
         /*
@@ -159,12 +167,14 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         public void setPage1() {
 
             //背景色
-            tv_bgColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_BACKGROUNG) );
-            tv_bgColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_BACKGROUNG) );
+            //tv_bgColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_BACKGROUNG) );
+            //tv_bgColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_BACKGROUNG) );
+            csv_background.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_BACKGROUNG, mv_map );
 
             //テキスト色
-            tv_txColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_TEXT) );
-            tv_txColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_TEXT) );
+            //tv_txColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_TEXT) );
+            //tv_txColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_TEXT) );
+            csv_text.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_TEXT, mv_map );
 
             Context context = mv_map.getContext();
 
@@ -195,8 +205,9 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
             iv_square.setOnClickListener( new ClickShapeImage(NodeTable.SQUARE) );
 
             //枠色
-            tv_borderColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_BORDER) );
-            tv_borderColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_BORDER) );
+            //tv_borderColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_BORDER) );
+            //tv_borderColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_BORDER) );
+            csv_border.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_BORDER, mv_map );
 
             //枠サイズ
             //★UIをラジオボタンにするなら、ライン側と統一させる
@@ -216,8 +227,9 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
             });
 
             //影色
-            tv_shadowColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_SHADOW) );
-            tv_shadowColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_SHADOW) );
+            //tv_shadowColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_SHADOW) );
+            //tv_shadowColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_SHADOW) );
+            csv_shadow.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_SHADOW, mv_map );
 
         }
 
@@ -226,10 +238,10 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
          */
         public void setPage2() {
 
-            //ラインカラー-カラーコード
-            tv_lineColorCode.setOnClickListener(new ClickColor(ClickColor.RGB, COLOR_LINE) );
-            //ラインカラー-カラーピッカー
-            tv_lineColorGraphic.setOnClickListener( new ClickColor(ClickColor.PICKER, COLOR_LINE) );
+            //ラインカラー
+            //tv_lineColorCode.setOnClickListener(new ClickColor(ClickColor.RGB, COLOR_LINE) );
+            //tv_lineColorGraphic.setOnClickListener( new ClickColor(ClickColor.PICKER, COLOR_LINE) );
+            csv_line.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_LINE, mv_map );
 
             //ラインサイズ
             rg_lineSize.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -252,6 +264,7 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         /*
          * カラー入力ダイアログ表示リスナー
          */
+/*
         private class ClickColor implements View.OnClickListener {
 
             //カラー入力方法
@@ -263,9 +276,11 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
             //設定対象
             private final int mSetTarget;
 
-            /*
+            */
+/*
              * コンストラクタ
-             */
+             *//*
+
             public ClickColor( int colorKind, int setTarget ){
                 mInputKind = colorKind;
                 mSetTarget = setTarget;
@@ -341,9 +356,11 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
                 dialog.show(mFragmentManager, "ColorCode");
             }
 
-            /*
+            */
+/*
              * 設定中のカラーを取得
-             */
+             *//*
+
             private String getCurrentColor(){
 
                 //マップ共通データ
@@ -394,6 +411,7 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
             }
 
         }
+*/
 
         /*
          *

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<View
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/ll_historyColorItem"
+    android:layout_width="@dimen/color_history_item_size"
+    android:layout_height="@dimen/color_history_item_size"
+    android:background="@drawable/frame_history_color">
+
+</View>

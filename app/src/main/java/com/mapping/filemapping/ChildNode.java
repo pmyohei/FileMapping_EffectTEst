@@ -10,6 +10,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -45,8 +46,16 @@ public class ChildNode extends BaseNode {
      * コンストラクタ
      */
     @SuppressLint("ClickableViewAccessibility")
+    public ChildNode(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    /*
+     * コンストラクタ
+     */
+    @SuppressLint("ClickableViewAccessibility")
     public ChildNode(Context context, NodeTable node, ActivityResultLauncher<Intent> launcher, int layoutID) {
-        super(context, node, launcher, layoutID );
+        super(context, node, launcher, layoutID);
 
         Log.i("ChildNode", "3");
 
@@ -120,7 +129,7 @@ public class ChildNode extends BaseNode {
 
         Log.i("ChildNode", "reflectViewNodeInfo 1");
 
-        if( mLineView == null ){
+        if (mLineView == null) {
             //子ノードとしての処理が未完了なら、ここで終了
             return;
         }
@@ -162,9 +171,9 @@ public class ChildNode extends BaseNode {
     /*
      * ラインカラーの設定
      */
-    public void setLineColor( String color ) {
+    public void setLineColor(String color) {
 
-        mLineView.setColor( color );
+        mLineView.setColor(color);
     }
 
     /*
@@ -177,9 +186,9 @@ public class ChildNode extends BaseNode {
     /*
      * ラインサイズ（太さ）の設定
      */
-    public void setLineSize( int thick ) {
+    public void setLineSize(int thick) {
 
-        mLineView.setSize( thick );
+        mLineView.setSize(thick);
     }
 
     /*
@@ -210,7 +219,7 @@ public class ChildNode extends BaseNode {
 
             //子ノードのノードビュー
             //ChildNode v_node = childNode.getChildNodeView();
-            ChildNode v_node = (ChildNode)childNode.getNodeView();
+            ChildNode v_node = (ChildNode) childNode.getNodeView();
 
             Log.i("test", "searchChildNodes 初期化対象の子ノード=" + v_node.getNode().getNodeName());
 
@@ -231,7 +240,7 @@ public class ChildNode extends BaseNode {
 
             //子ノードのノードビュー
             //ChildNode v_node = childNode.getChildNodeView();
-            ChildNode v_node = (ChildNode)childNode.getNodeView();
+            ChildNode v_node = (ChildNode) childNode.getNodeView();
 
             //子ノードの子ノードを移動させる
             v_node.move(movex, movey, mCenterPosX, mCenterPosY, true);
@@ -248,15 +257,15 @@ public class ChildNode extends BaseNode {
         for (NodeTable childNode : mChildNodes) {
 
             //子ノードのノードビュー
-            ChildNode v_node = (ChildNode)childNode.getNodeView();
+            ChildNode v_node = (ChildNode) childNode.getNodeView();
 
             Log.i("test", "反転時の自ノード情報 自分=" + mNode.getNodeName() + " 自分のX位置=" + mCenterPosX);
 
             //移動先の位置を反映
-            if( flip == FLIP_X ){
-                v_node.placeX((int)touchNodePos);
-            }else{
-                v_node.placeY((int)touchNodePos);
+            if (flip == FLIP_X) {
+                v_node.placeX((int) touchNodePos);
+            } else {
+                v_node.placeY((int) touchNodePos);
             }
 
             //この子ノードの子ノードも対象
@@ -386,7 +395,7 @@ public class ChildNode extends BaseNode {
 
             //子ノードのノードビュー
             //ChildNode v_node = childNode.getChildNodeView();
-            ChildNode v_node = (ChildNode)childNode.getNodeView();
+            ChildNode v_node = (ChildNode) childNode.getNodeView();
 
             //子ノードの子ノードを移動させる
             v_node.setLayoutMargin();
@@ -435,14 +444,14 @@ public class ChildNode extends BaseNode {
         searchChildNodes();
 
         //子ノードをレイアウトから削除
-        for( NodeTable node: mChildNodes ){
+        for (NodeTable node : mChildNodes) {
             //((ChildNode)node.getChildNodeView()).removeLayoutUnderSelf();
-            ((ChildNode)node.getNodeView()).removeLayoutUnderSelf();
+            ((ChildNode) node.getNodeView()).removeLayoutUnderSelf();
         }
 
         //自ノードとラインをレイアウトから削除
-        ((ViewGroup)getParent()).removeView(getLineView());
-        ((ViewGroup)getParent()).removeView(this);
+        ((ViewGroup) getParent()).removeView(getLineView());
+        ((ViewGroup) getParent()).removeView(this);
     }
 
     /*
@@ -454,9 +463,9 @@ public class ChildNode extends BaseNode {
         searchChildNodes();
 
         //子ノードのラインを再描画
-        for( NodeTable node: mChildNodes ){
+        for (NodeTable node : mChildNodes) {
             //node.getChildNodeView().getLineView().reDraw(mCenterPosX, mCenterPosY);
-            ((ChildNode)node.getNodeView()).getLineView().reDraw(mCenterPosX, mCenterPosY);
+            ((ChildNode) node.getNodeView()).getLineView().reDraw(mCenterPosX, mCenterPosY);
         }
     }
 
@@ -472,7 +481,68 @@ public class ChildNode extends BaseNode {
         MapCommonData mapCommonData = (MapCommonData) ((Activity) getContext()).getApplication();
         NodeArrayList<NodeTable> nodes = mapCommonData.getNodes();
         //親ノード
-        NodeTable parentNode = nodes.getNode( mNode.getPidParentNode() );
+        NodeTable parentNode = nodes.getNode(mNode.getPidParentNode());
+
+        //レイアウト確定処理
+        childNodeGlobalLayoutProcess(parentNode);
+
+/*        //レイアウト確定待ち処理
+        ViewTreeObserver observer = getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+
+                        if (mLineView == null) {
+
+                            //親の中心座標を取得
+                            float parentCenterX = parentNode.getCenterPosX();
+                            float parentCenterY = parentNode.getCenterPosY();
+
+                            if (parentCenterY == INIT_CENTER_POS) {
+                                //親ノードのレイアウトが未確定なら何もしない
+                                Log.i("OnGlobalLayoutListener", "親未確定");
+                                return;
+                            }
+
+                            //ライン未生成なら、生成
+                            LineView line = createLine(parentCenterX, parentCenterY);
+
+                            Log.i("OnGlobalLayoutListener", "通過チェック");
+
+                            //マップ上にラインを追加
+                            ViewGroup vg = (ViewGroup) getRootView();
+                            FrameLayout fl_map = vg.findViewById(R.id.fl_map);
+                            fl_map.addView(line);
+
+                        } else {
+                            //ライン生成済みなら、再描画
+                            mLineView.reDraw();
+                        }
+
+                        //レイアウト確定後は、不要なので本リスナー削除
+                        getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                }
+        );*/
+    }
+
+    /*
+     * レイアウト確定後処理の設定（子ノード用）
+     */
+    public void addOnNodeGlobalLayoutListener( NodeTable parentNode ) {
+        //ノード共通の確定処理
+        super.addOnNodeGlobalLayoutListener();
+
+        //レイアウト確定処理
+        childNodeGlobalLayoutProcess(parentNode);
+    }
+
+
+    /*
+     * レイアウト確定後処理の設定（子ノード用）
+     */
+    public void childNodeGlobalLayoutProcess( NodeTable parentNode ) {
 
         //レイアウト確定待ち処理
         ViewTreeObserver observer = getViewTreeObserver();
@@ -481,27 +551,27 @@ public class ChildNode extends BaseNode {
                     @Override
                     public void onGlobalLayout() {
 
-                        if( mLineView == null ){
+                        if (mLineView == null) {
 
                             //親の中心座標を取得
                             float parentCenterX = parentNode.getCenterPosX();
                             float parentCenterY = parentNode.getCenterPosY();
 
-                            if( parentCenterY == INIT_CENTER_POS ){
+                            if (parentCenterY == INIT_CENTER_POS) {
                                 //親ノードのレイアウトが未確定なら何もしない
                                 Log.i("OnGlobalLayoutListener", "親未確定");
                                 return;
                             }
 
                             //ライン未生成なら、生成
-                            LineView line = createLine( parentCenterX, parentCenterY );
+                            LineView line = createLine(parentCenterX, parentCenterY);
 
                             Log.i("OnGlobalLayoutListener", "通過チェック");
 
                             //マップ上にラインを追加
                             ViewGroup vg = (ViewGroup) getRootView();
-                            FrameLayout fl_map = (FrameLayout) vg.findViewById(R.id.fl_map);
-                            fl_map.addView( line );
+                            FrameLayout fl_map = vg.findViewById(R.id.fl_map);
+                            fl_map.addView(line);
 
                         } else {
                             //ライン生成済みなら、再描画
@@ -513,7 +583,9 @@ public class ChildNode extends BaseNode {
                     }
                 }
         );
+
     }
+
 
     /*
      * ノードタッチリスナー
@@ -704,13 +776,16 @@ public class ChildNode extends BaseNode {
             mStartPosX = startPosX;
             mStartPosY = startPosY;
 
+            //ライン情報
+            float  thick = mNode.getLineSize();
+            String color = mNode.getLineColor();
+
             //ペイント情報を生成
             mPaint = new Paint();
-            mPaint.setStrokeWidth(3f);
-            mPaint.setColor(getResources().getColor(R.color.cafe_1));
+            mPaint.setStrokeWidth( thick );
+            mPaint.setColor( Color.parseColor( color ) );
             mPaint.setAntiAlias(true);
             mPaint.setStyle(Paint.Style.STROKE);
-            //mPaint.setShadowLayer(20, 4, 4, Color.RED);
 
             //ノードに対して背面になるようにする（デフォルト値は0のため、0未満の値を指定）
             setTranslationZ(-1);

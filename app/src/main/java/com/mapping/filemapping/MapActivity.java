@@ -12,6 +12,7 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
@@ -42,7 +43,11 @@ import android.widget.Scroller;
 import android.widget.TextView;
 
 import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class MapActivity extends AppCompatActivity {
@@ -131,7 +136,7 @@ public class MapActivity extends AppCompatActivity {
         mScrollGestureDetector = new GestureDetector(this, new ScrollListener());
 
         //BottomSheet初期設定
-        initDesignBottomSheet();
+        //initDesignBottomSheet();
         
         //画面遷移ランチャー（ノード操作関連）を作成
         mNodeOperationLauncher = registerForActivityResult(
@@ -287,7 +292,6 @@ public class MapActivity extends AppCompatActivity {
         drawAllNodes();
     }
 
-
     /*
      * 全ノードの描画
      */
@@ -297,7 +301,7 @@ public class MapActivity extends AppCompatActivity {
         FrameLayout fl_map = findViewById(R.id.fl_map);
 
         //ライン描画種別
-        int lineDrawKind = NodeGlobalLayoutListener.LINE_NONE;
+        //int lineDrawKind = NodeGlobalLayoutListener.LINE_NONE;
 
         //全ノード数ループ
         int nodeNum = mNodes.size();
@@ -307,12 +311,12 @@ public class MapActivity extends AppCompatActivity {
             NodeTable node = mNodes.get(i);
 
             //最後のノードなら、全てのラインを描画
-            if (i == (nodeNum - 1)) {
-                lineDrawKind = NodeGlobalLayoutListener.LINE_ALL;
-            }
+            //if (i == (nodeNum - 1)) {
+            //    lineDrawKind = NodeGlobalLayoutListener.LINE_ALL;
+            //}
 
             //ノードを描画
-            drawNode(fl_map, node, lineDrawKind);
+            drawNode(fl_map, node, 0);
         }
     }
 
@@ -522,42 +526,14 @@ public class MapActivity extends AppCompatActivity {
     }
 
     /*
-     * 画面縦サイズの取得
+     * デザイン設定のBottomSheetを開く
      */
-    private int getWindowHeight() {
-        DisplayMetrics displayMetrics= new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        return displayMetrics.heightPixels;
-    }
-
-    /*
-     * デザインボトムシートの初期設定
-     */
-    private void initDesignBottomSheet() {
-
+    private void openDesignBottomSheet( int designKind, View view ) {
         //BottomSheet
-        View bs_design = findViewById(R.id.bs_design);
-
-        //高さを設定
-        ViewGroup.LayoutParams layoutParams= bs_design.getLayoutParams();
-        int windowHeight= getWindowHeight();
-        if (layoutParams != null) {
-            //画面の高さの半分
-            layoutParams.height = windowHeight / 2;
-        }
-        bs_design.setLayoutParams(layoutParams);
+        DesignBottomSheet bs_design = findViewById(R.id.bs_design);
+        bs_design.openBottomSheet(designKind, view);
     }
 
-    /*
-     * デザインボトムシートを開く
-     */
-    private void openDesignBottomSheet() {
-        //BottomSheet
-        View bs_design = findViewById(R.id.bs_design);
-        //オープン
-        BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(bs_design);
-        behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
-    }
 
     /*
      * onStop()
@@ -619,14 +595,12 @@ public class MapActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_palette:
 
-                //ダイアログを開く
-                DialogFragment dialog = new DesignDialog( (View)findViewById(R.id.fl_screenMap) );
-                dialog.show( getSupportFragmentManager(), DesignDialog.TAG_MAP );
+                //BottomSheetを開く
+                openDesignBottomSheet(DesignBottomSheet.MAP, findViewById(R.id.fl_screenMap));
 
                 return true;
 
             case R.id.action_search:
-                openDesignBottomSheet();
                 return true;
 
             case R.id.action_folder_tree:
@@ -792,9 +766,8 @@ public class MapActivity extends AppCompatActivity {
                 marginTop  = v_node.getNodeTop();
             }
 
-            //ダイアログを開く
-            DialogFragment dialog = new DesignDialog( v_node );
-            dialog.show(((FragmentActivity) view.getContext()).getSupportFragmentManager(), DesignDialog.TAG_NODE);
+            //BottomSheetを開く
+            openDesignBottomSheet(DesignBottomSheet.NODE, v_node);
 
             //画面上部中央にノードがくるようにする
             focusNodeToCenterScreen(marginLeft, marginTop, MOVE_UPPER);

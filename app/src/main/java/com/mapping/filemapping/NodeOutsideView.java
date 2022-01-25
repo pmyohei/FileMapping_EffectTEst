@@ -15,6 +15,7 @@ import android.widget.LinearLayout;
  */
 public class NodeOutsideView extends LinearLayout {
     private final Paint mPaint;
+    private int mShadowColor;
 
     float mRadius = 0.0f;
 
@@ -29,33 +30,22 @@ public class NodeOutsideView extends LinearLayout {
         mPaint = new Paint();
         //paint.setColor( getResources().getColor( R.color.fill ) );
         mPaint.setColor(Color.WHITE);
-
         mPaint.setAntiAlias(true);
-    }
-
-
-    public void setColorID(int colorID) {
-        mPaint.setColor(getResources().getColor(colorID));
-        invalidate();
-    }
-
-    public int getColorHex() {
-        return mPaint.getColor();
-    }
-
-    public void setColorHex(int colorHex) {
-        mPaint.setColor(colorHex);
-        invalidate();
     }
 
     /*
      * 影色の設定
      */
     public void setShadowColor(int colorHex) {
+        //色更新
+        mShadowColor = colorHex;
 
-        //影色の設定
+        //ノードの横幅
         int width = findViewById(R.id.cv_node).getWidth();
-        mPaint.setShadowLayer((width / 6f), 0, 0, colorHex);
+        //影の設定
+        mPaint.setShadowLayer((width / 6f), 0, 0, mShadowColor);
+
+        Log.i("影", "mShadowColor＝" + mShadowColor);
 
         //再描画
         invalidate();
@@ -67,22 +57,20 @@ public class NodeOutsideView extends LinearLayout {
     public String getShadowColor() {
 
         //★色は保持しておく
-        //getShadowLayerColor()はAPIレベル対応が必要のため
+        //getShadowLayerColor()はAPIレベル対応が必要
         //return ( "#" + Integer.toHexString( (int)paint.getShadowLayerColorLong() ) );
-        return "#aaaaaa";
+        return ( "#" + Integer.toHexString( mShadowColor ) );
     }
-
 
     @Override
     protected void onDraw(Canvas canvas) {
 
+        //ノードの横幅
         int width = findViewById(R.id.cv_node).getWidth();
 
         Log.i("サイズチェック", "onDraw レイアウト確定＝" + width);
 
-        //paint.setShadowLayer( (width / 4f), width / 4, getHeight() / 4, Color.RED );
-        mPaint.setShadowLayer((width / 5f), 0, 0, Color.GRAY);
-
+        //mPaint.setShadowLayer((width / 6f), 0, 0, Color.RED);
         //paint.setColor(getResources().getColor(R.color.mark_5));
         canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, (width / 2f), mPaint);
     }

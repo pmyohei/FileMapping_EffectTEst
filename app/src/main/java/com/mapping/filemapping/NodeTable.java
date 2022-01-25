@@ -55,23 +55,41 @@ public class NodeTable implements Serializable {
 
     //ノードサイズ
 
-    //ノードの形状
 
-    //色：ノード背景色
+    //ノードの形状
+    @ColumnInfo(name = "node_shape")
+    private int nodeShape;
+
+    //ノード背景色
     @ColumnInfo(name = "node_color")
     private String nodeColor;
 
-    //色：ノード文字色
+    //ノード文字色
     @ColumnInfo(name = "text_color")
     private String textColor;
 
+    //ノード枠色
+    @ColumnInfo(name = "border_color")
+    private String borderColor;
+
+    //ノード枠太さ
+    @ColumnInfo(name = "border_size")
+    private int borderSize;
+
+    //ノード影色
+    @ColumnInfo(name = "shadow_color")
+    private String shadowColor;
+
     //ライン-形状
 
+
     //ライン-太さ
+    @ColumnInfo(name = "line_size")
+    private float lineSize;
 
     //ライン-色
-
-
+    @ColumnInfo(name = "line_color")
+    private String lineColor;
 
     /*-- 定数 --*/
     //ノード種別
@@ -85,6 +103,16 @@ public class NodeTable implements Serializable {
     //ノード形
     public static final int CIRCLE = 0;
     public static final int SQUARE = 1;
+
+    //デフォルトカラー
+    public static final String DEFAULT_COLOR_WHITE = "#FFFFFF";
+    public static final String DEFAULT_COLOR_BLACK = "#000000";
+    public static final String DEFAULT_COLOR_GRAY  = "#99000000";
+
+    //サイズ
+    public static final float DEFAULT_THICK_LINE = 3f;
+    public static final int DEFAULT_THICK_BORDER = 4;
+
 
     //中心座標の連想配列文字列
 /*
@@ -110,6 +138,21 @@ public class NodeTable implements Serializable {
     private RootNodeView rootNodeView;          //ルートノードビュー*/
     @Ignore
     private BaseNode baseNode;          //ルートノードビュー
+
+
+    public NodeTable(){
+        //形
+        this.nodeShape = CIRCLE;
+        //色
+        this.nodeColor   = DEFAULT_COLOR_WHITE;
+        this.shadowColor = DEFAULT_COLOR_GRAY;
+        this.textColor   = DEFAULT_COLOR_BLACK;
+        this.borderColor = DEFAULT_COLOR_BLACK;
+        this.lineColor   = DEFAULT_COLOR_BLACK;
+        //サイズ
+        this.lineSize    = DEFAULT_THICK_LINE;
+        this.borderSize  = DEFAULT_THICK_BORDER;
+    }
 
     /*-- getter setter --*/
 
@@ -186,6 +229,48 @@ public class NodeTable implements Serializable {
     }
     public void setUriIdentify(String uriIdentify) {
         this.uriIdentify = uriIdentify;
+    }
+
+    public int getNodeShape() {
+        return nodeShape;
+    }
+    public void setNodeShape(int nodeShape) {
+        this.nodeShape = nodeShape;
+    }
+
+    public String getBorderColor() {
+        return borderColor;
+    }
+    public void setBorderColor(String borderColor) {
+        this.borderColor = borderColor;
+    }
+
+    public int getBorderSize() {
+        return borderSize;
+    }
+    public void setBorderSize(int borderSize) {
+        this.borderSize = borderSize;
+    }
+
+    public String getShadowColor() {
+        return shadowColor;
+    }
+    public void setShadowColor(String shadowColor) {
+        this.shadowColor = shadowColor;
+    }
+
+    public float getLineSize() {
+        return lineSize;
+    }
+    public void setLineSize(float lineSize) {
+        this.lineSize = lineSize;
+    }
+
+    public String getLineColor() {
+        return lineColor;
+    }
+    public void setLineColor(String lineColor) {
+        this.lineColor = lineColor;
     }
 
     /*-- getter setter（非レコードフィールド） --*/

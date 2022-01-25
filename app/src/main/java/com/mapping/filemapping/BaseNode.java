@@ -59,6 +59,13 @@ public class BaseNode extends FrameLayout {
 
     /*
      * コンストラクタ
+     */
+    public BaseNode(Context context, AttributeSet attrs) {
+        super(context, attrs);
+    }
+
+    /*
+     * コンストラクタ
      * 　 レイアウトに埋め込んだビューの生成時用
      */
     public BaseNode(Context context, AttributeSet attrs, int layoutID) {
@@ -273,44 +280,60 @@ public class BaseNode extends FrameLayout {
         Log.i("BaseNode", "reflectViewNodeInfo");
 
         //ノードデザインの更新
-        setNodeDesign(mNode);
-        setAsParentNodeInfo(mNode);
+        setNodeDesign();
     }
 
     /*
      * ノードデザインの設定
      */
-    public void setNodeDesign(NodeTable node) {
+    public void setNodeDesign() {
 
-        if (node == null) {
+        if (mNode == null) {
             //ノード情報未保持なら、何もしない
             return;
         }
 
-        //ノードデザイン
-        //ノードの形
-        //ノードの大きさ
+        //ノードの基本属性のデザインを設定
+        setAsBaseNodeInfo();
 
+        //親ノード属性のデザインを設定
+        setAsParentNodeInfo();
+
+    }
+
+    /*
+     * 基本ノードとしての情報の設定
+     */
+    public void setAsBaseNodeInfo() {
+
+        if (mNode == null) {
+            return;
+        }
+
+        //枠色
+        setBorderColor(mNode.getBorderColor());
+        //枠サイズ
+        setBorderSize(mNode.getBorderSize());
+        //影色
+        setShadowColor(mNode.getShadowColor());
     }
 
     /*
      * 親ノードとしての情報の設定
      */
-    public void setAsParentNodeInfo(NodeTable node) {
+    public void setAsParentNodeInfo() {
 
         //ピクチャノードなら、何もしない
-        if ((node == null) || (node.getKind() == NodeTable.NODE_KIND_PICTURE)) {
+        if ((mNode == null) || (mNode.getKind() == NodeTable.NODE_KIND_PICTURE)) {
             return;
         }
 
         //ノード名
-        setNodeName(node.getNodeName());
+        setNodeName(mNode.getNodeName());
+        //ノードテキストカラー
+        setNodeTextColor( mNode.getTextColor() );
         //ノード背景色
-        //★仮
-        //setBackgroundColor(getResources().getColor( R.color.cafe_2 ));
-        Log.i("setNodeInformation", "getNodeColor()=" + node.getNodeColor());
-        //setBackgroundColor( Color.parseColor(node.getNodeColor()) );
-        setNodeBackgroundColor(node.getNodeColor());
+        setNodeBackgroundColor(mNode.getNodeColor());
     }
 
     /*
@@ -360,8 +383,7 @@ public class BaseNode extends FrameLayout {
      *   para：例)#123456
      */
     public void setNodeTextColor(String color) {
-        TextView tv_node = findViewById(R.id.tv_node);
-        tv_node.setTextColor(Color.parseColor(color));
+        ((TextView) findViewById(R.id.tv_node)).setTextColor( Color.parseColor(color) );
     }
 
     /*
@@ -527,8 +549,7 @@ public class BaseNode extends FrameLayout {
                         calcCenterPos();
 
                         //ノードの形状
-                        //★Cardにするかcanvasにするか決める
-                        setShapeCircle();
+                        setNodeShape( mNode.getNodeShape() );
 
                         //レイアウト確定後は、不要なので本リスナー削除
                         getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -719,11 +740,10 @@ public class BaseNode extends FrameLayout {
         return mNode;
     }
     public void setNode(NodeTable node) {
-        this.mNode = node;
+        mNode = node;
 
         //ノード情報の設定
-        setNodeDesign(node);
-        setAsParentNodeInfo(node);
+        setNodeDesign();
 
         //ツールアイコンの設定
         setParentToolIcon();

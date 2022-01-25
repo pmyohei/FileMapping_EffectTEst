@@ -111,7 +111,7 @@ public class FontAdapter extends RecyclerView.Adapter<FontAdapter.FontItemViewHo
     public FontItemViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
 
         //レイアウトファイル
-        int layout = ( (mLang == ALPHABET) ? R.layout.item_font: R.layout.item_font_jp );
+        int layout = ( (mLang == ALPHABET) ? R.layout.item_font_alpha : R.layout.item_font_jp );
 
         //ビューを生成
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());

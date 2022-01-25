@@ -25,7 +25,7 @@
             android:elevation="4dp"
             android:layout_gravity="top"
             android:background="@android:color/transparent"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            android:theme="@style/Toolbar.NoActionBar"
             app:titleTextAppearance="@style/Toolbar.TitleText"
             app:menu="@menu/toolbar_map"/>
 
@@ -55,6 +55,12 @@
 
         </FrameLayout>
 
+        <!--  BottomSheet（デザイン設定画面用）  -->
+        <include
+            android:id="@+id/l_bottomSheet"
+            layout="@layout/design_bottom_sheet" />
+<!--
+
         <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -64,6 +70,7 @@
 
         </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
+-->
     </FrameLayout>
 
     <!--  ナビゲーションビュー  -->

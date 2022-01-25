@@ -1,71 +1,82 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="vertical">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
 
-    <!--  ツールバー  -->
-    <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:elevation="4dp"
-        android:layout_gravity="top"
-        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:titleTextAppearance="@style/Toolbar.TitleText"
-        app:menu="@menu/toolbar_trimming"/>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
 
-    <com.google.android.material.card.MaterialCardView
-        android:id="@+id/mcv"
-        android:theme="@style/Theme.MaterialComponents.Light"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="2"
-        android:layout_margin="12dp"
-        android:layout_gravity="center"
-        app:cardCornerRadius="@dimen/tmp_cardCornerRadius"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/black">
-
-        <!--  クリップイメージ  -->
-        <ImageView
-            android:id="@+id/iv_cropped"
+        <!--  ツールバー  -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_height="wrap_content"
+            android:elevation="4dp"
+            android:layout_gravity="top"
+            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            app:titleTextAppearance="@style/Toolbar.TitleText"
+            app:menu="@menu/toolbar_trimming"/>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/mcv"
+            android:theme="@style/Theme.MaterialComponents.Light"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="2"
+            android:layout_margin="12dp"
             android:layout_gravity="center"
-            android:adjustViewBounds="true"
-            android:scaleType="centerCrop"
-            android:src="@drawable/bmp_sample_cafe" />
+            app:cardCornerRadius="@dimen/tmp_cardCornerRadius"
+            app:strokeWidth="1dp"
+            app:strokeColor="@color/black">
 
-    </com.google.android.material.card.MaterialCardView>
+            <!--  クリップイメージ  -->
+            <ImageView
+                android:id="@+id/iv_cropped"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:adjustViewBounds="true"
+                android:scaleType="centerCrop"
+                android:src="@drawable/bmp_sample_cafe" />
 
+        </com.google.android.material.card.MaterialCardView>
 
-    <!--  仕切り線  -->
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="12dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginEnd="12dp"
-        android:background="@color/black"/>
+        <!--  仕切り線  -->
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:layout_marginStart="12dp"
+            android:layout_marginEnd="12dp"
+            android:background="@color/black"/>
 
-    <!--  選択した写真  -->
-    <com.isseiaoki.simplecropview.CropImageView
-        android:id="@+id/iv_cropTarget"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:layout_weight="3"
-        android:layout_marginTop="4dp" />
+        <!--  選択した写真  -->
+        <com.isseiaoki.simplecropview.CropImageView
+            android:id="@+id/iv_cropTarget"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:layout_weight="3"
+            android:layout_marginTop="4dp" />
 
-    <Button
-        android:id="@+id/bt_create"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginBottom="8dp"
-        android:background="@drawable/bt_create"
-        android:text="@string/bt_create" />
+        <Button
+            android:id="@+id/bt_create"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="8dp"
+            android:background="@drawable/bt_create"
+            android:text="@string/bt_create" />
 
-</LinearLayout>
+    </LinearLayout>
+
+    <!--  BottomSheet（ノード形の設定画面用）  -->
+    <include
+        android:id="@+id/l_bottomSheet"
+        layout="@layout/design_bottom_sheet" />
+
+</FrameLayout>

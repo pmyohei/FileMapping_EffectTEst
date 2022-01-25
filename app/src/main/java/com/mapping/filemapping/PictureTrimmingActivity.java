@@ -344,10 +344,9 @@ public class PictureTrimmingActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_shape:
-
                 //ノードの形状設定
-                DialogFragment dialog = new DesignDialog( (View)findViewById(R.id.mcv) );
-                dialog.show( getSupportFragmentManager(), DesignDialog.TAG_ONLY_SIZE );
+                DesignBottomSheet bs_design = findViewById(R.id.bs_design);
+                bs_design.openBottomSheet(DesignBottomSheet.SHAPE_ONLY, findViewById(R.id.mcv));
 
                 return true;
 

@@ -22,7 +22,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DesignDialog extends DialogFragment {
+public class DesignDialog_old extends DialogFragment {
 
     //タグ
     public static final String TAG_NODE = "node";
@@ -37,14 +37,14 @@ public class DesignDialog extends DialogFragment {
     /*
      * コンストラクタ（ノードデザイン）
      */
-    public DesignDialog(View v_map) {
+    public DesignDialog_old(View v_map) {
         mv_map = v_map;
     }
 
     /*
      * コンストラクタ（ノードデザイン）
      */
-    public DesignDialog(BaseNode v_node) {
+    public DesignDialog_old(BaseNode v_node) {
         mv_node = v_node;
     }
 

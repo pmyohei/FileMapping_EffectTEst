@@ -6,8 +6,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
+
+import com.google.android.material.tabs.TabLayout;
+import com.google.android.material.tabs.TabLayoutMediator;
+
+import java.util.ArrayList;
+import java.util.List;
 
 /*
  * マップ情報入力画面（新規作成／編集）
@@ -22,14 +30,13 @@ public class MapEntryActivity extends AppCompatActivity {
     /* 画面遷移-キー */
     public static String KEY_MAP = "map";         //マップ
 
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_entry);
 
         //遷移元からの情報
-        Intent intent = getIntent();
+/*        Intent intent = getIntent();
         boolean isCreate = intent.getBooleanExtra( MapListActivity.KEY_ISCREATE, false );
 
         if( isCreate ){
@@ -45,65 +52,13 @@ public class MapEntryActivity extends AppCompatActivity {
 
             //OKボタンリスナー
             findViewById(R.id.bt_create).setOnClickListener( new PositiveClickListener(map) );
-        }
+        }*/
+
+        //マップ入力ページレイアウト
+        setupMapEntryPage();
 
 
 
-/*
-        //ポジティブボタン
-        Button bt_positive = findViewById(R.id.bt_positive);
-
-        //ポジティブボタン押下
-        bt_positive.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //マップ名空チェック
-                String mapName = ((EditText)findViewById(R.id.et_mapName)).getText().toString();
-                if( mapName.isEmpty() ){
-                    //空なら、メッセージ出力して終了
-                    //★
-
-                    return;
-                }
-
-                //ルートノード名空チェック
-                String rootNodeName = ((EditText)findViewById(R.id.et_rootNodeName)).getText().toString();
-                if( rootNodeName.isEmpty() ){
-                    //空なら、メッセージ出力して終了
-                    //★
-
-                    return;
-                }
-
-                //マップを生成
-                //★
-                //※本マップ自体のpidはこの時点では確定していないため、DB処理完了後に設定
-                MapTable map = new MapTable();
-                map.setMapName( mapName );
-
-                //DB保存処理
-                AsyncCreateMap db = new AsyncCreateMap(view.getContext(), map, rootNodeName, new AsyncCreateMap.OnFinishListener() {
-
-                    @Override
-                    public void onFinish(int pid) {
-                        //データ挿入されたため、レコードに割り当てられたpidをマップに設定
-                        map.setPid( pid );
-
-                        //resultコード設定
-                        intent.putExtra(KEY_MAP, map );
-                        setResult(RESULT_CREATED, intent );
-
-                        Log.i("Map", "マップ生成完了。マップリスト画面へ戻る");
-
-                        //元の画面へ戻る
-                        finish();
-                    }
-                });
-                //非同期処理開始
-                db.execute();
-            }
-        });
-*/
 
 
 
@@ -119,6 +74,33 @@ public class MapEntryActivity extends AppCompatActivity {
             }
         });
 
+
+    }
+
+    /*
+     * マップデザイン用のレイアウトを設定
+     */
+    private void setupMapEntryPage() {
+        //ノードデザイン設定レイアウト
+        List<Integer> layoutIdList = new ArrayList<>();
+        layoutIdList.add(R.layout.page_map_create_0);
+        layoutIdList.add(R.layout.page_map_create_1);
+        layoutIdList.add(R.layout.page_map_create_2);
+        layoutIdList.add(R.layout.page_map_create_3);
+
+        //サンプルマップ
+        FrameLayout fl_map = findViewById(R.id.fl_map);
+
+        //ViewPager2にアダプタを割り当て
+        ViewPager2 vp = findViewById(R.id.vp2_createMap);
+        MapEntryPageAdapter adapter = new MapEntryPageAdapter(layoutIdList, fl_map, getSupportFragmentManager(), vp);
+        vp.setAdapter(adapter);
+
+        //インジケータの設定
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        new TabLayoutMediator(tabLayout, vp,
+                (tab, position) -> tab.setText("")
+        ).attach();
 
     }
 
@@ -184,15 +166,6 @@ public class MapEntryActivity extends AppCompatActivity {
 
                 return true;
             }
-
-/*            //ルートノード名空チェック
-            String rootNodeName = ((EditText)findViewById(R.id.et_rootNodeName)).getText().toString();
-            if( rootNodeName.isEmpty() ){
-                //空なら、メッセージ出力して終了
-                //★
-
-                return false;
-            }*/
 
             //問題なし
             return false;

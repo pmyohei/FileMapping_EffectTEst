@@ -36,7 +36,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_titleMap" />
 
-            <!-- テキストカラー -->
+            <!-- 色選択-ノードテキスト色 -->
             <TextView
                 android:id="@+id/tv_titleNodeTextColor"
                 android:layout_width="wrap_content"
@@ -48,7 +48,12 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_bgColorGraphic" />
 
-            <TextView
+            <com.mapping.filemapping.ColorSelectionView
+                android:id="@+id/csv_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+<!--            <TextView
                 android:id="@+id/tv_txColorCode"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -74,7 +79,7 @@
                 android:text="Graphic"
                 android:textColor="@color/black"
                 app:layout_constraintStart_toEndOf="@+id/tv_bgColorCode"
-                app:layout_constraintTop_toBottomOf="@+id/tv_titleNodeBackground" />
+                app:layout_constraintTop_toBottomOf="@+id/tv_titleNodeBackground" />-->
 
             <!-- フォント -->
             <TextView

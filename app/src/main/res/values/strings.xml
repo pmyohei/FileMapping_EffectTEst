@@ -3,6 +3,7 @@
 
     <!--  共通  -->
     <string name="bt_create">Create</string>
+    <string name="cancel">Cancel</string>
 
     <!--  ノード  -->
     <string name="default_rootNode">ルート\nノード</string>
@@ -10,7 +11,7 @@
     <string name="node_createButtom">作成</string>
     <string name="node_cancelButtom">キャンセル</string>a
 
-    <!-- ダイアログ -->
+    <!-- ノードデザイン -->
     <string name="coloeCodeHint">123456</string>
     <string name="node_nameHint">最大16文字</string>
     <string name="title_nodeName">ノード名</string>
@@ -27,6 +28,9 @@
 
     <string name="font_sample_alphabet">A a</string>
     <string name="font_sample_japanese">あァ</string>
+
+    <string name="color_rgb">RGB</string>
+    <string name="color_graphic">Graphic</string>
 
     <!--  レイアウト確認用（実際にユーザーに表示されることはない） -->
     <string name="sample">Sample</string>

@@ -2,7 +2,6 @@ package com.mapping.filemapping;
 
 import android.content.Context;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -21,8 +20,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
-
-import com.jaredrummler.android.colorpicker.ColorPickerView;
 
 import java.util.List;
 
@@ -58,26 +55,31 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
 
         /*--- ノードテキスト ---*/
         private EditText et_nodeName;
-        private TextView tv_txColorCode;
-        private TextView tv_txColorGraphic;
+        //private TextView tv_txColorCode;
+        //private TextView tv_txColorGraphic;
+        private ColorSelectionView csv_text;
         private RecyclerView rv_fontAlphabet;
         private RecyclerView rv_fontjapanese;
 
         /*--- ノードデザイン ---*/
         private TextView tv_bgColorCode;
         private TextView tv_bgColorGraphic;
+        private ColorSelectionView csv_background;
         private ImageView iv_circle;
         private ImageView iv_square;
         private SeekBar  sb_nodeSize;
         private TextView tv_borderColorCode;
         private TextView tv_borderColorGraphic;
+        private ColorSelectionView csv_border;
         private RadioGroup rg_borderSize;
         private TextView tv_shadowColorCode;
         private TextView tv_shadowColorGraphic;
+        private ColorSelectionView csv_shadow;
 
         /*--- ライン ---*/
         private TextView tv_lineColorCode;
         private TextView tv_lineColorGraphic;
+        private ColorSelectionView csv_line;
         private RadioGroup rg_lineSize;
 
 
@@ -95,34 +97,40 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
                 //ノード名
                 et_nodeName = itemView.findViewById(R.id.et_nodeName);
                 //テキスト色
-                tv_txColorCode    = itemView.findViewById(R.id.tv_txColorCode);
-                tv_txColorGraphic = itemView.findViewById(R.id.tv_txColorGraphic);
+                //tv_txColorCode    = itemView.findViewById(R.id.tv_txColorCode);
+                //tv_txColorGraphic = itemView.findViewById(R.id.tv_txColorGraphic);
+                csv_text = itemView.findViewById(R.id.csv_text);
+
                 //フォント
                 rv_fontAlphabet = itemView.findViewById(R.id.rv_fontAlphabet);
                 rv_fontjapanese   = itemView.findViewById(R.id.rv_fontJapanese);
 
             } else if (position == 1) {
                 //背景色
-                tv_bgColorCode    = itemView.findViewById(R.id.tv_bgColorCode);
-                tv_bgColorGraphic = itemView.findViewById(R.id.tv_bgColorGraphic);
+                //tv_bgColorCode    = itemView.findViewById(R.id.tv_bgColorCode);
+                //tv_bgColorGraphic = itemView.findViewById(R.id.tv_bgColorGraphic);
+                csv_background = itemView.findViewById(R.id.csv_background);
                 //ノード形
                 iv_circle    = itemView.findViewById(R.id.iv_circle);
                 iv_square    = itemView.findViewById(R.id.iv_square);
                 //ノードサイズ
                 sb_nodeSize       = itemView.findViewById(R.id.sb_nodeSize);
                 //枠線色
-                tv_borderColorCode    = itemView.findViewById(R.id.tv_borderColorCode);
-                tv_borderColorGraphic = itemView.findViewById(R.id.tv_borderColorGraphic);
+                //tv_borderColorCode    = itemView.findViewById(R.id.tv_borderColorCode);
+                //tv_borderColorGraphic = itemView.findViewById(R.id.tv_borderColorGraphic);
+                csv_border = itemView.findViewById(R.id.csv_border);
                 //枠線サイズ
                 rg_borderSize = itemView.findViewById(R.id.rg_borderSize);
                 //影色
-                tv_shadowColorCode    = itemView.findViewById(R.id.tv_shadowColorCode);
-                tv_shadowColorGraphic = itemView.findViewById(R.id.tv_shadowColorGraphic);
+                //tv_shadowColorCode    = itemView.findViewById(R.id.tv_shadowColorCode);
+                //tv_shadowColorGraphic = itemView.findViewById(R.id.tv_shadowColorGraphic);
+                csv_shadow = itemView.findViewById(R.id.csv_shadow);
 
             } else if (position == 2) {
                 //色
-                tv_lineColorCode    = itemView.findViewById(R.id.tv_lineColorCode);
-                tv_lineColorGraphic = itemView.findViewById(R.id.tv_lineColorGraphic);
+                //tv_lineColorCode    = itemView.findViewById(R.id.tv_lineColorCode);
+                //tv_lineColorGraphic = itemView.findViewById(R.id.tv_lineColorGraphic);
+                csv_line = itemView.findViewById(R.id.csv_line);
                 //サイズ
                 rg_lineSize = itemView.findViewById(R.id.rg_lineSize);
             }
@@ -142,7 +150,6 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
             } else if (position == 2) {
                 setPage2();
             }
-
         }
 
         /*
@@ -152,10 +159,10 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
             //文字入力リスナーを設定
             et_nodeName.addTextChangedListener(this);
 
-            //テキスト色-カラーコード
-            tv_txColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_TEXT) );
-            //テキスト色-カラーピッカー
-            tv_txColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_TEXT) );
+            //テキスト色
+            //tv_txColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_TEXT) );
+            //tv_txColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_TEXT) );
+            csv_text.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_TEXT, mv_node );
 
             Context context = mv_node.getContext();
 
@@ -188,8 +195,9 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
         public void setPage1() {
 
             //背景色
-            tv_bgColorCode.setOnClickListener(new ClickColor( ClickColor.RGB,COLOR_BACKGROUNG) );
-            tv_bgColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_BACKGROUNG) );
+            //tv_bgColorCode.setOnClickListener(new ClickColor( ClickColor.RGB,COLOR_BACKGROUNG) );
+            //tv_bgColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_BACKGROUNG) );
+            csv_background.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_BACKGROUNG, mv_node );
 
             //ノード形
             iv_circle.setOnClickListener(new ClickShapeImage(NodeTable.CIRCLE) );
@@ -226,15 +234,45 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
                     }
 
                     //Log.i("size", "i=" + i + " value=" + value);
+                    //cv.setScaleX( value );
+                    //cv.setScaleY( value );
 
-                    cv.setScaleX( value );
-                    cv.setScaleY( value );
+                    //実験----------
+                    //レイアウトパラメータ
+                    //value *= 10;
+                    TextView tv = mv_node.findViewById( R.id.tv_node );
+                    ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams)tv.getLayoutParams();
+                    mlp.setMargins( (int)value, (int)value, (int)value, (int)value );
+
+                    //マージンを設定
+                    //tv.setLayoutParams(mlp);
+
+                    float textSize;
+                    if( i < 50 ){
+                        textSize = 50 - i;
+                        textSize *= -1;
+                    } else{
+                        textSize = i - 50;
+                    }
+                    //textSize = i / 5f;
+                    textSize = i - 50;
+
+                    float nowSIze = tv.getTextSize();
+                    float nowSIzeSP = nowSIze / mv_node.getContext().getResources().getDisplayMetrics().density;
+
+                    Log.i("size", "textSize=" + textSize + " nowSIze(px)=" + nowSIze + " nowSIze(sp)=" + nowSIzeSP);
+
+                    //float textSize = tv.getTextSize() + value;
+                    tv.setTextSize( nowSIzeSP + textSize );
+                    mv_node.invalidate();
+                    //実験----------
                 }
             });
 
             //枠色
-            tv_borderColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_BORDER) );
-            tv_borderColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_BORDER) );
+            //tv_borderColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_BORDER) );
+            //tv_borderColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_BORDER) );
+            csv_border.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_BORDER, mv_node );
 
             //枠サイズ
             //★UIをラジオボタンにするなら、ライン側と統一させる
@@ -252,8 +290,9 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
             });
 
             //影色
-            tv_shadowColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_SHADOW) );
-            tv_shadowColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_SHADOW) );
+            //tv_shadowColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_SHADOW) );
+            //tv_shadowColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_SHADOW) );
+            csv_shadow.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_SHADOW, mv_node );
 
 
         }
@@ -264,8 +303,9 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
         public void setPage2() {
 
             //ラインカラー
-            tv_lineColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_LINE) );
-            tv_lineColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_LINE) );
+            //tv_lineColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_LINE) );
+            //tv_lineColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_LINE) );
+            csv_line.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_LINE, mv_node );
 
             //ラインサイズ
             rg_lineSize.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -303,6 +343,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
         /*
          * カラー入力ダイアログ表示リスナー
          */
+/*
         private class ClickColor implements View.OnClickListener {
 
             //カラー入力方法
@@ -314,9 +355,11 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
             //設定対象
             private final int mSetTarget;
 
-            /*
+            */
+/*
              * コンストラクタ
-             */
+             *//*
+
             public ClickColor( int colorKind, int setTarget ){
                 mInputKind = colorKind;
                 mSetTarget = setTarget;
@@ -384,9 +427,11 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
                 dialog.show(mFragmentManager, "ColorCode");
             }
 
-            /*
+            */
+/*
              * 設定中のカラーを取得
-             */
+             *//*
+
             private String getSettingColor(){
 
                 //色設定の対象毎に処理
@@ -419,6 +464,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
             }
 
         }
+*/
 
         /*
          *
@@ -447,9 +493,9 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
     /*
      * コンストラクタ
      */
-    public DesignNodePageAdapter(List<Integer> layoutIdList, BaseNode v_node, FragmentManager fragmentManager, ViewPager2 vp) {
+    public DesignNodePageAdapter(List<Integer> layoutIdList, View v_node, FragmentManager fragmentManager, ViewPager2 vp) {
         mData            = layoutIdList;
-        mv_node          = v_node;
+        mv_node          =  (BaseNode)v_node;
         mFragmentManager = fragmentManager;
         mvp2             = vp;
     }

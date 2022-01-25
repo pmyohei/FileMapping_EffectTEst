@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!--  RGB・カラーピッカー  -->
+    <LinearLayout
+        android:id="@+id/ll_nodeSize"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/color_selecter"
+            android:id="@+id/tv_rgb"
+            android:text="@string/color_rgb" />
+
+        <TextView
+            style="@style/color_selecter"
+            android:id="@+id/tv_graphic"
+            android:text="@string/color_graphic"/>
+
+    </LinearLayout>
+
+    <!--  カラーヒストリー  -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="12dp" />
+
+</LinearLayout>

@@ -22,7 +22,6 @@
             android:layout_marginStart="16dp"
             android:layout_marginTop="8dp"
             android:gravity="center"
-            android:fontFamily="serif"
             android:text="#"
             android:textSize="32sp"
             android:textColor="@color/black" />
@@ -73,7 +72,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:fontFamily="serif"
             android:text="OK"
             android:textColor="@color/black" />
 
@@ -83,7 +81,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:gravity="center"
-            android:fontFamily="serif"
             android:text="CANCEL"
             android:textColor="@color/black" />
 

@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.AttributeSet;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -17,9 +18,20 @@ import java.io.Serializable;
 
 public class NodeView extends ChildNode implements Serializable {
 
+
     /*
      * コンストラクタ
-     *   new用
+     *   レイアウトから
+     */
+    @SuppressLint("ClickableViewAccessibility")
+    public NodeView(Context context, AttributeSet attrs) {
+       // super(context, new NodeTable(), null, R.layout.node);
+        super(context, null, null, R.layout.node);
+    }
+
+    /*
+     * コンストラクタ
+     *   new
      */
     @SuppressLint("ClickableViewAccessibility")
     public NodeView(Context context, NodeTable node, ActivityResultLauncher<Intent> nodeOperationLauncher) {
