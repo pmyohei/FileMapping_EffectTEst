@@ -10,9 +10,6 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.DialogFragment;
-import androidx.fragment.app.FragmentActivity;
-import androidx.viewpager2.widget.ViewPager2;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
@@ -42,12 +39,6 @@ import android.widget.LinearLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
 
-import com.google.android.material.bottomsheet.BottomSheetBehavior;
-import com.google.android.material.tabs.TabLayout;
-import com.google.android.material.tabs.TabLayoutMediator;
-
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class MapActivity extends AppCompatActivity {
@@ -693,7 +684,7 @@ public class MapActivity extends AppCompatActivity {
         //アイコン操作ノード
         private BaseNode mTouchNode;
         //新規生成 or 編集
-        private boolean misNew;
+        private boolean mIsNew;
 
         /*
          * コンストラクタ
@@ -715,7 +706,7 @@ public class MapActivity extends AppCompatActivity {
             //操作対象ノード
             mTouchNode = node;
             //新規か編集か
-            misNew = isNew;
+            mIsNew = isNew;
 
             //本来のクリック処理
             this.onClick( view );
@@ -731,7 +722,7 @@ public class MapActivity extends AppCompatActivity {
             float marginLeft;
             float marginTop;
 
-            if( misNew ){
+            if(mIsNew){
                 //ノード新規生成
 
                 //親ノード

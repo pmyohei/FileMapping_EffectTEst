@@ -16,6 +16,7 @@ import android.widget.LinearLayout;
 public class NodeOutsideView extends LinearLayout {
     private final Paint mPaint;
     private int mShadowColor;
+    private boolean mIsShadow;
 
     float mRadius = 0.0f;
 
@@ -31,6 +32,60 @@ public class NodeOutsideView extends LinearLayout {
         //paint.setColor( getResources().getColor( R.color.fill ) );
         mPaint.setColor(Color.WHITE);
         mPaint.setAntiAlias(true);
+
+        mIsShadow = false;
+    }
+
+    /*
+     * 影の有無を設定
+     */
+    public void setShadow( boolean isShadow ) {
+
+        if( isShadow ){
+            //影の設定
+            int width = findViewById(R.id.cv_node).getWidth();
+            mPaint.setShadowLayer((width / 8f), 0, 0, mShadowColor);
+
+        } else {
+            //影を削除
+            mPaint.clearShadowLayer();
+        }
+
+        //影の有無の設定を更新
+        mIsShadow = isShadow;
+
+        //再描画
+        invalidate();
+    }
+
+    /*
+     * 影の有無を切り替え
+     */
+    public void switchShadow() {
+
+        //状態を反転
+        mIsShadow = !mIsShadow;
+
+        if( mIsShadow ){
+            //影の設定
+            int width = findViewById(R.id.cv_node).getWidth();
+            mPaint.setShadowLayer((width / 8f), 0, 0, mShadowColor);
+
+        } else {
+            //影を削除
+            mPaint.clearShadowLayer();
+        }
+
+        //再描画
+        invalidate();
+    }
+
+    /*
+     * ノード影の有無を取得
+     */
+    public boolean isShadow() {
+        //影の有無を取得
+        return mIsShadow;
     }
 
     /*
@@ -39,11 +94,12 @@ public class NodeOutsideView extends LinearLayout {
     public void setShadowColor(int colorHex) {
         //色更新
         mShadowColor = colorHex;
+        mIsShadow    = true;
 
         //ノードの横幅
         int width = findViewById(R.id.cv_node).getWidth();
         //影の設定
-        mPaint.setShadowLayer((width / 6f), 0, 0, mShadowColor);
+        mPaint.setShadowLayer((width / 8f), 0, 0, mShadowColor);
 
         Log.i("影", "mShadowColor＝" + mShadowColor);
 

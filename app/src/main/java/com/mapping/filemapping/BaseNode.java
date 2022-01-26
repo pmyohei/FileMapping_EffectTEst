@@ -470,6 +470,30 @@ public class BaseNode extends FrameLayout {
     }
 
     /*
+     * ノード影の有無の設定
+     */
+    public void setShadow( boolean isShadow ) {
+        //影色を設定
+        ((NodeOutsideView)findViewById( R.id.l_nodeBody )).setShadow( isShadow );
+    }
+
+    /*
+     * ノード影の有無を切替
+     */
+    public void switchShadow() {
+        //影色を設定
+        ((NodeOutsideView)findViewById( R.id.l_nodeBody )).switchShadow();
+    }
+
+    /*
+     * ノード影の有無を取得
+     */
+    public boolean isShadow() {
+        //影の有無を取得
+        return ((NodeOutsideView)findViewById( R.id.l_nodeBody )).isShadow();
+    }
+
+    /*
      * ノード中心座標の設定
      */
     public void calcCenterPos() {

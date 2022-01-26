@@ -395,7 +395,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
     }
 
     /*
-     *　全ノードの枠サイズの設定
+     *　全ノードの影色の設定
      */
     public void setAllNodeShadowColor( String color ) {
 
@@ -404,6 +404,32 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
             //★テーブルにも反映必要
             //node.
             node.getNodeView().setShadowColor( color );
+        }
+    }
+
+    /*
+     *　全ノードの影の有無の設定
+     */
+    public void setAllNodeShadow( boolean isShadow ) {
+
+        //リストの内のノードすべて
+        for( NodeTable node: this ){
+            //★テーブルにも反映必要
+            //node.
+            node.getNodeView().setShadow( isShadow );
+        }
+    }
+
+    /*
+     *　全ノードの影の有無の切り替え
+     */
+    public void switchAllNodeShadow() {
+
+        //リストの内のノードすべて
+        for( NodeTable node: this ){
+            //★テーブルにも反映必要
+            //node.
+            node.getNodeView().switchShadow();
         }
     }
 

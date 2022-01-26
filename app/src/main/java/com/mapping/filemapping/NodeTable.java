@@ -107,11 +107,11 @@ public class NodeTable implements Serializable {
     //デフォルトカラー
     public static final String DEFAULT_COLOR_WHITE = "#FFFFFF";
     public static final String DEFAULT_COLOR_BLACK = "#000000";
-    public static final String DEFAULT_COLOR_GRAY  = "#99000000";
+    public static final String DEFAULT_COLOR_GRAY  = "#66000000";
 
     //サイズ
-    public static final float DEFAULT_THICK_LINE = 3f;
-    public static final int DEFAULT_THICK_BORDER = 4;
+    public static final float DEFAULT_THICK_LINE = 2f;
+    public static final int DEFAULT_THICK_BORDER = 3;
 
 
     //中心座標の連想配列文字列

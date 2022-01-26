@@ -12,9 +12,21 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="16dp"
         android:layout_marginTop="16dp"
+        android:padding="2dp"
         android:layout_gravity="top|end"
         android:background="@drawable/bt_image"
         android:src="@drawable/baseline_color_switch_24" />
+
+    <ImageView
+        android:id="@+id/iv_shadowSwitch"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:layout_marginTop="60dp"
+        android:padding="2dp"
+        android:layout_gravity="top|end"
+        android:background="@drawable/bt_image"
+        android:src="@drawable/baseline_shadow_24" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
