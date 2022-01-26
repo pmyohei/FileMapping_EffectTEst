@@ -80,4 +80,18 @@ public class MapTable implements Serializable {
     public void setThirdColor(String thirdColor) {
         this.thirdColor = thirdColor;
     }
+
+    /*
+     * デフォルトカラーを取得
+     */
+    public String[] getDefaultColors() {
+        String[] colors = new String[3];
+        colors[0] = firstColor;
+        colors[1] = secondColor;
+        colors[2] = thirdColor;
+
+        return colors;
+    }
+
+
 }

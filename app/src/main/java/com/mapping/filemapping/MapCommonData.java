@@ -1,7 +1,13 @@
 package com.mapping.filemapping;
 
 import android.app.Application;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
+import android.view.View;
+
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
+import java.util.Locale;
 
 /*
  * マップ共通情報
@@ -22,7 +28,8 @@ public class MapCommonData extends Application {
     private BaseNode mToolOpeningNode = null;
     //編集対象ノード
     private NodeTable mEditNode = null;
-
+    //色履歴
+    private ArrayList<String> mColorHistory;
 
     /*
      * アプリケーションの起動時に呼び出される
@@ -34,6 +41,7 @@ public class MapCommonData extends Application {
         mNodes = new NodeArrayList<>();
         mMovedNodesQue = new NodeArrayList<>();
         mDeleteNodes = new NodeArrayList<>();
+        mColorHistory = new ArrayList<>();
     }
 
     /**
@@ -48,6 +56,7 @@ public class MapCommonData extends Application {
         mToolOpeningNode = null;
         mEditNode = null;
         mDeleteNodes = null;
+        mColorHistory = null;
     }
 
     /*
@@ -58,13 +67,13 @@ public class MapCommonData extends Application {
         //リストクリア
         mNodes.clear();
         mMovedNodesQue.clear();
+        mDeleteNodes.clear();
+        mColorHistory.clear();
 
         //ピンチ比率
         pinchDistanceRatioX = 1.0f;
         pinchDistanceRatioY = 1.0f;
     }
-
-
 
     /*
      * ノードリストの取得・設定・追加
@@ -78,6 +87,77 @@ public class MapCommonData extends Application {
     public void addNodes( NodeTable node ) {
         this.mNodes.add( node );
     }
+
+    /*
+     * 色履歴リストの生成
+     */
+    public void createColorHistory( MapTable map, View v_map ) {
+
+        ArrayList<String> tmp = new ArrayList<>();
+
+        //デフォルトカラーをリストに追加
+        String[] colors = map.getDefaultColors();
+        for( String defaultColor: colors ){
+            if( defaultColor != null ){
+                tmp.add( defaultColor );
+            }
+        }
+
+        //現在のマップ背景色を追加
+        ColorDrawable colorDrawable = (ColorDrawable) v_map.getBackground();
+        int colorInt = colorDrawable.getColor();
+        String color = "#" + Integer.toHexString(colorInt);
+
+        //大文字変換
+        color = color.toUpperCase(Locale.ROOT);
+
+        final String A = "#FF";
+        if( ( color.length() == 9 ) && ( color.contains(A)) ){
+            //#FF001122→#001122 にする
+            color = color.replace(A, "#");
+        }
+
+        tmp.add( color );
+        Log.i("色履歴", "v_map color=" + color);
+
+        //マップ中のノードに設定されている色を取得
+        tmp.addAll( mNodes.getAllNodeColors() );
+
+        //重複なしで設定
+        mColorHistory.addAll( new ArrayList<>(new LinkedHashSet<>(tmp)) );
+
+        //log
+        //for( String cc: mColorHistory ){
+        //    Log.i("色履歴", "cc=" + cc);
+        //}
+        //
+    }
+
+    /*
+     * 色履歴リストの取得
+     */
+    public ArrayList<String> getColorHistory() {
+        return mColorHistory;
+    }
+
+    /*
+     * 色履歴リストに色を追加
+     */
+    public void addColorHistory( String addColor ) {
+
+        for( String color: mColorHistory ){
+
+            if( color.equals( addColor ) ){
+                //既に同じ色があれば、追加なし
+                return;
+            }
+        }
+
+        //新しい色であれば追加
+        mColorHistory.add( addColor );
+    }
+
+
 
     /*
      * マップ内ノードリストから、指定ノードを返す

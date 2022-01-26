@@ -160,8 +160,6 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
             et_nodeName.addTextChangedListener(this);
 
             //テキスト色
-            //tv_txColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_TEXT) );
-            //tv_txColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_TEXT) );
             csv_text.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_TEXT, mv_node );
 
             Context context = mv_node.getContext();
@@ -195,8 +193,6 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
         public void setPage1() {
 
             //背景色
-            //tv_bgColorCode.setOnClickListener(new ClickColor( ClickColor.RGB,COLOR_BACKGROUNG) );
-            //tv_bgColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_BACKGROUNG) );
             csv_background.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_BACKGROUNG, mv_node );
 
             //ノード形
@@ -270,8 +266,6 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
             });
 
             //枠色
-            //tv_borderColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_BORDER) );
-            //tv_borderColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_BORDER) );
             csv_border.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_BORDER, mv_node );
 
             //枠サイズ
@@ -290,8 +284,6 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
             });
 
             //影色
-            //tv_shadowColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_SHADOW) );
-            //tv_shadowColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_SHADOW) );
             csv_shadow.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_SHADOW, mv_node );
 
 
@@ -303,8 +295,6 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
         public void setPage2() {
 
             //ラインカラー
-            //tv_lineColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_LINE) );
-            //tv_lineColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_LINE) );
             csv_line.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_LINE, mv_node );
 
             //ラインサイズ
@@ -340,131 +330,6 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
             mv_node.addOnNodeGlobalLayoutListener();
         }
 
-        /*
-         * カラー入力ダイアログ表示リスナー
-         */
-/*
-        private class ClickColor implements View.OnClickListener {
-
-            //カラー入力方法
-            public static final int RGB = 0;
-            public static final int PICKER = 1;
-
-            //カラー入力方法
-            private final int mInputKind;
-            //設定対象
-            private final int mSetTarget;
-
-            */
-/*
-             * コンストラクタ
-             *//*
-
-            public ClickColor( int colorKind, int setTarget ){
-                mInputKind = colorKind;
-                mSetTarget = setTarget;
-            }
-
-            @Override
-            public void onClick(View view) {
-
-                //設定中の色を取得
-                String settingColor = getSettingColor();
-
-                //ダイアログ
-                ColorDialog dialog;
-                if( mInputKind == RGB ){
-                    dialog = new ColorCodeDialog( settingColor );
-                } else {
-                    dialog = new ColorPickerDialog( settingColor );
-                }
-
-                //OKボタンリスナー
-                dialog.setOnPositiveClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        //Log.i("Design", "カラーコード=" + ((EditText)view).getText());
-
-                        //カラーコード文字列
-                        ColorDrawable colorDrawable = (ColorDrawable) view.getBackground();
-                        int colorInt = colorDrawable.getColor();
-                        String code = "#" + Integer.toHexString( colorInt );
-
-                        //色設定の対象毎に処理
-                        switch (mSetTarget){
-
-                            case COLOR_BACKGROUNG:
-                                //ノード背景色
-                                mv_node.setNodeBackgroundColor( code );
-                                break;
-
-                            case COLOR_TEXT:
-                                //ノードテキストカラー
-                                mv_node.setNodeTextColor( code );
-                                break;
-
-                            case COLOR_BORDER:
-                                //枠線カラー
-                                mv_node.setBorderColor( code );
-                                break;
-
-                            case COLOR_SHADOW:
-                                //影カラー
-                                mv_node.setShadowColor( code );
-                                break;
-
-                            case COLOR_LINE:
-                                //ラインカラー
-                                ((ChildNode)mv_node).setLineColor( code );
-                                break;
-                        }
-
-                        dialog.dismiss();
-                    }
-                });
-
-                dialog.show(mFragmentManager, "ColorCode");
-            }
-
-            */
-/*
-             * 設定中のカラーを取得
-             *//*
-
-            private String getSettingColor(){
-
-                //色設定の対象毎に処理
-                switch (mSetTarget){
-
-                    case COLOR_BACKGROUNG:
-                        //ノード背景色
-                        return mv_node.getNodeBackgroundColor();
-
-                    case COLOR_TEXT:
-                        //ノードテキストカラー
-                        return mv_node.getNodeTextColor();
-
-                    case COLOR_BORDER:
-                        //枠線カラー
-                        return mv_node.getBorderColor();
-
-                    case COLOR_SHADOW:
-                        //影カラー
-                        return mv_node.getShadowColor();
-
-                    case COLOR_LINE:
-                        //ラインカラー
-                        return ((ChildNode)mv_node).getLineColor();
-
-                    default:
-                        //該当なし(フェールセーフ)
-                        return ResourceManager.NODE_INVALID_COLOR;
-                }
-            }
-
-        }
-*/
 
         /*
          *

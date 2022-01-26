@@ -4,6 +4,7 @@ import android.graphics.Typeface;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 /*
  * ArrayList：ノード用
@@ -473,5 +474,24 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
         }
     }
 
+    /*
+     *　全ノードに設定している色を取得（重複なし）
+     */
+    public ArrayList<String> getAllNodeColors() {
 
+        ArrayList<String> colors = new ArrayList<>();
+
+        //リストの内の子ノードすべて
+        for( NodeTable node: this ){
+
+            //ノードに設定中の色を取得
+            ArrayList<String> tmpColors = node.getSettingColors();
+
+            //追加
+            colors.addAll( tmpColors );
+        }
+
+        //重複なしで返す
+        return new ArrayList<>(new LinkedHashSet<>(colors));
+    }
 }

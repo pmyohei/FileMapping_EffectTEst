@@ -202,6 +202,7 @@ public class MapActivity extends AppCompatActivity {
                 //マップ共通データ
                 MapCommonData mapCommonData = (MapCommonData) getApplication();
                 mapCommonData.setNodes(nodeList);
+                mapCommonData.createColorHistory( mMap, findViewById(R.id.fl_screenMap) );
 
                 //フィールド変数として保持
                 mNodes = nodeList;
@@ -750,11 +751,7 @@ public class MapActivity extends AppCompatActivity {
                 newNode.setPos( posX, posY );*/
 
                 //カラーパターン設定
-                String[] colors = new String[3];
-                colors[0] = mMap.getFirstColor();
-                colors[1] = mMap.getSecondColor();
-                colors[2] = mMap.getThirdColor();
-
+                String[] colors = mMap.getDefaultColors();
                 newNode.setColorPattern( colors );
 
                 //ノードをマップに追加

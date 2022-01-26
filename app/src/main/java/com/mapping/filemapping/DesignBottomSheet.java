@@ -127,7 +127,7 @@ public class DesignBottomSheet extends LinearLayout {
             layoutIdList.add(R.layout.page_node_line_design);
         }
 
-        //
+        //ViewPager2を生成
         ViewPager2 vp2 = findViewById(R.id.vp2_design);
         DesignNodePageAdapter adapter = new DesignNodePageAdapter(layoutIdList, v_node, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp2);
         vp2.setAdapter(adapter);

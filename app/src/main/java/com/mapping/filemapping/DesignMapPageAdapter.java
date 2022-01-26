@@ -2,9 +2,7 @@ package com.mapping.filemapping;
 
 import android.app.Activity;
 import android.content.Context;
-import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,12 +18,12 @@ import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.List;
 
-public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdapter.GuideViewHolder> {
+public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdapter.PageViewHolder> {
 
     //フィールド変数
     private final List<Integer>   mData;
     //マップ
-    private View     mv_map;
+    private View                  mv_map;
     //FragmentManager
     private final FragmentManager mFragmentManager;
     //ViewPager2
@@ -34,15 +32,7 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
      */
-    static class GuideViewHolder extends RecyclerView.ViewHolder {
-
-        //カラー指定
-        private final int COLOR_BACKGROUNG = 0;
-        private final int COLOR_TEXT = 1;
-        private final int COLOR_BORDER = 2;
-        private final int COLOR_SHADOW = 3;
-        private final int COLOR_LINE = 4;
-        private final int COLOR_MAP = 5;
+    static class PageViewHolder extends RecyclerView.ViewHolder {
 
         //マップ
         private final View            mv_map;
@@ -52,32 +42,20 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         private final ViewPager2      mvp2;
 
         //マップデザイン
-        //private TextView tv_bgMapColorCode;
-        //private TextView tv_bgMapColorGraphic;
         private ColorSelectionView csv_map;
 
         //ノードデザイン
-        //private TextView tv_bgColorCode;
-        //private TextView tv_bgColorGraphic;
-        //private TextView tv_txColorCode;
-        //private TextView tv_txColorGraphic;
         private ColorSelectionView csv_background;
         private ColorSelectionView csv_text;
         private RecyclerView rv_fontAlphabet;
         private RecyclerView rv_fontjapanese;
         private ImageView iv_circle;
         private ImageView iv_square;
-        //private TextView tv_borderColorCode;
-        //private TextView tv_borderColorGraphic;
         private ColorSelectionView csv_border;
         private RadioGroup rg_borderSize;
-        //private TextView tv_shadowColorCode;
-        //private TextView tv_shadowColorGraphic;
         private ColorSelectionView csv_shadow;
 
         //ラインデザイン
-        //private TextView tv_lineColorCode;
-        //private TextView tv_lineColorGraphic;
         private ColorSelectionView csv_line;
         private RadioGroup rg_lineSize;
 
@@ -85,7 +63,7 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         /*
          * コンストラクタ
          */
-        public GuideViewHolder(View itemView, int position, View v_map, FragmentManager fragmentManager, ViewPager2 vp2) {
+        public PageViewHolder(View itemView, int position, View v_map, FragmentManager fragmentManager, ViewPager2 vp2) {
             super(itemView);
 
             mv_map           = v_map;
@@ -94,18 +72,12 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
 
             if (position == 0) {
                 //マップ色
-                //tv_bgMapColorCode    = itemView.findViewById(R.id.tv_bgMapColorCode);
-                //tv_bgMapColorGraphic = itemView.findViewById(R.id.tv_bgMapColorGraphic);
                 csv_map = itemView.findViewById(R.id.csv_map);
 
             } else if (position == 1) {
                 //背景色
-                //tv_bgColorCode    = itemView.findViewById(R.id.tv_bgColorCode);
-                //tv_bgColorGraphic = itemView.findViewById(R.id.tv_bgColorGraphic);
                 csv_background = itemView.findViewById(R.id.csv_background);
                 //テキスト色
-               //tv_txColorCode    = itemView.findViewById(R.id.tv_txColorCode);
-               //tv_txColorGraphic = itemView.findViewById(R.id.tv_txColorGraphic);
                 csv_text = itemView.findViewById(R.id.csv_text);
                 //フォント
                 rv_fontAlphabet   = itemView.findViewById(R.id.rv_fontAlphabet);
@@ -114,20 +86,14 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
                 iv_circle    = itemView.findViewById(R.id.iv_circle);
                 iv_square    = itemView.findViewById(R.id.iv_square);
                 //枠線色
-                //tv_borderColorCode    = itemView.findViewById(R.id.tv_borderColorCode);
-                //tv_borderColorGraphic = itemView.findViewById(R.id.tv_borderColorGraphic);
                 csv_border = itemView.findViewById(R.id.csv_border);
                 //枠線サイズ
                 rg_borderSize = itemView.findViewById(R.id.rg_borderSize);
                 //影色
-                //tv_shadowColorCode    = itemView.findViewById(R.id.tv_shadowColorCode);
-                //tv_shadowColorGraphic = itemView.findViewById(R.id.tv_shadowColorGraphic);
                 csv_shadow = itemView.findViewById(R.id.csv_shadow);
 
             } else if (position == 2) {
                 //色
-                //tv_lineColorCode    = itemView.findViewById(R.id.tv_lineColorCode);
-                //tv_lineColorGraphic = itemView.findViewById(R.id.tv_lineColorGraphic);
                 csv_line = itemView.findViewById(R.id.csv_line);
                 //サイズ
                 rg_lineSize = itemView.findViewById(R.id.rg_lineSize);
@@ -157,7 +123,6 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         public void setPage0() {
 
             //背景色-カラーコード
-            //tv_bgMapColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_MAP) );
             csv_map.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_MAP, mv_map );
         }
 
@@ -167,13 +132,9 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         public void setPage1() {
 
             //背景色
-            //tv_bgColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_BACKGROUNG) );
-            //tv_bgColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_BACKGROUNG) );
             csv_background.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_BACKGROUNG, mv_map );
 
             //テキスト色
-            //tv_txColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_TEXT) );
-            //tv_txColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_TEXT) );
             csv_text.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_TEXT, mv_map );
 
             Context context = mv_map.getContext();
@@ -205,8 +166,6 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
             iv_square.setOnClickListener( new ClickShapeImage(NodeTable.SQUARE) );
 
             //枠色
-            //tv_borderColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_BORDER) );
-            //tv_borderColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_BORDER) );
             csv_border.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_BORDER, mv_map );
 
             //枠サイズ
@@ -227,8 +186,6 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
             });
 
             //影色
-            //tv_shadowColorCode.setOnClickListener(new ClickColor( ClickColor.RGB, COLOR_SHADOW) );
-            //tv_shadowColorGraphic.setOnClickListener( new ClickColor( ClickColor.PICKER, COLOR_SHADOW) );
             csv_shadow.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_SHADOW, mv_map );
 
         }
@@ -239,8 +196,6 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         public void setPage2() {
 
             //ラインカラー
-            //tv_lineColorCode.setOnClickListener(new ClickColor(ClickColor.RGB, COLOR_LINE) );
-            //tv_lineColorGraphic.setOnClickListener( new ClickColor(ClickColor.PICKER, COLOR_LINE) );
             csv_line.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_LINE, mv_map );
 
             //ラインサイズ
@@ -258,282 +213,7 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
                     nodes.setAllNodeLineSize( idx + 1 );
                 }
             });
-
         }
-
-        /*
-         * カラー入力ダイアログ表示リスナー
-         */
-/*
-        private class ClickColor implements View.OnClickListener {
-
-            //カラー入力方法
-            public static final int RGB = 0;
-            public static final int PICKER = 1;
-
-            //カラー入力方法
-            private final int mInputKind;
-            //設定対象
-            private final int mSetTarget;
-
-            */
-/*
-             * コンストラクタ
-             *//*
-
-            public ClickColor( int colorKind, int setTarget ){
-                mInputKind = colorKind;
-                mSetTarget = setTarget;
-            }
-
-            @Override
-            public void onClick(View view) {
-
-                //設定中の色を取得
-                String currentColor = getCurrentColor();
-
-                //ダイアログ
-                ColorDialog dialog;
-                if( mInputKind == RGB ){
-                    dialog = new ColorCodeDialog( currentColor );
-                } else {
-                    dialog = new ColorPickerDialog( currentColor );
-                }
-
-                //OKボタンリスナー
-                dialog.setOnPositiveClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        //Log.i("Design", "カラーコード=" + ((EditText)view).getText());
-
-                        //カラーコード文字列
-                        ColorDrawable colorDrawable = (ColorDrawable) view.getBackground();
-                        int colorInt = colorDrawable.getColor();
-                        String code = "#" + Integer.toHexString( colorInt );
-
-                        //マップ共通データ
-                        MapCommonData commonData = (MapCommonData)((Activity)mv_map.getContext()).getApplication();
-                        NodeArrayList<NodeTable> nodes = commonData.getNodes();
-
-                        switch (mSetTarget){
-
-                            case COLOR_MAP:
-                                //マップ色
-                                mv_map.setBackgroundColor( Color.parseColor(code) );
-                                break;
-
-                            case COLOR_BACKGROUNG:
-                                //ノード背景色
-                                nodes.setAllNodeBgColor( code );
-                                break;
-
-                            case COLOR_TEXT:
-                                //ノードテキストカラー
-                                nodes.setAllNodeTxColor( code );
-                                break;
-
-                            case COLOR_BORDER:
-                                //枠線カラー
-                                nodes.setAllNodeBorderColor( code );
-                                break;
-
-                            case COLOR_SHADOW:
-                                //影カラー
-                                nodes.setAllNodeShadowColor( code );
-                                break;
-
-                            case COLOR_LINE:
-                                //ラインカラー
-                                nodes.setAllNodeLineColor( code );
-                                break;
-                        }
-
-                        dialog.dismiss();
-                    }
-                });
-
-                dialog.show(mFragmentManager, "ColorCode");
-            }
-
-            */
-/*
-             * 設定中のカラーを取得
-             *//*
-
-            private String getCurrentColor(){
-
-                //マップ共通データ
-                MapCommonData commonData = (MapCommonData)((Activity)mv_map.getContext()).getApplication();
-                NodeArrayList<NodeTable> nodes = commonData.getNodes();
-
-                //ルートノード
-                BaseNode rootNode = nodes.getRootNode().getNodeView();
-
-                //色設定の対象毎に処理
-                switch (mSetTarget){
-                    case COLOR_MAP:
-                        //マップ色
-                        ColorDrawable colorDrawable = (ColorDrawable)mv_map.getBackground();
-                        return "#" + Integer.toHexString( colorDrawable.getColor() );
-
-                    case COLOR_BACKGROUNG:
-                        //ノード背景色
-                        return rootNode.getNodeBackgroundColor();
-
-                    case COLOR_TEXT:
-                        //ノードテキストカラー
-                        return rootNode.getNodeTextColor();
-
-                    case COLOR_BORDER:
-                        //枠線カラー
-                        return rootNode.getBorderColor();
-
-                    case COLOR_SHADOW:
-                        //影カラー
-                        return rootNode.getShadowColor();
-
-                    case COLOR_LINE:
-                        //ラインカラー
-
-                        //先頭ノード（ルートを除く）
-                        ChildNode topChildNode = (ChildNode)nodes.getTopChildNode().getNodeView();
-                        if(topChildNode == null){
-                            return ResourceManager.NODE_INVALID_COLOR;
-                        }
-
-                        return topChildNode.getLineColor();
-
-                    default:
-                        //該当なし(フェールセーフ)
-                        return ResourceManager.NODE_INVALID_COLOR;
-                }
-            }
-
-        }
-*/
-
-        /*
-         *
-         * カラーコード表示リスナー
-         *
-         */
-/*
-        private class ClickColorCode implements View.OnClickListener {
-
-            private final int mColorKind;
-
-            */
-/*
-             * コンストラクタ
-             *//*
-
-            public ClickColorCode( int kind ){
-                mColorKind = kind;
-            }
-
-            @Override
-            public void onClick(View view) {
-
-                //ダイアログを生成
-                ColorCodeDialog dialog = new ColorCodeDialog();
-
-                //OKボタンリスナー
-                dialog.setOnPositiveClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        Log.i("Design", "カラーコード=" + ((EditText)view).getText());
-
-                        //マップ共通データ
-                        MapCommonData commonData = (MapCommonData)((Activity)mv_map.getContext()).getApplication();
-                        NodeArrayList<NodeTable> nodes = commonData.getNodes();
-
-                        //カラーコード文字列
-                        String code = "#" + ((EditText)view).getText().toString();
-
-                        if( mColorKind == COLOR_MAP){
-                            //マップ色
-                            mv_map.setBackgroundColor( Color.parseColor(code) );
-                        } else if( mColorKind == COLOR_BACKGROUNG){
-                            //ノード背景色
-                            nodes.setAllNodeBgColor( code );
-                        } else if ( mColorKind == COLOR_TEXT){
-                            //ノードテキストカラー
-                            nodes.setAllNodeTxColor( code );
-                        } else {
-                            //ラインカラー
-                            nodes.setAllNodeLineColor( code );
-                        }
-
-                        dialog.dismiss();
-                    }
-                });
-
-                dialog.show(mFragmentManager, "ColorCode");
-            }
-        }
-*/
-
-        /*
-         *
-         * カラーピッカー表示リスナー
-         *
-         */
-/*
-        private class ClickColorPicker implements View.OnClickListener {
-
-            private final int mColorKind;
-
-            */
-/*
-             * コンストラクタ
-             *//*
-
-            public ClickColorPicker( int kind ){
-                mColorKind = kind;
-            }
-
-            @Override
-            public void onClick(View view) {
-
-                //ダイアログを生成
-                ColorPickerDialog dialog = new ColorPickerDialog();
-
-                //OKボタンリスナー
-                dialog.setOnPositiveClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-
-                        //マップ共通データ
-                        MapCommonData commonData = (MapCommonData)((Activity)mv_map.getContext()).getApplication();
-                        NodeArrayList<NodeTable> nodes = commonData.getNodes();
-
-                        //カラーコード文字列
-                        String code = "#" + Integer.toHexString( ((ColorPickerView)view).getColor() );
-
-                        if( mColorKind == COLOR_MAP){
-                            //マップ色
-                            mv_map.setBackgroundColor( Color.parseColor(code) );
-                        } else if( mColorKind == COLOR_BACKGROUNG){
-                            //ノード背景色
-                            nodes.setAllNodeBgColor( code );
-                        } else if ( mColorKind == COLOR_TEXT){
-                            //ノードテキストカラー
-                            nodes.setAllNodeTxColor( code );
-                        } else {
-                            //ラインカラー
-                            nodes.setAllNodeLineColor( code );
-                        }
-
-                        dialog.dismiss();
-                    }
-                });
-
-                dialog.show(mFragmentManager, "ColorGraphic");
-            }
-        }
-*/
 
         /*
          *
@@ -581,7 +261,6 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
     public int getItemViewType(int position) {
         //レイアウトIDを返す
         return position;
-        //return mData.get(position);
     }
 
     /*
@@ -589,24 +268,22 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
      */
     @NonNull
     @Override
-    public GuideViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
+    public PageViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
 
         //レイアウトを生成
         LayoutInflater inflater = LayoutInflater.from( viewGroup.getContext() );
         View view = inflater.inflate(mData.get(position), viewGroup, false);
 
-        return new GuideViewHolder(view, position, mv_map, mFragmentManager, mvp2);
+        return new PageViewHolder(view, position, mv_map, mFragmentManager, mvp2);
     }
 
     /*
      * ViewHolderの設定
      */
     @Override
-    public void onBindViewHolder(@NonNull GuideViewHolder viewHolder, final int i) {
-
+    public void onBindViewHolder(@NonNull PageViewHolder viewHolder, final int i) {
         //ページ設定
         viewHolder.setPage( i );
-
     }
 
     /*
@@ -617,6 +294,4 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         //ページ数
         return mData.size();
     }
-
-
 }

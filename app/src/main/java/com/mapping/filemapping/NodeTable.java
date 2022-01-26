@@ -8,6 +8,8 @@ import androidx.room.Index;
 import androidx.room.PrimaryKey;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.LinkedHashSet;
 
 /*
  * ノードテーブル
@@ -93,8 +95,8 @@ public class NodeTable implements Serializable {
 
     /*-- 定数 --*/
     //ノード種別
-    public static int NODE_KIND_ROOT    = 0;
-    public static int NODE_KIND_NODE    = 1;
+    public static int NODE_KIND_ROOT = 0;
+    public static int NODE_KIND_NODE = 1;
     public static int NODE_KIND_PICTURE = 2;
 
     //親ノードIDなし
@@ -107,7 +109,7 @@ public class NodeTable implements Serializable {
     //デフォルトカラー
     public static final String DEFAULT_COLOR_WHITE = "#FFFFFF";
     public static final String DEFAULT_COLOR_BLACK = "#000000";
-    public static final String DEFAULT_COLOR_GRAY  = "#66000000";
+    public static final String DEFAULT_COLOR_GRAY = "#66000000";
 
     //サイズ
     public static final float DEFAULT_THICK_LINE = 2f;
@@ -121,17 +123,16 @@ public class NodeTable implements Serializable {
 */
 
 
-
     /*-- 非レコードフィールド --*/
     @Ignore
     private static final long serialVersionUID = ResourceManager.SERIAL_VERSION_UID_NODE_TABLE;
-/*
-    @Ignore
-    private HashMap<String, Float> centerPos = new HashMap<String, Float>();        //ノード中心座標
-   @Ignore
-    private float centerPosX;                   //ノード中心座標X
-    @Ignore
-    private float centerPosY;                   //ノード中心座標Y*/
+    /*
+        @Ignore
+        private HashMap<String, Float> centerPos = new HashMap<String, Float>();        //ノード中心座標
+       @Ignore
+        private float centerPosX;                   //ノード中心座標X
+        @Ignore
+        private float centerPosY;                   //ノード中心座標Y*/
 /*    @Ignore
     private ChildNode childNodeView;        //ノードビュー
     @Ignore
@@ -143,32 +144,32 @@ public class NodeTable implements Serializable {
     /*
      * コンストラクタ
      */
-    public NodeTable( String nodeName, int mapPid, int parentPid, int kind, int posX, int posY ){
+    public NodeTable(String nodeName, int mapPid, int parentPid, int kind, int posX, int posY) {
         super();
 
-        this.nodeName       = nodeName;
-        this.pidMap         = mapPid;
-        this.pidParentNode  = parentPid;
-        this.kind           = kind;
-        this.posX           = posX;
-        this.posY           = posY;
+        this.nodeName = nodeName;
+        this.pidMap = mapPid;
+        this.pidParentNode = parentPid;
+        this.kind = kind;
+        this.posX = posX;
+        this.posY = posY;
     }
 
     /*
      * コンストラクタ
      */
-    public NodeTable(){
+    public NodeTable() {
         //形
         this.nodeShape = CIRCLE;
         //色
-        this.nodeColor   = DEFAULT_COLOR_WHITE;
+        this.nodeColor = DEFAULT_COLOR_WHITE;
         this.shadowColor = DEFAULT_COLOR_GRAY;
-        this.textColor   = DEFAULT_COLOR_BLACK;
+        this.textColor = DEFAULT_COLOR_BLACK;
         this.borderColor = DEFAULT_COLOR_BLACK;
-        this.lineColor   = DEFAULT_COLOR_BLACK;
+        this.lineColor = DEFAULT_COLOR_BLACK;
         //サイズ
-        this.lineSize    = DEFAULT_THICK_LINE;
-        this.borderSize  = DEFAULT_THICK_BORDER;
+        this.lineSize = DEFAULT_THICK_LINE;
+        this.borderSize = DEFAULT_THICK_BORDER;
     }
 
 
@@ -177,6 +178,7 @@ public class NodeTable implements Serializable {
     public int getPid() {
         return pid;
     }
+
     public void setPid(int pid) {
         this.pid = pid;
     }
@@ -184,6 +186,7 @@ public class NodeTable implements Serializable {
     public int getPidMap() {
         return pidMap;
     }
+
     public void setPidMap(int pidMap) {
         this.pidMap = pidMap;
     }
@@ -191,6 +194,7 @@ public class NodeTable implements Serializable {
     public int getPidParentNode() {
         return pidParentNode;
     }
+
     public void setPidParentNode(int pidParentNode) {
         this.pidParentNode = pidParentNode;
     }
@@ -198,6 +202,7 @@ public class NodeTable implements Serializable {
     public int getKind() {
         return kind;
     }
+
     public void setKind(int kind) {
         this.kind = kind;
     }
@@ -205,6 +210,7 @@ public class NodeTable implements Serializable {
     public String getNodeName() {
         return nodeName;
     }
+
     public void setNodeName(String nodeName) {
         this.nodeName = nodeName;
     }
@@ -212,6 +218,7 @@ public class NodeTable implements Serializable {
     public int getPosX() {
         return posX;
     }
+
     public void setPosX(int posX) {
         this.posX = posX;
     }
@@ -219,6 +226,7 @@ public class NodeTable implements Serializable {
     public int getPosY() {
         return posY;
     }
+
     public void setPosY(int posY) {
         this.posY = posY;
     }
@@ -231,6 +239,7 @@ public class NodeTable implements Serializable {
     public String getNodeColor() {
         return nodeColor;
     }
+
     public void setNodeColor(String nodeColor) {
         this.nodeColor = nodeColor;
     }
@@ -238,6 +247,7 @@ public class NodeTable implements Serializable {
     public String getTextColor() {
         return textColor;
     }
+
     public void setTextColor(String textColor) {
         this.textColor = textColor;
     }
@@ -245,6 +255,7 @@ public class NodeTable implements Serializable {
     public String getUriIdentify() {
         return uriIdentify;
     }
+
     public void setUriIdentify(String uriIdentify) {
         this.uriIdentify = uriIdentify;
     }
@@ -252,6 +263,7 @@ public class NodeTable implements Serializable {
     public int getNodeShape() {
         return nodeShape;
     }
+
     public void setNodeShape(int nodeShape) {
         this.nodeShape = nodeShape;
     }
@@ -259,6 +271,7 @@ public class NodeTable implements Serializable {
     public String getBorderColor() {
         return borderColor;
     }
+
     public void setBorderColor(String borderColor) {
         this.borderColor = borderColor;
     }
@@ -266,6 +279,7 @@ public class NodeTable implements Serializable {
     public int getBorderSize() {
         return borderSize;
     }
+
     public void setBorderSize(int borderSize) {
         this.borderSize = borderSize;
     }
@@ -273,6 +287,7 @@ public class NodeTable implements Serializable {
     public String getShadowColor() {
         return shadowColor;
     }
+
     public void setShadowColor(String shadowColor) {
         this.shadowColor = shadowColor;
     }
@@ -280,6 +295,7 @@ public class NodeTable implements Serializable {
     public float getLineSize() {
         return lineSize;
     }
+
     public void setLineSize(float lineSize) {
         this.lineSize = lineSize;
     }
@@ -287,6 +303,7 @@ public class NodeTable implements Serializable {
     public String getLineColor() {
         return lineColor;
     }
+
     public void setLineColor(String lineColor) {
         this.lineColor = lineColor;
     }
@@ -299,6 +316,7 @@ public class NodeTable implements Serializable {
     public float getCenterPosX() {
         return baseNode.getCenterPosX();
     }
+
     public float getCenterPosY() {
         return baseNode.getCenterPosY();
     }
@@ -306,6 +324,7 @@ public class NodeTable implements Serializable {
     public BaseNode getNodeView() {
         return this.baseNode;
     }
+
     public void setNodeView(BaseNode node) {
         this.baseNode = node;
     }
@@ -313,13 +332,15 @@ public class NodeTable implements Serializable {
     /*
      * 色パターンを設定
      */
-    public void setColorPattern( String[] colors ){
+    public void setColorPattern(String[] colors) {
 
         //カラーパターンなし
-        if( colors[0] == null ){ return; }
+        if (colors[0] == null) {
+            return;
+        }
 
         //カラーパターンあり
-        if( colors[2] == null ){
+        if (colors[2] == null) {
             //2色
             //ノード名
             this.textColor = colors[0];
@@ -331,7 +352,7 @@ public class NodeTable implements Serializable {
         } else {
             //3色
             //ノード名、枠、ライン
-            this.textColor = colors[1];
+            this.textColor   = colors[1];
             this.borderColor = colors[1];
             this.lineColor   = colors[1];
             //ノード背景、影
@@ -341,6 +362,26 @@ public class NodeTable implements Serializable {
 
     }
 
+    /*
+     * 設定中の色を返す（重複なし）
+     */
+    public ArrayList<String> getSettingColors(){
 
+        ArrayList<String> colors = new ArrayList<>();
+
+        //各色
+        colors.add( borderColor );
+        colors.add( lineColor );
+        colors.add( shadowColor );
+
+        //ピクチャノード以外は、以下の色も対象
+        if( kind != NODE_KIND_PICTURE ){
+            colors.add( nodeColor );
+            colors.add( textColor );
+        }
+
+        //重複なしにして返す
+        return new ArrayList<>(new LinkedHashSet<>(colors));
+    }
 
 }

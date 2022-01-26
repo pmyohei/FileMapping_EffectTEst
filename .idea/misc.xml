@@ -40,6 +40,7 @@
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/menu/toolbar_map.xml" value="0.13333333333333333" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/menu/toolbar_trimming.xml" value="0.2" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable-v24/baseline_open_map_24.xml" value="0.30104166666666665" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable-v24/baseline_refresh_24.xml" value="0.15555555555555556" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable-v24/baseline_shadow_24.xml" value="0.28177083333333336" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_close_24.xml" value="0.19722222222222222" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_color_switch_24.xml" value="0.28177083333333336" />
@@ -65,9 +66,14 @@
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_picture_trimming.xml" value="0.14159067882472137" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/color_code_dialog.xml" value="0.13489583333333333" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/color_picker_dialog.xml" value="0.13489583333333333" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/color_selection.xml" value="0.2015625" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/design_bottom_sheet.xml" value="0.265625" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/hierarchy_node.xml" value="0.265625" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/input_node_design.xml" value="0.24864130434782608" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/input_node_line.xml" value="0.24864130434782608" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/input_node_name.xml" value="0.24864130434782608" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/item_color_history.xml" value="0.21510416666666668" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/item_history_color.xml" value="0.21510416666666668" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/item_map.xml" value="0.20364583333333333" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/map_item.xml" value="0.13855116514690982" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node.xml" value="0.4" />

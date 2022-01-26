@@ -91,11 +91,7 @@ public class AsyncCreateMap {
             rootNode.setKind( NodeTable.NODE_KIND_ROOT );
 
             //カラーパターン設定
-            String[] colors = new String[3];
-            colors[0] = mMap.getFirstColor();
-            colors[1] = mMap.getSecondColor();
-            colors[2] = mMap.getThirdColor();
-
+            String[] colors = mMap.getDefaultColors();
             rootNode.setColorPattern( colors );
 
 /*            String firstColor = mMap.getFirstColor();
