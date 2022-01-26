@@ -146,7 +146,7 @@ public class MapListActivity extends AppCompatActivity {
             //マップ新規作成結果
             if(resultCode == MapEntryActivity.RESULT_CREATED) {
 
-                //マップ情報画面からデータを受け取る
+                //マップ入力画面からデータを受け取る
                 MapTable map = (MapTable) intent.getSerializableExtra(MapEntryActivity.KEY_MAP);
                 Log.i("MapListActivity", "新規生成 map=" + map.getMapName());
 
@@ -156,7 +156,9 @@ public class MapListActivity extends AppCompatActivity {
 
                 //マップ画面へ遷移
                 intent = new Intent(MapListActivity.this, MapActivity.class);
-                intent.putExtra(ResourceManager.KEY_MAPID, map.getPid());
+                //intent.putExtra(ResourceManager.KEY_MAPID, map.getPid());
+                intent.putExtra(KEY_MAP, map );
+                intent.putExtra(ResourceManager.KEY_NEW_MAP, true);
 
                 Log.i("Map", "マップ生成完了。マップ画面へ");
 
@@ -184,7 +186,7 @@ public class MapListActivity extends AppCompatActivity {
             //マップ編集結果
             if( resultCode == MapEntryActivity.RESULT_EDITED) {
 
-                //マップ情報画面からデータを受け取る
+                //マップ入力画面からデータを受け取る
                 MapTable map = (MapTable) intent.getSerializableExtra(MapEntryActivity.KEY_MAP);
                 Log.i("MapListActivity", "編集 map=" + map.getMapName());
 

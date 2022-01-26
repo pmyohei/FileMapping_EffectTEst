@@ -1,6 +1,8 @@
 package com.mapping.filemapping;
 
 import android.content.Context;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -29,7 +31,7 @@ public class MapEntryPageAdapter extends RecyclerView.Adapter<MapEntryPageAdapte
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
      */
-    class GuideViewHolder extends RecyclerView.ViewHolder  {
+    class GuideViewHolder extends RecyclerView.ViewHolder implements TextWatcher {
 
         //設定対象ノードビュー
         private final View mfl_sampleMap;
@@ -39,7 +41,7 @@ public class MapEntryPageAdapter extends RecyclerView.Adapter<MapEntryPageAdapte
         private final ViewPager2      mvp2;
 
         /*--- マップ名 ---*/
-        private EditText et_nodeName;
+        private EditText et_mapName;
 
         /*--- ノード数 ---*/
         private NumberPicker np_nodeNum ;
@@ -60,7 +62,7 @@ public class MapEntryPageAdapter extends RecyclerView.Adapter<MapEntryPageAdapte
 
             if (position == 0) {
                 //マップ名
-                et_nodeName = itemView.findViewById(R.id.et_nodeName);
+                et_mapName = itemView.findViewById(R.id.et_mapName);
 
             } else if (position == 1) {
                 //ノード数
@@ -97,7 +99,8 @@ public class MapEntryPageAdapter extends RecyclerView.Adapter<MapEntryPageAdapte
          * ページ設定（０）
          */
         public void setPage0() {
-
+            //文字入力リスナーを設定
+            et_mapName.addTextChangedListener(this);
         }
 
         /*
@@ -155,6 +158,19 @@ public class MapEntryPageAdapter extends RecyclerView.Adapter<MapEntryPageAdapte
 
             rv_colorPattern3.setAdapter( new ColorPatternAdapter( colorPattern, mfl_sampleMap ) );
         }
+
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+        @Override
+        public void afterTextChanged(Editable editable) {
+            //サンプルマップ側へ設定
+            ((SampleMapView)mfl_sampleMap).setMapName( editable.toString() );
+        }
+
     }
 
     /*

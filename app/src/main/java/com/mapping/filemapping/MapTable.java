@@ -25,13 +25,20 @@ public class MapTable implements Serializable {
     @ColumnInfo(name = "created_date")
     private String createdDate;
 
-    //マップ背景色
-    @ColumnInfo(name = "color")
-    private int color;
+    //デフォルトカラー１
+    @ColumnInfo(name = "first_color")
+    private String firstColor;
+
+    //デフォルトカラー２
+    @ColumnInfo(name = "second_color")
+    private String secondColor;
+
+    //デフォルトカラー３
+    @ColumnInfo(name = "third_color")
+    private String thirdColor;
 
 
-
-
+    /*---  getter/setter  ---*/
     public int getPid() {
         return pid;
     }
@@ -53,15 +60,24 @@ public class MapTable implements Serializable {
         this.createdDate = createdDate;
     }
 
-    public int getColor() {
-        return color;
+    public String getFirstColor() {
+        return firstColor;
     }
-    public void setColor(int color) {
-        this.color = color;
+    public void setFirstColor(String firstColor) {
+        this.firstColor = firstColor;
     }
 
+    public String getSecondColor() {
+        return secondColor;
+    }
+    public void setSecondColor(String secondColor) {
+        this.secondColor = secondColor;
+    }
 
-
-
-
+    public String getThirdColor() {
+        return thirdColor;
+    }
+    public void setThirdColor(String thirdColor) {
+        this.thirdColor = thirdColor;
+    }
 }

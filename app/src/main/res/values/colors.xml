@@ -67,179 +67,186 @@
 
 
     <string-array name="color_2_pattern_1">
-        <item>#010101</item>
-        <item>#022649</item>
+        <item>#e0caee</item>
+        <item>#1a330b</item>
     </string-array>
 
     <string-array name="color_2_pattern_2">
-        <item>#0d9a4b</item>
-        <item>#027564</item>
+        <item>#101010</item>
+        <item>#226496</item>
     </string-array>
 
     <string-array name="color_2_pattern_3">
-        <item>#054f60</item>
-        <item>#0ac04f</item>
+        <item>#d9a4b8</item>
+        <item>#275645</item>
     </string-array>
 
     <string-array name="color_2_pattern_4">
-        <item>#0271d5</item>
-        <item>#0dae3a</item>
+        <item>#54f60b</item>
+        <item>#ac04fe</item>
     </string-array>
 
     <string-array name="color_2_pattern_5">
-        <item>#0bea99</item>
-        <item>#041526</item>
+        <item>#271d58</item>
+        <item>#dae3ad</item>
     </string-array>
 
     <string-array name="color_2_pattern_6">
-        <item>#0823e2</item>
-        <item>#010a9f</item>
+        <item>#bea997</item>
+        <item>#415261</item>
     </string-array>
 
     <string-array name="color_2_pattern_7">
-        <item>#08fbeb</item>
-        <item>#0673f4</item>
+        <item>#823e20</item>
+        <item>#10a9f4</item>
     </string-array>
 
     <string-array name="color_2_pattern_8">
-        <item>#09b1b4</item>
-        <item>#064f2b</item>
+        <item>#8fbebb</item>
+        <item>#673f42</item>
     </string-array>
 
     <string-array name="color_2_pattern_9">
-        <item>#084000</item>
-        <item>#048958</item>
+        <item>#9b1b4a</item>
+        <item>#64f2b8</item>
     </string-array>
 
     <string-array name="color_2_pattern_10">
-        <item>#0b9a4a</item>
-        <item>#047575</item>
+        <item>#840000</item>
+        <item>#48958f</item>
     </string-array>
 
     <string-array name="color_2_pattern_11">
-        <item>#0E05EF</item>
-        <item>#0F6FCB</item>
+        <item>#b9a4aa</item>
+        <item>#475752</item>
     </string-array>
 
     <string-array name="color_2_pattern_12">
-        <item>#0D99B9</item>
-        <item>#0E5FBC</item>
+        <item>#E05EF4</item>
+        <item>#F6FCBE</item>
     </string-array>
 
     <string-array name="color_2_pattern_13">
-        <item>#0C9F3D</item>
-        <item>#0EC5DD</item>
+        <item>#D99B95</item>
+        <item>#E5FBCB</item>
     </string-array>
 
     <string-array name="color_2_pattern_14">
-        <item>#0D1F1D</item>
-        <item>#0C42C0</item>
+        <item>#C9F3DD</item>
+        <item>#EC5DDE</item>
     </string-array>
 
     <string-array name="color_2_pattern_15">
-        <item>#0FAF8C</item>
-        <item>#0E2939</item>
+        <item>#D1F1DC</item>
+        <item>#C42C06</item>
     </string-array>
 
     <string-array name="color_2_pattern_16">
-        <item>#072B94</item>
-        <item>#0F2FDB</item>
+        <item>#FAF8C3</item>
+        <item>#E29390</item>
     </string-array>
 
     <string-array name="color_2_pattern_17">
-        <item>#0F7FFB</item>
-        <item>#005B53</item>
+        <item>#72B94F</item>
+        <item>#F2FDBB</item>
     </string-array>
 
     <string-array name="color_2_pattern_18">
-        <item>#0FEFEC</item>
-        <item>#06551F</item>
+        <item>#F7FFBE</item>
+        <item>#05B53A</item>
     </string-array>
 
     <string-array name="color_2_pattern_19">
-        <item>#0DAF1C</item>
-        <item>#0DD131</item>
+        <item>#FEFEC2</item>
+        <item>#6551FB</item>
     </string-array>
 
     <string-array name="color_2_pattern_20">
-        <item>#0F76BE</item>
-        <item>#0E1F0B</item>
+        <item>#DAF1CE</item>
+        <item>#DD131D</item>
     </string-array>
 
     <string-array name="color_2_pattern_21">
-        <item>#0F2D8E</item>
-        <item>#01FC5C</item>
+        <item>#F76BE7</item>
+        <item>#E1F0BE</item>
     </string-array>
 
     <string-array name="color_2_pattern_22">
-        <item>#0DB9BE</item>
-        <item>#0FEF8C</item>
+        <item>#F2D8ED</item>
+        <item>#1FC5C5</item>
     </string-array>
 
     <string-array name="color_2_pattern_23">
-        <item>#0CB191</item>
-        <item>#0DAB5E</item>
+        <item>#DB9BEB</item>
+        <item>#FEF8C2</item>
     </string-array>
 
     <string-array name="color_2_pattern_24">
-        <item>#0EDFFC</item>
-        <item>#0B4330</item>
+        <item>#CB191C</item>
+        <item>#DAB5EB</item>
     </string-array>
 
     <string-array name="color_2_pattern_25">
-        <item>#071BA5</item>
-        <item>#0E7FDB</item>
+        <item>#EDFFC7</item>
+        <item>#B43300</item>
     </string-array>
 
     <string-array name="color_2_pattern_26">
-        <item>#0943FF</item>
-        <item>#0DBEFE</item>
+        <item>#71BA5F</item>
+        <item>#E7FDBE</item>
     </string-array>
 
     <string-array name="color_2_pattern_27">
-        <item>#0491F3</item>
-        <item>#0F0EEE</item>
+        <item>#943FFC</item>
+        <item>#DBEFEC</item>
     </string-array>
 
     <string-array name="color_2_pattern_28">
-        <item>#0B3A57</item>
-        <item>#0FEFEF</item>
+        <item>#491F33</item>
+        <item>#F0EEEF</item>
     </string-array>
 
     <string-array name="color_2_pattern_29">
-        <item>#0B6575</item>
-        <item>#0EBECE</item>
+        <item>#B3A57B</item>
+        <item>#FEFEFE</item>
     </string-array>
 
     <string-array name="color_2_pattern_30">
-        <item>#0385ED</item>
-        <item>#0FCFEF</item>
+        <item>#B65750</item>
+        <item>#EBECEE</item>
     </string-array>
 
     <string-array name="color_2_pattern_31">
-        <item>#09988E</item>
-        <item>#0FEFEF</item>
+        <item>#385ED0</item>
+        <item>#FCFEFF</item>
     </string-array>
 
     <string-array name="color_2_pattern_32">
-        <item>#0D6783</item>
-        <item>#0F4F6F</item>
+        <item>#9988E8</item>
+        <item>#FEFEFE</item>
     </string-array>
 
     <string-array name="color_2_pattern_33">
-        <item>#0350B3</item>
-        <item>#0FDFFF</item>
+        <item>#D6783C</item>
+        <item>#F4F6F9</item>
     </string-array>
 
     <string-array name="color_2_pattern_34">
-        <item>#0E5DFD</item>
-        <item>#06F686</item>
+        <item>#350B30</item>
+        <item>#FDFFFF</item>
     </string-array>
 
     <string-array name="color_2_pattern_35">
-        <item>#0AFA88</item>
-        <item>#0FEFEF</item>
+        <item>#E5DFD5</item>
+        <item>#6F6860</item>
     </string-array>
+
+    <string-array name="color_2_pattern_36">
+        <item>#AFA88B</item>
+        <item>#FEFEFE</item>
+    </string-array>
+
+
 
 
     <!-- 配色パターンリスト（3色） -->

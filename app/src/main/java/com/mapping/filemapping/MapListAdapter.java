@@ -65,7 +65,7 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
 
                     //マップ画面へ遷移
                     Intent intent = new Intent(context, MapActivity.class);
-                    intent.putExtra(ResourceManager.KEY_MAPID, map.getPid());
+                    intent.putExtra(MapListActivity.KEY_MAP, map);
 
                     context.startActivity(intent);
                 }

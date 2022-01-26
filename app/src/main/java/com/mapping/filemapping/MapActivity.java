@@ -82,6 +82,9 @@ public class MapActivity extends AppCompatActivity {
     //DrawerLayoutのオープン状態
     private boolean mDrawerIsOpen = false;
 
+    //マップテーブル
+    MapTable mMap;
+
     //マップ内ノードリスト
     private NodeArrayList<NodeTable> mNodes;
     private PictureArrayList<PictureTable> mThumbnails;
@@ -114,10 +117,10 @@ public class MapActivity extends AppCompatActivity {
         //フリング用スクロール生成
         mFlingScroller = new Scroller(this, new DecelerateInterpolator());
 
-        //マップ共通データ
+        //マップ共通データ初期化
         MapCommonData mapCommonData = (MapCommonData) getApplication();
-        //初期化
         mapCommonData.init();
+
         //ピンチ比率取得
         pinchDistanceRatioX = mapCommonData.getPinchDistanceRatioX();
         pinchDistanceRatioY = mapCommonData.getPinchDistanceRatioY();
@@ -126,9 +129,6 @@ public class MapActivity extends AppCompatActivity {
         mPinchGestureDetector = new ScaleGestureDetector(this, new PinchListener());
         mScrollGestureDetector = new GestureDetector(this, new ScrollListener());
 
-        //BottomSheet初期設定
-        //initDesignBottomSheet();
-        
         //画面遷移ランチャー（ノード操作関連）を作成
         mNodeOperationLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
@@ -161,10 +161,6 @@ public class MapActivity extends AppCompatActivity {
         Log.d("移動", "mTopScreanX=" + mTopScreanX);
         Log.d("移動", "mTopScreanY=" + mTopScreanY);
 
-        //暫定--------------
-        //背景色
-        //暫定--------------
-
         //アクティビティ
         Activity activity = this;
 
@@ -193,7 +189,10 @@ public class MapActivity extends AppCompatActivity {
 
         //DBからデータを取得
         Intent intent = getIntent();
-        int mapPid = intent.getIntExtra(ResourceManager.KEY_MAPID, 0);
+        //int     mapPid = intent.getIntExtra(ResourceManager.KEY_MAPID, 0);
+        //boolean isNew  = intent.getBooleanExtra(ResourceManager.KEY_NEW_MAP, false);
+        mMap = (MapTable) intent.getSerializableExtra(MapListActivity.KEY_MAP);
+        int mapPid = mMap.getPid();
         AsyncReadNodes db = new AsyncReadNodes(this, mapPid, new AsyncReadNodes.OnReadListener() {
 
             //DB読み取り完了
@@ -220,6 +219,12 @@ public class MapActivity extends AppCompatActivity {
 
         //非同期処理開始
         db.execute();
+
+        //マップ色を設定
+        String firstColor = mMap.getFirstColor();
+        if( firstColor != null ){
+            findViewById( R.id.fl_screenMap ).setBackgroundColor( Color.parseColor( firstColor ) );
+        }
 
         //ルートノード
         RootNodeView v_rootnode = findViewById(R.id.v_rootnode);
@@ -324,7 +329,6 @@ public class MapActivity extends AppCompatActivity {
             //ビューにノード情報を設定
             rootNodeView.setNode(node);
             //中心座標を設定
-            //rootNodeView.calcCenterPos();
             rootNodeView.addOnNodeGlobalLayoutListener();
             //ランチャーを設定
             rootNodeView.setNodeOperationLauncher(mNodeOperationLauncher);
@@ -332,7 +336,6 @@ public class MapActivity extends AppCompatActivity {
             rootNodeView.setOnNodeDesignClickListener(new NodeDesignClickListener());
 
             //NodeTable側でノードビューを保持
-            //node.setRootNodeView(rootNodeView);
             node.setNodeView(rootNodeView);
 
             //Log.i("drawNodes", "root centerx=" + (left + (rootNodeView.getWidth() / 2f)) + " left=" + left);
@@ -342,7 +345,6 @@ public class MapActivity extends AppCompatActivity {
         }
 
         //ノード生成
-        //NodeView nodeView = new NodeView(this, node, mNodeOperationLauncher);
         ChildNode nodeView;
         if (node.getKind() == NodeTable.NODE_KIND_NODE) {
             //ノード
@@ -371,8 +373,6 @@ public class MapActivity extends AppCompatActivity {
         Log.i("createNode", "getWidth=" + nodeView.getWidth() + " getHeight=" + nodeView.getHeight());
 
         //レイアウト確定後の処理を設定
-        //ViewTreeObserver observer = nodeView.getViewTreeObserver();
-        //observer.addOnGlobalLayoutListener(new NodeGlobalLayoutListener(nodeView, lineDrawKind));
         ((ChildNode) nodeView).addOnNodeGlobalLayoutListener();
 
         //ノード生成／編集クリックリスナー
@@ -733,13 +733,30 @@ public class MapActivity extends AppCompatActivity {
                 int posY = (int)parentNode.getCenterPosY();
 
                 //ノードを生成
-                NodeTable newNode = new NodeTable();
+                NodeTable newNode = new NodeTable(
+                        "",
+                        parentNode.getPidMap(),
+                        parentNode.getPid(),
+                        NodeTable.NODE_KIND_NODE,
+                        posX,
+                        posY
+                );
+
+/*                NodeTable newNode = new NodeTable();
                 newNode.setNodeName("");
                 newNode.setPidMap( parentNode.getPidMap() );
                 newNode.setPidParentNode( parentNode.getPid() );
                 newNode.setKind( NodeTable.NODE_KIND_NODE );
-                newNode.setPos( posX, posY );
-                newNode.setNodeColor( "#000000" );      //★初期値はデフォルト値がある形にしたい
+                newNode.setPos( posX, posY );*/
+
+                //カラーパターン設定
+                String[] colors = new String[3];
+                colors[0] = mMap.getFirstColor();
+                colors[1] = mMap.getSecondColor();
+                colors[2] = mMap.getThirdColor();
+
+                newNode.setColorPattern( colors );
+
                 //ノードをマップに追加
                 v_node = drawNode(findViewById(R.id.fl_map), newNode, NodeGlobalLayoutListener.LINE_SELF);
 

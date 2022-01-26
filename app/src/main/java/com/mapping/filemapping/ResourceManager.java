@@ -22,6 +22,7 @@ public class ResourceManager {
 
     /* 画面遷移-キー */
     public static final String KEY_MAPID = "MapID";
+    public static final String KEY_NEW_MAP = "IsNewMap";
     public static final String KEY_CREATED_NODE = "CreatedNode";
     public static final String KEY_UPDATED_NODE = "UpdatedNode";
     public static final String KEY_THUMBNAIL = "thumbnail";

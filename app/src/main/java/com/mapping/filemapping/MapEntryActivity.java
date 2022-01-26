@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
@@ -35,8 +36,11 @@ public class MapEntryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_entry);
 
+        //マップ入力ページレイアウト
+        setupMapEntryPage();
+
         //遷移元からの情報
-/*        Intent intent = getIntent();
+        Intent intent = getIntent();
         boolean isCreate = intent.getBooleanExtra( MapListActivity.KEY_ISCREATE, false );
 
         if( isCreate ){
@@ -52,15 +56,7 @@ public class MapEntryActivity extends AppCompatActivity {
 
             //OKボタンリスナー
             findViewById(R.id.bt_create).setOnClickListener( new PositiveClickListener(map) );
-        }*/
-
-        //マップ入力ページレイアウト
-        setupMapEntryPage();
-
-
-
-
-
+        }
 
         //キャンセル
         findViewById(R.id.bt_cancel).setOnClickListener(new View.OnClickListener() {
@@ -126,7 +122,7 @@ public class MapEntryActivity extends AppCompatActivity {
         public void onClick(View view) {
 
             //入力チェック
-            if (verifyInputData()) {
+            if (verifyInputData(view)) {
                 return;
             }
 
@@ -138,10 +134,21 @@ public class MapEntryActivity extends AppCompatActivity {
                 mMap = new MapTable();
 
                 isCreate = true;
+
+                //カラーパターンは新規生成のみ
+                SampleMapView smv = findViewById(R.id.fl_map);
+                String[] colors = smv.getCurrentColors();
+
+                //デフォルトカラー
+                mMap.setFirstColor( colors[0] );
+                mMap.setSecondColor( colors[1] );
+                mMap.setThirdColor( colors[2] );
             }
 
-            //入力データを設定
-            String mapName = ((EditText)findViewById(R.id.et_mapName)).getText().toString();
+            //入力マップ名を設定
+            SampleMapView sampleMapView = view.getRootView().findViewById( R.id.fl_map );
+            String mapName = sampleMapView.getMapName();
+
             mMap.setMapName( mapName );
 
             //非同期処理
@@ -156,13 +163,16 @@ public class MapEntryActivity extends AppCompatActivity {
          * 入力チェック
          *   true：問題あり
          */
-        private boolean verifyInputData() {
+        private boolean verifyInputData(View view) {
+
+            SampleMapView sampleMapView = view.getRootView().findViewById( R.id.fl_map );
 
             //マップ名空チェック
-            String mapName = ((EditText)findViewById(R.id.et_mapName)).getText().toString();
-            if( mapName.isEmpty() ){
+            String mapName = sampleMapView.getMapName();
+            if( (mapName == null) || (mapName.isEmpty()) ){
                 //空なら、メッセージ出力して終了
                 //★
+                Toast.makeText(view.getContext(), "マップ名を入力してください", Toast.LENGTH_SHORT).show();
 
                 return true;
             }

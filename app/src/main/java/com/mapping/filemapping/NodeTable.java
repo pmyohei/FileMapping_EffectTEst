@@ -140,6 +140,23 @@ public class NodeTable implements Serializable {
     private BaseNode baseNode;          //ルートノードビュー
 
 
+    /*
+     * コンストラクタ
+     */
+    public NodeTable( String nodeName, int mapPid, int parentPid, int kind, int posX, int posY ){
+        super();
+
+        this.nodeName       = nodeName;
+        this.pidMap         = mapPid;
+        this.pidParentNode  = parentPid;
+        this.kind           = kind;
+        this.posX           = posX;
+        this.posY           = posY;
+    }
+
+    /*
+     * コンストラクタ
+     */
     public NodeTable(){
         //形
         this.nodeShape = CIRCLE;
@@ -153,6 +170,7 @@ public class NodeTable implements Serializable {
         this.lineSize    = DEFAULT_THICK_LINE;
         this.borderSize  = DEFAULT_THICK_BORDER;
     }
+
 
     /*-- getter setter --*/
 
@@ -280,61 +298,10 @@ public class NodeTable implements Serializable {
      */
     public float getCenterPosX() {
         return baseNode.getCenterPosX();
-/*
-        if( kind == NODE_KIND_ROOT ){
-            return rootNodeView.getCenterPosX();
-        } else {
-            return childNodeView.getCenterPosX();
-        }
-*/
     }
     public float getCenterPosY() {
         return baseNode.getCenterPosY();
-
-/*        if( kind == NODE_KIND_ROOT ){
-            return rootNodeView.getCenterPosY();
-        } else {
-            return childNodeView.getCenterPosY();
-        }*/
     }
-
-/*    public float getCenterPosX() {
-        return centerPosX;
-    }
-    public void setCenterPosX(float centerPosX) {
-        this.centerPosX = centerPosX;
-    }
-
-    public float getCenterPosY() {
-        return centerPosY;
-    }
-    public void setCenterPosY(float centerPosY) {
-        this.centerPosY = centerPosY;
-    }*/
-
-
-/*
-    public HashMap<String, Float> getCenterPos() {
-        return centerPos;
-    }
-    public void setCenterPos(HashMap<String, Float> centerPos) {
-        this.centerPos = centerPos;
-    }
-*/
-
-/*    public ChildNode getChildNodeView() {
-        return childNodeView;
-    }
-    public void setChildNodeView(ChildNode childNodeView) {
-        this.childNodeView = childNodeView;
-    }
-
-    public RootNodeView getRootNodeView() {
-        return rootNodeView;
-    }
-    public void setRootNodeView(RootNodeView RootNodeView) {
-        this.rootNodeView = RootNodeView;
-    }*/
 
     public BaseNode getNodeView() {
         return this.baseNode;
@@ -342,5 +309,38 @@ public class NodeTable implements Serializable {
     public void setNodeView(BaseNode node) {
         this.baseNode = node;
     }
+
+    /*
+     * 色パターンを設定
+     */
+    public void setColorPattern( String[] colors ){
+
+        //カラーパターンなし
+        if( colors[0] == null ){ return; }
+
+        //カラーパターンあり
+        if( colors[2] == null ){
+            //2色
+            //ノード名
+            this.textColor = colors[0];
+            //ノード背景、枠、影、ライン
+            this.nodeColor   = colors[1];
+            this.borderColor = colors[1];
+            this.shadowColor = colors[1];
+            this.lineColor   = colors[1];
+        } else {
+            //3色
+            //ノード名、枠、ライン
+            this.textColor = colors[1];
+            this.borderColor = colors[1];
+            this.lineColor   = colors[1];
+            //ノード背景、影
+            this.nodeColor   = colors[2];
+            this.shadowColor = colors[2];
+        }
+
+    }
+
+
 
 }

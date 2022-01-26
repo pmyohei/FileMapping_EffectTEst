@@ -89,7 +89,45 @@ public class AsyncCreateMap {
             rootNode.setNodeName( mContext.getString( R.string.default_rootNode ) );
             rootNode.setPidParentNode( NodeTable.NO_PARENT );
             rootNode.setKind( NodeTable.NODE_KIND_ROOT );
-            rootNode.setNodeColor( mContext.getString( R.color.node_default ) );
+
+            //カラーパターン設定
+            String[] colors = new String[3];
+            colors[0] = mMap.getFirstColor();
+            colors[1] = mMap.getSecondColor();
+            colors[2] = mMap.getThirdColor();
+
+            rootNode.setColorPattern( colors );
+
+/*            String firstColor = mMap.getFirstColor();
+            if( firstColor != null ){
+
+                String secondColor = mMap.getSecondColor();
+                String thirdColor  = mMap.getThirdColor();
+
+                //デフォルトのカラー設定があれば、2色か3色かで設定対象を決める
+                if( thirdColor == null ){
+                    //2色
+
+                    //ノード名
+                    rootNode.setTextColor( firstColor );
+                    //ノード背景、枠、影、ライン
+                    rootNode.setNodeColor( secondColor );
+                    rootNode.setBorderColor( secondColor );
+                    rootNode.setShadowColor( secondColor );
+                    rootNode.setLineColor( secondColor );
+
+                } else{
+                    //3色
+
+                    //ノード名、枠、ライン
+                    rootNode.setTextColor( secondColor );
+                    rootNode.setBorderColor( secondColor );
+                    rootNode.setLineColor( secondColor );
+                    //ノード背景、影
+                    rootNode.setNodeColor( secondColor );
+                    rootNode.setShadowColor( secondColor );
+                }
+            }*/
 
             //新規挿入
             nodeDao.insert( rootNode );
