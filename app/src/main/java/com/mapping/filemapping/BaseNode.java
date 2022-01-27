@@ -494,6 +494,35 @@ public class BaseNode extends FrameLayout {
     }
 
     /*
+     * ノードサイズを設定
+     */
+    public void setScale() {
+        //★アイコン対応で替えるかも
+        float ratio = mNode.getSizeRatio();
+        findViewById( R.id.cl_node ).setScaleX( ratio );
+        findViewById( R.id.cl_node ).setScaleY( ratio );
+    }
+
+    /*
+     * ノードサイズを設定
+     */
+    public void setScale( float ratio ) {
+        //★アイコン対応で替えるかも
+        setScaleX( ratio );
+        setScaleY( ratio );
+
+        mNode.setSizeRatio( ratio );
+    }
+
+    /*
+     * 比率込みのノードサイズを取得
+     */
+    public float getScaleSize() {
+        //現在の横幅 * 現在の比率
+        return getWidth() * mNode.getSizeRatio();
+    }
+
+    /*
      * ノード中心座標の設定
      */
     public void calcCenterPos() {
@@ -574,6 +603,9 @@ public class BaseNode extends FrameLayout {
 
                         //ノードの形状
                         setNodeShape( mNode.getNodeShape() );
+
+                        //サイズを設定
+                        setScale();
 
                         //レイアウト確定後は、不要なので本リスナー削除
                         getViewTreeObserver().removeOnGlobalLayoutListener(this);

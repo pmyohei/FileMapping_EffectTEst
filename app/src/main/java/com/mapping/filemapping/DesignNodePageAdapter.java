@@ -199,9 +199,21 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
             iv_circle.setOnClickListener(new ClickShapeImage(NodeTable.CIRCLE) );
             iv_square.setOnClickListener( new ClickShapeImage(NodeTable.SQUARE) );
 
+            //現在の位置
+            float scaleSize = mv_node.getScaleSize();
+            int progress = (int)((scaleSize / NodeTable.NODE_MAX_SIZE) * 100f);
+
+            Log.i("sb_nodeSize", "scaleSize=" + scaleSize + " progress=" + progress);
+
+            //進捗バー最大値
+            final int PROGRESS_MAX = 100;
+
+            //増分
+            int add = (NodeTable.NODE_MAX_SIZE - NodeTable.NODE_MIN_SIZE) / PROGRESS_MAX;
+
             //ノードサイズ
-            sb_nodeSize.setMax(100);
-            sb_nodeSize.setProgress(50);
+            sb_nodeSize.setMax( PROGRESS_MAX );
+            sb_nodeSize.setProgress(progress);
             sb_nodeSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
 
                 @Override
@@ -214,54 +226,14 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
                 @Override
                 public void onProgressChanged(SeekBar seekbar, int i, boolean flag) {
 
-                    //ConstraintLayout cv = mv_node.findViewById( R.id.cl_node );
-                    View cv = mv_node.findViewById( R.id.cv_node );
+                    //設定比率を計算
+                    float setSize = NodeTable.NODE_MIN_SIZE + ( i * add);
+                    float setRatio = setSize / mv_node.getWidth();
 
-                    //Log.i("size", "getWidth=" + cv.getWidth());
+                    mv_node.setScale( setRatio );
 
-                    float value;
-
-                    //0.1～10.0　の範囲
-                    //★暫定
-                    if( i < 50 ){
-                        value = (0.9f / 50) * i + 0.1f;
-                    } else{
-                        value = (9f / 50) * (i - 50) + 1;
-                    }
-
-                    //Log.i("size", "i=" + i + " value=" + value);
-                    //cv.setScaleX( value );
-                    //cv.setScaleY( value );
-
-                    //実験----------
-                    //レイアウトパラメータ
-                    //value *= 10;
-                    TextView tv = mv_node.findViewById( R.id.tv_node );
-                    ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams)tv.getLayoutParams();
-                    mlp.setMargins( (int)value, (int)value, (int)value, (int)value );
-
-                    //マージンを設定
-                    //tv.setLayoutParams(mlp);
-
-                    float textSize;
-                    if( i < 50 ){
-                        textSize = 50 - i;
-                        textSize *= -1;
-                    } else{
-                        textSize = i - 50;
-                    }
-                    //textSize = i / 5f;
-                    textSize = i - 50;
-
-                    float nowSIze = tv.getTextSize();
-                    float nowSIzeSP = nowSIze / mv_node.getContext().getResources().getDisplayMetrics().density;
-
-                    Log.i("size", "textSize=" + textSize + " nowSIze(px)=" + nowSIze + " nowSIze(sp)=" + nowSIzeSP);
-
-                    //float textSize = tv.getTextSize() + value;
-                    tv.setTextSize( nowSIzeSP + textSize );
-                    mv_node.invalidate();
-                    //実験----------
+                    Log.i("sb_nodeSize", "設定比率=" + setRatio + " 目標サイズ=" + setSize);
+                    Log.i("sb_nodeSize", "結果サイズ=" + mv_node.getScaleSize());
                 }
             });
 

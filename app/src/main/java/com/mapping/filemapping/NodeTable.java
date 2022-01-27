@@ -96,20 +96,20 @@ public class NodeTable implements Serializable {
 
     /*-- 定数 --*/
     //ノード種別
-    public static int NODE_KIND_ROOT = 0;
-    public static int NODE_KIND_NODE = 1;
-    public static int NODE_KIND_PICTURE = 2;
+    public static final int NODE_KIND_ROOT = 0;
+    public static final int NODE_KIND_NODE = 1;
+    public static final int NODE_KIND_PICTURE = 2;
 
     //親ノードIDなし
-    public static int NO_PARENT = -1;
+    public static final int NO_PARENT = -1;
 
     //ノードサイズ比率：初期値
-    public static float DEFAULT_SIZE_RATIO = 1f;
+    public static final float DEFAULT_SIZE_RATIO = 1f;
     //ノードサイズ幅
-    public static int NODE_MAX_SIZE = 1000;
-    public static int NODE_MIN_SIZE = 100;
-    public static int PICTURE_MAX_SIZE = 400;
-    public static int PICTURE_MIN_SIZE = 100;
+    public static final int NODE_MAX_SIZE = 1300;
+    public static final int NODE_MIN_SIZE = 100;
+    public static final int PICTURE_MAX_SIZE = 400;
+    public static final int PICTURE_MIN_SIZE = 100;
 
     //ノード形
     public static final int CIRCLE = 0;
@@ -154,7 +154,7 @@ public class NodeTable implements Serializable {
      * コンストラクタ
      */
     public NodeTable(String nodeName, int mapPid, int parentPid, int kind, int posX, int posY) {
-        super();
+        this();
 
         this.nodeName = nodeName;
         this.pidMap = mapPid;
@@ -171,13 +171,13 @@ public class NodeTable implements Serializable {
         //形
         this.nodeShape = CIRCLE;
         //色
-        this.nodeColor = DEFAULT_COLOR_WHITE;
+        this.nodeColor   = DEFAULT_COLOR_WHITE;
         this.shadowColor = DEFAULT_COLOR_GRAY;
-        this.textColor = DEFAULT_COLOR_BLACK;
+        this.textColor   = DEFAULT_COLOR_BLACK;
         this.borderColor = DEFAULT_COLOR_BLACK;
-        this.lineColor = DEFAULT_COLOR_BLACK;
+        this.lineColor   = DEFAULT_COLOR_BLACK;
         //太さ
-        this.lineSize = DEFAULT_THICK_LINE;
+        this.lineSize   = DEFAULT_THICK_LINE;
         this.borderSize = DEFAULT_THICK_BORDER;
         //ノードサイズ
         this.sizeRatio = DEFAULT_SIZE_RATIO;

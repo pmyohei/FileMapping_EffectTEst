@@ -1114,6 +1114,8 @@ public class MapActivity extends AppCompatActivity {
         @Override
         public void onActivityResult(ActivityResult result) {
 
+            Log.i("NodeOpeResultCallback", "ルートチェック");
+
             //インテント
             Intent intent = result.getData();
             //リザルトコード
@@ -1122,6 +1124,7 @@ public class MapActivity extends AppCompatActivity {
             //ノード新規作成完了
             if( resultCode == NodeEntryActivity.RESULT_CREATED) {
 
+/*
                 //生成されたノードを取得
                 NodeTable node = (NodeTable) intent.getSerializableExtra(ResourceManager.KEY_CREATED_NODE);
                 //リストに追加
@@ -1130,27 +1133,17 @@ public class MapActivity extends AppCompatActivity {
 
                 //ノードを描画
                 drawNode(findViewById(R.id.fl_map), node, NodeGlobalLayoutListener.LINE_SELF);
+*/
 
             //ノード編集完了
             } else if( resultCode == NodeEntryActivity.RESULT_EDITED) {
 
-                //共通データから、編集ノードを取得
+/*                //共通データから、編集ノードを取得
                 MapCommonData mapCommonData = (MapCommonData) getApplication();
                 NodeTable node = mapCommonData.getEditNode();
 
                 //ノード情報をビューに反映
-/*                //★微妙
-                if( node.getKind() == NodeTable.NODE_KIND_ROOT ){
-                    //node.getRootNodeView().reflectViewNodeInfo();
-                    node.getNodeView().reflectViewNodeInfo();
-                } else{
-                    //node.getChildNodeView().reflectChildNodeInfo();
-                    //((ChildNode)node.getNodeView()).reflectViewNodeInfo();
-                    node.getNodeView().reflectViewNodeInfo();
-                }*/
-                //ChildNode nodeView = node.getChildNodeView();
-                //nodeView.reflectChildNodeInfo();
-                node.getNodeView().reflectViewNodeInfo();
+                node.getNodeView().reflectViewNodeInfo();*/
 
             //ピクチャノード生成完了
             } else if( resultCode == PictureTrimmingActivity.RESULT_PICTURE_NODE) {
