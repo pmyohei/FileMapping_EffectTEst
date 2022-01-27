@@ -199,19 +199,29 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
             iv_circle.setOnClickListener(new ClickShapeImage(NodeTable.CIRCLE) );
             iv_square.setOnClickListener( new ClickShapeImage(NodeTable.SQUARE) );
 
+            //ノードサイズの最大・最小値
+            int maxSize;
+            int minSize;
+            if( mv_node.getNode().getKind() == NodeTable.NODE_KIND_PICTURE ){
+                maxSize = NodeTable.PICTURE_MAX_SIZE;
+                minSize = NodeTable.PICTURE_MIN_SIZE;
+            } else {
+                maxSize = NodeTable.NODE_MAX_SIZE;
+                minSize = NodeTable.NODE_MIN_SIZE;
+            }
+
             //現在の位置
             float scaleSize = mv_node.getScaleSize();
-            int progress = (int)((scaleSize / NodeTable.NODE_MAX_SIZE) * 100f);
+            int progress    = (int)((scaleSize / maxSize) * 100f);
 
             Log.i("sb_nodeSize", "scaleSize=" + scaleSize + " progress=" + progress);
 
             //進捗バー最大値
             final int PROGRESS_MAX = 100;
-
             //増分
-            int add = (NodeTable.NODE_MAX_SIZE - NodeTable.NODE_MIN_SIZE) / PROGRESS_MAX;
+            int add = (maxSize - minSize) / PROGRESS_MAX;
 
-            //ノードサイズ
+            //ノードサイズリスナー
             sb_nodeSize.setMax( PROGRESS_MAX );
             sb_nodeSize.setProgress(progress);
             sb_nodeSize.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
@@ -227,7 +237,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
                 public void onProgressChanged(SeekBar seekbar, int i, boolean flag) {
 
                     //設定比率を計算
-                    float setSize = NodeTable.NODE_MIN_SIZE + ( i * add);
+                    float setSize = minSize + ( i * add);
                     float setRatio = setSize / mv_node.getWidth();
 
                     mv_node.setScale( setRatio );

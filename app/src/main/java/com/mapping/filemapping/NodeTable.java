@@ -108,7 +108,7 @@ public class NodeTable implements Serializable {
     //ノードサイズ幅
     public static final int NODE_MAX_SIZE = 1300;
     public static final int NODE_MIN_SIZE = 100;
-    public static final int PICTURE_MAX_SIZE = 400;
+    public static final int PICTURE_MAX_SIZE = 600;
     public static final int PICTURE_MIN_SIZE = 100;
 
     //ノード形

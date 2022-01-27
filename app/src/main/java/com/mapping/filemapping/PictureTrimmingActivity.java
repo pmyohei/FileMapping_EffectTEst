@@ -254,6 +254,8 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         int posX = (int)parentNode.getCenterPosX() + ResourceManager.POS_NODE_INIT_OFFSET;
         int posY = (int)parentNode.getCenterPosY();
 
+        Log.i("URI", "URI=" + uri.toString());
+
         //URI情報
         String[] uriSplit = uri.toString().split( ResourceManager.URI_SPLIT );
         String uriIdentify = uriSplit[1];
