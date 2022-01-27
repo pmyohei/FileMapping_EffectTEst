@@ -55,8 +55,9 @@ public class NodeTable implements Serializable {
     @ColumnInfo(name = "pos_y")
     private int posY;
 
-    //ノードサイズ
-
+    //ノードサイズ（デフォルトに対する比率）
+    @ColumnInfo(name = "size_ratio")
+    private float sizeRatio;
 
     //ノードの形状
     @ColumnInfo(name = "node_shape")
@@ -101,6 +102,14 @@ public class NodeTable implements Serializable {
 
     //親ノードIDなし
     public static int NO_PARENT = -1;
+
+    //ノードサイズ比率：初期値
+    public static float DEFAULT_SIZE_RATIO = 1f;
+    //ノードサイズ幅
+    public static int NODE_MAX_SIZE = 1000;
+    public static int NODE_MIN_SIZE = 100;
+    public static int PICTURE_MAX_SIZE = 400;
+    public static int PICTURE_MIN_SIZE = 100;
 
     //ノード形
     public static final int CIRCLE = 0;
@@ -167,9 +176,11 @@ public class NodeTable implements Serializable {
         this.textColor = DEFAULT_COLOR_BLACK;
         this.borderColor = DEFAULT_COLOR_BLACK;
         this.lineColor = DEFAULT_COLOR_BLACK;
-        //サイズ
+        //太さ
         this.lineSize = DEFAULT_THICK_LINE;
         this.borderSize = DEFAULT_THICK_BORDER;
+        //ノードサイズ
+        this.sizeRatio = DEFAULT_SIZE_RATIO;
     }
 
 
@@ -202,7 +213,6 @@ public class NodeTable implements Serializable {
     public int getKind() {
         return kind;
     }
-
     public void setKind(int kind) {
         this.kind = kind;
     }
@@ -210,15 +220,20 @@ public class NodeTable implements Serializable {
     public String getNodeName() {
         return nodeName;
     }
-
     public void setNodeName(String nodeName) {
         this.nodeName = nodeName;
+    }
+
+    public float getSizeRatio() {
+        return sizeRatio;
+    }
+    public void setSizeRatio(float sizeRatio) {
+        this.sizeRatio = sizeRatio;
     }
 
     public int getPosX() {
         return posX;
     }
-
     public void setPosX(int posX) {
         this.posX = posX;
     }
@@ -226,11 +241,9 @@ public class NodeTable implements Serializable {
     public int getPosY() {
         return posY;
     }
-
     public void setPosY(int posY) {
         this.posY = posY;
     }
-
     public void setPos(int posX, int posY) {
         this.posX = posX;
         this.posY = posY;
@@ -239,7 +252,6 @@ public class NodeTable implements Serializable {
     public String getNodeColor() {
         return nodeColor;
     }
-
     public void setNodeColor(String nodeColor) {
         this.nodeColor = nodeColor;
     }
@@ -247,7 +259,6 @@ public class NodeTable implements Serializable {
     public String getTextColor() {
         return textColor;
     }
-
     public void setTextColor(String textColor) {
         this.textColor = textColor;
     }
@@ -255,7 +266,6 @@ public class NodeTable implements Serializable {
     public String getUriIdentify() {
         return uriIdentify;
     }
-
     public void setUriIdentify(String uriIdentify) {
         this.uriIdentify = uriIdentify;
     }
@@ -263,7 +273,6 @@ public class NodeTable implements Serializable {
     public int getNodeShape() {
         return nodeShape;
     }
-
     public void setNodeShape(int nodeShape) {
         this.nodeShape = nodeShape;
     }
@@ -271,7 +280,6 @@ public class NodeTable implements Serializable {
     public String getBorderColor() {
         return borderColor;
     }
-
     public void setBorderColor(String borderColor) {
         this.borderColor = borderColor;
     }
@@ -279,7 +287,6 @@ public class NodeTable implements Serializable {
     public int getBorderSize() {
         return borderSize;
     }
-
     public void setBorderSize(int borderSize) {
         this.borderSize = borderSize;
     }
@@ -287,7 +294,6 @@ public class NodeTable implements Serializable {
     public String getShadowColor() {
         return shadowColor;
     }
-
     public void setShadowColor(String shadowColor) {
         this.shadowColor = shadowColor;
     }
@@ -295,7 +301,6 @@ public class NodeTable implements Serializable {
     public float getLineSize() {
         return lineSize;
     }
-
     public void setLineSize(float lineSize) {
         this.lineSize = lineSize;
     }
@@ -303,7 +308,6 @@ public class NodeTable implements Serializable {
     public String getLineColor() {
         return lineColor;
     }
-
     public void setLineColor(String lineColor) {
         this.lineColor = lineColor;
     }

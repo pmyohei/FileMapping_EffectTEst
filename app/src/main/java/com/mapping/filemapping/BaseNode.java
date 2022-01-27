@@ -633,6 +633,10 @@ public class BaseNode extends FrameLayout {
             //自ノードをオープン中ノードとして保持
             //mv_toolOpenNode = this;
             mapCommonData.setToolOpeningNode(this);
+
+            Log.i("TranslationZ", "設定前→getTranslationZ=" + findViewById(R.id.cl_node).getTranslationZ());
+            findViewById(R.id.cl_node).setTranslationZ(1f);
+            Log.i("TranslationZ", "設定後→getTranslationZ=" + findViewById(R.id.cl_node).getTranslationZ());
         }
 
         //本ビューのレイアウトを取得（※ここで取得しているのは、ノード用レイアウトのルートレイアウト）
@@ -657,7 +661,7 @@ public class BaseNode extends FrameLayout {
             }
         }
 
-        //findViewById(R.id.cl_node).setTranslationZ(20.0f);
+        //findViewById(R.id.cl_node).setTranslationZ(1f);
         //findViewById(R.id.cl_node).setElevation(100);
 
         //ツールアイコンのオープン状態変更
@@ -701,12 +705,6 @@ public class BaseNode extends FrameLayout {
                 }
         );
     }
-
-
-
-
-
-
 
     /*
      * ノードタッチリスナー

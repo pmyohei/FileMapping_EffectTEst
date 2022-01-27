@@ -39,7 +39,7 @@
             android:text="カラー履歴" />
 
         <ImageView
-            android:id="@+id/iv_update"
+            android:id="@+id/iv_updateHistory"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="24dp"

@@ -14,7 +14,6 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.ArrayList;
 
@@ -73,6 +72,15 @@ public class ColorSelectionView extends LinearLayout {
         RecyclerView rv_history = findViewById(R.id.rv_history);
         rv_history.setAdapter( adapter );
         rv_history.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false ));
+
+        //色履歴更新リスナー
+        findViewById(R.id.iv_updateHistory).setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //色履歴アダプタを更新
+                adapter.notifyDataSetChanged();
+            }
+        });
 
         //横スクロールを本リサイクラービューに優先させる
         //ViewPager2 vp2 = rv_history.getRootView().findViewById( R.id.vp2_design );

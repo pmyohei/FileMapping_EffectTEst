@@ -261,12 +261,26 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         //ノードを生成
         //★
         //※本ノード自体のpidはこの時点では確定していないため、DB処理完了後に設定
+/*
         NodeTable newNode = new NodeTable();
         newNode.setPidMap(mapPid);
         newNode.setPidParentNode( selectedNodePid );
         newNode.setKind(NodeTable.NODE_KIND_PICTURE);
         newNode.setPos( posX, posY );
         newNode.setUriIdentify( uriIdentify );
+*/
+
+        //ノードを生成
+        NodeTable newNode = new NodeTable(
+                "",
+                mapPid,
+                selectedNodePid,
+                NodeTable.NODE_KIND_PICTURE,
+                posX,
+                posY
+        );
+        newNode.setUriIdentify( uriIdentify );
+
 
         //トリミング情報
         final CropImageView iv_cropTarget = findViewById(R.id.iv_cropTarget);

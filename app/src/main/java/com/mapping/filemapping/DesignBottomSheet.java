@@ -4,6 +4,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
@@ -104,6 +106,28 @@ public class DesignBottomSheet extends LinearLayout {
                 (tab, position) -> tab.setText("")
         ).attach();
 
+        //----
+/*        vp.setUserInputEnabled(false);
+        tabLayout.setOnTouchListener(new OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+
+                    switch ( motionEvent.getAction() ){
+                        case MotionEvent.ACTION_DOWN:
+                            vp.setUserInputEnabled( true );
+                            Log.i("tabLayout", "DOWN");
+                            break;
+                        case MotionEvent.ACTION_UP:
+                            vp.setUserInputEnabled( false );
+                            Log.i("tabLayout", "UP");
+                            break;
+                    }
+
+                    return false;
+                }
+            }
+        );*/
+        //----
 
         //高さ設定
         setBottomSheetHeight( getContext(), heightRatio );

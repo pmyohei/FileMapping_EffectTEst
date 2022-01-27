@@ -91,7 +91,8 @@ public class PictureNodeView extends ChildNode implements Serializable  /*implem
                 bmp = Bitmap.createBitmap( bmp, thumbnail.getTrgLeft(), thumbnail.getTrgTop(), thumbnail.getTrgWidth(), thumbnail.getTrgHeight() );
 
                 //画像を設定
-                ((ImageView)findViewById(R.id.iv_node)).setImageBitmap( bmp );
+                ImageView iv_node = findViewById(R.id.iv_node);
+                iv_node.setImageBitmap( bmp );
             }
 
         } catch (IOException e) {

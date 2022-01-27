@@ -5,7 +5,8 @@
     android:id="@+id/cl_node"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_gravity="center">
+    android:layout_gravity="center"
+    android:translationZ="14dp">
 
     <!--  ノード本体  -->
     <include
@@ -27,6 +28,7 @@
         android:elevation="@dimen/node_toolIcon_elevation"
         android:background="@drawable/circle_tool_icon"
         android:visibility="gone"
+        android:translationZ="14dp"
         app:layout_constraintCircle="@id/l_nodeBody"
         app:layout_constraintCircleAngle="30"
         app:layout_constraintCircleRadius="@dimen/node_icon_radius"

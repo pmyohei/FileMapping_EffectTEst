@@ -2,12 +2,21 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:theme="@style/Toolbar.NoActionBar">
 
+    <!--  サンプルマップ  -->
+    <com.mapping.filemapping.SampleMapView
+        android:id="@+id/fl_map"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:background="@drawable/frame_sample_map"/>
+
+    <!--  マップ情報入力ページ  -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
@@ -20,7 +29,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center|top"
-            app:tabBackground="@drawable/selector_guide_indicator"
+            app:tabBackground="@drawable/selector_indicator"
             app:tabGravity="center"
             app:tabIndicatorHeight="0dp"
             app:tabIndicatorFullWidth="false"
@@ -35,15 +44,6 @@
 
     </LinearLayout>
 
-    <!--  サンプルマップ  -->
-    <com.mapping.filemapping.SampleMapView
-        android:id="@+id/fl_map"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:layout_gravity="center"
-        android:background="@color/white"/>
-
     <!--  ボタン  -->
     <LinearLayout
         android:layout_width="match_parent"
@@ -55,6 +55,7 @@
             android:id="@+id/bt_create"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:background="@drawable/bt_create"
             android:text="@string/bt_create" />
 
@@ -62,6 +63,7 @@
             android:id="@+id/bt_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:background="@drawable/bt_create"
             android:text="@string/cancel" />
 

@@ -743,13 +743,6 @@ public class MapActivity extends AppCompatActivity {
                         posY
                 );
 
-/*                NodeTable newNode = new NodeTable();
-                newNode.setNodeName("");
-                newNode.setPidMap( parentNode.getPidMap() );
-                newNode.setPidParentNode( parentNode.getPid() );
-                newNode.setKind( NodeTable.NODE_KIND_NODE );
-                newNode.setPos( posX, posY );*/
-
                 //カラーパターン設定
                 String[] colors = mMap.getDefaultColors();
                 newNode.setColorPattern( colors );
