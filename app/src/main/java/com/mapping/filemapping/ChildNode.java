@@ -172,7 +172,6 @@ public class ChildNode extends BaseNode {
      * ラインカラーの設定
      */
     public void setLineColor(String color) {
-
         mLineView.setColor(color);
     }
 
@@ -187,7 +186,6 @@ public class ChildNode extends BaseNode {
      * ラインサイズ（太さ）の設定
      */
     public void setLineSize(int thick) {
-
         mLineView.setSize(thick);
     }
 
@@ -199,6 +197,9 @@ public class ChildNode extends BaseNode {
 
         //子ノード検索
         searchChildNodes();
+
+        //子ノード内のツールアイコンクローズ
+        closeIconInChildNodes();
     }
 
     /*
@@ -218,13 +219,34 @@ public class ChildNode extends BaseNode {
         for (NodeTable childNode : mChildNodes) {
 
             //子ノードのノードビュー
-            //ChildNode v_node = childNode.getChildNodeView();
             ChildNode v_node = (ChildNode) childNode.getNodeView();
 
             Log.i("test", "searchChildNodes 初期化対象の子ノード=" + v_node.getNode().getNodeName());
 
             //子ノード側も初期化
             v_node.initFollowParent();
+        }
+    }
+
+    /*
+     * 子ノードのツールアイコンクローズ
+     *   自ノードの子ノードでアイコンを開いているノードがいれば閉じる
+     */
+    public void closeIconInChildNodes() {
+
+        //子ノード分ループ
+        for (NodeTable childNode : mChildNodes) {
+
+            //子ノード
+            ChildNode v_node = (ChildNode) childNode.getNodeView();
+            if( v_node.hasIconView() ){
+                //開いているノードがいれば閉じて処理を終了
+                v_node.closeIconView();
+                return;
+            }
+
+            //子ノード側も同様
+            v_node.closeIconInChildNodes();
         }
     }
 
@@ -239,7 +261,6 @@ public class ChildNode extends BaseNode {
         for (NodeTable childNode : mChildNodes) {
 
             //子ノードのノードビュー
-            //ChildNode v_node = childNode.getChildNodeView();
             ChildNode v_node = (ChildNode) childNode.getNodeView();
 
             //子ノードの子ノードを移動させる
@@ -255,7 +276,6 @@ public class ChildNode extends BaseNode {
 
         //子ノード分ループ
         for (NodeTable childNode : mChildNodes) {
-
             //子ノードのノードビュー
             ChildNode v_node = (ChildNode) childNode.getNodeView();
 
@@ -294,22 +314,46 @@ public class ChildNode extends BaseNode {
 
         Log.i("move", "move Node=" + mNode.getNodeName() + " posx=" + mCenterPosX + " posy=" + mCenterPosY);
 
-        //親の移動の追従か
+        //ツールアイコンの移動
+        moveToolIcon(moveX, moveY);
+
+        //ライン再描画
+        mLineView.reDraw();
+/*        //親の移動の追従か
         if (isFollowParent) {
             //ライン再描画（始端位置も更新）
             mLineView.reDraw(parentPosX, parentPosY);
         } else {
             //ライン再描画（終端位置のみ更新）
             mLineView.reDraw();
-        }
+        }*/
 
         //子ノード移動
         moveChildNodes(moveX, moveY);
     }
 
     /*
+     * ツールアイコンの移動
+     */
+    public void moveToolIcon(float moveX, float moveY) {
+
+        ToolIconsView toolIcon = getIconView();
+        if( toolIcon == null ){
+            //表示していないなら、何もしない
+            return;
+        }
+
+        //今回イベントでのView移動先の位置
+        int left = toolIcon.getLeft() + (int) moveX;
+        int top  = toolIcon.getTop()  + (int) moveY;
+
+        //レイアウトに反映
+        toolIcon.layout(left, top, left + toolIcon.getWidth(), top + toolIcon.getHeight());
+    }
+
+    /*
      * ノードの配置
-     *    指定されたX座標にノードを配置する
+     *    指定されたX座標に自身を配置する
      */
     public void placeX(int pos) {
 
@@ -338,7 +382,7 @@ public class ChildNode extends BaseNode {
 
     /*
      * ノードの配置
-     *    指定されたY座標にノードを配置する
+     *    指定されたY座標に自身を配置する
      */
     public void placeY(int pos) {
 
@@ -355,7 +399,7 @@ public class ChildNode extends BaseNode {
         int left = getLeft();
 
         //位置変更
-        layout(left, reverceTop, left + getWidth(), reverceTop + getHeight());
+        layout(left, reverceTop, left + getWidth(), reverceTop + height);
 
         //ライン再描画（終端位置のみ更新）
         mLineView.reDraw();
@@ -367,7 +411,7 @@ public class ChildNode extends BaseNode {
      * 　　※layout()はあくまで見えている位置を変えているだけ。
      *      本処理を行わないと、ダブルタップ発生時等で全てのノードが初期位置に戻る
      */
-    public void setLayoutMargin() {
+    public void setNodeLayoutMargin() {
 
         //現在の表示上位置にマージンを設定
         MarginLayoutParams mlp = (MarginLayoutParams) getLayoutParams();
@@ -398,7 +442,7 @@ public class ChildNode extends BaseNode {
             ChildNode v_node = (ChildNode) childNode.getNodeView();
 
             //子ノードの子ノードを移動させる
-            v_node.setLayoutMargin();
+            v_node.setNodeLayoutMargin();
         }
     }
 
@@ -465,7 +509,8 @@ public class ChildNode extends BaseNode {
         //子ノードのラインを再描画
         for (NodeTable node : mChildNodes) {
             //node.getChildNodeView().getLineView().reDraw(mCenterPosX, mCenterPosY);
-            ((ChildNode) node.getNodeView()).getLineView().reDraw(mCenterPosX, mCenterPosY);
+            //((ChildNode) node.getNodeView()).getLineView().reDraw(mCenterPosX, mCenterPosY);
+            ((ChildNode) node.getNodeView()).getLineView().reDraw();
         }
     }
 
@@ -486,45 +531,6 @@ public class ChildNode extends BaseNode {
         //レイアウト確定処理
         childNodeGlobalLayoutProcess(parentNode);
 
-/*        //レイアウト確定待ち処理
-        ViewTreeObserver observer = getViewTreeObserver();
-        observer.addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-
-                        if (mLineView == null) {
-
-                            //親の中心座標を取得
-                            float parentCenterX = parentNode.getCenterPosX();
-                            float parentCenterY = parentNode.getCenterPosY();
-
-                            if (parentCenterY == INIT_CENTER_POS) {
-                                //親ノードのレイアウトが未確定なら何もしない
-                                Log.i("OnGlobalLayoutListener", "親未確定");
-                                return;
-                            }
-
-                            //ライン未生成なら、生成
-                            LineView line = createLine(parentCenterX, parentCenterY);
-
-                            Log.i("OnGlobalLayoutListener", "通過チェック");
-
-                            //マップ上にラインを追加
-                            ViewGroup vg = (ViewGroup) getRootView();
-                            FrameLayout fl_map = vg.findViewById(R.id.fl_map);
-                            fl_map.addView(line);
-
-                        } else {
-                            //ライン生成済みなら、再描画
-                            mLineView.reDraw();
-                        }
-
-                        //レイアウト確定後は、不要なので本リスナー削除
-                        getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    }
-                }
-        );*/
     }
 
     /*
@@ -554,17 +560,16 @@ public class ChildNode extends BaseNode {
                         if (mLineView == null) {
 
                             //親の中心座標を取得
-                            float parentCenterX = parentNode.getCenterPosX();
+                            //float parentCenterX = parentNode.getCenterPosX();
                             float parentCenterY = parentNode.getCenterPosY();
-
                             if (parentCenterY == INIT_CENTER_POS) {
-                                //親ノードのレイアウトが未確定なら何もしない
+                                //親ノードのレイアウトが未確定なら、次のコールバックを待つ
                                 Log.i("OnGlobalLayoutListener", "親未確定");
                                 return;
                             }
 
                             //ライン未生成なら、生成
-                            LineView line = createLine(parentCenterX, parentCenterY);
+                            LineView line = createLine(parentNode.getNodeView());
 
                             Log.i("OnGlobalLayoutListener", "通過チェック");
 
@@ -679,7 +684,7 @@ public class ChildNode extends BaseNode {
                     //移動が発生していれば
                     if( isMove ){
                         //移動後の位置をレイアウトに反映させる
-                        setLayoutMargin();
+                        setNodeLayoutMargin();
                     }
 
                     break;
@@ -758,23 +763,23 @@ public class ChildNode extends BaseNode {
 
         //ペイント情報
         Paint mPaint;
-
+        //親ノード
+        BaseNode mParentNode;
         //描画開始座標（親ノード位置）
         private float mStartPosX;
         private float mStartPosY;
-
-        //描画終端座標（自ノード位置）
-        //※NodeView側で定義しているため、ここでは持たない
+        //描画終了座標（自ノード位置）
+        private float mSelfPosX;
+        private float mSelfPosY;
 
         /*
          * コンストラクタ
          */
-        public LineView(Context context, float startPosX, float startPosY) {
+        public LineView(Context context, BaseNode parentNode) {
             super(context);
 
-            //描画開始・終了座標
-            mStartPosX = startPosX;
-            mStartPosY = startPosY;
+            //親ノード
+            mParentNode = parentNode;
 
             //ライン情報
             float  thick = mNode.getLineSize();
@@ -786,9 +791,64 @@ public class ChildNode extends BaseNode {
             mPaint.setColor( Color.parseColor( color ) );
             mPaint.setAntiAlias(true);
             mPaint.setStyle(Paint.Style.STROKE);
+            mPaint.setStrokeCap(Paint.Cap.ROUND);
 
+            //ライン端点の計算
+            calcSelfPos();
             //ノードに対して背面になるようにする（デフォルト値は0のため、0未満の値を指定）
             setTranslationZ(-1);
+        }
+
+
+        /*
+         * 自身のライン端点を計算
+         */
+        public void calcSelfPos() {
+
+            //親ノード位置
+            float parentPosX = mParentNode.getCenterPosX();
+            float parentPosY = mParentNode.getCenterPosY();
+
+            //ノード間の線分の傾き
+            float a = ( parentPosY - mCenterPosY ) / (parentPosX - mCenterPosX);
+            //ラジアン角度を取得
+            double radian = Math.atan( a );
+
+            final float CROSS_RADIUS_RATIO = 1.2f;
+
+            //交点に相当する座標を計算（自ノード側）
+            //ノードよりも少し大きい半径を取得
+            float radius = ( getScaleNodeBodyWidth() / 2f) * CROSS_RADIUS_RATIO;
+            int x = (int)(Math.cos(radian) * radius);
+            int y = (int)(Math.sin(radian) * radius);
+
+            //親の位置に応じて、端点を計算
+            mSelfPosX = mCenterPosX + ( (parentPosX > mCenterPosX) ? (x) : (-x));
+            mSelfPosY = mCenterPosY + ( (parentPosX > mCenterPosX) ? (y) : (-y));
+
+            //交点に相当する座標を計算（親ノード側）
+            //ノードよりも少し大きい半径を取得
+            radius = (mParentNode.getScaleNodeBodyWidth() / 2f) * CROSS_RADIUS_RATIO;
+            x = (int)(Math.cos(radian) * radius);
+            y = (int)(Math.sin(radian) * radius);
+
+            //親の位置に応じて、端点を計算
+            mStartPosX = parentPosX + ( (parentPosX > mCenterPosX) ? (-x) : (x));
+            mStartPosY = parentPosY + ( (parentPosX > mCenterPosX) ? (-y) : (y));
+
+            Log.i("三角関数", "傾き=" + a);
+            Log.i("三角関数", "Math.cos(radian)=" + Math.cos(radian));
+            Log.i("三角関数", "Math.sin(radian)=" + Math.sin(radian));
+            Log.i("ラインチェック", "radian=" + radian);
+            Log.i("ラインチェック", "parentPosX=" + parentPosX);
+            Log.i("ラインチェック", "parentPosY=" + parentPosY);
+            Log.i("ラインチェック", "mCenterPosX=" + mCenterPosX);
+            Log.i("ラインチェック", "mCenterPosY=" + mCenterPosY);
+            Log.i("ラインチェック", "x=" + x);
+            Log.i("ラインチェック", "y=" + y);
+            Log.i("ラインチェック", "mSelfPosX=" + mSelfPosX);
+            Log.i("ラインチェック", "mSelfPosY=" + mSelfPosY);
+            Log.i("ラインチェック", "---------------");
         }
 
         /*
@@ -853,6 +913,8 @@ public class ChildNode extends BaseNode {
          */
         public void reDraw() {
 
+            //ライン端点再計算
+            calcSelfPos();
             //再描画
             invalidate();
         }
@@ -863,14 +925,54 @@ public class ChildNode extends BaseNode {
             super.onDraw(canvas);
 
             //Path生成
+            //★初期生成させる
             @SuppressLint("DrawAllocation") Path path = new Path();
 
             //スタート地点を移動
             path.moveTo(mStartPosX, mStartPosY);
 
+            //制御点
+            float controlX1;
+            float controlX2;
+            float controlY1;
+            float controlY2;
+
+/*            float distanceX = Math.abs( mStartPosX - mCenterPosX );
+            float distanceY = Math.abs( mStartPosY - mCenterPosY );
+            if( distanceX > distanceY ){
+                //X方向の方が距離がある
+                controlX = ( mStartPosX + mCenterPosX ) / 2f;
+                controlY = mStartPosY + distanceX;
+            } else {
+                //Y方向の方が距離がある
+                controlX = mStartPosX + distanceY;
+                controlY = ( mStartPosY + mCenterPosY ) / 2f;
+            }*/
+
+            controlX1 = ( mStartPosX + mCenterPosX ) / 2f;
+            //controlY1 = ( mStartPosY + mCenterPosY ) * 0.3f;
+            //controlY2 = ( mStartPosY + mCenterPosY ) * 0.6f;
+
+            //controlY1 = Math.min(mStartPosY, mCenterPosY) + (Math.abs( mStartPosY - mCenterPosY ) * 0.3f);
+            //controlY2 = Math.min(mStartPosY, mCenterPosY) + (Math.abs( mStartPosY - mCenterPosY ) * 0.6f);
+            controlY1 = Math.min(mStartPosY, mSelfPosY);
+            controlY2 = Math.max(mStartPosY, mSelfPosY);
+
+            Log.i("制御点", "mStartPosX=" + mStartPosX);
+            Log.i("制御点", "mStartPosY=" + mStartPosY);
+            Log.i("制御点", "mCenterPosX=" + mCenterPosX);
+            Log.i("制御点", "mCenterPosY=" + mCenterPosY);
+            Log.i("制御点", "controlX1=" + controlX1);
+            Log.i("制御点", "controlY1=" + controlY1);
+            Log.i("制御点", "controlY2=" + controlY2);
+            Log.i("制御点", "-----------");
+
             //制御点X, 制御点Y, 終点X, 終点Y
-            path.quadTo(mStartPosX, (mStartPosY + mCenterPosY) / 2, mCenterPosX, mCenterPosY);
             //path.quadTo( (mStartPosX + mCenterPosX) / 2, (mStartPosY + mCenterPosY) / 2, mCenterPosX, mCenterPosY);
+            //path.quadTo(mStartPosX, (mStartPosY + mCenterPosY) / 2, mCenterPosX, mCenterPosY);
+            //path.quadTo(mStartPosX, (mStartPosY + mSelfPosY) / 2, mSelfPosX, mSelfPosY);
+            //path.quadTo(controlX, controlY, mSelfPosX, mSelfPosY);
+            path.cubicTo(controlX1, controlY1, controlX1, controlY2, mSelfPosX, mSelfPosY);
 
             Log.i("onDraw", "mParentPosX=" + mStartPosX + " mParentPosY=" + mStartPosY);
 
@@ -885,12 +987,9 @@ public class ChildNode extends BaseNode {
     public LineView getLineView() {
         return mLineView;
     }
-    public void setLineView(LineView lineView) {
-        this.mLineView = lineView;
-    }
 
-    public LineView createLine(float startPosX, float startPosY) {
-        this.mLineView = new LineView( getContext(), startPosX, startPosY );
+    public LineView createLine(BaseNode parentNode) {
+        this.mLineView = new LineView( getContext(), parentNode );
         return this.mLineView;
     }
 

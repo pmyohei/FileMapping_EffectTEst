@@ -1,5 +1,6 @@
 package com.mapping.filemapping;
 
+import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -52,10 +53,8 @@ public class ToolIconsView extends ConstraintLayout {
 
     //次のアイコンの加算角度
     private final int ADD_ANGLE = 30;
-
+    //対象ノード
     private BaseNode v_baseNode;
-    private FrameLayout mfl_map;
-
 
     /*
      * コンストラクタ(New)
@@ -84,6 +83,12 @@ public class ToolIconsView extends ConstraintLayout {
         //レイアウト生成
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.node_tool_icon, this, true);
+
+        //既に開いているノードを閉じる
+        closeShowingIcon();
+
+        //ノードに自分を持たせる
+        v_baseNode.setIconView(this);
 
         //ツールアイコン設定
         setupIcon();
@@ -331,26 +336,46 @@ public class ToolIconsView extends ConstraintLayout {
                     @Override
                     public void onClick(View view) {
                         //Log.i("アイコン", "クリックされました");
+                        //ノードに持たせていた自分をクローズ
+                        v_baseNode.closeIconView();
                     }
                 });
                 break;
         }
 
-
-
-
-
-
-
     }
 
+    /*
+     * オープン中のアイコンのクローズ
+     */
+    public void closeShowingIcon() {
 
+        //ノードリスト
+        MapCommonData mapCommonData = (MapCommonData)((Activity)getContext()).getApplication();
+        NodeArrayList<NodeTable> nodes = mapCommonData.getMovedNodesQue();
 
+        BaseNode haveNode = nodes.getShowingIconNode();
+        if( haveNode == null ){
+            //どのノードも開いてなければ、何もしない
+            return;
+        }
 
+        //アイコンを閉じさせる
+        haveNode.closeIconView();
+    }
 
+    /*
+     * 自分自身をレイアウトから削除する
+     */
+    public void closeMyself() {
+        //※removeView()がすぐに反映されないため、GONEさせとく
+        setVisibility(GONE);
 
+        ViewGroup parent = (ViewGroup)getRootView();
+        parent.removeView( this );
 
-
+        Log.i("ツールアイコン", "クローズチェック");
+    }
 
 
 

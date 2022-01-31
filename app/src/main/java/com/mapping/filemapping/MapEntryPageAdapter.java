@@ -1,12 +1,22 @@
 package com.mapping.filemapping;
 
+import static android.content.Context.WINDOW_SERVICE;
+
+import android.app.Activity;
 import android.content.Context;
+import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.view.WindowManager;
+import android.view.WindowMetrics;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.NumberPicker;
 
 import androidx.annotation.NonNull;
@@ -140,8 +150,42 @@ public class MapEntryPageAdapter extends RecyclerView.Adapter<MapEntryPageAdapte
 
             //レイアウトマネージャの生成・設定
             rv_colorPattern2.setLayoutManager(new GridLayoutManager(context, 2));
-
             rv_colorPattern2.setAdapter( new ColorPatternAdapter( colorPattern, mfl_sampleMap ) );
+
+            //レイアウト確定待ち処理
+            ViewTreeObserver observer = rv_colorPattern2.getViewTreeObserver();
+            observer.addOnGlobalLayoutListener(
+                    new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            //レイアウト確定後は、不要なので本リスナー削除
+                            rv_colorPattern2.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                            Context context = rv_colorPattern2.getContext();
+
+                            //画面横サイズ
+                            int screenWidth;
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                //
+                                WindowManager windowManager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
+                                WindowMetrics windowMetrics = windowManager.getCurrentWindowMetrics();
+
+                                screenWidth = windowMetrics.getBounds().width();
+                                Log.d("screenWidth=>>>", screenWidth + "");
+
+                            } else {
+                                DisplayMetrics displayMetrics = new DisplayMetrics();
+                                ((Activity)context).getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
+                                screenWidth = displayMetrics.widthPixels;
+                            }
+
+
+
+
+
+                        }
+                    }
+            );
         }
 
         /*
@@ -155,7 +199,6 @@ public class MapEntryPageAdapter extends RecyclerView.Adapter<MapEntryPageAdapte
 
             //レイアウトマネージャの生成・設定
             rv_colorPattern3.setLayoutManager(new GridLayoutManager(context, 2));
-
             rv_colorPattern3.setAdapter( new ColorPatternAdapter( colorPattern, mfl_sampleMap ) );
         }
 

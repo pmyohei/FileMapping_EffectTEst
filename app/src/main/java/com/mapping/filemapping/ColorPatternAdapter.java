@@ -1,7 +1,10 @@
 package com.mapping.filemapping;
 
+import static android.view.View.GONE;
+
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.util.Log;
@@ -13,6 +16,8 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
 
@@ -65,10 +70,29 @@ public class ColorPatternAdapter extends RecyclerView.Adapter<ColorPatternAdapte
                 int colorValue = Color.parseColor( color );
 
                 //カラーを設定
-                View v = ll_colorItem.findViewById( v_id );
-                v.setBackgroundColor( colorValue );
+                MaterialCardView v = ll_colorItem.findViewById( v_id );
+                //v.setBackgroundColor( colorValue );
+                ColorStateList colorState = new ColorStateList(
+                        new int[][] {
+                                new int[]{ android.R.attr.state_checked},
+                                new int[]{ -android.R.attr.state_checked},
+                        },
+                        new int[] {
+                                colorValue,
+                                colorValue,
+                        }
+                );
+                v.setCardForegroundColor( colorState );
 
                 count++;
+            }
+
+            if( count == 2 ){
+                String idStr = "v_color" + Integer.toString( count );
+                int v_id = context.getResources().getIdentifier( idStr, "id", context.getPackageName() );
+
+                View v = ll_colorItem.findViewById( v_id );
+                v.setVisibility( GONE );
             }
 
             //リスナー

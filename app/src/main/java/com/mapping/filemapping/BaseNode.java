@@ -52,10 +52,10 @@ public class BaseNode extends FrameLayout {
     public ActivityResultLauncher<Intent> mNodeOperationLauncher;
     //ノード生成／編集クリックリスナー
     private MapActivity.NodeDesignClickListener mNodeDesignClickListener;
-    //シャドウペイント
-    //private Paint mShadowPaint;
-
+    //ダブルタップリスナー
     private View.OnClickListener mClickListener;
+    //アイコンビュー（開いていない場合は、nullを設定する）
+    private ToolIconsView mIconView;
 
     /*
      * コンストラクタ
@@ -112,6 +112,8 @@ public class BaseNode extends FrameLayout {
 
         //ツールアイコン非表示
         mIsOpenToolIcon = false;
+        //ツールアイコン未保持
+        mIconView = null;
 
         Log.i("init", "root getChildCount = " + getChildCount());
 
@@ -521,11 +523,22 @@ public class BaseNode extends FrameLayout {
     }
 
     /*
-     * 比率込みのノードサイズを取得
+     * 比率込みのノードサイズ（横幅）を取得
+     *   ※ノードレイアウト全体のサイズ
      */
-    public float getScaleSize() {
+    public float getScaleWidth() {
         //現在の横幅 * 現在の比率
         return getWidth() * mNode.getSizeRatio();
+    }
+
+
+    /*
+     * 比率込みのノード本体サイズ（横幅）を取得
+     *   ※ノード本体のサイズ
+     */
+    public float getScaleNodeBodyWidth() {
+        //現在の横幅 * 現在の比率
+        return findViewById(R.id.cv_node).getWidth() * mNode.getSizeRatio();
     }
 
     /*
@@ -822,18 +835,28 @@ public class BaseNode extends FrameLayout {
     public float getCenterPosX() {
         return mCenterPosX;
     }
-    public void setCenterPosX(float centerPosX) {
-        this.mCenterPosX = centerPosX;
-    }
-
     public float getCenterPosY() {
         return mCenterPosY;
-    }
-    public void setCenterPosY(float centerPosY) {
-        this.mCenterPosY = centerPosY;
     }
 
     public void setNodeOperationLauncher( ActivityResultLauncher<Intent> launcher ) {
         this.mNodeOperationLauncher = launcher;
+    }
+
+    public ToolIconsView getIconView() {
+        return this.mIconView;
+    }
+    public void setIconView( ToolIconsView iconView ) {
+        this.mIconView = iconView;
+    }
+    public boolean hasIconView() {
+        return (this.mIconView != null);
+    }
+    public void closeIconView() {
+        this.mIconView.closeMyself();
+        this.mIconView = null;
+    }
+    public void clearIconView() {
+        this.mIconView = null;
     }
 }

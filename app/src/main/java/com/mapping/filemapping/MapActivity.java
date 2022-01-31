@@ -346,6 +346,12 @@ public class MapActivity extends AppCompatActivity {
             rootNodeView.setOnNodeClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
+
+                        if( ((BaseNode)view).hasIconView() ){
+                            //開いているなら、何もしない
+                            return;
+                        }
+
                         //ツールアイコンを生成、ノード上に表示
                         ToolIconsView toolIconsView = new ToolIconsView( fl_map.getContext(), (BaseNode)view );
                         fl_map.addView(
@@ -398,6 +404,12 @@ public class MapActivity extends AppCompatActivity {
         nodeView.setOnNodeClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
+
+                    if( ((BaseNode)view).hasIconView() ){
+                        //開いているなら、何もしない
+                        return;
+                    }
+
                     //ツールアイコンを生成、ノード上に表示
                     fl_map.addView(
                             new ToolIconsView( fl_map.getContext(), (BaseNode)view ),
@@ -455,15 +467,14 @@ public class MapActivity extends AppCompatActivity {
         NodeTable parentNode = mNodes.getNode(pidParentNode);
 
         //親の中心座標を取得
-        float parentCenterX = parentNode.getCenterPosX();
-        float parentCenterY = parentNode.getCenterPosY();
+        //float parentCenterX = parentNode.getCenterPosX();
+        //float parentCenterY = parentNode.getCenterPosY();
 
         //自身の中心座標を取得
-        //ChildNode nodeView = node.getChildNodeView();
         ChildNode nodeView = (ChildNode) node.getNodeView();
 
         //ラインを生成
-        NodeView.LineView lineView = nodeView.createLine(parentCenterX, parentCenterY);
+        NodeView.LineView lineView = nodeView.createLine( parentNode.getNodeView() );
 
         //レイアウトに追加
         fl_map.addView(lineView);

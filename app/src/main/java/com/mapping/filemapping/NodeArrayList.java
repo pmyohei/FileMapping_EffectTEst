@@ -494,4 +494,21 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
         //重複なしで返す
         return new ArrayList<>(new LinkedHashSet<>(colors));
     }
+
+    /*
+     *　ツールアイコンを開いているノードを取得
+     */
+    public BaseNode getShowingIconNode() {
+
+        //リストの内の子ノードすべて
+        for( NodeTable node: this ){
+            //アイコンビューを持っているかチェック
+            if( node.getNodeView().hasIconView() ){
+                return node.getNodeView();
+            }
+        }
+
+        //なければnull
+        return null;
+    }
 }

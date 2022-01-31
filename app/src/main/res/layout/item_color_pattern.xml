@@ -1,29 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/ll_colorItem"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="12dp"
     android:gravity="center"
-    android:orientation="horizontal"
-    android:background="@drawable/frame_color">
+    android:orientation="horizontal">
 
-    <View
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/v_color0"
-        android:background="@drawable/frame_color"
         android:layout_width="48dp"
-        android:layout_height="48dp"/>
+        android:layout_height="48dp"
+        android:theme="@style/Theme.MaterialComponents.Light"
+        app:cardCornerRadius="24dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/black"/>
 
-    <View
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/v_color1"
         android:layout_width="48dp"
-        android:layout_height="48dp"/>
+        android:layout_height="48dp"
+        android:theme="@style/Theme.MaterialComponents.Light"
+        app:cardCornerRadius="24dp"
+        app:cardForegroundColor="@color/purple_700"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/black"/>
 
-    <View
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/v_color2"
         android:layout_width="48dp"
-        android:layout_height="48dp"/>
+        android:layout_height="48dp"
+        android:theme="@style/Theme.MaterialComponents.Light"
+        app:cardCornerRadius="24dp"
+        app:strokeWidth="1dp"
+        app:strokeColor="@color/black"/>
 
 </LinearLayout>

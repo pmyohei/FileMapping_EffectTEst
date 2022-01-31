@@ -211,7 +211,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
             }
 
             //現在の位置
-            float scaleSize = mv_node.getScaleSize();
+            float scaleSize = mv_node.getScaleWidth();
             int progress    = (int)((scaleSize / maxSize) * 100f);
 
             Log.i("sb_nodeSize", "scaleSize=" + scaleSize + " progress=" + progress);
@@ -243,7 +243,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
                     mv_node.setScale( setRatio );
 
                     Log.i("sb_nodeSize", "設定比率=" + setRatio + " 目標サイズ=" + setSize);
-                    Log.i("sb_nodeSize", "結果サイズ=" + mv_node.getScaleSize());
+                    Log.i("sb_nodeSize", "結果サイズ=" + mv_node.getScaleWidth());
                 }
             });
 
