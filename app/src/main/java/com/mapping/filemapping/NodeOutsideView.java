@@ -4,8 +4,10 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -14,7 +16,7 @@ import android.widget.LinearLayout;
  *   主に影／発光の役割を果たす
  */
 public class NodeOutsideView extends LinearLayout {
-    private final Paint mPaint;
+    private Paint mPaint;
     private int mShadowColor;
     private boolean mIsShadow;
 
@@ -26,20 +28,43 @@ public class NodeOutsideView extends LinearLayout {
     public NodeOutsideView(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        //レイアウト生成
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        inflater.inflate(R.layout.node_body, this, true);
 
-        mPaint = new Paint();
-        //paint.setColor( getResources().getColor( R.color.fill ) );
-        mPaint.setColor(Color.WHITE);
-        mPaint.setAntiAlias(true);
+        //OnDraw()をコールさせる設定
+        setWillNotDraw(false);
 
         mIsShadow = false;
     }
 
     /*
+     * ペイント初期化
+     */
+    public void initPaint( int nodeKind ) {
+
+        if( (nodeKind != NodeTable.NODE_KIND_PICTURE) && (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) ){
+            //ピクチャノード以外で、API28以下なら、レイヤータイプを設定
+            //※API28以下は、影の描画に必要な処理
+            //※ピクチャノードでは、以下をコールすると写真が円形にならない
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+        }
+        
+        //ペイント生成
+        mPaint = new Paint();
+        mPaint.setColor(Color.WHITE);
+        mPaint.setAntiAlias(true);
+    }
+
+    /*
      * 影の有無を設定
      */
-    public void setShadow( boolean isShadow ) {
+    public void setShadowOnOff(boolean isShadow, int nodeKind ) {
+
+        //ペイント未生成なら生成
+        if( mPaint == null ){
+            initPaint(nodeKind);
+        }
 
         if( isShadow ){
             //影の設定
@@ -91,7 +116,13 @@ public class NodeOutsideView extends LinearLayout {
     /*
      * 影色の設定
      */
-    public void setShadowColor(int colorHex) {
+    public void setShadowColor(int colorHex, int nodeKind) {
+
+        //ペイント未生成なら生成
+        if( mPaint == null ){
+            initPaint( nodeKind );
+        }
+
         //色更新
         mShadowColor = colorHex;
         mIsShadow    = true;
@@ -121,14 +152,15 @@ public class NodeOutsideView extends LinearLayout {
     @Override
     protected void onDraw(Canvas canvas) {
 
+        if( mPaint == null ){
+            return;
+        }
+
         //ノードの横幅
         int width = findViewById(R.id.cv_node).getWidth();
+        canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, (width / 2f), mPaint);
 
         Log.i("サイズチェック", "onDraw レイアウト確定＝" + width);
-
-        //mPaint.setShadowLayer((width / 6f), 0, 0, Color.RED);
-        //paint.setColor(getResources().getColor(R.color.mark_5));
-        canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, (width / 2f), mPaint);
     }
 
 }

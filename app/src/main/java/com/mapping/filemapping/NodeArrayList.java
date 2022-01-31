@@ -404,7 +404,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
         for( NodeTable node: this ){
             //★テーブルにも反映必要
             //node.
-            node.getNodeView().setShadowColor( color );
+            node.getNodeView().setShadowColor( color, node.getKind() );
         }
     }
 
@@ -417,7 +417,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
         for( NodeTable node: this ){
             //★テーブルにも反映必要
             //node.
-            node.getNodeView().setShadow( isShadow );
+            node.getNodeView().setShadowOnOff( isShadow, node.getKind()  );
         }
     }
 

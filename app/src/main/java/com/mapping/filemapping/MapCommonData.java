@@ -143,18 +143,19 @@ public class MapCommonData extends Application {
     /*
      * 色履歴リストに色を追加
      */
-    public void addColorHistory( String addColor ) {
+    public int addColorHistory( String addColor ) {
 
         for( String color: mColorHistory ){
 
             if( color.equals( addColor ) ){
                 //既に同じ色があれば、追加なし
-                return;
+                return -1;
             }
         }
 
         //新しい色であれば追加
         mColorHistory.add( addColor );
+        return mColorHistory.size() - 1;
     }
 
 

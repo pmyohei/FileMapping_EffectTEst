@@ -6,11 +6,7 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
-import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.fragment.app.DialogFragment;
 
-import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -110,6 +106,10 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         pictureIntent.addCategory(Intent.CATEGORY_OPENABLE);
         //pictureIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);     //画像の複数選択を可能にする
         pictureIntent.setType("image/*");
+
+        //お試ししたが、落ちる
+        //pictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+        //pictureIntent.addCategory(Intent.ACTION_OPEN_DOCUMENT_TREE );
 
         //遷移
         mPictureSelectLauncher.launch(pictureIntent);
@@ -361,8 +361,8 @@ public class PictureTrimmingActivity extends AppCompatActivity {
 
             case R.id.action_shape:
                 //ノードの形状設定
-                DesignBottomSheet bs_design = findViewById(R.id.bs_design);
-                bs_design.openBottomSheet(DesignBottomSheet.SHAPE_ONLY, findViewById(R.id.mcv));
+                DesignBottomSheet l_bottomSheet = findViewById(R.id.dbs_shape);
+                l_bottomSheet.openBottomSheet(DesignBottomSheet.SHAPE_ONLY, findViewById(R.id.mcv));
 
                 return true;
 

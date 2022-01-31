@@ -7,8 +7,7 @@
     android:layout_gravity="bottom"
     android:gravity="center">
 
-    <!--  BottomSheet本体  -->
-    <LinearLayout
+    <com.mapping.filemapping.DesignBottomSheet
         android:id="@+id/ll_bottomSheet"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -55,6 +54,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
-    </LinearLayout>
+    </com.mapping.filemapping.DesignBottomSheet>
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

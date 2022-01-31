@@ -56,9 +56,17 @@
         </FrameLayout>
 
         <!--  BottomSheet（デザイン設定画面用）  -->
+<!--
         <include
             android:id="@+id/l_bottomSheet"
             layout="@layout/design_bottom_sheet" />
+-->
+
+        <com.mapping.filemapping.DesignBottomSheet
+            android:id="@+id/dbs_map"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom"/>
 <!--
 
         <androidx.coordinatorlayout.widget.CoordinatorLayout

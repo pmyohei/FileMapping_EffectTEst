@@ -2,26 +2,16 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/cl_node"
+    android:id="@+id/cl_toolIcon"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
+    android:padding="0dp"
     android:layout_gravity="center">
 
-    <!--  ノード本体  -->
-<!--    <include
-        layout="@layout/node_body"
-        android:id="@+id/l_nodeBody"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />-->
-    <!--  ノード本体  -->
-    <com.mapping.filemapping.NodeOutsideView
-        android:id="@+id/l_nodeBody"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+    <View
+        android:id="@+id/v_center"
+        android:layout_width="1dp"
+        android:layout_height="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,14 +19,10 @@
 
     <!--  ツールアイコン  -->
     <ImageButton
+        style="@style/tool_icon"
         android:id="@+id/ib_createNode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:elevation="@dimen/node_toolIcon_elevation"
         android:background="@drawable/circle_tool_icon"
-        android:visibility="gone"
-        app:layout_constraintCircle="@id/l_nodeBody"
+        app:layout_constraintCircle="@id/v_center"
         app:layout_constraintCircleAngle="30"
         app:layout_constraintCircleRadius="@dimen/node_icon_default_radius"
         app:layout_constraintEnd_toEndOf="parent"
@@ -45,14 +31,10 @@
 
 
     <ImageButton
+        style="@style/tool_icon"
         android:id="@+id/ib_createPictureNode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:elevation="@dimen/node_toolIcon_elevation"
         android:background="@drawable/circle_tool_icon"
-        android:visibility="gone"
-        app:layout_constraintCircle="@id/l_nodeBody"
+        app:layout_constraintCircle="@id/v_center"
         app:layout_constraintCircleAngle="60"
         app:layout_constraintCircleRadius="@dimen/node_icon_default_radius"
         app:layout_constraintEnd_toEndOf="parent"
@@ -61,15 +43,10 @@
 
 
     <ImageButton
+        style="@style/tool_icon"
         android:id="@+id/ib_edit"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
         android:background="@drawable/circle_tool_icon"
-        android:elevation="@dimen/node_toolIcon_elevation"
-        android:padding="4dp"
-        android:visibility="gone"
-        app:layout_constraintCircle="@id/l_nodeBody"
+        app:layout_constraintCircle="@id/v_center"
         app:layout_constraintCircleAngle="90"
         app:layout_constraintCircleRadius="@dimen/node_icon_default_radius"
         app:layout_constraintEnd_toEndOf="parent"
@@ -78,14 +55,10 @@
 
 
     <ImageButton
+        style="@style/tool_icon"
         android:id="@+id/ib_delete"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:elevation="@dimen/node_toolIcon_elevation"
         android:background="@drawable/circle_tool_icon"
-        android:visibility="gone"
-        app:layout_constraintCircle="@id/l_nodeBody"
+        app:layout_constraintCircle="@id/v_center"
         app:layout_constraintCircleAngle="120"
         app:layout_constraintCircleRadius="@dimen/node_icon_default_radius"
         app:layout_constraintEnd_toEndOf="parent"
@@ -94,62 +67,43 @@
 
 
     <ImageButton
+        style="@style/tool_icon"
         android:id="@+id/ib_displayAllPicture"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:elevation="@dimen/node_toolIcon_elevation"
         android:background="@drawable/circle_tool_icon"
-        android:visibility="gone"
-        app:layout_constraintCircle="@id/l_nodeBody"
+        app:layout_constraintCircle="@id/v_center"
         app:layout_constraintCircleAngle="150"
         app:layout_constraintCircleRadius="@dimen/node_icon_default_radius"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_photo_library_24" />
 
-
     <ImageButton
+        style="@style/tool_icon"
         android:id="@+id/ib_changeParent"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:background="@drawable/circle_tool_icon"
-        android:elevation="@dimen/node_toolIcon_elevation"
-        android:padding="4dp"
-        android:visibility="gone"
-        app:layout_constraintCircle="@id/l_nodeBody"
+        app:layout_constraintCircle="@id/v_center"
         app:layout_constraintCircleAngle="180"
         app:layout_constraintCircleRadius="@dimen/node_icon_default_radius"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:srcCompat="@drawable/baseline_restart_alt_24" />
 
-
     <ImageButton
+        style="@style/tool_icon"
         android:id="@+id/ib_newMap"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:elevation="@dimen/node_toolIcon_elevation"
         android:background="@drawable/circle_tool_icon"
-        android:visibility="gone"
-        app:layout_constraintCircle="@id/l_nodeBody"
+        app:layout_constraintCircle="@id/v_center"
         app:layout_constraintCircleAngle="210"
         app:layout_constraintCircleRadius="@dimen/node_icon_default_radius"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_menu_book_24" />
 
-
     <ImageButton
+        style="@style/tool_icon"
         android:id="@+id/ib_close"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:padding="4dp"
-        android:elevation="@dimen/node_toolIcon_elevation"
         android:background="@drawable/circle_tool_icon"
-        android:visibility="gone"
-        app:layout_constraintCircle="@id/l_nodeBody"
+        app:layout_constraintCircle="@id/v_center"
         app:layout_constraintCircleAngle="240"
         app:layout_constraintCircleRadius="@dimen/node_icon_default_radius"
         app:layout_constraintStart_toStartOf="parent"

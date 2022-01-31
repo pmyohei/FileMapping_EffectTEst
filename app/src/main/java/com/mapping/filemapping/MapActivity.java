@@ -8,6 +8,7 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
@@ -96,6 +97,7 @@ public class MapActivity extends AppCompatActivity {
     //ノード操作発生時の画面遷移ランチャー
     ActivityResultLauncher<Intent> mNodeOperationLauncher;
 
+    ToolIconsView mtoolIconsView;
 
     /*
      * 画面生成
@@ -327,6 +329,8 @@ public class MapActivity extends AppCompatActivity {
             //元々レイアウト上にあるルートノード名を変更し、中心座標を保持
             RootNodeView rootNodeView = findViewById(R.id.v_rootnode);
 
+            Log.i("アイコン", "ルートノードの位置 左=" + rootNodeView.getLeft() + " 上=" + rootNodeView.getTop());
+
             //ビューにノード情報を設定
             rootNodeView.setNode(node);
             //中心座標を設定
@@ -338,6 +342,18 @@ public class MapActivity extends AppCompatActivity {
 
             //NodeTable側でノードビューを保持
             node.setNodeView(rootNodeView);
+
+            rootNodeView.setOnNodeClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //ツールアイコンを生成、ノード上に表示
+                        ToolIconsView toolIconsView = new ToolIconsView( fl_map.getContext(), (BaseNode)view );
+                        fl_map.addView(
+                                toolIconsView,
+                                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    }
+                }
+            );
 
             //Log.i("drawNodes", "root centerx=" + (left + (rootNodeView.getWidth() / 2f)) + " left=" + left);
             //Log.i("drawNodes", "root centery=" + (top + (rootNodeView.getHeight() / 2f)) + " top=" + top);
@@ -365,7 +381,7 @@ public class MapActivity extends AppCompatActivity {
         //位置設定
         //※レイアウト追加後に行うこと（MarginLayoutParamsがnullになってしまうため）
         int left = node.getPosX();
-        int top = node.getPosY();
+        int top  = node.getPosY();
 
         ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) nodeView.getLayoutParams();
         mlp.setMargins(left, top, mlp.rightMargin, mlp.bottomMargin);
@@ -378,6 +394,17 @@ public class MapActivity extends AppCompatActivity {
 
         //ノード生成／編集クリックリスナー
         nodeView.setOnNodeDesignClickListener(new NodeDesignClickListener());
+
+        nodeView.setOnNodeClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //ツールアイコンを生成、ノード上に表示
+                    fl_map.addView(
+                            new ToolIconsView( fl_map.getContext(), (BaseNode)view ),
+                            new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                }
+            }
+        );
 
         //ノードビューを保持
         node.setNodeView(nodeView);
@@ -522,8 +549,8 @@ public class MapActivity extends AppCompatActivity {
      */
     private void openDesignBottomSheet( int designKind, View view ) {
         //BottomSheet
-        DesignBottomSheet bs_design = findViewById(R.id.bs_design);
-        bs_design.openBottomSheet(designKind, view);
+        DesignBottomSheet l_bottomSheet = findViewById(R.id.dbs_map);
+        l_bottomSheet.openBottomSheet(designKind, view);
     }
 
 
@@ -593,6 +620,7 @@ public class MapActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_search:
+
                 return true;
 
             case R.id.action_folder_tree:

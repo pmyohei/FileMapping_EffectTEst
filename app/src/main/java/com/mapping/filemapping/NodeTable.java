@@ -118,34 +118,15 @@ public class NodeTable implements Serializable {
     //デフォルトカラー
     public static final String DEFAULT_COLOR_WHITE = "#FFFFFF";
     public static final String DEFAULT_COLOR_BLACK = "#000000";
-    public static final String DEFAULT_COLOR_GRAY = "#66000000";
+    public static final String DEFAULT_COLOR_GRAY  = "#1A000000";
 
     //サイズ
     public static final float DEFAULT_THICK_LINE = 2f;
     public static final int DEFAULT_THICK_BORDER = 3;
 
-
-    //中心座標の連想配列文字列
-/*
-    public static String CENTER_POS_X = "X";
-    public static String CENTER_POS_Y = "X";
-*/
-
-
     /*-- 非レコードフィールド --*/
     @Ignore
     private static final long serialVersionUID = ResourceManager.SERIAL_VERSION_UID_NODE_TABLE;
-    /*
-        @Ignore
-        private HashMap<String, Float> centerPos = new HashMap<String, Float>();        //ノード中心座標
-       @Ignore
-        private float centerPosX;                   //ノード中心座標X
-        @Ignore
-        private float centerPosY;                   //ノード中心座標Y*/
-/*    @Ignore
-    private ChildNode childNodeView;        //ノードビュー
-    @Ignore
-    private RootNodeView rootNodeView;          //ルートノードビュー*/
     @Ignore
     private BaseNode baseNode;          //ルートノードビュー
 

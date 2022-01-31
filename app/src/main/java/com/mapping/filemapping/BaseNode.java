@@ -7,7 +7,6 @@ import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -56,6 +55,7 @@ public class BaseNode extends FrameLayout {
     //シャドウペイント
     //private Paint mShadowPaint;
 
+    private View.OnClickListener mClickListener;
 
     /*
      * コンストラクタ
@@ -127,8 +127,14 @@ public class BaseNode extends FrameLayout {
         setCommonToolIcon();
         setParentToolIcon();
 
-        //シャドウペイント設定
-        //setShadowPaint();
+
+        //お試し
+/*        setOnClickListener(new OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                mClickListener.onClick( view );
+            }
+        });*/
     }
 
 
@@ -315,7 +321,7 @@ public class BaseNode extends FrameLayout {
         //枠サイズ
         setBorderSize(mNode.getBorderSize());
         //影色
-        setShadowColor(mNode.getShadowColor());
+        setShadowColor(mNode.getShadowColor(), mNode.getKind());
     }
 
     /*
@@ -457,9 +463,9 @@ public class BaseNode extends FrameLayout {
     /*
      * ノード影色の設定
      */
-    public void setShadowColor( String color ) {
+    public void setShadowColor( String color, int nodeKind ) {
         //影色を設定
-        ((NodeOutsideView)findViewById( R.id.l_nodeBody )).setShadowColor( Color.parseColor(color) );
+        ((NodeOutsideView)findViewById( R.id.l_nodeBody )).setShadowColor( Color.parseColor(color), nodeKind );
     }
 
     /*
@@ -472,9 +478,9 @@ public class BaseNode extends FrameLayout {
     /*
      * ノード影の有無の設定
      */
-    public void setShadow( boolean isShadow ) {
+    public void setShadowOnOff(boolean isShadow, int nodeKind  ) {
         //影色を設定
-        ((NodeOutsideView)findViewById( R.id.l_nodeBody )).setShadow( isShadow );
+        ((NodeOutsideView)findViewById( R.id.l_nodeBody )).setShadowOnOff( isShadow, nodeKind  );
     }
 
     /*
@@ -614,6 +620,13 @@ public class BaseNode extends FrameLayout {
         );
     }
 
+    /*
+     *
+     */
+    public void setOnNodeClickListener( View.OnClickListener listener ) {
+        mClickListener = listener;
+    }
+
 
 /*    @Override
     protected void onDraw(Canvas canvas) {
@@ -667,7 +680,7 @@ public class BaseNode extends FrameLayout {
             mapCommonData.setToolOpeningNode(this);
 
             Log.i("TranslationZ", "設定前→getTranslationZ=" + findViewById(R.id.cl_node).getTranslationZ());
-            findViewById(R.id.cl_node).setTranslationZ(1f);
+            //findViewById(R.id.cl_node).setTranslationZ(1f);
             Log.i("TranslationZ", "設定後→getTranslationZ=" + findViewById(R.id.cl_node).getTranslationZ());
         }
 
@@ -778,7 +791,10 @@ public class BaseNode extends FrameLayout {
                 Log.i("tap", "onDoubleTap getChildCount1 = " + getChildCount());
 
                 //ツールアイコン表示制御
-                operationToolIcon();
+                //operationToolIcon();
+
+                //
+                mClickListener.onClick( mNode.getNodeView() );
 
                 //return super.onDoubleTap(event);
                 return true;

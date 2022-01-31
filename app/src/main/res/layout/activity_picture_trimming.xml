@@ -75,8 +75,13 @@
     </LinearLayout>
 
     <!--  BottomSheet（ノード形の設定画面用）  -->
-    <include
+<!--    <include
         android:id="@+id/l_bottomSheet"
-        layout="@layout/design_bottom_sheet" />
+        layout="@layout/design_bottom_sheet" />-->
+    <com.mapping.filemapping.DesignBottomSheet
+        android:id="@+id/dbs_shape"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"/>
 
 </FrameLayout>

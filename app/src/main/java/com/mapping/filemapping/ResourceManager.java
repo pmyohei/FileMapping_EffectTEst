@@ -19,6 +19,7 @@ public class ResourceManager {
     //URI識別子分割用の文字列
     //URI 例)content://com.android.providers.media.documents/document/image%3A27
     public static final String URI_SPLIT = "image%";
+    //URI 例)content://com.android.providers.downloads.documents/document/12
 
     /* 画面遷移-キー */
     public static final String KEY_MAPID = "MapID";

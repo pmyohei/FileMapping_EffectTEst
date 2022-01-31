@@ -36,6 +36,8 @@ public class ColorSelectionView extends LinearLayout {
     private int  mPart;           //カラー設定個所
     private View mSetView;        //設定対象ビュー（ノードorマップ）
 
+    private ColorHistoryAdapter mColorHistoryAdapter;
+
     /*
      * コンストラクタ
      */
@@ -66,11 +68,11 @@ public class ColorSelectionView extends LinearLayout {
         MapCommonData mapCommonData = (MapCommonData) ((Activity)context).getApplication();
         ArrayList<String> colors =  mapCommonData.getColorHistory();
 
-        testColorHistoryAdapter adapter = new testColorHistoryAdapter( colors );
-
+        mColorHistoryAdapter = new ColorHistoryAdapter( colors );
+        
         //色履歴を設定
         RecyclerView rv_history = findViewById(R.id.rv_history);
-        rv_history.setAdapter( adapter );
+        rv_history.setAdapter( mColorHistoryAdapter );
         rv_history.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false ));
 
         //色履歴更新リスナー
@@ -78,7 +80,7 @@ public class ColorSelectionView extends LinearLayout {
             @Override
             public void onClick(View view) {
                 //色履歴アダプタを更新
-                adapter.notifyDataSetChanged();
+                mColorHistoryAdapter.notifyDataSetChanged();
             }
         });
 
@@ -184,7 +186,7 @@ public class ColorSelectionView extends LinearLayout {
 
             case COLOR_SHADOW:
                 //影カラー
-                node.setShadowColor(code);
+                node.setShadowColor(code, node.getNode().getKind());
                 break;
 
             case COLOR_LINE:
@@ -246,7 +248,12 @@ public class ColorSelectionView extends LinearLayout {
 
                     //色履歴の追加
                     MapCommonData commonData = (MapCommonData)((Activity)getContext()).getApplication();
-                    commonData.addColorHistory( code );
+                    int idx = commonData.addColorHistory( code );
+
+                    if( idx >= 0 ){
+                        //アダプタに追加を通知
+                        mColorHistoryAdapter.notifyItemInserted(idx);
+                    }
 
                     //ダイアログ閉じる
                     dialog.dismiss();
@@ -448,8 +455,10 @@ public class ColorSelectionView extends LinearLayout {
         }*/
     }
 
-
-    public class testColorHistoryAdapter extends RecyclerView.Adapter<testColorHistoryAdapter.ColorHistoryViewHolder> {
+    /*
+     * 色履歴アダプタ
+     */
+    public class ColorHistoryAdapter extends RecyclerView.Adapter<ColorHistoryAdapter.ColorHistoryViewHolder> {
 
         //色履歴
         private final ArrayList<String> mData;
@@ -493,7 +502,7 @@ public class ColorSelectionView extends LinearLayout {
         /*
          * コンストラクタ
          */
-        public testColorHistoryAdapter(ArrayList<String> colors ) {
+        public ColorHistoryAdapter(ArrayList<String> colors ) {
             mData = colors;
         }
 

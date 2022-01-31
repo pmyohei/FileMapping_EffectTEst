@@ -4,12 +4,12 @@ import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
-import android.util.Log;
-import android.view.MotionEvent;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -20,7 +20,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
 import java.util.List;
 
-public class DesignBottomSheet extends LinearLayout {
+public class DesignBottomSheet extends CoordinatorLayout {
 
     //デザインレイアウト種別
     public static final int MAP = 0;
@@ -40,6 +40,10 @@ public class DesignBottomSheet extends LinearLayout {
 
     public DesignBottomSheet(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+
+        //レイアウト生成
+        LayoutInflater inflater = LayoutInflater.from(getContext());
+        inflater.inflate(R.layout.design_bottom_sheet, this, true);
     }
 
     /*
@@ -48,18 +52,17 @@ public class DesignBottomSheet extends LinearLayout {
      */
     public void setBottomSheetHeight(Context context, float ratio ) {
 
-        //高さ設定
         //BottomSheet
-        //View bs_design = findViewById(R.id.bs_design);
+        LinearLayout bs_design = findViewById(R.id.ll_bottomSheet);
 
         //高さを設定
-        ViewGroup.LayoutParams layoutParams= this.getLayoutParams();
+        ViewGroup.LayoutParams layoutParams= bs_design.getLayoutParams();
         int windowHeight= getWindowHeight( context );
         if (layoutParams != null) {
             //画面の高さの半分
             layoutParams.height = (int)(windowHeight * ratio);
         }
-        this.setLayoutParams(layoutParams);
+        bs_design.setLayoutParams(layoutParams);
     }
 
     /*
@@ -133,7 +136,7 @@ public class DesignBottomSheet extends LinearLayout {
         setBottomSheetHeight( getContext(), heightRatio );
 
         //オープン
-        BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(this);
+        BottomSheetBehavior<View> behavior = BottomSheetBehavior.from( findViewById(R.id.ll_bottomSheet) );
         behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 

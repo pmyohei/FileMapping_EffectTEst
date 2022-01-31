@@ -9,6 +9,15 @@
     android:translationZ="14dp">
 
     <!--  ノード本体  -->
+    <com.mapping.filemapping.NodeOutsideView
+        android:id="@+id/l_nodeBody"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
+    <!--
     <include
         layout="@layout/node_body"
         android:id="@+id/l_nodeBody"
@@ -18,6 +27,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+-->
 
     <!--  ツールアイコン  -->
     <ImageButton
@@ -31,7 +41,7 @@
         android:translationZ="14dp"
         app:layout_constraintCircle="@id/l_nodeBody"
         app:layout_constraintCircleAngle="30"
-        app:layout_constraintCircleRadius="@dimen/node_icon_radius"
+        app:layout_constraintCircleRadius="@dimen/node_icon_default_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_add_24" />
@@ -47,7 +57,7 @@
         android:visibility="gone"
         app:layout_constraintCircle="@id/l_nodeBody"
         app:layout_constraintCircleAngle="82.5"
-        app:layout_constraintCircleRadius="@dimen/node_icon_radius"
+        app:layout_constraintCircleRadius="@dimen/node_icon_default_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_add_a_photo_24" />
@@ -64,7 +74,7 @@
         android:visibility="gone"
         app:layout_constraintCircle="@id/l_nodeBody"
         app:layout_constraintCircleAngle="135"
-        app:layout_constraintCircleRadius="@dimen/node_icon_radius"
+        app:layout_constraintCircleRadius="@dimen/node_icon_default_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_edit_24" />
@@ -80,7 +90,7 @@
         android:visibility="gone"
         app:layout_constraintCircle="@id/l_nodeBody"
         app:layout_constraintCircleAngle="187.5"
-        app:layout_constraintCircleRadius="@dimen/node_icon_radius"
+        app:layout_constraintCircleRadius="@dimen/node_icon_default_radius"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_photo_library_24" />
@@ -95,7 +105,7 @@
         android:visibility="gone"
         app:layout_constraintCircle="@id/l_nodeBody"
         app:layout_constraintCircleAngle="200"
-        app:layout_constraintCircleRadius="@dimen/node_icon_radius"
+        app:layout_constraintCircleRadius="@dimen/node_icon_default_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:srcCompat="@drawable/baseline_delete_24" />
@@ -110,7 +120,7 @@
         android:visibility="gone"
         app:layout_constraintCircle="@id/l_nodeBody"
         app:layout_constraintCircleAngle="240"
-        app:layout_constraintCircleRadius="@dimen/node_icon_radius"
+        app:layout_constraintCircleRadius="@dimen/node_icon_default_radius"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:srcCompat="@drawable/baseline_close_24" />
