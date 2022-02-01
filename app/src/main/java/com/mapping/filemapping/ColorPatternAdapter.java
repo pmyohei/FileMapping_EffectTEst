@@ -71,7 +71,6 @@ public class ColorPatternAdapter extends RecyclerView.Adapter<ColorPatternAdapte
 
                 //カラーを設定
                 MaterialCardView v = ll_colorItem.findViewById( v_id );
-                //v.setBackgroundColor( colorValue );
                 ColorStateList colorState = new ColorStateList(
                         new int[][] {
                                 new int[]{ android.R.attr.state_checked},

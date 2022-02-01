@@ -68,10 +68,12 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
         private ImageView iv_circle;
         private ImageView iv_square;
         private SeekBar  sb_nodeSize;
+        private SeekbarView  sbv_nodeSize;
         private TextView tv_borderColorCode;
         private TextView tv_borderColorGraphic;
         private ColorSelectionView csv_border;
         private RadioGroup rg_borderSize;
+        private SeekbarView  sbv_borderSize;
         private TextView tv_shadowColorCode;
         private TextView tv_shadowColorGraphic;
         private ColorSelectionView csv_shadow;
@@ -81,6 +83,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
         private TextView tv_lineColorGraphic;
         private ColorSelectionView csv_line;
         private RadioGroup rg_lineSize;
+        private SeekbarView  sbv_lineSize;
 
 
         /*
@@ -114,13 +117,15 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
                 iv_circle    = itemView.findViewById(R.id.iv_circle);
                 iv_square    = itemView.findViewById(R.id.iv_square);
                 //ノードサイズ
-                sb_nodeSize       = itemView.findViewById(R.id.sb_nodeSize);
+                //sb_nodeSize       = itemView.findViewById(R.id.sb_nodeSize);
+                sbv_nodeSize       = itemView.findViewById(R.id.sbv_nodeSize);
                 //枠線色
                 //tv_borderColorCode    = itemView.findViewById(R.id.tv_borderColorCode);
                 //tv_borderColorGraphic = itemView.findViewById(R.id.tv_borderColorGraphic);
                 csv_border = itemView.findViewById(R.id.csv_border);
                 //枠線サイズ
                 rg_borderSize = itemView.findViewById(R.id.rg_borderSize);
+                sbv_borderSize       = itemView.findViewById(R.id.sbv_borderSize);
                 //影色
                 //tv_shadowColorCode    = itemView.findViewById(R.id.tv_shadowColorCode);
                 //tv_shadowColorGraphic = itemView.findViewById(R.id.tv_shadowColorGraphic);
@@ -133,6 +138,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
                 csv_line = itemView.findViewById(R.id.csv_line);
                 //サイズ
                 rg_lineSize = itemView.findViewById(R.id.rg_lineSize);
+                sbv_lineSize       = itemView.findViewById(R.id.sbv_lineSize);
             }
         }
 
@@ -199,7 +205,10 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
             iv_circle.setOnClickListener(new ClickShapeImage(NodeTable.CIRCLE) );
             iv_square.setOnClickListener( new ClickShapeImage(NodeTable.SQUARE) );
 
-            //ノードサイズの最大・最小値
+            //ノードサイズのシークバー
+            sbv_nodeSize.setNodeSizeSeekbar( mv_node );
+
+/*            //ノードサイズの最大・最小値
             int maxSize;
             int minSize;
             if( mv_node.getNode().getKind() == NodeTable.NODE_KIND_PICTURE ){
@@ -245,11 +254,13 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
                     Log.i("sb_nodeSize", "設定比率=" + setRatio + " 目標サイズ=" + setSize);
                     Log.i("sb_nodeSize", "結果サイズ=" + mv_node.getScaleWidth());
                 }
-            });
+            });*/
 
             //枠色
             csv_border.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_BORDER, mv_node );
-
+            //枠サイズのシークバー
+            sbv_borderSize.setBorderSizeSeekbar( mv_node );
+/*
             //枠サイズ
             //★UIをラジオボタンにするなら、ライン側と統一させる
             rg_borderSize.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
@@ -263,12 +274,10 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
                     Log.i("NodeDesign", "枠サイズ設定値=" + (idx + 1));
                     mv_node.setBorderSize( idx + 1 );
                 }
-            });
+            });*/
 
             //影色
             csv_shadow.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_SHADOW, mv_node );
-
-
         }
 
         /*
@@ -278,9 +287,10 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
 
             //ラインカラー
             csv_line.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_LINE, mv_node );
-
             //ラインサイズ
-            rg_lineSize.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            sbv_lineSize.setLineSizeSeekbar( mv_node );
+
+/*            rg_lineSize.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     //選択されたindexを取得
@@ -291,7 +301,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
                     Log.i("NodeDesign", "ラインサイズ設定値=" + (idx + 1));
                     ((ChildNode)mv_node).setLineSize( idx + 1 );
                 }
-            });
+            });*/
 
         }
 

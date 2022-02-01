@@ -185,8 +185,15 @@ public class ChildNode extends BaseNode {
     /*
      * ラインサイズ（太さ）の設定
      */
-    public void setLineSize(int thick) {
+    public void setLineSize(float thick) {
         mLineView.setSize(thick);
+    }
+
+    /*
+     * ラインサイズ（太さ）の取得
+     */
+    public float getLineSize() {
+        return mLineView.getSize();
     }
 
     /*
@@ -872,13 +879,18 @@ public class ChildNode extends BaseNode {
         /*
          * ラインサイズ（太さ）の設定
          */
-        public void setSize( int thick ) {
-
-            //太さ設定（指定値の５倍の太さを指定）
-            //★５倍は暫定値
-            mPaint.setStrokeWidth( thick * 5f );
+        public void setSize( float thick ) {
+            //太さ設定
+            mPaint.setStrokeWidth( thick );
             //再描画
             invalidate();
+        }
+
+        /*
+         * ラインサイズ（太さ）の取得
+         */
+        public float getSize() {
+            return mPaint.getStrokeWidth();
         }
 
 /*    @Override

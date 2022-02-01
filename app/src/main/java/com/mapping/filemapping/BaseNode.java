@@ -438,6 +438,13 @@ public class BaseNode extends FrameLayout {
     }
 
     /*
+     * ノード枠線サイズの取得
+     */
+    public int getBorderSize() {
+        return ((MaterialCardView)findViewById( R.id.cv_node )).getStrokeWidth();
+    }
+
+    /*
      * ノード枠色の設定
      */
     public void setBorderColor( String color ) {
