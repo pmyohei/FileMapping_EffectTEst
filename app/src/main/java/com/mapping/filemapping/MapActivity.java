@@ -34,6 +34,8 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.WindowManager;
 import android.view.WindowMetrics;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -113,6 +115,18 @@ public class MapActivity extends AppCompatActivity {
         toolbar.setTitle("(仮)マップ名を入れる");
         setSupportActionBar(toolbar);
 
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+                //半透明→完全に透明 のアニメーション開始
+                //表示アニメーション
+                Animation animation = AnimationUtils.loadAnimation(view.getContext(), R.anim.show_toolbar);
+                //animation.setStartOffset( ANIM_OFFSET * count );
+                view.startAnimation(animation);
+            }
+        });
+
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
@@ -137,6 +151,7 @@ public class MapActivity extends AppCompatActivity {
                 new NodeOperationResultCallback()
         );
 
+        //★ここにあるのは微妙
         int screenWidth;
         int screenHeight;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
@@ -146,8 +161,8 @@ public class MapActivity extends AppCompatActivity {
 
             screenWidth = windowMetrics.getBounds().width();
             screenHeight = windowMetrics.getBounds().height();
-            Log.d("screenWidth=>>>", screenWidth + "");
-            Log.d("screenHeight=>>", screenHeight + "");
+            //Log.d("screenWidth=>>>", screenWidth + "");
+            //Log.d("screenHeight=>>", screenHeight + "");
 
         } else {
             DisplayMetrics displayMetrics = new DisplayMetrics();
@@ -160,8 +175,8 @@ public class MapActivity extends AppCompatActivity {
         mTopScreanX = screenWidth / 2;
         mTopScreanY = (int) (screenHeight * (1f - ResourceManager.NODE_DESIGN_DIALOG_RATIO)) / 2;
 
-        Log.d("移動", "mTopScreanX=" + mTopScreanX);
-        Log.d("移動", "mTopScreanY=" + mTopScreanY);
+        //Log.d("移動", "mTopScreanX=" + mTopScreanX);
+        //Log.d("移動", "mTopScreanY=" + mTopScreanY);
 
         //アクティビティ
         Activity activity = this;
@@ -250,36 +265,25 @@ public class MapActivity extends AppCompatActivity {
                         mEnableDrawNode = true;
 
                         //ノードを円形にする
-                        CardView cv_node = v_rootnode.findViewById(R.id.cv_node);
-                        makeNodeCircle(cv_node);
+                        //CardView cv_node = v_rootnode.findViewById(R.id.cv_node);
+                        //makeNodeCircle(cv_node);
                     }
                 }
         );
     }
 
+    /*
+     * マップのデフォルトカラーを取得
+     */
+    public String[] getMapDefaultColors() {
+        return mMap.getDefaultColors();
+    }
 
     /*
-     * ノードの形を円形にする
+     * 画面遷移用ランチャーを取得
      */
-    //★ノードビューに作ったため廃止予定
-    private void makeNodeCircle(CardView cv_node) {
-
-        //CardView cv_node = findViewById(R.id.cv_node);
-        Log.i("Card", "width=" + cv_node.getWidth() + " height=" + cv_node.getHeight());
-
-        int max;
-        int width = cv_node.getWidth();
-        int height = cv_node.getHeight();
-        if (width > height) {
-            cv_node.setMinimumHeight(width);
-            max = width;
-        } else {
-            cv_node.setMinimumWidth(height);
-            max = height;
-        }
-
-        //int max = Math.max( cv_node.getWidth(), cv_node.getHeight() );
-        cv_node.setRadius(max / 2.0f);
+    public ActivityResultLauncher<Intent> getActivityResultLauncher() {
+        return mNodeOperationLauncher;
     }
 
     /*
@@ -315,14 +319,14 @@ public class MapActivity extends AppCompatActivity {
             //}
 
             //ノードを描画
-            drawNode(fl_map, node, 0);
+            drawNode(fl_map, node);
         }
     }
 
     /*
      * ノード（単体）の描画
      */
-    private BaseNode drawNode(FrameLayout fl_map, NodeTable node, int lineDrawKind) {
+    public BaseNode drawNode(FrameLayout fl_map, NodeTable node) {
 
         //ルートノード
         if (node.getKind() == NodeTable.NODE_KIND_ROOT) {
@@ -336,9 +340,9 @@ public class MapActivity extends AppCompatActivity {
             //中心座標を設定
             rootNodeView.addOnNodeGlobalLayoutListener();
             //ランチャーを設定
-            rootNodeView.setNodeOperationLauncher(mNodeOperationLauncher);
+            //rootNodeView.setNodeOperationLauncher(mNodeOperationLauncher);
             //ノード生成／編集クリックリスナー
-            rootNodeView.setOnNodeDesignClickListener(new NodeDesignClickListener());
+            //rootNodeView.setOnNodeDesignClickListener(new NodeDesignClickListener());
 
             //NodeTable側でノードビューを保持
             node.setNodeView(rootNodeView);
@@ -353,7 +357,7 @@ public class MapActivity extends AppCompatActivity {
                         }
 
                         //ツールアイコンを生成、ノード上に表示
-                        ToolIconsView toolIconsView = new ToolIconsView( fl_map.getContext(), (BaseNode)view );
+                        ToolIconsView toolIconsView = new ToolIconsView( fl_map.getContext(), (BaseNode)view, MapActivity.this );
                         fl_map.addView(
                                 toolIconsView,
                                 new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -371,14 +375,14 @@ public class MapActivity extends AppCompatActivity {
         ChildNode nodeView;
         if (node.getKind() == NodeTable.NODE_KIND_NODE) {
             //ノード
-            nodeView = new NodeView(this, node, mNodeOperationLauncher);
+            nodeView = new NodeView(this, node);
         } else {
             //ピクチャノード
             //該当サムネイル取得
             //★nullの場合の考慮を行う
             PictureTable thumbnail = mThumbnails.getThumbnail(node.getPidParentNode(), node.getUriIdentify());
 
-            nodeView = new PictureNodeView(this, node, thumbnail, mNodeOperationLauncher);
+            nodeView = new PictureNodeView(this, node, thumbnail);
         }
 
         //ノードをマップに追加
@@ -399,20 +403,23 @@ public class MapActivity extends AppCompatActivity {
         ((ChildNode) nodeView).addOnNodeGlobalLayoutListener();
 
         //ノード生成／編集クリックリスナー
-        nodeView.setOnNodeDesignClickListener(new NodeDesignClickListener());
+        //nodeView.setOnNodeDesignClickListener(new NodeDesignClickListener());
 
         nodeView.setOnNodeClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
+                    Log.i("アイコン", "オープン契機");
+
                     if( ((BaseNode)view).hasIconView() ){
                         //開いているなら、何もしない
+                        Log.i("アイコン", "オープンなし");
                         return;
                     }
 
                     //ツールアイコンを生成、ノード上に表示
                     fl_map.addView(
-                            new ToolIconsView( fl_map.getContext(), (BaseNode)view ),
+                            new ToolIconsView( fl_map.getContext(), (BaseNode)view, MapActivity.this ),
                             new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
                 }
             }
@@ -437,6 +444,7 @@ public class MapActivity extends AppCompatActivity {
      * 全ラインの描画
      */
     //★不要になる見込み
+/*
     private void drawAllLines() {
 
         //ビュー
@@ -449,11 +457,13 @@ public class MapActivity extends AppCompatActivity {
             drawLine(fl_map, node);
         }
     }
+*/
 
     /*
      * ライン（単体）の描画
      */
     //★不要になる見込み
+/*
     private void drawLine(FrameLayout fl_map, NodeTable node) {
 
         //親ノードPid
@@ -479,11 +489,12 @@ public class MapActivity extends AppCompatActivity {
         //レイアウトに追加
         fl_map.addView(lineView);
     }
+*/
 
     /*
      *　ノードにフォーカスをあてる（画面中心に指定座標をもってくる）
      */
-    private void focusNodeToCenterScreen(float nodeLeft, float nodeTop, int POS_KIND) {
+    public void focusNodeToCenterScreen(float nodeLeft, float nodeTop, int POS_KIND) {
 
         int height = 0;
 
@@ -515,9 +526,9 @@ public class MapActivity extends AppCompatActivity {
         //スクロール時間 [milliseconds]
         final int MOVE_DURATION = 600;
 
-        Log.i("move中心", "移動先ノード nodeLeft=" + nodeLeft + " nodeTop=" + nodeTop);
-        Log.i("move中心", "mapLeft=" + mapLeft + " mapTop=" + mapTop);
-        Log.i("move中心", "スクロール開始位置 x=" + mapAbsX + " y=" + mapAbsY);
+        //Log.i("move中心", "移動先ノード nodeLeft=" + nodeLeft + " nodeTop=" + nodeTop);
+        //Log.i("move中心", "mapLeft=" + mapLeft + " mapTop=" + mapTop);
+        //Log.i("move中心", "スクロール開始位置 x=" + mapAbsX + " y=" + mapAbsY);
 
         //スクローラーを設定
         Scroller scroller = new Scroller(this, new DecelerateInterpolator());
@@ -535,7 +546,7 @@ public class MapActivity extends AppCompatActivity {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
 
-                Log.i("Scroller", "onAnimationUpdate");
+                //Log.i("Scroller", "onAnimationUpdate");
 
                 if (!scroller.isFinished()) {
                     scroller.computeScrollOffset();
@@ -558,7 +569,7 @@ public class MapActivity extends AppCompatActivity {
     /*
      * デザイン設定のBottomSheetを開く
      */
-    private void openDesignBottomSheet( int designKind, View view ) {
+    public void openDesignBottomSheet( int designKind, View view ) {
         //BottomSheet
         DesignBottomSheet l_bottomSheet = findViewById(R.id.dbs_map);
         l_bottomSheet.openBottomSheet(designKind, view);
@@ -577,7 +588,7 @@ public class MapActivity extends AppCompatActivity {
         MapCommonData mapCommonData = (MapCommonData) getApplication();
         NodeArrayList<NodeTable> nodeQue = mapCommonData.getMovedNodesQue();
 
-        Log.i("onStop", "nodeQue.size()=" + nodeQue.size());
+        //Log.i("onStop", "nodeQue.size()=" + nodeQue.size());
 
         //座標移動したノードがあれば
         if (nodeQue.size() > 0) {
@@ -688,9 +699,9 @@ public class MapActivity extends AppCompatActivity {
                 float distanceX = motionEvent.getX() - mPreTouchPosX;
                 float distanceY = motionEvent.getY() - mPreTouchPosY;
 
-                Log.i("MotionEvent", "preX=" + mPreTouchPosX + " preY=" + mPreTouchPosY);
-                Log.i("MotionEvent", "getX=" + motionEvent.getX() + " getY=" + motionEvent.getY());
-                Log.i("MotionEvent", "diffX=" + distanceX + " diffY=" + distanceY);
+                //Log.i("MotionEvent", "preX=" + mPreTouchPosX + " preY=" + mPreTouchPosY);
+                //Log.i("MotionEvent", "getX=" + motionEvent.getX() + " getY=" + motionEvent.getY());
+                //Log.i("MotionEvent", "diffX=" + distanceX + " diffY=" + distanceY);
 
                 //現在位置
                 float x = fl_map.getTranslationX();
@@ -719,6 +730,7 @@ public class MapActivity extends AppCompatActivity {
     /*
      * ノード生成／編集アイコンクリックリスナー
      */
+/*
     public class NodeDesignClickListener implements View.OnClickListener {
 
         //アイコン操作ノード
@@ -726,22 +738,28 @@ public class MapActivity extends AppCompatActivity {
         //新規生成 or 編集
         private boolean mIsNew;
 
-        /*
+        */
+/*
          * コンストラクタ
-         */
+         *//*
+
+*/
 /*
         public NodeDesignClickListener( BaseNode node ){
             mTouchNode = node;
         }
-*/
+*//*
+
 
         public void setTouchNode( BaseNode node ){
             mTouchNode = node;
         }
 
-        /*
+        */
+/*
          * アイコンクリック処理
-         */
+         *//*
+
         public void onClickIcon(BaseNode node, View view, boolean isNew ){
             //操作対象ノード
             mTouchNode = node;
@@ -787,7 +805,7 @@ public class MapActivity extends AppCompatActivity {
                 newNode.setColorPattern( colors );
 
                 //ノードをマップに追加
-                v_node = drawNode(findViewById(R.id.fl_map), newNode, NodeGlobalLayoutListener.LINE_SELF);
+                v_node = drawNode(findViewById(R.id.fl_map), newNode);
 
                 marginLeft = posX;
                 marginTop  = posY;
@@ -810,20 +828,26 @@ public class MapActivity extends AppCompatActivity {
             focusNodeToCenterScreen(marginLeft, marginTop, MOVE_UPPER);
         }
     }
+*/
 
 
     /*
      * OnGlobalLayoutListener（ノード用）
      */
     //★不要のため削除←レイアウト確定待ちはノード自身に行わせる
+/*
     private class NodeGlobalLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener {
 
-        /* ライン描画指定 */
+        */
+/* ライン描画指定 *//*
+
         public static final int LINE_NONE = 0;
         public static final int LINE_ALL  = 1;
         public static final int LINE_SELF = 2;
 
-        /* フィールド変数 */
+        */
+/* フィールド変数 *//*
+
         private final BaseNode mv_node;
         private final int mLineDrawKind;
 
@@ -834,14 +858,14 @@ public class MapActivity extends AppCompatActivity {
 
         @Override
         public void onGlobalLayout() {
-            Log.i("NodeGlobal", "レイアウト確定ノード=" + mv_node.getNode().getNodeName());
+            //Log.i("NodeGlobal", "レイアウト確定ノード=" + mv_node.getNode().getNodeName());
 
             //レイアウト確定後は、不要なので本リスナー削除
             //mv_node.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
             //ノードの形を設定
-            CardView cv_node = mv_node.findViewById(R.id.cv_node);
-            makeNodeCircle( cv_node );
+            //CardView cv_node = mv_node.findViewById(R.id.cv_node);
+            //makeNodeCircle( cv_node );
 
             //レイアウトが確定したため、このタイミングで中心座標を設定
             mv_node.calcCenterPos();
@@ -855,6 +879,7 @@ public class MapActivity extends AppCompatActivity {
             }
         }
     }
+*/
 
     /*
      * ピンチ（拡大・縮小）操作リスナー
@@ -894,7 +919,7 @@ public class MapActivity extends AppCompatActivity {
         @Override
         public boolean onScaleBegin(ScaleGestureDetector detector) {
 
-            Log.i("onScale", "onScaleBegin");
+            //Log.i("onScale", "onScaleBegin");
 
             //ピンチ操作発生
             mIsPinch = true;
@@ -909,8 +934,8 @@ public class MapActivity extends AppCompatActivity {
             rnv_rootnode.getLocationInWindow(locationRoot);
             mv_base.getLocationInWindow(locationBase);
 
-            Log.i("onScaleBegin", "mCenterNode location=" + locationRoot[0] + " location=" + locationRoot[1]);
-            Log.i("onScaleBegin", "v_tmp location=" + locationBase[0] + " location=" + locationBase[1]);
+            //Log.i("onScaleBegin", "mCenterNode location=" + locationRoot[0] + " location=" + locationRoot[1]);
+            //Log.i("onScaleBegin", "v_tmp location=" + locationBase[0] + " location=" + locationBase[1]);
 
             //2点間のスクリーン座標上の距離を保持
             startDistanceX = locationBase[0] - locationRoot[0];
@@ -928,7 +953,7 @@ public class MapActivity extends AppCompatActivity {
 
             float scaleFactor = detector.getScaleFactor();
 
-            Log.i("onScale", "getScaleFactor=" + scaleFactor);
+            //Log.i("onScale", "getScaleFactor=" + scaleFactor);
 
             //ピンチ操作開始時の比率に、ピンチ操作中の比率を掛ける
             mfl_map.setScaleX(mPinchScaleX * scaleFactor);
@@ -959,7 +984,7 @@ public class MapActivity extends AppCompatActivity {
             MapCommonData mapCommonData = (MapCommonData)getApplication();
             mapCommonData.setPinchDistanceRatio(pinchDistanceRatioX, pinchDistanceRatioY);
 
-            Log.i("onScaleEnd", "pinchDistanceRatioX=" + pinchDistanceRatioX + " pinchDistanceRatioY=" + pinchDistanceRatioY);
+            //Log.i("onScaleEnd", "pinchDistanceRatioX=" + pinchDistanceRatioX + " pinchDistanceRatioY=" + pinchDistanceRatioY);
 
             //↓改修が必要
             //mDragViewListener.setTestScaleX( testScaleX );
@@ -970,7 +995,7 @@ public class MapActivity extends AppCompatActivity {
             mPinchShiftX += (startRootPosX - locationRoot[0]);
             mPinchShiftY += (startRootPosY - locationRoot[1]);
 
-            Log.i("Pinch", "mPinchShiftX=" + mPinchShiftX + " mPinchShiftY=" + mPinchShiftY);
+            //Log.i("Pinch", "mPinchShiftX=" + mPinchShiftX + " mPinchShiftY=" + mPinchShiftY);
 
             super.onScaleEnd(detector);
         }
@@ -987,7 +1012,7 @@ public class MapActivity extends AppCompatActivity {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
-            Log.i("onFling", "velocityX=" + velocityX + " velocityY=" + velocityY);
+            //Log.i("onFling", "velocityX=" + velocityX + " velocityY=" + velocityY);
 
 
 //            mFlingScroller.fling(currentX, currentY, velocityX / SCALE, velocityY / SCALE, minX, minY, maxX, maxY);
@@ -1141,9 +1166,7 @@ public class MapActivity extends AppCompatActivity {
 
     /*
      * 画面遷移からの戻りのコールバック通知
-     *   ・ノード新規作成
      *   ・ノード新規作成（ピクチャ）
-     *   ・ノード編集
      */
     private class NodeOperationResultCallback implements ActivityResultCallback<ActivityResult> {
 
@@ -1160,32 +1183,7 @@ public class MapActivity extends AppCompatActivity {
             //リザルトコード
             int resultCode = result.getResultCode();
 
-            //ノード新規作成完了
-            if( resultCode == NodeEntryActivity.RESULT_CREATED) {
-
-/*
-                //生成されたノードを取得
-                NodeTable node = (NodeTable) intent.getSerializableExtra(ResourceManager.KEY_CREATED_NODE);
-                //リストに追加
-                MapCommonData mapCommonData = (MapCommonData) getApplication();
-                mapCommonData.addNodes(node);
-
-                //ノードを描画
-                drawNode(findViewById(R.id.fl_map), node, NodeGlobalLayoutListener.LINE_SELF);
-*/
-
-            //ノード編集完了
-            } else if( resultCode == NodeEntryActivity.RESULT_EDITED) {
-
-/*                //共通データから、編集ノードを取得
-                MapCommonData mapCommonData = (MapCommonData) getApplication();
-                NodeTable node = mapCommonData.getEditNode();
-
-                //ノード情報をビューに反映
-                node.getNodeView().reflectViewNodeInfo();*/
-
-            //ピクチャノード生成完了
-            } else if( resultCode == PictureTrimmingActivity.RESULT_PICTURE_NODE) {
+            if( resultCode == PictureTrimmingActivity.RESULT_PICTURE_NODE) {
 
                 //新規ピクチャノードを取得
                 NodeTable pictureNode = (NodeTable)intent.getSerializableExtra(ResourceManager.KEY_CREATED_NODE);
@@ -1198,7 +1196,7 @@ public class MapActivity extends AppCompatActivity {
                 mThumbnails.add(picture);
 
                 //ノードを描画
-                drawNode(findViewById(R.id.fl_map), pictureNode, NodeGlobalLayoutListener.LINE_SELF);
+                drawNode(findViewById(R.id.fl_map), pictureNode);
             }
 
         }

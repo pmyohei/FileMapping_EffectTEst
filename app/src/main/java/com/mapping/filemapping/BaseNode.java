@@ -43,15 +43,15 @@ public class BaseNode extends FrameLayout {
     public NodeTable mNode;
     //ダブルタップ検知用
     public GestureDetector mGestureDetector;
-    //ツールアイコン表示
-    public boolean mIsOpenToolIcon;
     //ノード中心座標
     public float mCenterPosX = INIT_CENTER_POS;
     public float mCenterPosY = INIT_CENTER_POS;
+    //ツールアイコン表示
+    //public boolean mIsOpenToolIcon;
     //ノード操作発生時の画面遷移ランチャー
-    public ActivityResultLauncher<Intent> mNodeOperationLauncher;
+    //public ActivityResultLauncher<Intent> mNodeOperationLauncher;
     //ノード生成／編集クリックリスナー
-    private MapActivity.NodeDesignClickListener mNodeDesignClickListener;
+    //private MapActivity.NodeDesignClickListener mNodeDesignClickListener;
     //ダブルタップリスナー
     private View.OnClickListener mClickListener;
     //アイコンビュー（開いていない場合は、nullを設定する）
@@ -81,7 +81,7 @@ public class BaseNode extends FrameLayout {
      * 　　new用
      */
     @SuppressLint("ClickableViewAccessibility")
-    public BaseNode(Context context, NodeTable node, ActivityResultLauncher<Intent> launcher, int layoutID) {
+    public BaseNode(Context context, NodeTable node, int layoutID) {
         super(context);
 
         Log.i("BaseNode", "2");
@@ -89,11 +89,7 @@ public class BaseNode extends FrameLayout {
         //ノード情報を保持
         mNode = node;
         //ノード操作ランチャーを保持
-        mNodeOperationLauncher = launcher;
-
-        //レイアウト生成
-        //LayoutInflater inflater = LayoutInflater.from(getContext());
-        //inflater.inflate(layoutID, this, true);
+        //mNodeOperationLauncher = launcher;
 
         init(layoutID);
     }
@@ -111,7 +107,7 @@ public class BaseNode extends FrameLayout {
         Log.i("BaseNode", "init");
 
         //ツールアイコン非表示
-        mIsOpenToolIcon = false;
+        //mIsOpenToolIcon = false;
         //ツールアイコン未保持
         mIconView = null;
 
@@ -126,8 +122,8 @@ public class BaseNode extends FrameLayout {
         reflectViewNodeInfo();
 
         //ツールアイコン設定
-        setCommonToolIcon();
-        setParentToolIcon();
+        //setCommonToolIcon();
+        //setParentToolIcon();
 
 
         //お試し
@@ -148,7 +144,7 @@ public class BaseNode extends FrameLayout {
      */
     public void setCommonToolIcon() {
 
-        //クローズ
+/*        //クローズ
         findViewById(R.id.ib_close).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -168,29 +164,10 @@ public class BaseNode extends FrameLayout {
                 //mNodeDesignClickListener.setTouchNode( bn_self );
                 mNodeDesignClickListener.onClickIcon(bn_self, view, false);
 
-/*
-                //ノード情報画面へ遷移
-                Context context = getContext();
-                Intent intent = new Intent(context, NodeEntryActivity.class);
-
-                //mNode.setNodeView(null);
-
-                //タッチノードの情報を渡す
-                //intent.putExtra( MapActivity.INTENT_NODE, mNode );
-
-                //タッチノードを共通データとして設定
-                MapCommonData mapCommonData = (MapCommonData) ((Activity) getContext()).getApplication();
-                mapCommonData.setEditNode(mNode);
-
-                //画面遷移
-                //((Activity)context).startActivityForResult(intent, MapActivity.REQ_NODE_EDIT);
-                mNodeOperationLauncher.launch(intent);
-*/
-
                 //クローズする
                 operationToolIcon();
             }
-        });
+        });*/
 
     }
 
@@ -214,9 +191,9 @@ public class BaseNode extends FrameLayout {
             @Override
             public void onClick(View view) {
 
+/*
                 mNodeDesignClickListener.onClickIcon(bn_self, view, true);
 
-/*
                 //ノード情報画面へ遷移
                 Context context = getContext();
                 Intent intent = new Intent(context, NodeEntryActivity.class);
@@ -236,12 +213,12 @@ public class BaseNode extends FrameLayout {
 */
 
                 //クローズする
-                operationToolIcon();
+                //operationToolIcon();
             }
         });
 
         //ノード生成(ピクチャ)
-        findViewById(R.id.ib_createPictureNode).setOnClickListener(new OnClickListener() {
+/*        findViewById(R.id.ib_createPictureNode).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -257,16 +234,16 @@ public class BaseNode extends FrameLayout {
                 //クローズする
                 operationToolIcon();
             }
-        });
+        });*/
 
     }
 
     /*
      * ツールアイコン-ノード生成／編集クリックリスナー
      */
-    public void setOnNodeDesignClickListener(MapActivity.NodeDesignClickListener listener) {
+/*    public void setOnNodeDesignClickListener(MapActivity.NodeDesignClickListener listener) {
         mNodeDesignClickListener = listener;
-    }
+    }*/
 
     /*
      * ノードデザインの設定
@@ -611,6 +588,19 @@ public class BaseNode extends FrameLayout {
         cv_node.setRadius(min * ResourceManager.SQUARE_CORNER_RATIO);
     }
 
+
+/*    @Override
+    public void onMeasure(int widthMeasureSpec, int heightMeasureSpec) {
+
+        super.onMeasure( widthMeasureSpec, heightMeasureSpec );
+
+        int widthMode = MeasureSpec.getMode(widthMeasureSpec);
+        int widthSize = MeasureSpec.getSize(widthMeasureSpec);
+
+        Log.i("長さの確定確認", "onMeasure widthSize=" + widthSize);
+        Log.i("長さの確定確認", "onMeasure getWidth=" + getWidth());
+    }*/
+
     /*
      * レイアウト確定後処理の設定
      */
@@ -622,14 +612,13 @@ public class BaseNode extends FrameLayout {
                     @Override
                     public void onGlobalLayout() {
 
-                        Log.i("OnGlobalLayoutListener", "Base側通過チェック");
+                        Log.i("長さの確定確認", "addOnNodeGlobalLayoutListener");
+                        Log.i("長さの確定確認", "addOnNodeGlobalLayoutListener getWidth=" + getWidth());
 
                         //中心座標の計算
                         calcCenterPos();
-
                         //ノードの形状
                         setNodeShape( mNode.getNodeShape() );
-
                         //サイズを設定
                         setScale();
 
@@ -667,7 +656,7 @@ public class BaseNode extends FrameLayout {
      */
     public void operationToolIcon() {
 
-        //共通データ
+/*        //共通データ
         MapCommonData mapCommonData = (MapCommonData)((Activity)getContext()).getApplication();
 
         //表示制御値
@@ -768,7 +757,7 @@ public class BaseNode extends FrameLayout {
                         Log.i("toolOpenControl", mNode.getNodeName() + " global=" + getWidth() + " " + getHeight());
                     }
                 }
-        );
+        );*/
     }
 
     /*
@@ -836,7 +825,7 @@ public class BaseNode extends FrameLayout {
         setNodeDesign();
 
         //ツールアイコンの設定
-        setParentToolIcon();
+        //setParentToolIcon();
     }
 
     public float getCenterPosX() {
@@ -846,9 +835,9 @@ public class BaseNode extends FrameLayout {
         return mCenterPosY;
     }
 
-    public void setNodeOperationLauncher( ActivityResultLauncher<Intent> launcher ) {
+/*    public void setNodeOperationLauncher( ActivityResultLauncher<Intent> launcher ) {
         this.mNodeOperationLauncher = launcher;
-    }
+    }*/
 
     public ToolIconsView getIconView() {
         return this.mIconView;

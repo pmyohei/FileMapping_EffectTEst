@@ -54,8 +54,8 @@ public class ChildNode extends BaseNode {
      * コンストラクタ
      */
     @SuppressLint("ClickableViewAccessibility")
-    public ChildNode(Context context, NodeTable node, ActivityResultLauncher<Intent> launcher, int layoutID) {
-        super(context, node, launcher, layoutID);
+    public ChildNode(Context context, NodeTable node, int layoutID) {
+        super(context, node, layoutID);
 
         Log.i("ChildNode", "3");
 
@@ -63,7 +63,7 @@ public class ChildNode extends BaseNode {
         setOnTouchListener(new NodeTouchListener());
 
         //ツールアイコン設定
-        setChildToolIcon();
+        //setChildToolIcon();
     }
 
 
@@ -74,7 +74,7 @@ public class ChildNode extends BaseNode {
      */
     public void setChildToolIcon() {
 
-        //ノード削除
+/*        //ノード削除
         findViewById(R.id.ib_delete).setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -114,8 +114,7 @@ public class ChildNode extends BaseNode {
                         .setNegativeButton("Cancel", null)
                         .show();
             }
-        });
-
+        });*/
 
     }
 

@@ -457,7 +457,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
     /*
      *　全ノードのラインサイズの設定
      */
-    public void setAllNodeLineSize( int idx ) {
+    public void setAllNodeLineSize( float thick ) {
 
         //リストの内の子ノードすべて
         for( NodeTable node: this ){
@@ -467,10 +467,9 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
                 continue;
             }
 
-            //★テーブルにも反映必要
-            //node.
+            //★テーブルにも反映→ノード側で行う
             ChildNode childNode = (ChildNode)node.getNodeView();
-            childNode.setLineSize( idx + 1 );
+            childNode.setLineSize( thick );
         }
     }
 

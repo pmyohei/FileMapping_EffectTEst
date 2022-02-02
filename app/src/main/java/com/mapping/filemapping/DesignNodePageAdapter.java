@@ -39,13 +39,6 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
      */
     class GuideViewHolder extends RecyclerView.ViewHolder implements TextWatcher {
 
-        //カラー指定
-        private final int COLOR_BACKGROUNG = 0;
-        private final int COLOR_TEXT = 1;
-        private final int COLOR_BORDER = 2;
-        private final int COLOR_SHADOW = 3;
-        private final int COLOR_LINE = 4;
-
         //設定対象ノードビュー
         private final BaseNode        mv_node;
         //FragmentManager
@@ -124,7 +117,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
                 //tv_borderColorGraphic = itemView.findViewById(R.id.tv_borderColorGraphic);
                 csv_border = itemView.findViewById(R.id.csv_border);
                 //枠線サイズ
-                rg_borderSize = itemView.findViewById(R.id.rg_borderSize);
+                //rg_borderSize = itemView.findViewById(R.id.rg_borderSize);
                 sbv_borderSize       = itemView.findViewById(R.id.sbv_borderSize);
                 //影色
                 //tv_shadowColorCode    = itemView.findViewById(R.id.tv_shadowColorCode);
@@ -137,7 +130,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
                 //tv_lineColorGraphic = itemView.findViewById(R.id.tv_lineColorGraphic);
                 csv_line = itemView.findViewById(R.id.csv_line);
                 //サイズ
-                rg_lineSize = itemView.findViewById(R.id.rg_lineSize);
+                //rg_lineSize = itemView.findViewById(R.id.rg_lineSize);
                 sbv_lineSize       = itemView.findViewById(R.id.sbv_lineSize);
             }
         }

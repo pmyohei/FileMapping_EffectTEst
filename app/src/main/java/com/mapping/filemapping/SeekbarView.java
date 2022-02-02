@@ -67,8 +67,6 @@ public class SeekbarView extends LinearLayout {
      */
     public void setNodeSizeSeekbar(BaseNode node) {
 
-        
-
         //ノードサイズの最大・最小値
         int maxSize;
         int minSize;
@@ -129,8 +127,12 @@ public class SeekbarView extends LinearLayout {
         //シークバー
         SeekBar sb_size = findViewById(R.id.sb_size);
 
+        //現在の値
+        final int INIT_SIZE = 5;
+        int progress = ( (node == null) ? INIT_SIZE : (int)((ChildNode)node).getLineSize() * RATIO );
+
         sb_size.setMax( PROGRESS_MAX );
-        sb_size.setProgress( (int)((ChildNode)node).getLineSize() * RATIO );
+        sb_size.setProgress( progress );
         sb_size.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar seekbar){}
@@ -142,10 +144,21 @@ public class SeekbarView extends LinearLayout {
                 //設定するラインの幅
                 float thick = (float)( i + 1 ) / RATIO;
 
-                ((ChildNode) node).setLineSize( thick );
+                if( node == null ){
+                    //全ノード
+
+                    //マップ共通データ
+                    MapCommonData commonData = (MapCommonData)((Activity)getContext()).getApplication();
+                    NodeArrayList<NodeTable> nodes = commonData.getNodes();
+                    nodes.setAllNodeLineSize( thick );
+
+                } else {
+                    //ノード単体
+                    ((ChildNode) node).setLineSize( thick );
+                }
 
                 //Log.i("sb_nodeSize", "設定比率=" + setRatio + " 目標サイズ=" + setSize);
-                //Log.i("sb_nodeSize", "結果サイズ=" + node.getScaleWidth());
+                Log.i("seekbar", "ライン太さ=" + thick);
             }
         });
     }
@@ -162,8 +175,12 @@ public class SeekbarView extends LinearLayout {
         //シークバー
         SeekBar sb_size = findViewById(R.id.sb_size);
 
+        //現在の値
+        final int INIT_SIZE = 5;
+        int progress = ( (node == null) ? INIT_SIZE : node.getBorderSize() );
+
         sb_size.setMax( PROGRESS_MAX );
-        sb_size.setProgress( node.getBorderSize() );
+        sb_size.setProgress( progress );
         sb_size.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
             @Override
             public void onStopTrackingTouch(SeekBar seekbar){}
@@ -172,11 +189,23 @@ public class SeekbarView extends LinearLayout {
             @Override
             public void onProgressChanged(SeekBar seekbar, int i, boolean flag) {
 
-                //シークバーの値をそのまま設定
-                node.setBorderSize( i );
+                if( node == null ){
+                    //全ノード
+
+                    //マップ共通データ
+                    MapCommonData commonData = (MapCommonData)((Activity)getContext()).getApplication();
+                    NodeArrayList<NodeTable> nodes = commonData.getNodes();
+                    nodes.setAllNodeBorderSize( i );
+
+                } else {
+                    //ノード単体
+
+                    //シークバーの値をそのまま設定
+                    node.setBorderSize( i );
+                }
 
                 //Log.i("sb_nodeSize", "設定比率=" + setRatio + " 目標サイズ=" + setSize);
-                //Log.i("sb_nodeSize", "結果サイズ=" + node.getScaleWidth());
+                Log.i("seekbar", "ノード枠太さ=" + i);
             }
         });
     }

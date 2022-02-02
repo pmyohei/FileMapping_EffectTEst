@@ -52,12 +52,14 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         private ImageView iv_circle;
         private ImageView iv_square;
         private ColorSelectionView csv_border;
-        private RadioGroup rg_borderSize;
+        //private RadioGroup rg_borderSize;
+        private SeekbarView  sbv_borderSize;
         private ColorSelectionView csv_shadow;
 
         //ラインデザイン
         private ColorSelectionView csv_line;
-        private RadioGroup rg_lineSize;
+        //private RadioGroup rg_lineSize;
+        private SeekbarView  sbv_lineSize;
 
 
         /*
@@ -88,7 +90,8 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
                 //枠線色
                 csv_border = itemView.findViewById(R.id.csv_border);
                 //枠線サイズ
-                rg_borderSize = itemView.findViewById(R.id.rg_borderSize);
+                //rg_borderSize = itemView.findViewById(R.id.rg_borderSize);
+                sbv_borderSize       = itemView.findViewById(R.id.sbv_borderSize);
                 //影色
                 csv_shadow = itemView.findViewById(R.id.csv_shadow);
 
@@ -96,7 +99,8 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
                 //色
                 csv_line = itemView.findViewById(R.id.csv_line);
                 //サイズ
-                rg_lineSize = itemView.findViewById(R.id.rg_lineSize);
+                //rg_lineSize = itemView.findViewById(R.id.rg_lineSize);
+                sbv_lineSize = itemView.findViewById(R.id.sbv_lineSize);
             }
         }
 
@@ -168,9 +172,11 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
             //枠色
             csv_border.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_BORDER, mv_map );
 
-            //枠サイズ
+            //枠サイズのシークバー
+            sbv_borderSize.setBorderSizeSeekbar( null );
+
             //★UIをラジオボタンにするなら、ライン側と統一させる
-            rg_borderSize.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+/*            rg_borderSize.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     //選択されたindexを取得
@@ -183,7 +189,7 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
 
                     nodes.setAllNodeBorderSize( idx + 1 );
                 }
-            });
+            });*/
 
             //影色
             csv_shadow.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_SHADOW, mv_map );
@@ -199,7 +205,9 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
             csv_line.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_LINE, mv_map );
 
             //ラインサイズ
-            rg_lineSize.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            sbv_lineSize.setLineSizeSeekbar( null );
+
+/*            rg_lineSize.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
                 @Override
                 public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
                     //選択されたindexを取得
@@ -212,7 +220,7 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
 
                     nodes.setAllNodeLineSize( idx + 1 );
                 }
-            });
+            });*/
         }
 
         /*

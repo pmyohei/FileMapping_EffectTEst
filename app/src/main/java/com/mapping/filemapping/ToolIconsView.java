@@ -1,7 +1,12 @@
 package com.mapping.filemapping;
 
+import static com.mapping.filemapping.MapActivity.MOVE_UPPER;
+
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -10,7 +15,6 @@ import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
-import android.widget.FrameLayout;
 import android.widget.ImageButton;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -26,24 +30,25 @@ public class ToolIconsView extends ConstraintLayout {
     private class TooliconData {
 
         //アイコン種別
-        public static final String ICON_CREATE_NODE = "createNode";
-        public static final String ICON_CREATE_PICTURE_NODE = "createPictureNode";
-        public static final String ICON_EDIT = "edit";
-        public static final String ICON_DISPLAY_ALL_PICTURE = "displayAllPicture";
-        public static final String ICON_DELETE = "delete";
-        public static final String ICON_CHANGE_PARENT = "changeParent";
-        public static final String ICON_NEW_MAP = "newMap";
-        public static final String ICON_CLOSE = "close";
+        //★整数でよい
+        public static final int CREATE_NODE = 0;
+        public static final int CREATE_PICTURE_NODE = 1;
+        public static final int EDIT = 2;
+        public static final int DISPLAY_ALL_PICTURE = 3;
+        public static final int DELETE = 4;
+        public static final int CHANGE_PARENT = 5;
+        public static final int NEW_MAP = 6;
+        public static final int CLOSE = 7;
         
-        private final String iconKind;
+        private final int iconKind;
         private final ImageButton ibIcon;
 
-        public TooliconData(String kind, ImageButton ib ){
+        public TooliconData(int kind, ImageButton ib ){
             iconKind = kind;
             ibIcon = ib;
         }
 
-        public String getIconKind() {
+        public int getIconKind() {
             return iconKind;
         }
         public ImageButton getIbIcon() {
@@ -55,13 +60,16 @@ public class ToolIconsView extends ConstraintLayout {
     private final int ADD_ANGLE = 30;
     //対象ノード
     private BaseNode v_baseNode;
+    //マップ画面
+    private MapActivity mMapActivity;
 
     /*
      * コンストラクタ(New)
      */
-    public ToolIconsView(Context context, BaseNode v_node) {
+    public ToolIconsView(Context context, BaseNode v_node, MapActivity mapActivity) {
         super(context);
         v_baseNode = v_node;
+        mMapActivity = mapActivity;
 
         //初期化
         init();
@@ -76,7 +84,7 @@ public class ToolIconsView extends ConstraintLayout {
     }
 
     /*
-     *
+     * 初期化処理
      */
     public void init() {
 
@@ -216,28 +224,28 @@ public class ToolIconsView extends ConstraintLayout {
         int kind = v_baseNode.getNode().getKind();
 
         if (kind == NodeTable.NODE_KIND_ROOT) {
-            iconViews.add( new TooliconData( TooliconData.ICON_CREATE_NODE, findViewById( R.id.ib_createNode ) ) );
-            iconViews.add( new TooliconData( TooliconData.ICON_CREATE_PICTURE_NODE, findViewById( R.id.ib_createPictureNode ) ) );
-            iconViews.add( new TooliconData( TooliconData.ICON_EDIT, findViewById( R.id.ib_edit ) ) );
-            iconViews.add( new TooliconData( TooliconData.ICON_DISPLAY_ALL_PICTURE, findViewById( R.id.ib_displayAllPicture ) ) );
-            iconViews.add( new TooliconData( TooliconData.ICON_CLOSE, findViewById( R.id.ib_close ) ) );
+            iconViews.add( new TooliconData( TooliconData.CREATE_NODE, findViewById( R.id.ib_createNode ) ) );
+            iconViews.add( new TooliconData( TooliconData.CREATE_PICTURE_NODE, findViewById( R.id.ib_createPictureNode ) ) );
+            iconViews.add( new TooliconData( TooliconData.EDIT, findViewById( R.id.ib_edit ) ) );
+            iconViews.add( new TooliconData( TooliconData.DISPLAY_ALL_PICTURE, findViewById( R.id.ib_displayAllPicture ) ) );
+            iconViews.add( new TooliconData( TooliconData.CLOSE, findViewById( R.id.ib_close ) ) );
 
         } else if (kind == NodeTable.NODE_KIND_NODE) {
-            iconViews.add( new TooliconData( TooliconData.ICON_CREATE_NODE, findViewById( R.id.ib_createNode )) );
-            iconViews.add( new TooliconData( TooliconData.ICON_CREATE_PICTURE_NODE, findViewById( R.id.ib_createPictureNode )) );
-            iconViews.add( new TooliconData( TooliconData.ICON_EDIT, findViewById( R.id.ib_edit )) );
-            iconViews.add( new TooliconData( TooliconData.ICON_DISPLAY_ALL_PICTURE, findViewById( R.id.ib_displayAllPicture )) );
-            iconViews.add( new TooliconData( TooliconData.ICON_DELETE, findViewById( R.id.ib_delete )) );
-            iconViews.add( new TooliconData( TooliconData.ICON_CHANGE_PARENT, findViewById( R.id.ib_changeParent )) );
+            iconViews.add( new TooliconData( TooliconData.CREATE_NODE, findViewById( R.id.ib_createNode )) );
+            iconViews.add( new TooliconData( TooliconData.CREATE_PICTURE_NODE, findViewById( R.id.ib_createPictureNode )) );
+            iconViews.add( new TooliconData( TooliconData.EDIT, findViewById( R.id.ib_edit )) );
+            iconViews.add( new TooliconData( TooliconData.DISPLAY_ALL_PICTURE, findViewById( R.id.ib_displayAllPicture )) );
+            iconViews.add( new TooliconData( TooliconData.DELETE, findViewById( R.id.ib_delete )) );
+            iconViews.add( new TooliconData( TooliconData.CHANGE_PARENT, findViewById( R.id.ib_changeParent )) );
             //iconViews.add( new TooliconData( TooliconData.ICON_NEW_MAP, findViewById( R.id.ib_newMap )) );
-            iconViews.add( new TooliconData( TooliconData.ICON_CLOSE, findViewById( R.id.ib_close )) );
+            iconViews.add( new TooliconData( TooliconData.CLOSE, findViewById( R.id.ib_close )) );
 
         } else {
-            iconViews.add( new TooliconData( TooliconData.ICON_EDIT, findViewById( R.id.ib_edit )) );
-            iconViews.add( new TooliconData( TooliconData.ICON_DISPLAY_ALL_PICTURE, findViewById( R.id.ib_displayAllPicture )) );
-            iconViews.add( new TooliconData( TooliconData.ICON_DELETE, findViewById( R.id.ib_delete )) );
-            iconViews.add( new TooliconData( TooliconData.ICON_CHANGE_PARENT, findViewById( R.id.ib_changeParent )) );
-            iconViews.add( new TooliconData( TooliconData.ICON_CLOSE, findViewById( R.id.ib_close )) );
+            iconViews.add( new TooliconData( TooliconData.EDIT, findViewById( R.id.ib_edit )) );
+            iconViews.add( new TooliconData( TooliconData.DISPLAY_ALL_PICTURE, findViewById( R.id.ib_displayAllPicture )) );
+            iconViews.add( new TooliconData( TooliconData.DELETE, findViewById( R.id.ib_delete )) );
+            iconViews.add( new TooliconData( TooliconData.CHANGE_PARENT, findViewById( R.id.ib_changeParent )) );
+            iconViews.add( new TooliconData( TooliconData.CLOSE, findViewById( R.id.ib_close )) );
         }
 
         return iconViews;
@@ -251,98 +259,205 @@ public class ToolIconsView extends ConstraintLayout {
 
         //アイコンビュー
         ImageButton ib = toolIconData.getIbIcon();
-        //アイコン種別
-        String iconKind = toolIconData.getIconKind();
+        //クリックリスナー
+        OnClickListener listener = null;
 
+        //アイコン毎にリスナーを生成
+        int iconKind = toolIconData.getIconKind();
         switch (iconKind) {
-            case TooliconData.ICON_CREATE_NODE:
+            case TooliconData.CREATE_NODE:
 
-                ib.setOnClickListener(new OnClickListener() {
+                listener = new OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //Log.i("アイコン", "クリックされました");
+
+                        //アイコンが開かれたノードを親ノードとする
+                        NodeTable parentNode = v_baseNode.getNode();
+
+                        //初期生成位置
+                        int posX = (int)parentNode.getCenterPosX() + ResourceManager.POS_NODE_INIT_OFFSET;
+                        int posY = (int)parentNode.getCenterPosY();
+
+                        //ノードを生成
+                        NodeTable newNode = new NodeTable(
+                                "",
+                                parentNode.getPidMap(),
+                                parentNode.getPid(),
+                                NodeTable.NODE_KIND_NODE,
+                                posX,
+                                posY
+                        );
+
+                        //カラーパターン設定
+                        String[] colors = mMapActivity.getMapDefaultColors();
+                        newNode.setColorPattern( colors );
+
+                        //ノードをマップに追加
+                        BaseNode v_node = mMapActivity.drawNode( mMapActivity.findViewById(R.id.fl_map), newNode );
+
+                        //BottomSheetを開く
+                        mMapActivity.openDesignBottomSheet(DesignBottomSheet.NODE, v_node);
+                        //画面上部中央にノードがくるようにする
+                        mMapActivity.focusNodeToCenterScreen(posX, posY, MOVE_UPPER);
+
+                        //ノードに持たせていた自分をクローズ
+                        v_baseNode.closeIconView();
                     }
-                });
+                };
 
                 break;
-            case TooliconData.ICON_CREATE_PICTURE_NODE:
 
+            case TooliconData.CREATE_PICTURE_NODE:
 
-                ib.setOnClickListener(new OnClickListener() {
+                listener = new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        //ノードに持たせていた自分をクローズ
+                        v_baseNode.closeIconView();
+
+                        //ノード
+                        NodeTable node = v_baseNode.getNode();
+
+                        //ピクチャトリミング画面へ遷移
+                        Context context = getContext();
+                        Intent intent = new Intent(context, PictureTrimmingActivity.class);
+                        intent.putExtra(MapActivity.INTENT_MAP_PID, node.getPidMap());
+                        intent.putExtra(MapActivity.INTENT_NODE_PID, node.getPid());
+
+                        //開始
+                        mMapActivity.getActivityResultLauncher().launch(intent);
+                    }
+                };
+
+                break;
+
+            case TooliconData.EDIT:
+
+                listener = new OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //Log.i("アイコン", "クリックされました");
+
+                        //ノード本体のマージンを取得
+                        float marginLeft = v_baseNode.getLeft();
+                        float marginTop  = v_baseNode.getTop();
+
+                        //BottomSheetを開く
+                        mMapActivity.openDesignBottomSheet(DesignBottomSheet.NODE, v_baseNode);
+                        //画面上部中央にノードがくるようにする
+                        mMapActivity.focusNodeToCenterScreen(marginLeft, marginTop, MOVE_UPPER);
+
+                        //ノードに持たせていた自分をクローズ
+                        v_baseNode.closeIconView();
                     }
-                });
+                };
 
                 break;
-            case TooliconData.ICON_EDIT:
 
+            case TooliconData.DISPLAY_ALL_PICTURE:
 
-                ib.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //Log.i("アイコン", "クリックされました");
-                    }
-                });
-
-                break;
-            case TooliconData.ICON_DISPLAY_ALL_PICTURE:
-
-
-                ib.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //Log.i("アイコン", "クリックされました");
-                    }
-                });
-
-                break;
-            case TooliconData.ICON_DELETE:
-
-
-                ib.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //Log.i("アイコン", "クリックされました");
-                    }
-                });
-
-                break;
-            case TooliconData.ICON_CHANGE_PARENT:
-
-
-                ib.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //Log.i("アイコン", "クリックされました");
-                    }
-                });
-
-                break;
-            case TooliconData.ICON_NEW_MAP:
-                //※現状なし
-                ib.setOnClickListener(new OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        //Log.i("アイコン", "クリックされました");
-                    }
-                });
-
-                break;
-            case TooliconData.ICON_CLOSE:
-
-                ib.setOnClickListener(new OnClickListener() {
+                listener = new OnClickListener() {
                     @Override
                     public void onClick(View view) {
                         //Log.i("アイコン", "クリックされました");
                         //ノードに持たせていた自分をクローズ
                         v_baseNode.closeIconView();
                     }
-                });
+                };
+
+                break;
+            case TooliconData.DELETE:
+
+                listener = new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+
+                        //本ノード配下のノード（本ノード含む）を全て取得する
+                        MapCommonData mapCommonData = (MapCommonData) ((Activity) getContext()).getApplication();
+                        mapCommonData.setDeleteNodes(v_baseNode.getNode().getPid());
+
+                        //削除確認ダイアログを表示
+                        new AlertDialog.Builder(getContext())
+                                .setTitle("ノード削除確認")
+                                .setMessage("配下のノードも全て削除されます。\nなお、端末上から写真は削除されません。")
+                                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                                    @Override
+                                    public void onClick(DialogInterface dialog, int which) {
+
+                                        //削除対象ノード
+                                        NodeArrayList<NodeTable> nodes = mapCommonData.getDeleteNodes();
+
+                                        //DBからノード削除
+                                        AsyncDeleteNode db = new AsyncDeleteNode(getContext(), nodes, new AsyncDeleteNode.OnFinishListener() {
+                                            @Override
+                                            public void onFinish() {
+
+                                                //自身と配下ノードをレイアウトから削除
+                                                ((ChildNode)v_baseNode).removeLayoutUnderSelf();
+
+                                                //共通データに削除完了処理を行わせる
+                                                mapCommonData.finishDeleteNode();
+                                            }
+                                        });
+
+                                        //非同期処理開始
+                                        db.execute();
+                                    }
+                                })
+                                .setNegativeButton("Cancel", null)
+                                .show();
+
+                        //ノードに持たせていた自分をクローズ
+                        v_baseNode.closeIconView();
+                    }
+                };
+
+                break;
+
+            case TooliconData.CHANGE_PARENT:
+
+
+                listener = new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Log.i("アイコン", "クリックされました");
+                        //ノードに持たせていた自分をクローズ
+                        v_baseNode.closeIconView();
+                    }
+                };
+
+                break;
+
+            case TooliconData.NEW_MAP:
+                //※現状なし
+                listener = new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Log.i("アイコン", "クリックされました");
+                        //ノードに持たせていた自分をクローズ
+                        v_baseNode.closeIconView();
+                    }
+                };
+
+                break;
+
+            case TooliconData.CLOSE:
+
+                listener = new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Log.i("アイコン", "クリックされました");
+                        //ノードに持たせていた自分をクローズ
+                        v_baseNode.closeIconView();
+                    }
+                };
                 break;
         }
 
+        //リスナーを設定
+        ib.setOnClickListener( listener );
     }
 
     /*

@@ -216,7 +216,7 @@ public class SampleMapView extends FrameLayout {
         }
 
         //ノード生成
-        ChildNode nodeView = new NodeView(getContext(), node, null);
+        ChildNode nodeView = new NodeView(getContext(), node);
 
         //ノードをマップに追加
         fl_map.addView(nodeView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));

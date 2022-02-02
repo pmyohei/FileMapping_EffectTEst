@@ -23,8 +23,8 @@ public class PictureNodeView extends ChildNode implements Serializable  /*implem
      * コンストラクタ
      */
     @SuppressLint("ClickableViewAccessibility")
-    public PictureNodeView(Context context, NodeTable node, PictureTable thumbnail, ActivityResultLauncher<Intent> nodeOperationLauncher) {
-        super(context, node, nodeOperationLauncher, R.layout.picture_node);
+    public PictureNodeView(Context context, NodeTable node, PictureTable thumbnail) {
+        super(context, node, R.layout.picture_node);
 
         Log.i("PictureNodeView", "3");
 

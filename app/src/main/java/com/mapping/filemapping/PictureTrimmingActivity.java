@@ -9,12 +9,14 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -28,6 +30,7 @@ import android.widget.ImageView;
 import com.google.android.material.card.MaterialCardView;
 import com.isseiaoki.simplecropview.CropImageView;
 
+import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.Objects;
@@ -79,6 +82,38 @@ public class PictureTrimmingActivity extends AppCompatActivity {
                                 //コンテンツURIを取得
                                 Uri contentUri = intent.getData();
 
+                                //お試し
+                                File file = new File(contentUri.getPath());
+                                Log.i("URI関連", "ファイル名=" + file.getName());
+                                Log.i("URI関連", "contentUri.getPath()=" + contentUri.getPath() );
+                                Log.i("URI関連", "contentUri.getPath()=" + file.getAbsolutePath() );
+
+                                //String[] projection = { MediaStore.MediaColumns.DISPLAY_NAME };
+                                String[] projection = { MediaStore.MediaColumns.DISPLAY_NAME, MediaStore.MediaColumns.DATA };
+                                Cursor cursor = getContentResolver()
+                                        .query(contentUri, projection, null, null, null);
+                                if (cursor != null) {
+                                    if (cursor.moveToFirst()) {
+                                        String fileName = cursor.getString(
+                                                cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME));
+
+                                        Log.i("URI関連", "fileName=" + fileName );
+
+                                        if( cursor.moveToNext() ){
+                                            String path = cursor.getString(
+                                                    cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA));
+
+                                            Log.i("URI関連", "path=" + path );
+                                        }
+                                    }
+                                    cursor.close();
+                                }
+
+
+
+                                //お試し------
+
+
                                 //トリミング画面を設定
                                 setCropLayout(contentUri);
 
@@ -107,7 +142,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         //pictureIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);     //画像の複数選択を可能にする
         pictureIntent.setType("image/*");
 
-        //お試ししたが、落ちる
+        //試ししたが、落ちる
         //pictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
         //pictureIntent.addCategory(Intent.ACTION_OPEN_DOCUMENT_TREE );
 
@@ -164,7 +199,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
     /*
      *　本画面のレイアウト設定
      */
-    private void setCropLayout( Uri uri ) {
+    private void setCropLayout( Uri contentUri ) {
 
         //ファイルを指す
         ParcelFileDescriptor pfDescriptor = null;
@@ -173,7 +208,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
             ContentResolver contentResolver = getContentResolver();
 
             //URI下のデータにアクセスする
-            pfDescriptor = contentResolver.openFileDescriptor(uri, "r");
+            pfDescriptor = contentResolver.openFileDescriptor(contentUri, "r");
             if(pfDescriptor != null){
 
                 //実際のFileDescriptorを取得
@@ -211,7 +246,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
                     @Override
                     public void onClick(View v) {
                         //ノードを生成
-                        createPictureNode( uri );
+                        createPictureNode( contentUri );
                     }
                 });
 
@@ -258,19 +293,14 @@ public class PictureTrimmingActivity extends AppCompatActivity {
 
         //URI情報
         String[] uriSplit = uri.toString().split( ResourceManager.URI_SPLIT );
-        String uriIdentify = uriSplit[1];
 
-        //ノードを生成
-        //★
-        //※本ノード自体のpidはこの時点では確定していないため、DB処理完了後に設定
-/*
-        NodeTable newNode = new NodeTable();
-        newNode.setPidMap(mapPid);
-        newNode.setPidParentNode( selectedNodePid );
-        newNode.setKind(NodeTable.NODE_KIND_PICTURE);
-        newNode.setPos( posX, posY );
-        newNode.setUriIdentify( uriIdentify );
-*/
+        if( uriSplit.length < 2  ){
+            //想定するURIではない場合
+            Log.i("URI", "想定外のURI=" + uri.toString());
+            return;
+        }
+
+        String uriIdentify = uriSplit[1];
 
         //ノードを生成
         NodeTable newNode = new NodeTable(
@@ -282,7 +312,6 @@ public class PictureTrimmingActivity extends AppCompatActivity {
                 posY
         );
         newNode.setUriIdentify( uriIdentify );
-
 
         //トリミング情報
         final CropImageView iv_cropTarget = findViewById(R.id.iv_cropTarget);

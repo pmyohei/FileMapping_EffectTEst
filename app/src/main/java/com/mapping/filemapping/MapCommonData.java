@@ -25,7 +25,7 @@ public class MapCommonData extends Application {
     //削除対象ノード
     private NodeArrayList<NodeTable> mDeleteNodes;
     //ツールアイコン表示中ノード
-    private BaseNode mToolOpeningNode = null;
+    //private BaseNode mToolOpeningNode = null;
     //編集対象ノード
     private NodeTable mEditNode = null;
     //色履歴
@@ -53,7 +53,7 @@ public class MapCommonData extends Application {
 
         mNodes = null;
         mMovedNodesQue = null;
-        mToolOpeningNode = null;
+        //mToolOpeningNode = null;
         mEditNode = null;
         mDeleteNodes = null;
         mColorHistory = null;
@@ -216,7 +216,7 @@ public class MapCommonData extends Application {
     /*
      * ツールアイコン表示中ノードの取得／設定
      */
-    public BaseNode getToolOpeningNode() {
+/*    public BaseNode getToolOpeningNode() {
         return mToolOpeningNode;
     }
     public void setToolOpeningNode(BaseNode mToolOpeningNode) {
@@ -228,7 +228,7 @@ public class MapCommonData extends Application {
     public boolean isToolOpening() {
         //ノードあるなら、開き中
         return (this.mToolOpeningNode != null );
-    }
+    }*/
 
     /*
      * 編集対象ノード

@@ -67,11 +67,6 @@
 
 
             <!--  ノード境界線サイズ  -->
-            <com.mapping.filemapping.SeekbarView
-                android:id="@+id/sbv_lineSize"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
             <TextView
                 android:id="@+id/textView8"
                 android:layout_width="wrap_content"
@@ -81,6 +76,12 @@
                 android:text="@string/title_lineThickness"
                 android:textColor="@color/black" />
 
+            <com.mapping.filemapping.SeekbarView
+                android:id="@+id/sbv_lineSize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+<!--
             <RadioGroup
                 android:id="@+id/rg_lineSize"
                 android:layout_width="wrap_content"
@@ -123,6 +124,7 @@
                     android:layout_weight="1"
                     android:text="5" />
             </RadioGroup>
+-->
 
             <TextView
                 android:id="@+id/textView9"

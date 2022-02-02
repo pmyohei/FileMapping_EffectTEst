@@ -26,7 +26,7 @@ public class NodeView extends ChildNode implements Serializable {
     @SuppressLint("ClickableViewAccessibility")
     public NodeView(Context context, AttributeSet attrs) {
        // super(context, new NodeTable(), null, R.layout.node);
-        super(context, null, null, R.layout.node);
+        super(context, null, R.layout.node);
     }
 
     /*
@@ -34,8 +34,8 @@ public class NodeView extends ChildNode implements Serializable {
      *   new
      */
     @SuppressLint("ClickableViewAccessibility")
-    public NodeView(Context context, NodeTable node, ActivityResultLauncher<Intent> nodeOperationLauncher) {
-        super(context, node, nodeOperationLauncher, R.layout.node);
+    public NodeView(Context context, NodeTable node) {
+        super(context, node, R.layout.node);
 
         Log.i("NodeView", "3");
 

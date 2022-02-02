@@ -185,11 +185,6 @@
                 app:layout_constraintTop_toBottomOf="@+id/tv_titleNodeBackground" />-->
 
             <!--  ノード境界線サイズ  -->
-            <com.mapping.filemapping.SeekbarView
-                android:id="@+id/sbv_borderSize"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
-
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -198,6 +193,12 @@
                 android:text="ノードの枠線のサイズ"
                 android:textColor="@color/black" />
 
+            <com.mapping.filemapping.SeekbarView
+                android:id="@+id/sbv_borderSize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+<!--
             <RadioGroup
                 android:id="@+id/rg_borderSize"
                 android:layout_width="wrap_content"
@@ -240,6 +241,7 @@
                     android:layout_weight="1"
                     android:text="5" />
             </RadioGroup>
+-->
 
             <!-- 色選択-ノード影色 -->
             <TextView
