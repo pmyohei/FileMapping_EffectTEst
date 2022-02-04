@@ -33,9 +33,9 @@ public class PictureTable implements Serializable {
     @ColumnInfo(name = "pid_parent_node")
     private int pidParentNode;
 
-    //Uri-識別子
-    @ColumnInfo(name = "uri_identify")
-    private String uriIdentify;
+    //写真の絶対パス
+    @ColumnInfo(name = "path")
+    private String path;
 
     //トリミング開始x座標
     @ColumnInfo(name = "trg_left")
@@ -53,19 +53,71 @@ public class PictureTable implements Serializable {
     @ColumnInfo(name = "trg_height")
     private int trgHeight = INIT_TRIMMING;
 
+    //ピクチャノードの写真かどうか
+    @ColumnInfo(name = "is_thumbnail")
+    private boolean isThumbnail;
 
     //トリミング情報初期値
     public static final int INIT_TRIMMING = -1;
+    //所属ピクチャノード未定
+    public static final int UNKNOWN = -1;
+
+    public PictureTable() {
+    }
+
+    public PictureTable(int mapPid, int parentNodePid, String path, boolean isThumbnail) {
+        this.pidMap = mapPid;
+        this.pidParentNode = parentNodePid;
+        this.path = path;
+        this.isThumbnail = isThumbnail;
+
+        this.setTrimmingInfo( null );
+    }
+
+    public PictureTable(int mapPid, int parentNodePid, String path, boolean isThumbnail, RectF rect) {
+        this( mapPid, parentNodePid, path, isThumbnail );
+
+        this.setTrimmingInfo( rect );
+    }
+
+    /*
+     * サムネイル化
+     */
+    public void setEnableThumbnail( RectF rect ) {
+        setTrimmingInfo(rect);
+        this.isThumbnail = true;
+    }
+
+    /*
+     * 非サムネイル化
+     */
+    public void setDisableThumbnail() {
+        this.trgLeft = INIT_TRIMMING;
+        this.trgTop = INIT_TRIMMING;
+        this.trgWidth = INIT_TRIMMING;
+        this.trgHeight = INIT_TRIMMING;
+        this.isThumbnail = false;
+    }
 
     /*
      * トリミング情報設定
      */
     public void setTrimmingInfo(RectF rect) {
+
+        if( rect == null ){
+            this.trgLeft   = INIT_TRIMMING;
+            this.trgTop    = INIT_TRIMMING;
+            this.trgWidth  = INIT_TRIMMING;
+            this.trgHeight = INIT_TRIMMING;
+            return;
+        }
+
         this.trgLeft   = (int)rect.left;
         this.trgTop    = (int)rect.top;
         this.trgWidth  = (int)rect.width();
         this.trgHeight = (int)rect.height();
     }
+
     /*
      * トリミング情報取得
      */
@@ -92,11 +144,11 @@ public class PictureTable implements Serializable {
         this.pidParentNode = pidParentNode;
     }
 
-    public String getUriIdentify() {
-        return uriIdentify;
+    public String getPath() {
+        return path;
     }
-    public void setUriIdentify(String uriIdentify) {
-        this.uriIdentify = uriIdentify;
+    public void setPath(String path) {
+        this.path = path;
     }
 
     public int getTrgLeft() {
@@ -127,5 +179,10 @@ public class PictureTable implements Serializable {
         this.trgHeight = trgHeight;
     }
 
-
+    public boolean isThumbnail() {
+        return isThumbnail;
+    }
+    public void setThumbnail(boolean isThumbnail) {
+        this.isThumbnail = isThumbnail;
+    }
 }

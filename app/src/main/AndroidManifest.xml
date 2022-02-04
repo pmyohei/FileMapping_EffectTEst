@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.mapping.filemapping">
+    <!-- MediaStore.Images.Media.EXTERNAL_CONTENT_URI -->
+    <!-- ※コード上でも「ActivityCompat.requestPermissions()」の処理が必要 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:name=".MapCommonData"
@@ -10,6 +13,9 @@
         android:roundIcon="@mipmap/ic_m_round"
         android:supportsRtl="true"
         android:theme="@style/Toolbar.NoActionBar">
+        <activity
+            android:name=".PictureGalleryActivity"
+            android:exported="false" />
         <activity
             android:name=".PictureTrimmingActivity"
             android:exported="true" />

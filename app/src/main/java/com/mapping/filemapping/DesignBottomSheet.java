@@ -25,7 +25,8 @@ public class DesignBottomSheet extends CoordinatorLayout {
     //デザインレイアウト種別
     public static final int MAP = 0;
     public static final int NODE = 1;
-    public static final int SHAPE_ONLY = 2;
+    public static final int PICTURE_NODE = 2;
+    public static final int SHAPE_ONLY = 3;
 
     /*
      * コンストラクタ
@@ -91,6 +92,11 @@ public class DesignBottomSheet extends CoordinatorLayout {
             vp = setupNodeDesignLayout(view);
 
             heightRatio = HALF;
+        } else if( kind == PICTURE_NODE ){
+            //ピクチャノードデザイン指定
+            vp = setupPictureNodeDesignLayout(view);
+
+            heightRatio = HALF;
         } else if( kind == MAP ){
             //マップデザイン指定
             vp = setupMapDesignLayout(view);
@@ -108,29 +114,6 @@ public class DesignBottomSheet extends CoordinatorLayout {
         new TabLayoutMediator(tabLayout, vp,
                 (tab, position) -> tab.setText("")
         ).attach();
-
-        //----
-/*        vp.setUserInputEnabled(false);
-        tabLayout.setOnTouchListener(new OnTouchListener() {
-                @Override
-                public boolean onTouch(View view, MotionEvent motionEvent) {
-
-                    switch ( motionEvent.getAction() ){
-                        case MotionEvent.ACTION_DOWN:
-                            vp.setUserInputEnabled( true );
-                            Log.i("tabLayout", "DOWN");
-                            break;
-                        case MotionEvent.ACTION_UP:
-                            vp.setUserInputEnabled( false );
-                            Log.i("tabLayout", "UP");
-                            break;
-                    }
-
-                    return false;
-                }
-            }
-        );*/
-        //----
 
         //高さ設定
         setBottomSheetHeight( getContext(), heightRatio );
@@ -162,6 +145,28 @@ public class DesignBottomSheet extends CoordinatorLayout {
         return vp2;
     }
 
+
+    /*
+     * ピクチャノードデザイン用のレイアウトを設定
+     */
+    private ViewPager2 setupPictureNodeDesignLayout( View v_node ) {
+        //ノードデザイン設定レイアウト
+        List<Integer> layoutIdList = new ArrayList<>();
+        layoutIdList.add(R.layout.page_set_thumbnail);
+        layoutIdList.add(R.layout.page_node_design);
+
+        if( ((BaseNode)v_node).getNode().getKind() != NodeTable.NODE_KIND_ROOT ){
+            //ルートノード以外は、ライン用ページを追加
+            layoutIdList.add(R.layout.page_node_line_design);
+        }
+
+        //ViewPager2を生成
+        ViewPager2 vp2 = findViewById(R.id.vp2_design);
+        DesignNodePageAdapter adapter = new DesignNodePageAdapter(layoutIdList, v_node, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp2);
+        vp2.setAdapter(adapter);
+
+        return vp2;
+    }
 
     /*
      * マップデザイン用のレイアウトを設定

@@ -34,11 +34,6 @@ public class NodeTable implements Serializable {
     @ColumnInfo(name = "pid_parent_node")
     private int pidParentNode;
 
-    //Uri識別子-ピクチャ（ピクチャノードのみ）
-    //※エラーになるため、外部キーとして（Pid）は持たない
-    @ColumnInfo(name = "uri_identify")
-    private String uriIdentify;
-
     //ノード種別
     @ColumnInfo(name = "kind")
     private int kind;
@@ -242,13 +237,6 @@ public class NodeTable implements Serializable {
     }
     public void setTextColor(String textColor) {
         this.textColor = textColor;
-    }
-
-    public String getUriIdentify() {
-        return uriIdentify;
-    }
-    public void setUriIdentify(String uriIdentify) {
-        this.uriIdentify = uriIdentify;
     }
 
     public int getNodeShape() {

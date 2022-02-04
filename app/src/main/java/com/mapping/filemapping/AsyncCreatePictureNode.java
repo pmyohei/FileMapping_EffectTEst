@@ -18,7 +18,6 @@ public class AsyncCreatePictureNode {
     private final NodeTable         mNode;
     private final PictureTable      mPicture;
     private       int               mNodePid;
-    private       int               mPicturePid;
     private final OnFinishListener  mOnFinishListener;
 
     /*
@@ -66,10 +65,12 @@ public class AsyncCreatePictureNode {
             //PictureDao
             PictureTableDao pictureDao = mDB.daoPictureTable();
 
-            //ノードを挿入
+            //ピクチャノードを挿入
             mNodePid = (int)nodeDao.insert( mNode );
             //ピクチャを挿入
-            mPicturePid = (int)pictureDao.insert( mPicture );
+            mPicture.setPidParentNode( mNodePid );
+            int pid = (int)pictureDao.insert( mPicture );
+            mPicture.setPid( pid );
         }
     }
 
@@ -100,7 +101,7 @@ public class AsyncCreatePictureNode {
     void onPostExecute() {
 
         //読み取り完了
-        mOnFinishListener.onFinish(mNodePid, mPicturePid);
+        mOnFinishListener.onFinish(mNodePid, mPicture);
     }
 
     /*
@@ -110,7 +111,7 @@ public class AsyncCreatePictureNode {
         /*
          * ノード生成完了時、コールされる
          */
-        void onFinish( int nodePid, int picturePid );
+        void onFinish( int nodePid, PictureTable picture );
     }
 
 

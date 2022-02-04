@@ -6,16 +6,23 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 
+import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.RectF;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
+import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
@@ -26,6 +33,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.material.card.MaterialCardView;
 import com.isseiaoki.simplecropview.CropImageView;
@@ -38,8 +46,7 @@ import java.util.Objects;
 public class PictureTrimmingActivity extends AppCompatActivity {
 
     /*-- 定数 --*/
-    /* 画面遷移-レスポンスコード */
-    public static final int RESULT_PICTURE_NODE = 200;
+
 
     //写真ギャラリー用ランチャー
     private ActivityResultLauncher<Intent> mPictureSelectLauncher;
@@ -58,6 +65,22 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         //戻るボタン
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //権限付与
+        //※query()を発行するとき、権限エラーになるためここでも指定が必要
+        final int REQUEST_EXTERNAL_STORAGE = 1;
+        String[] PERMISSIONS_STORAGE = {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+                Manifest.permission.WRITE_EXTERNAL_STORAGE
+        };
+        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
 
         //レイアウト設定未完了
         mIsLayout = false;
@@ -82,39 +105,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
                                 //コンテンツURIを取得
                                 Uri contentUri = intent.getData();
 
-                                //お試し
-                                File file = new File(contentUri.getPath());
-                                Log.i("URI関連", "ファイル名=" + file.getName());
-                                Log.i("URI関連", "contentUri.getPath()=" + contentUri.getPath() );
-                                Log.i("URI関連", "contentUri.getPath()=" + file.getAbsolutePath() );
-
-                                //String[] projection = { MediaStore.MediaColumns.DISPLAY_NAME };
-                                String[] projection = { MediaStore.MediaColumns.DISPLAY_NAME, MediaStore.MediaColumns.DATA };
-                                Cursor cursor = getContentResolver()
-                                        .query(contentUri, projection, null, null, null);
-                                if (cursor != null) {
-                                    if (cursor.moveToFirst()) {
-                                        String fileName = cursor.getString(
-                                                cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DISPLAY_NAME));
-
-                                        Log.i("URI関連", "fileName=" + fileName );
-
-                                        if( cursor.moveToNext() ){
-                                            String path = cursor.getString(
-                                                    cursor.getColumnIndexOrThrow(MediaStore.MediaColumns.DATA));
-
-                                            Log.i("URI関連", "path=" + path );
-                                        }
-                                    }
-                                    cursor.close();
-                                }
-
-
-
-                                //お試し------
-
-
-                                //トリミング画面を設定
+                                //本画面レイアウト設定
                                 setCropLayout(contentUri);
 
                                 return;
@@ -154,7 +145,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
     /*
      *　トリミング画像の設定
      */
-    private void setTrimmingPicture( Bitmap bmp ) {
+    private void setTrimmingPicture(Bitmap bmp) {
 
         //トリミング結果の画像
         final ImageView iv_cropped = findViewById(R.id.iv_cropped);
@@ -168,7 +159,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
 
                         //形状（円）を設定
                         MaterialCardView mcv = findViewById(R.id.mcv);
-                        mcv.setRadius( iv_cropped.getWidth() / 2f );
+                        mcv.setRadius(iv_cropped.getWidth() / 2f);
 
                         //レイアウト確定後は、不要なので本リスナー削除
                         iv_cropped.getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -199,108 +190,96 @@ public class PictureTrimmingActivity extends AppCompatActivity {
     /*
      *　本画面のレイアウト設定
      */
-    private void setCropLayout( Uri contentUri ) {
+    private void setCropLayout(Uri contentUri) {
 
-        //ファイルを指す
-        ParcelFileDescriptor pfDescriptor = null;
-        try{
-            //ContentResolver:コンテンツモデルへのアクセスを提供
-            ContentResolver contentResolver = getContentResolver();
-
-            //URI下のデータにアクセスする
-            pfDescriptor = contentResolver.openFileDescriptor(contentUri, "r");
-            if(pfDescriptor != null){
-
-                //実際のFileDescriptorを取得
-                FileDescriptor fileDescriptor = pfDescriptor.getFileDescriptor();
-                Bitmap bmp = BitmapFactory.decodeFileDescriptor(fileDescriptor);
-                pfDescriptor.close();
-
-                //トリミング画面の設定
-                setTrimmingPicture( bmp );
-
-                if( mIsLayout ){
-                    //レイアウト設定済みならここで終了
-                    return;
-                }
-
-                //トリミング結果
-                final ImageView iv_cropped = findViewById(R.id.iv_cropped);
-                //トリミング対象
-                final CropImageView iv_cropTarget = findViewById(R.id.iv_cropTarget);
-
-                //トリミング範囲が変更されたとき、その時点のトリミング範囲を設定
-                iv_cropTarget.setOnTouchListener(new View.OnTouchListener() {
-                    @Override
-                    public boolean onTouch(View view, MotionEvent motionEvent) {
-                        //フレームに合わせてトリミング
-                        iv_cropped.setImageBitmap(iv_cropTarget.getCroppedBitmap());
-                        //イベント処理完了
-                        return false;
-                    }
-                });
-
-                //作成ボタン
-                Button bt_create = findViewById(R.id.bt_create);
-                bt_create.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        //ノードを生成
-                        createPictureNode( contentUri );
-                    }
-                });
-
-                //レイアウト設定完了
-                mIsLayout = true;
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-
-        } finally {
-            try{
-                if(pfDescriptor != null){
-                    pfDescriptor.close();
-                }
-            }catch (Exception e){
-                e.printStackTrace();
-            }
+        //Bitmapを取得
+        Bitmap bmp = getBitmapFromUri(contentUri);
+        if( bmp == null ){
+            //取得エラー
+            Log.i("URI", "Bitmap生成エラー");
+            return;
         }
 
-    }
+        //トリミング画像の設定
+        setTrimmingPicture(bmp);
 
+        if (mIsLayout) {
+            //レイアウト設定済みならここで終了
+            return;
+        }
+
+        //トリミング結果
+        final ImageView iv_cropped = findViewById(R.id.iv_cropped);
+        //トリミング対象
+        final CropImageView iv_cropTarget = findViewById(R.id.iv_cropTarget);
+
+        //トリミング範囲が変更されたとき、その時点のトリミング範囲を設定
+        iv_cropTarget.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                //フレームに合わせてトリミング
+                iv_cropped.setImageBitmap(iv_cropTarget.getCroppedBitmap());
+                //イベント処理完了
+                return false;
+            }
+        });
+
+        //作成ボタン
+        Button bt_create = findViewById(R.id.bt_create);
+        bt_create.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                //遷移元からの情報
+                Intent intent = getIntent();
+                boolean isEdit = intent.getBooleanExtra(MapActivity.INTENT_EDIT, false);
+
+                if( isEdit ){
+                    //編集なら、サムネイルを変更
+                    changeThumbnail( contentUri );
+                } else{
+                    //ノードを生成
+                    createPictureNode(contentUri);
+                }
+
+            }
+        });
+
+        //レイアウト設定完了
+        mIsLayout = true;
+    }
 
     /*
      *　写真ノードの生成
      */
-    private void createPictureNode( Uri uri ) {
+    private void createPictureNode(Uri uri) {
 
         //遷移元からの情報
         //★マップIDは共通情報にする
         Intent intent = getIntent();
-        int mapPid          = intent.getIntExtra(MapActivity.INTENT_MAP_PID, 0);
+        int mapPid = intent.getIntExtra(MapActivity.INTENT_MAP_PID, 0);
         int selectedNodePid = intent.getIntExtra(MapActivity.INTENT_NODE_PID, 0);
+        boolean isEdit = intent.getBooleanExtra(MapActivity.INTENT_EDIT, false);
 
         //マップ共通データ
-        MapCommonData mapCommonData = (MapCommonData)getApplication();
+        MapCommonData mapCommonData = (MapCommonData) getApplication();
 
         //ノード初期位置を親ノードの中心位置から一定の距離離した位置にする
-        NodeTable parentNode = mapCommonData.getNodeInMap( selectedNodePid );
-        int posX = (int)parentNode.getCenterPosX() + ResourceManager.POS_NODE_INIT_OFFSET;
-        int posY = (int)parentNode.getCenterPosY();
+        NodeTable parentNode = mapCommonData.getNodeInMap(selectedNodePid);
+        int posX = (int) parentNode.getCenterPosX() + ResourceManager.POS_NODE_INIT_OFFSET;
+        int posY = (int) parentNode.getCenterPosY();
 
         Log.i("URI", "URI=" + uri.toString());
 
-        //URI情報
-        String[] uriSplit = uri.toString().split( ResourceManager.URI_SPLIT );
-
-        if( uriSplit.length < 2  ){
-            //想定するURIではない場合
-            Log.i("URI", "想定外のURI=" + uri.toString());
+        //絶対パスを取得
+        String path = ResourceManager.getPathFromUri(this, uri);
+        if (path == null ) {
+            //絶対パスの取得に失敗した場合
+            Log.i("URI", "絶対パス取得エラー");
+            //★
+            Toast.makeText(this, "失敗しました", Toast.LENGTH_SHORT).show();
             return;
         }
-
-        String uriIdentify = uriSplit[1];
 
         //ノードを生成
         NodeTable newNode = new NodeTable(
@@ -311,7 +290,6 @@ public class PictureTrimmingActivity extends AppCompatActivity {
                 posX,
                 posY
         );
-        newNode.setUriIdentify( uriIdentify );
 
         //トリミング情報
         final CropImageView iv_cropTarget = findViewById(R.id.iv_cropTarget);
@@ -319,26 +297,26 @@ public class PictureTrimmingActivity extends AppCompatActivity {
 
         //ピクチャ情報を生成
         //※本ノード自体のpidはこの時点では確定していないため、DB処理完了後に設定
-        PictureTable picture = new PictureTable();
-        picture.setPidMap( mapPid );
-        picture.setPidParentNode( selectedNodePid );
-        picture.setTrimmingInfo( rectInfo );
-        picture.setUriIdentify( uriIdentify );
+        PictureTable picture = new PictureTable(
+                mapPid,
+                PictureTable.UNKNOWN,   //ピクチャノードのpidも未確定
+                path,
+                true,
+                rectInfo);
 
         //DB保存処理
-        AsyncCreatePictureNode db = new AsyncCreatePictureNode(iv_cropTarget.getContext(), newNode, picture, new AsyncCreatePictureNode.OnFinishListener() {
+        AsyncCreatePictureNode db = new AsyncCreatePictureNode(this, newNode, picture, new AsyncCreatePictureNode.OnFinishListener() {
 
             @Override
-            public void onFinish(int nodePid, int picturePid) {
+            public void onFinish(int nodePid, PictureTable picture) {
                 //データ挿入されたため、レコードに割り当てられたpidをテーブルに設定
-                newNode.setPid( nodePid );
-                picture.setPid( picturePid );
+                newNode.setPid(nodePid);
 
                 //resultコード設定
                 Intent retIntent = getIntent();
-                retIntent.putExtra(ResourceManager.KEY_CREATED_NODE, newNode );    //生成したピクチャノード
-                retIntent.putExtra(ResourceManager.KEY_THUMBNAIL, picture );       //生成したサムネピクチャ
-                setResult(RESULT_PICTURE_NODE, retIntent );
+                retIntent.putExtra(ResourceManager.KEY_CREATED_NODE, newNode);    //生成したピクチャノード
+                retIntent.putExtra(ResourceManager.KEY_THUMBNAIL, picture);       //生成したサムネピクチャ
+                setResult(MapActivity.RESULT_PICTURE_NODE, retIntent);
 
                 //元の画面へ戻る
                 finish();
@@ -351,6 +329,100 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         //Log.i("TrimmingActivity", "rectInfo.top=" + rectInfo.top + " rectInfo.bottom=" + rectInfo.bottom + " rectInfo.right=" + rectInfo.right + " rectInfo.left=" + rectInfo.left);
         //Log.i("TrimmingActivity", "uri=" + uri);
         //Log.i("TrimmingActivity", "uri identify=" + bb[1]);
+    }
+
+    /*
+     *　コンテンツURIからビットマップを取得
+     */
+    private Bitmap getBitmapFromUri( Uri uri ) {
+
+        //ファイルを指す
+        ParcelFileDescriptor pfDescriptor = null;
+        try {
+            //ContentResolver:コンテンツモデルへのアクセスを提供
+            ContentResolver contentResolver = getContentResolver();
+
+            //URI下のデータにアクセスする
+            pfDescriptor = contentResolver.openFileDescriptor(uri, "r");
+            if (pfDescriptor != null) {
+
+                //実際のFileDescriptorを取得
+                FileDescriptor fileDescriptor = pfDescriptor.getFileDescriptor();
+                Bitmap bmp = BitmapFactory.decodeFileDescriptor(fileDescriptor);
+                pfDescriptor.close();
+
+                //ビットマップを返す
+                return bmp;
+            }
+
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        } finally {
+            try {
+                if (pfDescriptor != null) {
+                    pfDescriptor.close();
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
+
+        return null;
+    }
+
+    /*
+     *　サムネイルの変更
+     */
+    private void changeThumbnail(Uri uri) {
+
+        //遷移元からの情報
+        Intent intent = getIntent();
+        int mapPid = intent.getIntExtra(MapActivity.INTENT_MAP_PID, 0);
+        int pictureNodePid = intent.getIntExtra(MapActivity.INTENT_NODE_PID, 0);
+
+        //絶対パスを取得
+        String path = ResourceManager.getPathFromUri(this, uri);
+        if (path == null ) {
+            //絶対パスの取得に失敗した場合
+            Log.i("URI", "絶対パス取得エラー");
+            //★
+            Toast.makeText(this, "失敗しました", Toast.LENGTH_SHORT).show();
+            finish();
+        }
+
+        //トリミング情報
+        final CropImageView iv_cropTarget = findViewById(R.id.iv_cropTarget);
+        RectF rectInfo = iv_cropTarget.getActualCropRect();
+
+        //ピクチャ情報を生成
+        //※本ノード自体のpidはこの時点では確定していないため、DB処理完了後に設定
+        PictureTable picture = new PictureTable(
+                mapPid,
+                pictureNodePid,
+                path,
+                true,
+                rectInfo);
+
+        //DB保存処理
+        AsyncUpdateThumbnail db = new AsyncUpdateThumbnail(this, picture, new AsyncUpdateThumbnail.OnFinishListener() {
+
+            @Override
+            public void onFinish(PictureTable oldPicture, PictureTable newPicture) {
+
+                //変わったノードとサムネ情報を返す
+                Intent retIntent = getIntent();
+                retIntent.putExtra(ResourceManager.KEY_NEW_THUMBNAIL, newPicture);
+                retIntent.putExtra(ResourceManager.KEY_OLD_THUMBNAIL, oldPicture);
+                setResult(MapActivity.RESULT_UPDATE_TUHMBNAIL, retIntent);
+
+                //元の画面へ戻る
+                finish();
+            }
+        });
+
+        //非同期処理開始
+        db.execute();
     }
 
     /*

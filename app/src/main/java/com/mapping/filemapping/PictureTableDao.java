@@ -26,10 +26,17 @@ public interface PictureTableDao {
     PictureTable getPicture(int pid);
 
     /*
+     * 取得：指定ピクチャノードに所属するピクチャを取得
+     */
+    @Query("SELECT * FROM picture WHERE pid_map=(:mapPid) AND pid_parent_node=(:parentPid)")
+    List<PictureTable> getGallery(int mapPid, int parentPid);
+
+
+    /*
      * 取得：サムネイル写真
      *   指定マップに所属する写真の内、サムネイルとして登録された写真を取得
      */
-    @Query("SELECT * FROM picture WHERE pid_map=(:mapPid) AND trg_left>=(0)")
+    @Query("SELECT * FROM picture WHERE pid_map=(:mapPid) AND is_thumbnail")
     List<PictureTable> getThumbnailPicture(int mapPid);
 
     @Insert

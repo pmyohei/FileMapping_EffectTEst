@@ -1,7 +1,13 @@
 package com.mapping.filemapping;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.database.Cursor;
 import android.graphics.Typeface;
+import android.net.Uri;
+import android.provider.DocumentsContract;
+import android.provider.MediaStore;
+import android.util.Log;
 
 import androidx.core.content.res.ResourcesCompat;
 
@@ -27,6 +33,8 @@ public class ResourceManager {
     public static final String KEY_CREATED_NODE = "CreatedNode";
     public static final String KEY_UPDATED_NODE = "UpdatedNode";
     public static final String KEY_THUMBNAIL = "thumbnail";
+    public static final String KEY_NEW_THUMBNAIL = "new_thumbnail";
+    public static final String KEY_OLD_THUMBNAIL = "old_thumbnail";
 
     //serialVersionUID
     public static final long SERIAL_VERSION_UID_NODE_TABLE = 1L;
@@ -81,4 +89,43 @@ public class ResourceManager {
 
         return fonts;
     }
+
+    /*
+     *　コンテンツURIから絶対パスを取得（/~~/~~/xxx.png）
+     */
+    public static String getPathFromUri( Context context, Uri uri ) {
+
+        String path = null;
+
+        ContentResolver contentResolver = context.getContentResolver();
+
+        //対象フィールド
+        String[] columns = {
+                MediaStore.Images.Media.DATA
+        };
+
+        //検索条件
+        String where = MediaStore.Images.Media._ID + "=?";
+        String wholeId = DocumentsContract.getDocumentId(uri);
+        String id = wholeId.split(":")[1];
+
+        //クエリ発行
+        Cursor cursor = contentResolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, where, new String[]{ id }, null);
+
+        //Log.i("URI", "dump cursor:" + DatabaseUtils.dumpCursorToString(cursor));
+
+        if( cursor.moveToFirst() ){
+            //絶対パスを取得
+            path = cursor.getString( cursor.getColumnIndexOrThrow(columns[0]) );
+
+            Log.i("URI", "path=" + path);
+        }
+
+        cursor.close();
+
+        return path;
+    }
+
+
 }

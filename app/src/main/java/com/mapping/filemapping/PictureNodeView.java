@@ -1,20 +1,13 @@
 package com.mapping.filemapping;
 
 import android.annotation.SuppressLint;
-import android.content.ContentResolver;
+import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.os.ParcelFileDescriptor;
 import android.util.Log;
 import android.widget.ImageView;
 
-import androidx.activity.result.ActivityResultLauncher;
-
-import java.io.FileDescriptor;
-import java.io.IOException;
 import java.io.Serializable;
 
 public class PictureNodeView extends ChildNode implements Serializable  /*implements View.OnTouchListener*/ {
@@ -23,37 +16,78 @@ public class PictureNodeView extends ChildNode implements Serializable  /*implem
      * コンストラクタ
      */
     @SuppressLint("ClickableViewAccessibility")
-    public PictureNodeView(Context context, NodeTable node, PictureTable thumbnail) {
+    public PictureNodeView(Context context, NodeTable node) {
         super(context, node, R.layout.picture_node);
 
         Log.i("PictureNodeView", "3");
 
-        initNode(thumbnail);
+        initNode();
     }
 
     /*
      * 初期化処理
      */
-    private void initNode(PictureTable thumbnail) {
+    private void initNode() {
 
         Log.i("PictureNodeView", "init");
 
-       //ノードに画像を設定
-        setNodeBitmap(thumbnail);
+        //ノードの中身の表示を変更
+        findViewById(R.id.tv_node).setVisibility( GONE );
+        findViewById(R.id.iv_node).setVisibility( VISIBLE );
 
-        //
-
-        //ツールアイコン設定
-        setNodeToolIcon();
+        //ノードに画像を設定
+        setThumbnail();
     }
 
     /*
      * ノードに画像を設定
      */
+    private void setThumbnail()  {
+        //本ノードのサムネイルを取得
+        MapCommonData mapCommonData = (MapCommonData) ((Activity) getContext()).getApplication();
+        PictureTable thumbnail = mapCommonData.getThumbnails().getThumbnail( mNode.getPid() );
+
+        setBitmap( thumbnail );
+    }
+
+    /*
+     * ノード画像の更新
+     */
+    public void updateThumbnail( PictureTable thumbnail ) {
+        //ノードに画像を設定
+        setBitmap( thumbnail );
+    }
+
+    /*
+     * ノードに画像を設定
+     */
+    private void setBitmap(PictureTable thumbnail)  {
+
+        String path = thumbnail.getPath();
+        if( path == null ){
+            //フェールセーフ
+            Log.i("URI", "setBitmap() pathなし");
+            return;
+        }
+
+        //トリミング範囲で切り取り
+        Bitmap bitmap = BitmapFactory.decodeFile(path);
+        bitmap = Bitmap.createBitmap( bitmap, thumbnail.getTrgLeft(), thumbnail.getTrgTop(), thumbnail.getTrgWidth(), thumbnail.getTrgHeight() );
+
+        //画像設定
+        ImageView iv_node = findViewById(R.id.iv_node);
+        iv_node.setImageBitmap( bitmap );
+    }
+
+    /*
+     * ノードに画像を設定
+     */
+/*
     public void setNodeBitmap(PictureTable thumbnail) {
 
         //仮ガード-----
-        if( mNode.getUriIdentify() == null ){
+        String path = mNode.getPath();
+        if( path == null ){
             return;
         }
         //-----
@@ -68,8 +102,13 @@ public class PictureNodeView extends ChildNode implements Serializable  /*implem
         //URI下のデータにアクセスする
         ParcelFileDescriptor pfDescriptor = null;
         try {
+
+            //Fike → InputStream → Bitmap
+            File file = new File(path);
+            Uri uri = Uri.fromFile(file);
+
             //URI作成
-            Uri uri = Uri.parse( ResourceManager.URI_PATH + mNode.getUriIdentify() );
+            //Uri uri = Uri.parse( ResourceManager.URI_PATH + mNode.getPath() );
 
             Log.i("setNodeBitmap", "uri=" + uri);
 
@@ -107,11 +146,6 @@ public class PictureNodeView extends ChildNode implements Serializable  /*implem
             }
         }
     }
+*/
 
-    /*
-     * ツールアイコン設定
-     */
-    public void setNodeToolIcon() {
-
-    }
 }

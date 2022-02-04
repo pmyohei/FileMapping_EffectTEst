@@ -20,6 +20,8 @@ public class MapCommonData extends Application {
 
     //マップ内のノードリスト
     private NodeArrayList<NodeTable> mNodes;
+    //マップ内のサムネイルリスト
+    private PictureArrayList<PictureTable> mThumbnails;
     //位置変更ノードキュー
     private NodeArrayList<NodeTable> mMovedNodesQue;
     //削除対象ノード
@@ -40,6 +42,7 @@ public class MapCommonData extends Application {
 
         mNodes = new NodeArrayList<>();
         mMovedNodesQue = new NodeArrayList<>();
+        mThumbnails = new PictureArrayList<>();
         mDeleteNodes = new NodeArrayList<>();
         mColorHistory = new ArrayList<>();
     }
@@ -53,6 +56,7 @@ public class MapCommonData extends Application {
 
         mNodes = null;
         mMovedNodesQue = null;
+        mThumbnails = null;
         //mToolOpeningNode = null;
         mEditNode = null;
         mDeleteNodes = null;
@@ -66,6 +70,7 @@ public class MapCommonData extends Application {
 
         //リストクリア
         mNodes.clear();
+        mThumbnails.clear();
         mMovedNodesQue.clear();
         mDeleteNodes.clear();
         mColorHistory.clear();
@@ -73,6 +78,14 @@ public class MapCommonData extends Application {
         //ピンチ比率
         pinchDistanceRatioX = 1.0f;
         pinchDistanceRatioY = 1.0f;
+    }
+
+
+    /*
+     * マップPidを取得
+     */
+    public int getMapPid() {
+        return mNodes.getRootNode().getPidMap();
     }
 
     /*
@@ -86,6 +99,49 @@ public class MapCommonData extends Application {
     }
     public void addNodes( NodeTable node ) {
         this.mNodes.add( node );
+    }
+
+    /*
+     * サムネリストの取得・設定・追加
+     */
+    public void setThumbnails( PictureArrayList<PictureTable> nodes ) {
+        mThumbnails = nodes;
+    }
+    public PictureArrayList<PictureTable> getThumbnails() {
+        return mThumbnails;
+    }
+    public void addThumbnail( PictureTable thumbnail ) {
+        this.mThumbnails.add( thumbnail );
+    }
+
+    /*
+     * サムネイルリストを更新
+     */
+    public PictureTable updateThumbnail( PictureTable oldPicture, PictureTable newPicture ) {
+
+        PictureTable currentThumbnail = null;
+
+        if( oldPicture != null ){
+            //現在サムネイルとして設定されている情報を更新
+
+            if( oldPicture.isThumbnail() ){
+                //サムネイルのままであれば、更新
+                mThumbnails.updatePicture( oldPicture );
+            } else{
+                //サムネイルではなくなっていれば、リストから削除
+                mThumbnails.deletePicture(oldPicture);
+            }
+
+            currentThumbnail = oldPicture;
+        }
+
+        if( newPicture != null ){
+            mThumbnails.add( newPicture );
+
+            currentThumbnail = newPicture;
+        }
+
+        return currentThumbnail;
     }
 
     /*

@@ -6,6 +6,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:layout_margin="12dp"
+    android:padding="16dp"
     android:gravity="center"
     android:orientation="horizontal">
 
@@ -15,8 +16,8 @@
         android:layout_height="48dp"
         android:theme="@style/Theme.MaterialComponents.Light"
         app:cardCornerRadius="24dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/black"/>
+        app:cardElevation="8dp"
+        app:strokeWidth="0dp"/>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/v_color1"
@@ -24,9 +25,8 @@
         android:layout_height="48dp"
         android:theme="@style/Theme.MaterialComponents.Light"
         app:cardCornerRadius="24dp"
-        app:cardForegroundColor="@color/purple_700"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/black"/>
+        app:cardElevation="8dp"
+        app:strokeWidth="0dp"/>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/v_color2"
@@ -34,7 +34,7 @@
         android:layout_height="48dp"
         android:theme="@style/Theme.MaterialComponents.Light"
         app:cardCornerRadius="24dp"
-        app:strokeWidth="1dp"
-        app:strokeColor="@color/black"/>
+        app:cardElevation="8dp"
+        app:strokeWidth="0dp"/>
 
 </LinearLayout>

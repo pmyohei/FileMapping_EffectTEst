@@ -1,5 +1,6 @@
 package com.mapping.filemapping;
 
+import androidx.activity.ComponentActivity;
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
@@ -7,17 +8,17 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -42,13 +43,16 @@ import android.widget.LinearLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 public class MapActivity extends AppCompatActivity {
 
-    /* 画面遷移-リクエストコード */
-    public static final int REQ_NODE_CREATE = 100;
-    public static final int REQ_NODE_EDIT = 101;
+    /* 画面遷移-レスポンスコード */
+    public static final int RESULT_PICTURE_NODE = 200;
+    public static final int RESULT_UPDATE_TUHMBNAIL = 201;
+    public static final int RESULT_ADD_PICTURE = 202;
 
     /* 画面遷移-キー-種別（遷移先での遷移理由識別用） */
     public static final String INTENT_KIND_CREATE = "Create";
@@ -56,7 +60,7 @@ public class MapActivity extends AppCompatActivity {
     /* 画面遷移-キー */
     public static String INTENT_MAP_PID = "MapPid";
     public static String INTENT_NODE_PID = "NodePid";
-    public static String INTENT_NODE = "Node";
+    public static String INTENT_EDIT = "edit";
 
     //ノードフォーカス処理
     public static final int MOVE_CENTER = 0;
@@ -90,16 +94,15 @@ public class MapActivity extends AppCompatActivity {
 
     //マップ内ノードリスト
     private NodeArrayList<NodeTable> mNodes;
-    private PictureArrayList<PictureTable> mThumbnails;
+    //private PictureArrayList<PictureTable> mThumbnails;
 
     /* 制御 */
     //ノード生成ができる状態か
     private boolean mEnableDrawNode = false;
 
-    //ノード操作発生時の画面遷移ランチャー
+    //画面遷移ランチャー
     ActivityResultLauncher<Intent> mNodeOperationLauncher;
-
-    ToolIconsView mtoolIconsView;
+    ActivityResultLauncher<Intent> mGalleryLauncher;
 
     /*
      * 画面生成
@@ -149,6 +152,10 @@ public class MapActivity extends AppCompatActivity {
         mNodeOperationLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new NodeOperationResultCallback()
+        );
+        mGalleryLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new AddPictureResultCallback(this)
         );
 
         //★ここにあるのは微妙
@@ -219,11 +226,12 @@ public class MapActivity extends AppCompatActivity {
                 //マップ共通データ
                 MapCommonData mapCommonData = (MapCommonData) getApplication();
                 mapCommonData.setNodes(nodeList);
+                mapCommonData.setThumbnails(thumbnailList);
                 mapCommonData.createColorHistory( mMap, findViewById(R.id.fl_screenMap) );
 
                 //フィールド変数として保持
                 mNodes = nodeList;
-                mThumbnails = thumbnailList;
+                //mThumbnails = thumbnailList;
 
                 if (mEnableDrawNode) {
                     //ノード生成可能なら、マップ上にノードを生成
@@ -280,10 +288,18 @@ public class MapActivity extends AppCompatActivity {
     }
 
     /*
-     * 画面遷移用ランチャーを取得
+     * 画面遷移用ランチャー（トリミング画面）を取得
      */
-    public ActivityResultLauncher<Intent> getActivityResultLauncher() {
+    public ActivityResultLauncher<Intent> getTrimmingLauncher() {
         return mNodeOperationLauncher;
+    }
+
+    /*
+     * 画面遷移用ランチャー（画像ギャラリー）を取得
+     */
+    public ActivityResultLauncher<Intent> getGalleryLauncher() {
+
+        return mGalleryLauncher;
     }
 
     /*
@@ -378,11 +394,7 @@ public class MapActivity extends AppCompatActivity {
             nodeView = new NodeView(this, node);
         } else {
             //ピクチャノード
-            //該当サムネイル取得
-            //★nullの場合の考慮を行う
-            PictureTable thumbnail = mThumbnails.getThumbnail(node.getPidParentNode(), node.getUriIdentify());
-
-            nodeView = new PictureNodeView(this, node, thumbnail);
+            nodeView = new PictureNodeView(this, node);
         }
 
         //ノードをマップに追加
@@ -430,66 +442,6 @@ public class MapActivity extends AppCompatActivity {
 
         return nodeView;
     }
-
-    /*
-     * ノード（単体）の再描画
-     */
-/*    private void redrawNode(FrameLayout fl_map, NodeTable node, int lineDrawKind) {
-
-
-
-    }*/
-
-    /*
-     * 全ラインの描画
-     */
-    //★不要になる見込み
-/*
-    private void drawAllLines() {
-
-        //ビュー
-        FrameLayout fl_map = findViewById(R.id.fl_map);     //マップレイアウト（ノード追加先）
-
-        //全ノード数ループ
-        for (NodeTable node : mNodes) {
-
-            //ラインの描画
-            drawLine(fl_map, node);
-        }
-    }
-*/
-
-    /*
-     * ライン（単体）の描画
-     */
-    //★不要になる見込み
-/*
-    private void drawLine(FrameLayout fl_map, NodeTable node) {
-
-        //親ノードPid
-        int pidParentNode = node.getPidParentNode();
-        if (pidParentNode == NodeTable.NO_PARENT) {
-            //ルートノードはラインなし
-            return;
-        }
-
-        //親ノード
-        NodeTable parentNode = mNodes.getNode(pidParentNode);
-
-        //親の中心座標を取得
-        //float parentCenterX = parentNode.getCenterPosX();
-        //float parentCenterY = parentNode.getCenterPosY();
-
-        //自身の中心座標を取得
-        ChildNode nodeView = (ChildNode) node.getNodeView();
-
-        //ラインを生成
-        NodeView.LineView lineView = nodeView.createLine( parentNode.getNodeView() );
-
-        //レイアウトに追加
-        fl_map.addView(lineView);
-    }
-*/
 
     /*
      *　ノードにフォーカスをあてる（画面中心に指定座標をもってくる）
@@ -727,159 +679,6 @@ public class MapActivity extends AppCompatActivity {
         return false;
     }
 
-    /*
-     * ノード生成／編集アイコンクリックリスナー
-     */
-/*
-    public class NodeDesignClickListener implements View.OnClickListener {
-
-        //アイコン操作ノード
-        private BaseNode mTouchNode;
-        //新規生成 or 編集
-        private boolean mIsNew;
-
-        */
-/*
-         * コンストラクタ
-         *//*
-
-*/
-/*
-        public NodeDesignClickListener( BaseNode node ){
-            mTouchNode = node;
-        }
-*//*
-
-
-        public void setTouchNode( BaseNode node ){
-            mTouchNode = node;
-        }
-
-        */
-/*
-         * アイコンクリック処理
-         *//*
-
-        public void onClickIcon(BaseNode node, View view, boolean isNew ){
-            //操作対象ノード
-            mTouchNode = node;
-            //新規か編集か
-            mIsNew = isNew;
-
-            //本来のクリック処理
-            this.onClick( view );
-        }
-
-        @Override
-        public void onClick(View view) {
-
-            //生成／編集対象のノード
-            BaseNode v_node;
-
-            //ノード位置
-            float marginLeft;
-            float marginTop;
-
-            if(mIsNew){
-                //ノード新規生成
-
-                //親ノード
-                NodeTable parentNode = mTouchNode.getNode();
-
-                //初期生成位置
-                int posX = (int)parentNode.getCenterPosX() + ResourceManager.POS_NODE_INIT_OFFSET;
-                int posY = (int)parentNode.getCenterPosY();
-
-                //ノードを生成
-                NodeTable newNode = new NodeTable(
-                        "",
-                        parentNode.getPidMap(),
-                        parentNode.getPid(),
-                        NodeTable.NODE_KIND_NODE,
-                        posX,
-                        posY
-                );
-
-                //カラーパターン設定
-                String[] colors = mMap.getDefaultColors();
-                newNode.setColorPattern( colors );
-
-                //ノードをマップに追加
-                v_node = drawNode(findViewById(R.id.fl_map), newNode);
-
-                marginLeft = posX;
-                marginTop  = posY;
-
-            } else {
-                //ノード編集
-                //タッチされたノードが編集対象
-                v_node = mTouchNode;
-
-                //ノード本体のマージンを取得
-                //※このタイミングではツールアイコン込みのマージンが取得されるため、以下のメソッドを使用
-                marginLeft = v_node.getNodeLeft();
-                marginTop  = v_node.getNodeTop();
-            }
-
-            //BottomSheetを開く
-            openDesignBottomSheet(DesignBottomSheet.NODE, v_node);
-
-            //画面上部中央にノードがくるようにする
-            focusNodeToCenterScreen(marginLeft, marginTop, MOVE_UPPER);
-        }
-    }
-*/
-
-
-    /*
-     * OnGlobalLayoutListener（ノード用）
-     */
-    //★不要のため削除←レイアウト確定待ちはノード自身に行わせる
-/*
-    private class NodeGlobalLayoutListener implements ViewTreeObserver.OnGlobalLayoutListener {
-
-        */
-/* ライン描画指定 *//*
-
-        public static final int LINE_NONE = 0;
-        public static final int LINE_ALL  = 1;
-        public static final int LINE_SELF = 2;
-
-        */
-/* フィールド変数 *//*
-
-        private final BaseNode mv_node;
-        private final int mLineDrawKind;
-
-        public NodeGlobalLayoutListener(BaseNode v_node, int lineDrawKind ){
-            mv_node = v_node;
-            mLineDrawKind = lineDrawKind;
-        }
-
-        @Override
-        public void onGlobalLayout() {
-            //Log.i("NodeGlobal", "レイアウト確定ノード=" + mv_node.getNode().getNodeName());
-
-            //レイアウト確定後は、不要なので本リスナー削除
-            //mv_node.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-            //ノードの形を設定
-            //CardView cv_node = mv_node.findViewById(R.id.cv_node);
-            //makeNodeCircle( cv_node );
-
-            //レイアウトが確定したため、このタイミングで中心座標を設定
-            mv_node.calcCenterPos();
-
-            if(mLineDrawKind == LINE_ALL){
-                //全ラインを描画
-                drawAllLines();
-            } else if( mLineDrawKind == LINE_SELF ){
-                //本ノードのラインを描画
-                drawLine( findViewById(R.id.fl_map), mv_node.getNode() );
-            }
-        }
-    }
-*/
 
     /*
      * ピンチ（拡大・縮小）操作リスナー
@@ -1183,24 +982,134 @@ public class MapActivity extends AppCompatActivity {
             //リザルトコード
             int resultCode = result.getResultCode();
 
-            if( resultCode == PictureTrimmingActivity.RESULT_PICTURE_NODE) {
-
+            if( resultCode == RESULT_PICTURE_NODE) {
                 //新規ピクチャノードを取得
                 NodeTable pictureNode = (NodeTable)intent.getSerializableExtra(ResourceManager.KEY_CREATED_NODE);
-                PictureTable picture  = (PictureTable)intent.getSerializableExtra(ResourceManager.KEY_THUMBNAIL);
+                PictureTable thumbnail  = (PictureTable)intent.getSerializableExtra(ResourceManager.KEY_THUMBNAIL);
 
                 //リストに追加
                 MapCommonData mapCommonData = (MapCommonData) getApplication();
                 mapCommonData.addNodes(pictureNode);
-                //リストに追加
-                mThumbnails.add(picture);
+                mapCommonData.addThumbnail(thumbnail);
 
                 //ノードを描画
                 drawNode(findViewById(R.id.fl_map), pictureNode);
+
+            } else if( resultCode == RESULT_UPDATE_TUHMBNAIL) {
+                //サムネイル変更
+
+                //新たなサムネイル画像と元々設定されていたサムネイル画像を取得(nullの場合あり)
+                PictureTable newThumbnail = (PictureTable)intent.getSerializableExtra(ResourceManager.KEY_NEW_THUMBNAIL);
+                PictureTable oldThumbnail = (PictureTable)intent.getSerializableExtra(ResourceManager.KEY_OLD_THUMBNAIL);
+
+                //サムネイルリストを更新
+                MapCommonData mapCommonData = (MapCommonData) getApplication();
+                PictureTable currentThumbnail = mapCommonData.updateThumbnail(oldThumbnail, newThumbnail);
+
+                if( currentThumbnail == null ){
+                    //ないはずだが、一応フェールセーフ
+                    return;
+                }
+
+                //ピクチャノードの画像を更新
+                int pictureNodePid = currentThumbnail.getPidParentNode();
+                NodeTable node = mapCommonData.getNodes().getNode( pictureNodePid );
+                ((PictureNodeView)node.getNodeView()).updateThumbnail( currentThumbnail );
             }
 
         }
     }
 
+    /*
+     * 画面遷移からの戻りのコールバック通知
+     *   ・写真追加（ギャラリーからの戻り）
+     */
+    private static class AddPictureResultCallback implements ActivityResultCallback<ActivityResult> {
 
+        private final Context mContext;
+
+        public AddPictureResultCallback( Context context ) {
+            mContext = context;
+        }
+
+        @Override
+        public void onActivityResult(ActivityResult result) {
+
+            //リザルトコード
+            //int resultCode = result.getResultCode();
+
+            if (result.getResultCode() == RESULT_OK) {
+
+                Intent intent = result.getData();
+                if (intent == null) {
+                    return;
+                }
+
+                //選択されているピクチャノード情報
+                MapCommonData mapCommonData = (MapCommonData) ((ComponentActivity)mContext).getApplication();
+                NodeArrayList<NodeTable> nodes =  mapCommonData.getNodes();
+                NodeTable pictureNode = nodes.getShowingIconNode().getNode();
+
+                int mapPid = pictureNode.getPidMap();
+                int nodePid = pictureNode.getPid();
+
+                //絶対pathリスト
+                PictureArrayList<PictureTable> pictures = new PictureArrayList<>();
+
+                ClipData clipData = intent.getClipData();
+                if( clipData == null ){
+                    //選択枚数1枚
+
+                    //絶対パスを取得
+                    Uri contentUri = intent.getData();
+                    String path = ResourceManager.getPathFromUri(mContext, contentUri);
+
+                    //ピクチャデータをリストに追加
+                    pictures.add(
+                            new PictureTable(mapPid, nodePid, path, false)
+                    );
+
+                } else{
+                    //選択写真数
+                    int pictureNum = clipData.getItemCount();
+                    for( int i = 0; i < pictureNum; i++ ){
+                        //コンテンツURIを取得
+                        Uri contentUri = intent.getClipData().getItemAt(i).getUri();
+
+                        //絶対パスを取得
+                        String path = ResourceManager.getPathFromUri(mContext, contentUri);
+                        if (path == null ) {
+                            //絶対パスの取得に失敗した場合
+                            Log.i("URI", "絶対パス取得エラー");
+                            continue;
+                        }
+
+                        //ピクチャデータをリストに追加
+                        pictures.add(
+                                new PictureTable(mapPid, nodePid, path, false)
+                        );
+
+                        Log.i("ギャラリーに追加", "path=" + path);
+                    }
+                }
+
+                if( pictures.size() == 0 ){
+                    //追加写真がなければ終了
+                    return;
+                }
+
+                //DBにピクチャデータとして保存
+                //DB保存処理
+                AsyncCreateGallery db = new AsyncCreateGallery(mContext, pictures, new AsyncCreateGallery.OnCreateListener() {
+                    @Override
+                    public void onCreate() {
+                    }
+                });
+
+                //非同期処理開始
+                db.execute();
+            }
+
+        }
+    }
 }

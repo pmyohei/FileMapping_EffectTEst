@@ -1,12 +1,15 @@
 package com.mapping.filemapping;
 
+import static android.app.Activity.RESULT_OK;
 import static com.mapping.filemapping.MapActivity.MOVE_UPPER;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +20,11 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 
+import androidx.activity.ComponentActivity;
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.ArrayList;
@@ -38,7 +46,8 @@ public class ToolIconsView extends ConstraintLayout {
         public static final int DELETE = 4;
         public static final int CHANGE_PARENT = 5;
         public static final int NEW_MAP = 6;
-        public static final int CLOSE = 7;
+        public static final int ADD_PICTURE = 7;
+        public static final int CLOSE = 8;
         
         private final int iconKind;
         private final ImageButton ibIcon;
@@ -242,6 +251,7 @@ public class ToolIconsView extends ConstraintLayout {
 
         } else {
             iconViews.add( new TooliconData( TooliconData.EDIT, findViewById( R.id.ib_edit )) );
+            iconViews.add( new TooliconData( TooliconData.ADD_PICTURE, findViewById( R.id.ib_addPhoto )) );
             iconViews.add( new TooliconData( TooliconData.DISPLAY_ALL_PICTURE, findViewById( R.id.ib_displayAllPicture )) );
             iconViews.add( new TooliconData( TooliconData.DELETE, findViewById( R.id.ib_delete )) );
             iconViews.add( new TooliconData( TooliconData.CHANGE_PARENT, findViewById( R.id.ib_changeParent )) );
@@ -327,7 +337,7 @@ public class ToolIconsView extends ConstraintLayout {
                         intent.putExtra(MapActivity.INTENT_NODE_PID, node.getPid());
 
                         //開始
-                        mMapActivity.getActivityResultLauncher().launch(intent);
+                        mMapActivity.getTrimmingLauncher().launch(intent);
                     }
                 };
 
@@ -362,6 +372,12 @@ public class ToolIconsView extends ConstraintLayout {
                     @Override
                     public void onClick(View view) {
                         //Log.i("アイコン", "クリックされました");
+
+                        Intent intent = new Intent( mMapActivity, PictureGalleryActivity.class );
+                        intent.putExtra(MapActivity.INTENT_NODE_PID, v_baseNode.getNode().getPid());
+
+                        mMapActivity.startActivity(intent);
+
                         //ノードに持たせていた自分をクローズ
                         v_baseNode.closeIconView();
                     }
@@ -418,7 +434,6 @@ public class ToolIconsView extends ConstraintLayout {
 
             case TooliconData.CHANGE_PARENT:
 
-
                 listener = new OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -441,6 +456,31 @@ public class ToolIconsView extends ConstraintLayout {
                     }
                 };
 
+                break;
+
+            case TooliconData.ADD_PICTURE:
+
+                listener = new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        Log.i("アイコン", "クリックされました ADD_PICTURE");
+
+                        //写真を一覧で表示
+                        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                        intent.addCategory(Intent.CATEGORY_OPENABLE);
+                        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+                        intent.setType("image/*");
+
+                        //開始
+                        mMapActivity.getGalleryLauncher().launch(intent);
+
+                        //※ノードに持たせていた自分をクローズしない
+                        //ギャラリーから戻ってきたとき、マップ画面側でどのピクチャノードがタッチされたのかを
+                        //判別するため
+                        //閉じないことが仕様
+                        //v_baseNode.closeIconView();
+                    }
+                };
                 break;
 
             case TooliconData.CLOSE:
@@ -499,7 +539,7 @@ public class ToolIconsView extends ConstraintLayout {
      */
     public void tm(  ) {
 
-
     }
+
 }
 

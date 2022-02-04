@@ -101,10 +101,21 @@
 
     <ImageButton
         style="@style/tool_icon"
-        android:id="@+id/ib_close"
+        android:id="@+id/ib_addPhoto"
         android:background="@drawable/circle_tool_icon"
         app:layout_constraintCircle="@id/v_center"
         app:layout_constraintCircleAngle="240"
+        app:layout_constraintCircleRadius="@dimen/node_icon_default_radius"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/baseline_add_photo_library_24" />
+
+    <ImageButton
+        style="@style/tool_icon"
+        android:id="@+id/ib_close"
+        android:background="@drawable/circle_tool_icon"
+        app:layout_constraintCircle="@id/v_center"
+        app:layout_constraintCircleAngle="270"
         app:layout_constraintCircleRadius="@dimen/node_icon_default_radius"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

@@ -1,10 +1,12 @@
 package com.mapping.filemapping;
 
 import android.graphics.Typeface;
+import android.widget.Switch;
 
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 /*
  * ArrayList：ノード用
@@ -141,7 +143,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
     }
 
     /*
-     *　指定ノード配下のノード取得（指定ノード含む）
+     *　指定ノード配下のノード取得
      *   param：指定ノードもリストに含めるかどうか
      *          true ：含める
      *          false：含めない
@@ -474,7 +476,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
     }
 
     /*
-     *　全ノードに設定している色を取得（重複なし）
+     *　全ノードに設定している色を取得（重複なしですべて一意になるリストを返す）
      */
     public ArrayList<String> getAllNodeColors() {
 
@@ -509,5 +511,71 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
 
         //なければnull
         return null;
+    }
+
+    /*
+     *　指定ノード配下のピクチャノードのpidを返す
+     *   ※指定ノードがピクチャノードの場合は、指定ノードのみが返る
+     */
+    public List<Integer> getPictureNodes(int pid ) {
+
+        List<Integer> pisd = new ArrayList<>();
+
+        NodeTable node = getNode(pid);
+
+        switch( node.getKind() ){
+            case NodeTable.NODE_KIND_ROOT:
+                pisd = getAllPictureNodes();
+                break;
+
+            case NodeTable.NODE_KIND_NODE:
+                pisd = getPictureNodesUnderNode(node.getPid() );
+                break;
+
+            case NodeTable.NODE_KIND_PICTURE:
+                //指定Pidのみ
+                pisd.add( node.getPid() );
+                break;
+
+        }
+
+        return pisd;
+    }
+
+    /*
+     *　マップ上のすべてのピクチャノードを取得
+     */
+    private List<Integer> getAllPictureNodes() {
+
+        List<Integer> pids = new ArrayList<>();
+
+        //リストの内の子ノードすべて
+        for( NodeTable node: this ){
+            if( node.getKind() == NodeTable.NODE_KIND_PICTURE ){
+                pids.add( node.getPid() );
+            }
+        }
+
+        return pids;
+    }
+
+    /*
+     *　指定一般ノードのすべてのピクチャノードを取得
+     */
+    private List<Integer> getPictureNodesUnderNode( int pid ) {
+
+        List<Integer> pids = new ArrayList<>();
+
+        //配下ノードをすべて取得
+        NodeArrayList<NodeTable> childNodes = getUnderNodes( pid, false );
+
+        //リストの内の子ノードすべて
+        for( NodeTable node: childNodes ){
+            if( node.getKind() == NodeTable.NODE_KIND_PICTURE ){
+                pids.add( node.getPid() );
+            }
+        }
+
+        return pids;
     }
 }
