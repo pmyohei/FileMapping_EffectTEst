@@ -1,5 +1,7 @@
 package com.mapping.filemapping;
 
+import android.graphics.Typeface;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.ForeignKey;
@@ -42,6 +44,17 @@ public class NodeTable implements Serializable {
     @ColumnInfo(name = "node_name")
     private String nodeName;
 
+    //フォントファイル名
+    @ColumnInfo(name = "font")
+    private String fontFileName;
+
+    public String getFontFileName() {
+        return fontFileName;
+    }
+    public void setFontFileName(String fontFileName) {
+        this.fontFileName = fontFileName;
+    }
+
     //x座標
     @ColumnInfo(name = "pos_x")
     private int posX;
@@ -77,6 +90,10 @@ public class NodeTable implements Serializable {
     //ノード影色
     @ColumnInfo(name = "shadow_color")
     private String shadowColor;
+
+    //ノード影の有無
+    @ColumnInfo(name = "is_shadow")
+    private boolean isShadow;
 
     //ライン-形状
 
@@ -279,6 +296,13 @@ public class NodeTable implements Serializable {
     }
     public void setLineColor(String lineColor) {
         this.lineColor = lineColor;
+    }
+
+    public boolean isShadow() {
+        return isShadow;
+    }
+    public void setShadow(boolean shadow) {
+        isShadow = shadow;
     }
 
     /*-- getter setter（非レコードフィールド） --*/

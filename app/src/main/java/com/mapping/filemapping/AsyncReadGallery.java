@@ -20,7 +20,7 @@ public class AsyncReadGallery {
     private final int mMapPid;
     private final List<Integer> mPictureNodePids;
     private final OnFinishListener mOnFinishListener;
-    private PictureArrayList<PictureTable> mPictures;
+    private List<PictureArrayList<PictureTable>> mGalleries;
 
     /*
      * コンストラクタ
@@ -62,8 +62,6 @@ public class AsyncReadGallery {
          */
         private void insertDB(){
 
-            List< PictureTable > tmp = new ArrayList<>();
-
             //PictureTableDao
             PictureTableDao dao = mDB.daoPictureTable();
 
@@ -74,22 +72,37 @@ public class AsyncReadGallery {
             }*/
             //log
 
+            //各ギャラリーのリスト
+            mGalleries = new ArrayList<>();
+            //「すべて」タグ用の全写真
+            PictureArrayList<PictureTable> allPictures = new PictureArrayList<>();
+
             //ピクチャノード分ループ
             for( Integer picturePid: mPictureNodePids ){
                 Log.i("ギャラリー確認", "DBから取得=" + picturePid);
 
-                //ピクチャノード配下のピクチャを取得し、仮リストに格納
-                tmp.addAll( dao.getGallery( mMapPid, picturePid ) );
+                //ピクチャノードに格納された写真
+                PictureArrayList<PictureTable> galleryInPictureNode = new PictureArrayList<>();
+                galleryInPictureNode.addAll( dao.getGallery( mMapPid, picturePid ) );
+
+                //全写真リストに追加
+                allPictures.addAll( galleryInPictureNode );
+
+                //ギャラリーリストに写真リストを格納
+                mGalleries.add( galleryInPictureNode );
             }
 
+            //ギャラリーリストの先頭に、「すべて」の写真リストを格納
+            mGalleries.add(0, allPictures);
+
 /*            Log.i("ギャラリー確認", "DBから取得完了");
-            for( PictureTable aa: tmp ){
+            for( PictureTable aa: galleryInPictureNode ){
                 Log.i("ギャラリー確認", "DBから取得 パス=" + aa.getPath());
             }*/
 
             //本リストに追加
-            mPictures = new PictureArrayList<>();
-            mPictures.addAll( tmp );
+            //mGalleries = new PictureArrayList<>();
+            //mGalleries.addAll( galleryInPictureNode );
         }
     }
 
@@ -119,7 +132,7 @@ public class AsyncReadGallery {
      */
     void onPostExecute() {
         //生成完了
-        mOnFinishListener.onFinish( mPictures );
+        mOnFinishListener.onFinish( mGalleries );
     }
 
     /*
@@ -129,7 +142,7 @@ public class AsyncReadGallery {
         /*
          * 生成完了時、コールされる
          */
-        void onFinish( PictureArrayList<PictureTable> pictures );
+        void onFinish( List<PictureArrayList<PictureTable>> galleries);
     }
 
 

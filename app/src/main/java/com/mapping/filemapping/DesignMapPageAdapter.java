@@ -52,13 +52,11 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         private ImageView iv_circle;
         private ImageView iv_square;
         private ColorSelectionView csv_border;
-        //private RadioGroup rg_borderSize;
         private SeekbarView  sbv_borderSize;
         private ColorSelectionView csv_shadow;
 
         //ラインデザイン
         private ColorSelectionView csv_line;
-        //private RadioGroup rg_lineSize;
         private SeekbarView  sbv_lineSize;
 
 

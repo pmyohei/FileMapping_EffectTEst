@@ -1,17 +1,19 @@
 package com.mapping.filemapping;
 
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.List;
+public class GalleryAdapter_old extends RecyclerView.Adapter<GalleryAdapter_old.ViewHolder> {
 
-public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder> {
-
-    private final List<String> mData;
+    private final PictureArrayList<PictureTable> mData;
 
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
@@ -19,20 +21,32 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
      */
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        //private final SampleMapView mfl_sampleMap;
+        private final ImageView iv_picture;
 
         /*
          * コンストラクタ
          */
-        public ViewHolder(View itemView, View view) {
+        public ViewHolder( View itemView ) {
             super(itemView);
-            //iv_picture = itemView.findViewById( R.id.iv_picture );
+
+            iv_picture = itemView.findViewById( R.id.iv_picture );
         }
 
         /*
          * ビューの設定
          */
-        public void setView(){
+        public void setView( PictureTable picture ){
+
+            //絶対パス
+            String path = picture.getPath();
+
+            Log.i("ギャラリー確認", "アダプタ内 setView=" + path);
+
+            //トリミング範囲で切り取り
+            Bitmap bitmap = BitmapFactory.decodeFile(path);
+            //画像設定
+            iv_picture.setImageBitmap( bitmap );
+
             /*
             //リスナー
             ll_colorItem.setOnClickListener(new View.OnClickListener() {
@@ -46,7 +60,7 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
     /*
      * コンストラクタ
      */
-    public FormatAdapter( List<String> data ) {
+    public GalleryAdapter_old(PictureArrayList<PictureTable> data ) {
         mData = data;
     }
 
@@ -67,9 +81,9 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
 
         //ビューを生成
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        View view = inflater.inflate(R.layout.item_color_pattern2, viewGroup, false);
+        View view = inflater.inflate(R.layout.item_gallery_picture, viewGroup, false);
 
-        return new ViewHolder(view, null);
+        return new ViewHolder(view);
     }
 
     /*
@@ -80,7 +94,7 @@ public class FormatAdapter extends RecyclerView.Adapter<FormatAdapter.ViewHolder
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
 
         //ビューの設定
-        //viewHolder.setView( mData.get(i) );
+        viewHolder.setView( mData.get(i) );
     }
 
     /*

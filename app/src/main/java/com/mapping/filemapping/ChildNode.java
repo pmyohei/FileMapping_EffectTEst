@@ -609,11 +609,18 @@ public class ChildNode extends BaseNode {
         final int BIT_Y = 0x10;    //自ノードが親ノードより上にいる場合
         final int OFF  = 0x00;    //オフ
 
+        //クリックリスナーに制御を渡すかどうかを判定するMove回数
+        //この回数よりも多くMoveを検出したとき、本Touchリスナーで制御を終了する
+        final int MOVE_DETECTION_COUNT = 3;
+
         //親ノードに対する自ノードのX座標における相対位置（親ノードより正側か負側か）
         private int mParentRelative;
 
         //Move発生フラグ
         private boolean isMove;
+        //Move発生回数
+        private int isMoveCount;
+
 
         /*
          * コンストラクタ
@@ -625,19 +632,22 @@ public class ChildNode extends BaseNode {
         public boolean onTouch(View view, MotionEvent event) {
 
             //ルートノード側の共通処理をコール
-            boolean ret = super.onTouch( view, event );
+            //boolean ret = super.onTouch( view, event );
 
-            Log.i("NodeTouchListener", "super.onTouch=" + ret + " event.getAction()=" + event.getAction());
+/*            Log.i("NodeTouchListener", "super.onTouch=" + ret + " event.getAction()=" + event.getAction());
 
             //共通処理を行った場合、終了
             if( ret ){
                 Log.i("NodeTouchListener", "ダブルタッチしたため終了");
                 return true;
-            }
+            }*/
 
             //タッチしている位置取得（スクリーン座標）
             int x = (int) event.getRawX();
             int y = (int) event.getRawY();
+
+            //
+            //boolean ret = false;
 
             switch (event.getAction()) {
 
@@ -661,9 +671,14 @@ public class ChildNode extends BaseNode {
                     //Moveフラグ初期化
                     isMove = false;
 
+                    //Move発生回数初期化
+                    isMoveCount = 0;
+
                     break;
 
                 case MotionEvent.ACTION_MOVE:
+
+                    Log.i("ムーブチェック", "ACTION_MOVE");
 
                     //ノードの移動量
                     float moveX = (x - mPreTouchPosX) / pinchDistanceRatioX;
@@ -682,8 +697,10 @@ public class ChildNode extends BaseNode {
                     //MoveフラグON
                     isMove = true;
 
-                    //イベント処理完了
-                    return true;
+                    //Move発生回数加算
+                    isMoveCount++;
+
+                    break;
 
                 case MotionEvent.ACTION_UP:
 
@@ -696,8 +713,9 @@ public class ChildNode extends BaseNode {
                     break;
             }
 
-            //イベント処理完了
-            return false;
+            //ある程度のノード移動があれば、イベント処理はここで完了(クリックリスナーへは渡さない)
+            //単純にMoveが発生したか否かでクリック検知に渡すと、ほとんどMove検出されるため、回数を設ける
+            return ( isMoveCount > MOVE_DETECTION_COUNT );
         }
 
         /*
@@ -842,19 +860,19 @@ public class ChildNode extends BaseNode {
             mStartPosX = parentPosX + ( (parentPosX > mCenterPosX) ? (-x) : (x));
             mStartPosY = parentPosY + ( (parentPosX > mCenterPosX) ? (-y) : (y));
 
-            Log.i("三角関数", "傾き=" + a);
-            Log.i("三角関数", "Math.cos(radian)=" + Math.cos(radian));
-            Log.i("三角関数", "Math.sin(radian)=" + Math.sin(radian));
-            Log.i("ラインチェック", "radian=" + radian);
-            Log.i("ラインチェック", "parentPosX=" + parentPosX);
-            Log.i("ラインチェック", "parentPosY=" + parentPosY);
-            Log.i("ラインチェック", "mCenterPosX=" + mCenterPosX);
-            Log.i("ラインチェック", "mCenterPosY=" + mCenterPosY);
-            Log.i("ラインチェック", "x=" + x);
-            Log.i("ラインチェック", "y=" + y);
-            Log.i("ラインチェック", "mSelfPosX=" + mSelfPosX);
-            Log.i("ラインチェック", "mSelfPosY=" + mSelfPosY);
-            Log.i("ラインチェック", "---------------");
+            //Log.i("三角関数", "傾き=" + a);
+            //Log.i("三角関数", "Math.cos(radian)=" + Math.cos(radian));
+            //Log.i("三角関数", "Math.sin(radian)=" + Math.sin(radian));
+            //Log.i("ラインチェック", "radian=" + radian);
+            //Log.i("ラインチェック", "parentPosX=" + parentPosX);
+            //Log.i("ラインチェック", "parentPosY=" + parentPosY);
+            //Log.i("ラインチェック", "mCenterPosX=" + mCenterPosX);
+            //Log.i("ラインチェック", "mCenterPosY=" + mCenterPosY);
+            //Log.i("ラインチェック", "x=" + x);
+            //Log.i("ラインチェック", "y=" + y);
+            //Log.i("ラインチェック", "mSelfPosX=" + mSelfPosX);
+            //Log.i("ラインチェック", "mSelfPosY=" + mSelfPosY);
+            //Log.i("ラインチェック", "---------------");
         }
 
         /*
@@ -969,14 +987,14 @@ public class ChildNode extends BaseNode {
             controlY1 = Math.min(mStartPosY, mSelfPosY);
             controlY2 = Math.max(mStartPosY, mSelfPosY);
 
-            Log.i("制御点", "mStartPosX=" + mStartPosX);
-            Log.i("制御点", "mStartPosY=" + mStartPosY);
-            Log.i("制御点", "mCenterPosX=" + mCenterPosX);
-            Log.i("制御点", "mCenterPosY=" + mCenterPosY);
-            Log.i("制御点", "controlX1=" + controlX1);
-            Log.i("制御点", "controlY1=" + controlY1);
-            Log.i("制御点", "controlY2=" + controlY2);
-            Log.i("制御点", "-----------");
+            //Log.i("制御点", "mStartPosX=" + mStartPosX);
+            //Log.i("制御点", "mStartPosY=" + mStartPosY);
+            //Log.i("制御点", "mCenterPosX=" + mCenterPosX);
+            //Log.i("制御点", "mCenterPosY=" + mCenterPosY);
+            //Log.i("制御点", "controlX1=" + controlX1);
+            //Log.i("制御点", "controlY1=" + controlY1);
+            //Log.i("制御点", "controlY2=" + controlY2);
+            //Log.i("制御点", "-----------");
 
             //制御点X, 制御点Y, 終点X, 終点Y
             //path.quadTo( (mStartPosX + mCenterPosX) / 2, (mStartPosY + mCenterPosY) / 2, mCenterPosX, mCenterPosY);

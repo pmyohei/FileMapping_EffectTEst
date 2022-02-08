@@ -33,11 +33,11 @@ public class FontAdapter extends RecyclerView.Adapter<FontAdapter.FontItemViewHo
     class FontItemViewHolder extends RecyclerView.ViewHolder {
 
         //設定対象ノードビュー
-        private final BaseNode          mv_node;
+        private final BaseNode mv_node;
 
-        private final View              mView;           //※共通データ取得用
-        private final TextView          tv_sampleFont;
-        private final LinearLayout      ll_fontItem;
+        private final View mView;           //※共通データ取得用
+        private final TextView tv_sampleFont;
+        private final ViewGroup ll_fontItem;
 
         /*
          * コンストラクタ

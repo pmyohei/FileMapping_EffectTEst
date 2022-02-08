@@ -32,8 +32,8 @@ public class PictureNodeView extends ChildNode implements Serializable  /*implem
         Log.i("PictureNodeView", "init");
 
         //ノードの中身の表示を変更
-        findViewById(R.id.tv_node).setVisibility( GONE );
-        findViewById(R.id.iv_node).setVisibility( VISIBLE );
+        findViewById(R.id.tv_node).setVisibility(GONE);
+        findViewById(R.id.iv_node).setVisibility(VISIBLE);
 
         //ノードに画像を設定
         setThumbnail();
@@ -42,29 +42,33 @@ public class PictureNodeView extends ChildNode implements Serializable  /*implem
     /*
      * ノードに画像を設定
      */
-    private void setThumbnail()  {
+    private void setThumbnail() {
         //本ノードのサムネイルを取得
         MapCommonData mapCommonData = (MapCommonData) ((Activity) getContext()).getApplication();
-        PictureTable thumbnail = mapCommonData.getThumbnails().getThumbnail( mNode.getPid() );
+        PictureTable thumbnail = mapCommonData.getThumbnails().getThumbnail(mNode.getPid());
 
-        setBitmap( thumbnail );
+        setBitmap(thumbnail);
     }
 
     /*
      * ノード画像の更新
      */
-    public void updateThumbnail( PictureTable thumbnail ) {
+    public void updateThumbnail(PictureTable thumbnail) {
         //ノードに画像を設定
-        setBitmap( thumbnail );
+        setBitmap(thumbnail);
     }
 
     /*
      * ノードに画像を設定
      */
-    private void setBitmap(PictureTable thumbnail)  {
+    private void setBitmap(PictureTable thumbnail) {
 
+        //サムネイルのBitmapを生成
+        Bitmap bitmap = createThumbnail( thumbnail );
+
+/*
         String path = thumbnail.getPath();
-        if( path == null ){
+        if (path == null) {
             //フェールセーフ
             Log.i("URI", "setBitmap() pathなし");
             return;
@@ -72,11 +76,29 @@ public class PictureNodeView extends ChildNode implements Serializable  /*implem
 
         //トリミング範囲で切り取り
         Bitmap bitmap = BitmapFactory.decodeFile(path);
-        bitmap = Bitmap.createBitmap( bitmap, thumbnail.getTrgLeft(), thumbnail.getTrgTop(), thumbnail.getTrgWidth(), thumbnail.getTrgHeight() );
+        bitmap = Bitmap.createBitmap(bitmap, thumbnail.getTrgLeft(), thumbnail.getTrgTop(), thumbnail.getTrgWidth(), thumbnail.getTrgHeight());
+*/
 
         //画像設定
         ImageView iv_node = findViewById(R.id.iv_node);
-        iv_node.setImageBitmap( bitmap );
+        iv_node.setImageBitmap(bitmap);
+    }
+
+    /*
+     * サムネイルとなるBitmapを生成
+     */
+    public static Bitmap createThumbnail(PictureTable thumbnail)  {
+
+        String path = thumbnail.getPath();
+        if (path == null) {
+            //フェールセーフ
+            Log.i("URI", "setBitmap() pathなし");
+            return null;
+        }
+
+        //トリミング範囲で切り取り
+        Bitmap bitmap = BitmapFactory.decodeFile(path);
+        return Bitmap.createBitmap(bitmap, thumbnail.getTrgLeft(), thumbnail.getTrgTop(), thumbnail.getTrgWidth(), thumbnail.getTrgHeight());
     }
 
     /*

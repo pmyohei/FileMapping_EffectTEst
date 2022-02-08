@@ -2,6 +2,7 @@ package com.mapping.filemapping;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
@@ -14,6 +15,8 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 
@@ -108,7 +111,7 @@ public class ColorSelectionView extends LinearLayout {
     private void setColor( String code ){
 
         if( mViewKind == MAP ){
-            setMapColor( code );
+            setMapAllNodeColor( code );
         } else {
             setNodeColor( code );
         }
@@ -117,7 +120,7 @@ public class ColorSelectionView extends LinearLayout {
     /*
      * マップ全体に色を設定
      */
-    private void setMapColor( String code ){
+    private void setMapAllNodeColor(String code ){
 
         //マップ共通データ
         MapCommonData commonData = (MapCommonData)((Activity)getContext()).getApplication();
@@ -127,7 +130,8 @@ public class ColorSelectionView extends LinearLayout {
 
             case COLOR_MAP:
                 //マップ色
-                mSetView.setBackgroundColor( Color.parseColor(code) );
+                ((MapActivity)mSetView.getContext()).setMapColor( code );
+                //mSetView.setBackgroundColor( Color.parseColor(code) );
                 break;
 
             case COLOR_BACKGROUNG:
@@ -469,7 +473,7 @@ public class ColorSelectionView extends LinearLayout {
          */
         class ColorHistoryViewHolder extends RecyclerView.ViewHolder {
 
-            private final View      v_historyColorItem;
+            private final MaterialCardView v_historyColorItem;
 
             /*
              * コンストラクタ
@@ -486,7 +490,19 @@ public class ColorSelectionView extends LinearLayout {
             public void setView( String color ){
 
                 //色を設定
-                v_historyColorItem.setBackgroundColor( Color.parseColor( color ) );
+                //v_historyColorItem.setBackgroundColor( Color.parseColor( color ) );
+
+                ColorStateList colorState = new ColorStateList(
+                        new int[][] {
+                                new int[]{ android.R.attr.state_checked},
+                                new int[]{ -android.R.attr.state_checked},
+                        },
+                        new int[] {
+                                Color.parseColor( color ),
+                                Color.parseColor( color ),
+                        }
+                );
+                v_historyColorItem.setCardForegroundColor( colorState );
 
                 //リスナー
                 v_historyColorItem.setOnClickListener(new View.OnClickListener() {

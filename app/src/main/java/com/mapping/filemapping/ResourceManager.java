@@ -57,7 +57,7 @@ public class ResourceManager {
 
 
     /*
-     * 本アプリケーション内のフォントリスト
+     * 本アプリケーション内のフォントリスト(英語)
      */
     public static List<Typeface> getAlphabetFonts(Context context){
 
@@ -75,7 +75,7 @@ public class ResourceManager {
     }
 
     /*
-     * 本アプリケーション内のフォントリスト
+     * 本アプリケーション内のフォントリスト(日本語)
      */
     public static List<Typeface> getJapaneseFonts(Context context){
 

@@ -1,111 +1,137 @@
 package com.mapping.filemapping;
 
+import static android.content.Context.VIBRATOR_SERVICE;
+
+import android.annotation.SuppressLint;
+import android.app.Activity;
+import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.os.Build;
+import android.os.VibrationEffect;
+import android.os.Vibrator;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AbsListView;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import androidx.annotation.NonNull;
-import androidx.recyclerview.widget.RecyclerView;
-
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
-public class GalleryAdapter extends RecyclerView.Adapter<GalleryAdapter.ViewHolder> {
+public class GalleryAdapter extends BaseAdapter {
 
     private final PictureArrayList<PictureTable> mData;
 
+
     /*
-     * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
-     * (固有のためインナークラスで定義)
+     * 日付レイアウトクラス
      */
-    class ViewHolder extends RecyclerView.ViewHolder {
+    private class ViewHolder {
 
-        private final ImageView iv_picture;
-
-        /*
-         * コンストラクタ
-         */
-        public ViewHolder( View itemView ) {
-            super(itemView);
-
-            iv_picture = itemView.findViewById( R.id.iv_picture );
-        }
+        //セル位置
+        private int position;
+        private ImageView iv_picture;
 
         /*
          * ビューの設定
          */
-        public void setView( PictureTable picture ){
+        @SuppressLint("ClickableViewAccessibility")
+        public void setView( View view, PictureTable picture ) {
 
-            //絶対パス
-            String path = picture.getPath();
-
-            Log.i("ギャラリー確認", "アダプタ内 setView=" + path);
+            iv_picture = view.findViewById( R.id.iv_picture );
 
             //トリミング範囲で切り取り
-            Bitmap bitmap = BitmapFactory.decodeFile(path);
+            Bitmap bitmap = BitmapFactory.decodeFile( picture.getPath() );
             //画像設定
             iv_picture.setImageBitmap( bitmap );
 
-            /*
-            //リスナー
-            ll_colorItem.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                }
-            });*/
+            //レイアウト全体にタッチリスナーを設定
+            //ll_cell.setClickable(true);                             //！これがないとダブルタップが検知されない
+            //ll_cell.setOnTouchListener(new DateTouchListener( this ));
         }
+
+
     }
 
     /*
      * コンストラクタ
      */
-    public GalleryAdapter(PictureArrayList<PictureTable> data ) {
+    public GalleryAdapter(PictureArrayList<PictureTable> data){
         mData = data;
     }
 
-    /*
-     * ここの戻り値が、onCreateViewHolder()の第２引数になる
-     */
     @Override
-    public int getItemViewType(int position) {
-        return position;
-    }
-
-    /*
-     *　ViewHolderの生成
-     */
-    @NonNull
-    @Override
-    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-
-        //ビューを生成
-        LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
-        View view = inflater.inflate(R.layout.item_gallery_picture, viewGroup, false);
-
-        return new ViewHolder(view);
-    }
-
-    /*
-     * ViewHolderの設定
-     *   表示内容等の設定を行う
-     */
-    @Override
-    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
-
-        //ビューの設定
-        viewHolder.setView( mData.get(i) );
-    }
-
-    /*
-     * データ数取得
-     */
-    @Override
-    public int getItemCount() {
-        //データ数
+    public int getCount() {
+        //その月の日数
         return mData.size();
     }
 
+    /*
+     * セル一つ一つを描画する際にコールされる。
+     */
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+
+        //findViewById()で取得した参照を保持するためのクラス
+        ViewHolder holder;
+
+        Context context = parent.getContext();
+
+        //初めて表示されるなら、セルを割り当て。セルはレイアウトファイルを使用。
+        if (convertView == null) {
+            convertView = LayoutInflater.from(context).inflate(R.layout.item_gallery_picture, null);
+            //convertView = new DateCellView(mContext);
+
+            //ビューを生成。レイアウト内のビューを保持。
+            holder = new ViewHolder();
+
+            //タグ設定
+            convertView.setTag(holder);
+
+        } else {
+            //一度表示されているなら、そのまま活用
+            holder = (ViewHolder)convertView.getTag();
+        }
+
+        //ビューの設定
+        holder.setView( convertView, mData.get(position) );
+
+        //セルのサイズを指定
+        //画面解像度の比率を取得
+        float dp = context.getResources().getDisplayMetrics().density;
+        //セルの幅と高さ
+        AbsListView.LayoutParams params = new AbsListView.LayoutParams(
+                parent.getWidth() / 2 - (int)dp,
+                parent.getWidth() / 2 - (int)dp);
+        convertView.setLayoutParams(params);
+
+        //設定したビューを返す(このビューが日付セルとして表示される)
+        return convertView;
+    }
+
+
+    @Override
+    public long getItemId(int position) {
+        return 0;
+    }
+    @Override
+    public Object getItem(int position) {
+        return null;
+    }
+
+
+
+/*
+    横になったとき
+    //自身へ変更通知
+    this.notifyDataSetChanged();*/
 }
+

@@ -151,8 +151,7 @@ public class MapEntryPageAdapter extends RecyclerView.Adapter<MapEntryPageAdapte
 
             //レイアウトマネージャの生成・設定
             rv_colorPattern2.setLayoutManager( new LinearLayoutManager(context) );
-            rv_colorPattern2.setAdapter( new ColorPatternAdapter( colorPattern, mfl_sampleMap ) );
-
+            rv_colorPattern2.setAdapter( new ColorPatternAdapter( colorPattern, mfl_sampleMap, ColorPatternAdapter.COLOR_2 ) );
         }
 
         /*
@@ -166,7 +165,7 @@ public class MapEntryPageAdapter extends RecyclerView.Adapter<MapEntryPageAdapte
 
             //レイアウトマネージャの生成・設定
             rv_colorPattern3.setLayoutManager(new LinearLayoutManager(context));
-            rv_colorPattern3.setAdapter( new ColorPatternAdapter( colorPattern, mfl_sampleMap ) );
+            rv_colorPattern3.setAdapter( new ColorPatternAdapter( colorPattern, mfl_sampleMap, ColorPatternAdapter.COLOR_3 ) );
         }
 
         @Override

@@ -26,8 +26,8 @@
     <string name="title_mapDesign">マップデザイン</string>
     <string name="title_mapBackgroundColor">マップの色</string>
 
-    <string name="font_sample_alphabet">A a</string>
-    <string name="font_sample_japanese">あァ</string>
+    <string name="font_sample_alphabet">A</string>
+    <string name="font_sample_japanese">あ</string>
 
     <string name="color_rgb">RGB</string>
     <string name="color_graphic">Graphic</string>

@@ -67,37 +67,38 @@ public class AsyncUpdateThumbnail {
             //PictureTableDao
             PictureTableDao dao = mDB.daoPictureTable();
 
-            //ピクチャノードの所属ピクチャをすべて取得
-            PictureArrayList<PictureTable> gallery = new PictureArrayList<>();
-            gallery.addAll( dao.getGallery(mPicture.getPidMap(), mPicture.getPidParentNode()) );
+            //更新対象のピクチャノードに所属する写真をすべて取得
+            PictureArrayList<PictureTable> galleryInPictureNode = new PictureArrayList<>();
+            galleryInPictureNode.addAll( dao.getGallery(mPicture.getPidMap(), mPicture.getPidParentNode()) );
 
             //現在設定中のサムネイル
-            PictureTable currentThumbnail = gallery.getThumbnail(mPicture.getPidParentNode());
+            PictureTable currentThumbnail = galleryInPictureNode.getThumbnail(mPicture.getPidParentNode());
 
-            //現在設定中のサムネイルを更新
+            //現在設定中のサムネイル情報を更新
             boolean isSamePicture = updateCurrentThumbnail(dao, currentThumbnail);
             if( isSamePicture ) {
-                //同じ画像がサムネイルに選択された場合、テーブル処理終了
+                //同じ画像がサムネイルに選択された場合、ここで処理終了
                 return;
             }
 
-            //変更対象が既にテーブルにあるかどうか
-            PictureTable picture = gallery.getPicture( mPicture.getPidParentNode(), mPicture.getPath() );
+            //変更対象がピクチャノードに格納されているかどうか
+            PictureTable picture = galleryInPictureNode.getPicture( mPicture.getPidParentNode(), mPicture.getPath() );
             if( picture == null ){
-                //なければ挿入
+                //なければ新規挿入
                 long pid = dao.insert( mPicture );
                 mPicture.setPid( (int)pid );
 
-                mNewThumbnail = picture;
+                //新しいサムネイルとして保持
+                mNewThumbnail = mPicture;
 
             } else {
                 //あれば、サムネイル化して更新
                 picture.setEnableThumbnail( mPicture.getTrimmingInfo() );
                 dao.update( picture );
 
+                //新しいサムネイルとして保持
                 mNewThumbnail = picture;
             }
-
         }
 
         /*
@@ -111,27 +112,31 @@ public class AsyncUpdateThumbnail {
             //現在のサムネイルと同じ画像か
             boolean isSamePicture = false;
 
-            //現在設定中のサムネイル
-            if (currentThumbnail != null) {
-
-                //変更対象の画像と同じ
-                if (currentThumbnail.getPath().equals(mPicture.getPath())) {
-                    //トリミング情報を更新
-                    currentThumbnail.setTrimmingInfo(mPicture.getTrimmingInfo());
-
-                    //サムネイルに選択された画像が同じ
-                    isSamePicture = true;
-
-                } else {
-                    //非サムネイルに設定
-                    currentThumbnail.setDisableThumbnail();
-                }
-
-                //現在サムネイルを更新
-                dao.update( currentThumbnail );
-
-                mOldThumbnail = currentThumbnail;
+            //現在設定中のサムネイルがなくなっている場合、何もしない
+            if( currentThumbnail == null ){
+                return isSamePicture;
             }
+
+            //変更対象の画像と同じ画像が選択された場合
+            if (currentThumbnail.getPath().equals( mPicture.getPath()) ) {
+                //トリミング情報だけ更新
+                currentThumbnail.setTrimmingInfo(mPicture.getTrimmingInfo());
+
+                //サムネイルに選択された画像が同じ
+                isSamePicture = true;
+
+            } else {
+                //別の画像が選択された場合
+
+                //現在設定中のサムネイルを非サムネイルに設定
+                currentThumbnail.setDisableThumbnail();
+            }
+
+            //現在サムネイルを更新
+            dao.update( currentThumbnail );
+
+            //古いサムネイルとして保持
+            mOldThumbnail = currentThumbnail;
 
             return isSamePicture;
         }

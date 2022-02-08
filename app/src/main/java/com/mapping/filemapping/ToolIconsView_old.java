@@ -1,15 +1,12 @@
 package com.mapping.filemapping;
 
-import static android.app.Activity.RESULT_OK;
 import static com.mapping.filemapping.MapActivity.MOVE_UPPER;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,11 +17,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 
-import androidx.activity.ComponentActivity;
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.ArrayList;
@@ -33,7 +25,7 @@ import java.util.List;
 /*
  * ノードのツールアイコン全体のビュー
  */
-public class ToolIconsView extends ConstraintLayout {
+public class ToolIconsView_old extends ConstraintLayout {
 
     private class TooliconData {
 
@@ -72,13 +64,19 @@ public class ToolIconsView extends ConstraintLayout {
     //マップ画面
     private MapActivity mMapActivity;
 
+    ViewGroup mMap;
+
     /*
      * コンストラクタ(New)
      */
-    public ToolIconsView(Context context, BaseNode v_node, MapActivity mapActivity) {
+    public ToolIconsView_old(ViewGroup map, Context context, BaseNode v_node, MapActivity mapActivity) {
         super(context);
         v_baseNode = v_node;
         mMapActivity = mapActivity;
+
+        mMap = map;
+
+        Log.i("アイコン時間チェック", "コンストラクタ");
 
         //初期化
         init();
@@ -88,8 +86,9 @@ public class ToolIconsView extends ConstraintLayout {
      *　レイアウトから生成時
      *    ※呼ばれない作り
      */
-    public ToolIconsView(Context context, AttributeSet attrs) {
+    public ToolIconsView_old(Context context, AttributeSet attrs) {
         super(context, attrs);
+
     }
 
     /*
@@ -101,11 +100,30 @@ public class ToolIconsView extends ConstraintLayout {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.node_tool_icon, this, true);
 
+        Log.i("アイコン時間チェック", "init");
+/*
         //既に開いているノードを閉じる
         closeShowingIcon();
 
         //ノードに自分を持たせる
         v_baseNode.setIconView(this);
+
+        //ツールアイコン設定
+        setupIcon();*/
+    }
+
+    /*
+     * 初期化処理
+     */
+    public void initA() {
+
+        Log.i("アイコン時間チェック", "initA");
+
+        //既に開いているノードを閉じる
+        closeShowingIcon();
+
+        //ノードに自分を持たせる
+        //v_baseNode.setIconView(this);
 
         //ツールアイコン設定
         setupIcon();
@@ -125,6 +143,8 @@ public class ToolIconsView extends ConstraintLayout {
                         //レイアウト確定後は、不要なので本リスナー削除
                         getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
+                        Log.i("アイコン時間チェック", "レイアウト確定");
+
 /*
                         //Padding設定
                         //※アイコンの影が見切れるため、このタイミングで設定
@@ -140,18 +160,15 @@ public class ToolIconsView extends ConstraintLayout {
 
                         //本レイアウト位置
                         int left = nodex - (getWidth() / 2);
-                        int top = nodey - (getHeight() / 2);
+                        int top  = nodey - (getHeight() / 2);
 
                         //見かけ上の移動
                         //※これをせず、mlp.setMargins()のみの処理をすると、画面上から見えなくなってしまうため注意
                         layout(left, top, left + getWidth(), top + getHeight());
 
                         //レイアウト位置変更
-                        ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) getLayoutParams();
+                        MarginLayoutParams mlp = (MarginLayoutParams) getLayoutParams();
                         mlp.setMargins(left, top, mlp.rightMargin, mlp.bottomMargin);
-
-                        //アイコンを表示
-                        showIcon();
                     }
                 }
         );
@@ -176,15 +193,18 @@ public class ToolIconsView extends ConstraintLayout {
 
         //アイコン設置初期角度
         final int START_ANGLE = 30;
+        //アニメーション開始オフセット
+        final long ANIM_OFFSET = 25;
 
         int count = 0;
         for (TooliconData toolIconData : iconViews) {
 
-            ConstraintLayout.LayoutParams layoutParams = new ConstraintLayout.LayoutParams(
-                    ConstraintLayout.LayoutParams.WRAP_CONTENT,
-                    ConstraintLayout.LayoutParams.WRAP_CONTENT);
+            LayoutParams layoutParams = new LayoutParams(
+                    LayoutParams.WRAP_CONTENT,
+                    LayoutParams.WRAP_CONTENT);
 
             Log.i("アイコン", "半径 初期値=" + layoutParams.circleRadius + " 設定値=" + radius);
+            Log.i("アイコン時間チェック", "show");
 
             //角度、半径を設定
             layoutParams.circleConstraint = v_center_id;
@@ -194,10 +214,12 @@ public class ToolIconsView extends ConstraintLayout {
             //アイコンビュー
             ImageButton ib = toolIconData.getIbIcon();
             ib.setLayoutParams(layoutParams);
+            ib.setVisibility(VISIBLE);
 
-            //※最終的な可視化はレイアウト確定後に行う
-            //※この時点では、サイズが欲しいため領域確保のみ
-            ib.setVisibility(INVISIBLE);
+            //表示アニメーション
+            Animation animation = AnimationUtils.loadAnimation(ib.getContext(), R.anim.show_tool_icon);
+            animation.setStartOffset( ANIM_OFFSET * count );
+            ib.startAnimation(animation);
 
             //リスナーの設定
             setIconListener(toolIconData);
@@ -208,44 +230,18 @@ public class ToolIconsView extends ConstraintLayout {
         }
 
 
-        /*//Padding設定
+        //Padding設定
         //※アイコンの影が見切れるため、このタイミングで設定
+/*
         int padding = (int)getResources().getDimension( R.dimen.node_icon_parent_padding);
         ConstraintLayout cl_toolIcon = findViewById( R.id.cl_toolIcon );
         Log.i("アイコン", "padding 初期値=" + cl_toolIcon.getPaddingLeft() + " 設定値=" + padding);
         cl_toolIcon.setPadding( padding, padding, padding, padding );
-        */
+*/
 
         //生成位置
         //※ツールアイコン表示後に行う
         setupShowPosition();
-    }
-
-    /*
-     * アイコンを表示
-     */
-    public void showIcon() {
-
-        //アイコンビュー情報を取得
-        List<TooliconData> iconViews = getIconResourceId();
-
-        //アニメーション開始オフセット
-        final long ANIM_OFFSET = 20;
-
-        int count = 0;
-        for (TooliconData toolIconData : iconViews) {
-
-            //アイコンビュー
-            ImageButton ib = toolIconData.getIbIcon();
-            ib.setVisibility(VISIBLE);
-
-            //表示アニメーション
-            Animation animation = AnimationUtils.loadAnimation(ib.getContext(), R.anim.show_tool_icon);
-            animation.setStartOffset( ANIM_OFFSET * count );
-            ib.startAnimation(animation);
-
-            count++;
-        }
     }
 
     /*

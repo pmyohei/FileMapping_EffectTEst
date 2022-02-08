@@ -1,5 +1,21 @@
 <?xml version="1.0" encoding="utf-8"?>
-<View
+
+<com.google.android.material.card.MaterialCardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/v_historyColorItem"
+    android:layout_width="48dp"
+    android:layout_height="48dp"
+    android:layout_marginTop="8dp"
+    android:layout_marginBottom="16dp"
+    android:layout_marginStart="16dp"
+    android:layout_marginEnd="8dp"
+    android:theme="@style/Theme.MaterialComponents.Light"
+    app:cardCornerRadius="24dp"
+    app:cardElevation="8dp"
+    />
+
+<!--<View
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/v_historyColorItem"
     android:layout_width="@dimen/color_history_item_size"
@@ -7,3 +23,4 @@
     android:padding="12dp"
     android:background="@drawable/frame_history_color">
 </View>
+-->

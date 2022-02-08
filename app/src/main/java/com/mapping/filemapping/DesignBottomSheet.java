@@ -88,20 +88,24 @@ public class DesignBottomSheet extends CoordinatorLayout {
         //レイアウト構築
         ViewPager2 vp;
         if( kind == NODE ){
-            //ノードデザイン指定
-            vp = setupNodeDesignLayout(view);
+
+            //ノード種別で切り分け
+            if( ((BaseNode)view).getNode().getKind() == NodeTable.NODE_KIND_PICTURE ){
+                //ノードピクチャデザイン指定
+                vp = setupPictureNodeDesignLayout(view);
+            } else {
+                //ノードデザイン指定
+                vp = setupNodeDesignLayout(view);
+            }
 
             heightRatio = HALF;
-        } else if( kind == PICTURE_NODE ){
-            //ピクチャノードデザイン指定
-            vp = setupPictureNodeDesignLayout(view);
 
-            heightRatio = HALF;
         } else if( kind == MAP ){
             //マップデザイン指定
             vp = setupMapDesignLayout(view);
 
             heightRatio = HALF;
+
         } else {
             //ノード形のみの指定
             vp = setupNodeSizeLayout(view);
@@ -162,7 +166,7 @@ public class DesignBottomSheet extends CoordinatorLayout {
 
         //ViewPager2を生成
         ViewPager2 vp2 = findViewById(R.id.vp2_design);
-        DesignNodePageAdapter adapter = new DesignNodePageAdapter(layoutIdList, v_node, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp2);
+        DesignPicturePageAdapter adapter = new DesignPicturePageAdapter(layoutIdList, v_node, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp2);
         vp2.setAdapter(adapter);
 
         return vp2;

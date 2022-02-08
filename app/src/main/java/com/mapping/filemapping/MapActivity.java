@@ -43,8 +43,6 @@ import android.widget.LinearLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Objects;
 
 public class MapActivity extends AppCompatActivity {
@@ -249,7 +247,7 @@ public class MapActivity extends AppCompatActivity {
         //マップ色を設定
         String firstColor = mMap.getFirstColor();
         if( firstColor != null ){
-            findViewById( R.id.fl_screenMap ).setBackgroundColor( Color.parseColor( firstColor ) );
+            setMapColor(firstColor);
         }
 
         //ルートノード
@@ -281,6 +279,20 @@ public class MapActivity extends AppCompatActivity {
     }
 
     /*
+     * マップ背景色の設定
+     */
+    public void setMapColor( String color ) {
+
+        int value = Color.parseColor( color );
+
+        //マップ全体
+        findViewById( R.id.fl_screenMap ).setBackgroundColor( value );
+        //システムバー
+        getWindow().setStatusBarColor( value );
+    }
+
+
+    /*
      * マップのデフォルトカラーを取得
      */
     public String[] getMapDefaultColors() {
@@ -303,10 +315,26 @@ public class MapActivity extends AppCompatActivity {
     }
 
     /*
+     * ツールアイコンを表示
+     */
+    private void showToolIcon(View node ) {
+
+        //開いているなら、何もしない
+        if( ((BaseNode)node).hasIconView() ){
+            return;
+        }
+
+        //ツールアイコンをレイアウトに追加
+        FrameLayout fl_map = findViewById( R.id.fl_map );
+        fl_map.addView(
+                new ToolIconsView( this, (BaseNode)node, MapActivity.this ),
+                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+    }
+
+    /*
      * マップ内の全てのノード・ラインを生成
      */
     private void createMap() {
-
         //ノードの生成
         drawAllNodes();
     }
@@ -355,28 +383,13 @@ public class MapActivity extends AppCompatActivity {
             rootNodeView.setNode(node);
             //中心座標を設定
             rootNodeView.addOnNodeGlobalLayoutListener();
-            //ランチャーを設定
-            //rootNodeView.setNodeOperationLauncher(mNodeOperationLauncher);
-            //ノード生成／編集クリックリスナー
-            //rootNodeView.setOnNodeDesignClickListener(new NodeDesignClickListener());
-
             //NodeTable側でノードビューを保持
             node.setNodeView(rootNodeView);
-
+            //ノードクリックリスナー
             rootNodeView.setOnNodeClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-
-                        if( ((BaseNode)view).hasIconView() ){
-                            //開いているなら、何もしない
-                            return;
-                        }
-
-                        //ツールアイコンを生成、ノード上に表示
-                        ToolIconsView toolIconsView = new ToolIconsView( fl_map.getContext(), (BaseNode)view, MapActivity.this );
-                        fl_map.addView(
-                                toolIconsView,
-                                new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                        showToolIcon( view );
                     }
                 }
             );
@@ -414,25 +427,11 @@ public class MapActivity extends AppCompatActivity {
         //レイアウト確定後の処理を設定
         ((ChildNode) nodeView).addOnNodeGlobalLayoutListener();
 
-        //ノード生成／編集クリックリスナー
-        //nodeView.setOnNodeDesignClickListener(new NodeDesignClickListener());
-
+        //ノードクリックリスナー
         nodeView.setOnNodeClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    Log.i("アイコン", "オープン契機");
-
-                    if( ((BaseNode)view).hasIconView() ){
-                        //開いているなら、何もしない
-                        Log.i("アイコン", "オープンなし");
-                        return;
-                    }
-
-                    //ツールアイコンを生成、ノード上に表示
-                    fl_map.addView(
-                            new ToolIconsView( fl_map.getContext(), (BaseNode)view, MapActivity.this ),
-                            new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+                    showToolIcon( view );
                 }
             }
         );
@@ -959,8 +958,6 @@ public class MapActivity extends AppCompatActivity {
                 }
             });
         }
-
-
     }
 
     /*

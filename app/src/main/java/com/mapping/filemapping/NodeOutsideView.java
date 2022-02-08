@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 public class NodeOutsideView extends LinearLayout {
     private Paint mPaint;
     private int mShadowColor;
-    private boolean mIsShadow;
 
     float mRadius = 0.0f;
 
@@ -34,8 +33,6 @@ public class NodeOutsideView extends LinearLayout {
 
         //OnDraw()をコールさせる設定
         setWillNotDraw(false);
-
-        mIsShadow = false;
     }
 
     /*
@@ -76,9 +73,6 @@ public class NodeOutsideView extends LinearLayout {
             mPaint.clearShadowLayer();
         }
 
-        //影の有無の設定を更新
-        mIsShadow = isShadow;
-
         //再描画
         invalidate();
     }
@@ -86,6 +80,7 @@ public class NodeOutsideView extends LinearLayout {
     /*
      * 影の有無を切り替え
      */
+/*
     public void switchShadow() {
 
         //状態を反転
@@ -104,14 +99,15 @@ public class NodeOutsideView extends LinearLayout {
         //再描画
         invalidate();
     }
+*/
 
     /*
      * ノード影の有無を取得
      */
-    public boolean isShadow() {
+/*    public boolean isShadow() {
         //影の有無を取得
         return mIsShadow;
-    }
+    }*/
 
     /*
      * 影色の設定
@@ -125,9 +121,8 @@ public class NodeOutsideView extends LinearLayout {
 
         //色更新
         mShadowColor = colorHex;
-        mIsShadow    = true;
 
-        //ノードの横幅
+/*        //ノードの横幅
         int width = findViewById(R.id.cv_node).getWidth();
         //影の設定
         mPaint.setShadowLayer((width / 8f), 0, 0, mShadowColor);
@@ -135,7 +130,7 @@ public class NodeOutsideView extends LinearLayout {
         Log.i("影", "mShadowColor＝" + mShadowColor);
 
         //再描画
-        invalidate();
+        invalidate();*/
     }
 
     /*

@@ -404,8 +404,6 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
 
         //リストの内のノードすべて
         for( NodeTable node: this ){
-            //★テーブルにも反映必要
-            //node.
             node.getNodeView().setShadowColor( color, node.getKind() );
         }
     }
@@ -417,8 +415,6 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
 
         //リストの内のノードすべて
         for( NodeTable node: this ){
-            //★テーブルにも反映必要
-            //node.
             node.getNodeView().setShadowOnOff( isShadow, node.getKind()  );
         }
     }
@@ -430,9 +426,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
 
         //リストの内のノードすべて
         for( NodeTable node: this ){
-            //★テーブルにも反映必要
-            //node.
-            node.getNodeView().switchShadow();
+            node.getNodeView().switchShadow( node.getKind() );
         }
     }
 
@@ -449,8 +443,6 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
                 continue;
             }
 
-            //★テーブルにも反映必要
-            //node.
             ChildNode childNode = (ChildNode)node.getNodeView();
             childNode.setLineColor( color );
         }
@@ -469,7 +461,6 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
                 continue;
             }
 
-            //★テーブルにも反映→ノード側で行う
             ChildNode childNode = (ChildNode)node.getNodeView();
             childNode.setLineSize( thick );
         }

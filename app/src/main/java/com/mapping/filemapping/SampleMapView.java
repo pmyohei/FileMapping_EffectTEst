@@ -54,13 +54,13 @@ public class SampleMapView extends FrameLayout {
     public SampleMapView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
-        init(context);
+        init();
     }
 
     /*
      * 初期化
      */
-    private void init(Context context) {
+    private void init() {
 
         //レイアウト生成
         LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -85,7 +85,7 @@ public class SampleMapView extends FrameLayout {
                         createSampleNode();
                         //ノード描画
                         drawAllNodes();
-                        //影をなしに設定
+                        //影なしに設定
                         setDisableShadowInMap();
                     }
                 }
@@ -321,16 +321,11 @@ public class SampleMapView extends FrameLayout {
         findViewById(R.id.fl_map).setBackgroundColor(Color.parseColor(mColors[first]));
         mTmpNodes.setAllNodeTxColor(mColors[first]);
 
-        //ノード枠線、ライン、ノード背景色
+        //ノード枠線、ライン、ノード背景色、影色
         mTmpNodes.setAllNodeBorderColor(mColors[second]);
         mTmpNodes.setAllNodeLineColor(mColors[second]);
         mTmpNodes.setAllNodeBgColor(mColors[second]);
-
-        //ノード影色（影が設定されている場合のみ）
-        RootNodeView rootNodeView = findViewById(R.id.v_rootNode);
-        if (rootNodeView.isShadow()) {
-            mTmpNodes.setAllNodeShadowColor(mColors[second]);
-        }
+        mTmpNodes.setAllNodeShadowColor(mColors[second]);
 
         //現在の色を保持
         mCurrentColors[0] = mColors[first];
@@ -351,14 +346,9 @@ public class SampleMapView extends FrameLayout {
         mTmpNodes.setAllNodeLineColor(mColors[second]);
         mTmpNodes.setAllNodeTxColor(mColors[second]);
 
-        //ノード背景色
+        //ノード背景色、影色
         mTmpNodes.setAllNodeBgColor(mColors[third]);
-
-        //ノード影色（影が設定されている場合のみ）
-        RootNodeView rootNodeView = findViewById(R.id.v_rootNode);
-        if (rootNodeView.isShadow()) {
-            mTmpNodes.setAllNodeShadowColor(mColors[third]);
-        }
+        mTmpNodes.setAllNodeShadowColor(mColors[third]);
 
         //現在の色を保持
         mCurrentColors[0] = mColors[first];
@@ -371,21 +361,14 @@ public class SampleMapView extends FrameLayout {
      */
     private void switchSampleNodeShadow() {
 
-        //ノード影色
+        //ノード背景色
         RootNodeView rootNodeView = findViewById(R.id.v_rootNode);
-        if (!rootNodeView.isShadow()) {
-            //影なしであれば、ノード背景色の影色を設定する形で影ありの状態にする
-            //※単純に影ありを設定すると、前回の色が設定されるため
+        String color = rootNodeView.getNodeBackgroundColor();
+        //影色を更新
+        mTmpNodes.setAllNodeShadowColor(color);
 
-            //ノード背景色
-            String color = rootNodeView.getNodeBackgroundColor();
-            //影色を設定
-            mTmpNodes.setAllNodeShadowColor(color);
-
-        } else {
-            //影が設定されていれば、なしに設定
-            mTmpNodes.setAllNodeShadow(false);
-        }
+        //影設定を反転
+        mTmpNodes.switchAllNodeShadow();
     }
 
     /*
