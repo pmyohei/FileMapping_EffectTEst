@@ -78,7 +78,6 @@ public class MapActivity extends AppCompatActivity {
     private float mPinchShiftX = 1.0f;
     private float mPinchShiftY = 1.0f;
     //スクリーン上部の中心座標(ノード生成ダイアログ表示時の残りの画面領域の中心)
-    private int mTopScreanX = 0;
     private int mTopScreanY = 0;
     //ピンチ操作発生フラグ
     private boolean mIsPinch = false;
@@ -156,29 +155,9 @@ public class MapActivity extends AppCompatActivity {
                 new AddPictureResultCallback(this)
         );
 
-        //★ここにあるのは微妙
-        int screenWidth;
-        int screenHeight;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
-            //
-            WindowManager windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-            WindowMetrics windowMetrics = windowManager.getCurrentWindowMetrics();
-
-            screenWidth = windowMetrics.getBounds().width();
-            screenHeight = windowMetrics.getBounds().height();
-            //Log.d("screenWidth=>>>", screenWidth + "");
-            //Log.d("screenHeight=>>", screenHeight + "");
-
-        } else {
-            DisplayMetrics displayMetrics = new DisplayMetrics();
-            getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
-            screenWidth = displayMetrics.widthPixels;
-            screenHeight = displayMetrics.heightPixels;
-        }
-
         //画面上部の中心位置
-        mTopScreanX = screenWidth / 2;
-        mTopScreanY = (int) (screenHeight * (1f - ResourceManager.NODE_DESIGN_DIALOG_RATIO)) / 2;
+        int screenHeight = ResourceManager.getScreenHeight(this);
+        mTopScreanY = (int) ( screenHeight * (1f - ResourceManager.NODE_DESIGN_DIALOG_RATIO) ) / 2;
 
         //Log.d("移動", "mTopScreanX=" + mTopScreanX);
         //Log.d("移動", "mTopScreanY=" + mTopScreanY);

@@ -1,12 +1,16 @@
 package com.mapping.filemapping;
 
+import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.GridView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
 
@@ -38,8 +42,28 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
          * ページ設定
          */
         private void setPage( int position ) {
-            //画像を表示
-            gv_gallery.setAdapter( new GalleryAdapter( mGallerys.get(position) ) );
+            //画面向きを取得
+            int orientation = gv_gallery.getContext().getResources().getConfiguration().orientation;
+
+            //1行に表示する写真数を設定
+            int pictureNumOnLine = ( (orientation == Configuration.ORIENTATION_PORTRAIT) ? GalleryAdapter.PORTRAIT_NUM : GalleryAdapter.LANDSCAPE_NUM );
+            gv_gallery.setNumColumns( pictureNumOnLine );
+
+            //レイアウト確定後、アダプタの設定を行う
+            //※ギャラリー用リサイクラービューの大きさで写真の大きさを決定しているため
+            ViewTreeObserver observer = gv_gallery.getViewTreeObserver();
+            observer.addOnGlobalLayoutListener(
+                    new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+                            //アダプタを設定
+                            gv_gallery.setAdapter( new GalleryAdapter( gv_gallery.getContext(), mGallerys.get(position) ) );
+
+                            //レイアウト確定後は、不要なので本リスナー削除
+                            gv_gallery.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        }
+                    }
+            );
         }
     }
 

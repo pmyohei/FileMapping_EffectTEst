@@ -1,76 +1,64 @@
 package com.mapping.filemapping;
 
-import static android.content.Context.VIBRATOR_SERVICE;
-
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.os.Build;
-import android.os.VibrationEffect;
-import android.os.Vibrator;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
-import java.util.Locale;
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 
 public class GalleryAdapter extends BaseAdapter {
 
+    //写真数
+    public final static int PORTRAIT_NUM = 2;
+    public final static int LANDSCAPE_NUM = 6;
+
     private final PictureArrayList<PictureTable> mData;
+    private final float mDp;
+    private final Context mContext;
+    private final LayoutInflater mInflater;
+    private int mPictureNumOnLine;            //1行で表示する写真の数
 
-
-    /*
-     * 日付レイアウトクラス
-     */
-    private class ViewHolder {
-
-        //セル位置
-        private int position;
-        private ImageView iv_picture;
-
-        /*
-         * ビューの設定
-         */
-        @SuppressLint("ClickableViewAccessibility")
-        public void setView( View view, PictureTable picture ) {
-
-            iv_picture = view.findViewById( R.id.iv_picture );
-
-            //トリミング範囲で切り取り
-            Bitmap bitmap = BitmapFactory.decodeFile( picture.getPath() );
-            //画像設定
-            iv_picture.setImageBitmap( bitmap );
-
-            //レイアウト全体にタッチリスナーを設定
-            //ll_cell.setClickable(true);                             //！これがないとダブルタップが検知されない
-            //ll_cell.setOnTouchListener(new DateTouchListener( this ));
-        }
-
-
-    }
 
     /*
      * コンストラクタ
      */
-    public GalleryAdapter(PictureArrayList<PictureTable> data){
+    public GalleryAdapter(Context context, PictureArrayList<PictureTable> data){
+        mContext = context;
         mData = data;
+        mInflater = LayoutInflater.from(context);
+
+        //画面密度
+        mDp = context.getResources().getDisplayMetrics().density;
+
+        //1行の写真表示数を設定
+        setPictureNumOnLine();
+    }
+
+    /*
+     * 表示写真の1辺の長さを設定
+     */
+    public void setPictureNumOnLine() {
+
+        //画面向きを取得
+        int orientation = mContext.getResources().getConfiguration().orientation;
+
+        //向きに応じて、1行で表示する写真数を設定
+        mPictureNumOnLine = ( (orientation == Configuration.ORIENTATION_PORTRAIT) ? PORTRAIT_NUM : LANDSCAPE_NUM );
     }
 
     @Override
     public int getCount() {
-        //その月の日数
+        //写真数
         return mData.size();
     }
 
@@ -80,40 +68,42 @@ public class GalleryAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        //findViewById()で取得した参照を保持するためのクラス
-        ViewHolder holder;
-
-        Context context = parent.getContext();
-
         //初めて表示されるなら、セルを割り当て。セルはレイアウトファイルを使用。
         if (convertView == null) {
-            convertView = LayoutInflater.from(context).inflate(R.layout.item_gallery_picture, null);
-            //convertView = new DateCellView(mContext);
+            convertView = mInflater.inflate(R.layout.item_gallery_picture, null);
 
-            //ビューを生成。レイアウト内のビューを保持。
-            holder = new ViewHolder();
+            //写真用ビューのサイズ
+            int sideLength = (parent.getWidth() / mPictureNumOnLine) - (int)mDp;
+            AbsListView.LayoutParams params = new AbsListView.LayoutParams(
+                    sideLength,
+                    sideLength);
+            convertView.setLayoutParams(params);
 
-            //タグ設定
-            convertView.setTag(holder);
-
-        } else {
-            //一度表示されているなら、そのまま活用
-            holder = (ViewHolder)convertView.getTag();
+            //float dp = mContext.getResources().getDisplayMetrics().density;
+            //Log.i("ギャラリー", "position=" + position + " 前回設定サイズ=" + (parent.getWidth() / 2 - (int)dp) );
+            //Log.i("ギャラリー", "position=" + position + " mPictureNumOnLine=" + mPictureNumOnLine);
         }
 
-        //ビューの設定
-        holder.setView( convertView, mData.get(position) );
+        //Picassoを利用して画像を設定
+        ImageView iv_picture = convertView.findViewById( R.id.iv_picture );
+        Picasso.get()
+                .load( new File( mData.get(position).getPath() ) )
+                .error(R.drawable.baseline_picture_read_error_24)
+                .into( iv_picture );
 
-        //セルのサイズを指定
-        //画面解像度の比率を取得
-        float dp = context.getResources().getDisplayMetrics().density;
-        //セルの幅と高さ
-        AbsListView.LayoutParams params = new AbsListView.LayoutParams(
-                parent.getWidth() / 2 - (int)dp,
-                parent.getWidth() / 2 - (int)dp);
-        convertView.setLayoutParams(params);
+        iv_picture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //画面遷移
+                    Intent intent = new Intent( ((PictureGalleryActivity)mContext).getApplication(), SinglePictureDisplayActivity.class );
+                    intent.putExtra( "test", mData );
 
-        //設定したビューを返す(このビューが日付セルとして表示される)
+                    mContext.startActivity(intent);
+                }
+            }
+        );
+
+        //設定したビューを返す
         return convertView;
     }
 
@@ -126,8 +116,6 @@ public class GalleryAdapter extends BaseAdapter {
     public Object getItem(int position) {
         return null;
     }
-
-
 
 /*
     横になったとき

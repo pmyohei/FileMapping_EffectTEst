@@ -1,13 +1,20 @@
 package com.mapping.filemapping;
 
+import static android.content.Context.WINDOW_SERVICE;
+
+import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.WindowManager;
+import android.view.WindowMetrics;
 
 import androidx.core.content.res.ResourcesCompat;
 
@@ -38,7 +45,7 @@ public class ResourceManager {
 
     //serialVersionUID
     public static final long SERIAL_VERSION_UID_NODE_TABLE = 1L;
-    public static final long SERIAL_VERSION_UID_NODE_VIEW  = 2L;
+    public static final long SERIAL_VERSION_UID_NODE_VIEW = 2L;
 
     /* ノード共通情報 */
     //ノード初期生成位置（親ノードからのオフセット）
@@ -53,23 +60,20 @@ public class ResourceManager {
     public static final String NODE_INVALID_COLOR = "#000000";
 
 
-
-
-
     /*
      * 本アプリケーション内のフォントリスト(英語)
      */
-    public static List<Typeface> getAlphabetFonts(Context context){
+    public static List<Typeface> getAlphabetFonts(Context context) {
 
         List<Typeface> fonts = new ArrayList<>();
-        fonts.add( ResourcesCompat.getFont(context, R.font.luxurious_roman_regular) );
-        fonts.add( ResourcesCompat.getFont(context, R.font.roboto_regular) );
-        fonts.add( ResourcesCompat.getFont(context, R.font.the_nautigal_regular) );
-        fonts.add( ResourcesCompat.getFont(context, R.font.dongle_regular) );
-        fonts.add( ResourcesCompat.getFont(context, R.font.oswald_variable_font_wght) );
-        fonts.add( ResourcesCompat.getFont(context, R.font.mochiy_pop_p_one_regular) );
-        fonts.add( ResourcesCompat.getFont(context, R.font.moon_dance_regular) );
-        fonts.add( ResourcesCompat.getFont(context, R.font.josefin_sans_variable_font_wght) );
+        fonts.add(ResourcesCompat.getFont(context, R.font.luxurious_roman_regular));
+        fonts.add(ResourcesCompat.getFont(context, R.font.roboto_regular));
+        fonts.add(ResourcesCompat.getFont(context, R.font.the_nautigal_regular));
+        fonts.add(ResourcesCompat.getFont(context, R.font.dongle_regular));
+        fonts.add(ResourcesCompat.getFont(context, R.font.oswald_variable_font_wght));
+        fonts.add(ResourcesCompat.getFont(context, R.font.mochiy_pop_p_one_regular));
+        fonts.add(ResourcesCompat.getFont(context, R.font.moon_dance_regular));
+        fonts.add(ResourcesCompat.getFont(context, R.font.josefin_sans_variable_font_wght));
 
         return fonts;
     }
@@ -77,15 +81,15 @@ public class ResourceManager {
     /*
      * 本アプリケーション内のフォントリスト(日本語)
      */
-    public static List<Typeface> getJapaneseFonts(Context context){
+    public static List<Typeface> getJapaneseFonts(Context context) {
 
         List<Typeface> fonts = new ArrayList<>();
-        fonts.add( ResourcesCompat.getFont(context, R.font.ipaexm) );
-        fonts.add( ResourcesCompat.getFont(context, R.font.ipaexg) );
-        fonts.add( ResourcesCompat.getFont(context, R.font.hannari_mincho_regular) );
-        fonts.add( ResourcesCompat.getFont(context, R.font.senobi_gothic_medium) );
-        fonts.add( ResourcesCompat.getFont(context, R.font.jk_maru_gothic_m) );
-        fonts.add( ResourcesCompat.getFont(context, R.font.pixel_mplus10_regular) );
+        fonts.add(ResourcesCompat.getFont(context, R.font.ipaexm));
+        fonts.add(ResourcesCompat.getFont(context, R.font.ipaexg));
+        fonts.add(ResourcesCompat.getFont(context, R.font.hannari_mincho_regular));
+        fonts.add(ResourcesCompat.getFont(context, R.font.senobi_gothic_medium));
+        fonts.add(ResourcesCompat.getFont(context, R.font.jk_maru_gothic_m));
+        fonts.add(ResourcesCompat.getFont(context, R.font.pixel_mplus10_regular));
 
         return fonts;
     }
@@ -93,7 +97,7 @@ public class ResourceManager {
     /*
      *　コンテンツURIから絶対パスを取得（/~~/~~/xxx.png）
      */
-    public static String getPathFromUri( Context context, Uri uri ) {
+    public static String getPathFromUri(Context context, Uri uri) {
 
         String path = null;
 
@@ -111,13 +115,13 @@ public class ResourceManager {
 
         //クエリ発行
         Cursor cursor = contentResolver.query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, where, new String[]{ id }, null);
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, where, new String[]{id}, null);
 
         //Log.i("URI", "dump cursor:" + DatabaseUtils.dumpCursorToString(cursor));
 
-        if( cursor.moveToFirst() ){
+        if (cursor.moveToFirst()) {
             //絶対パスを取得
-            path = cursor.getString( cursor.getColumnIndexOrThrow(columns[0]) );
+            path = cursor.getString(cursor.getColumnIndexOrThrow(columns[0]));
 
             Log.i("URI", "path=" + path);
         }
@@ -127,5 +131,43 @@ public class ResourceManager {
         return path;
     }
 
+    /*
+     *　スクリーン横幅を取得
+     */
+    public static int getScreenWidth( Context context ) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowManager windowManager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
+            WindowMetrics windowMetrics = windowManager.getCurrentWindowMetrics();
+
+            return windowMetrics.getBounds().width();
+            //Log.d("screenWidth=>>>", screenWidth + "");
+            //Log.d("screenHeight=>>", screenHeight + "");
+
+        } else {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            ((Activity)context).getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
+            return displayMetrics.widthPixels;
+        }
+    }
+
+    /*
+     *　スクリーン縦幅を取得
+     */
+    public static int getScreenHeight( Context context ) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowManager windowManager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
+            WindowMetrics windowMetrics = windowManager.getCurrentWindowMetrics();
+
+            return windowMetrics.getBounds().height();
+
+        } else {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            ((Activity)context).getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
+
+            return displayMetrics.heightPixels;
+        }
+    }
 
 }
