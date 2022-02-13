@@ -12,61 +12,78 @@
         android:id="@+id/fl_map"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
+        android:layout_weight="0.4"
         android:layout_gravity="center"
-        android:background="@drawable/frame_sample_map"/>
+        android:background="@color/white"
+        android:elevation="4dp"/>
 
     <!--  マップ情報入力ページ  -->
-    <LinearLayout
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:orientation="vertical">
-
-        <!-- インジケータ -->
-        <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tab_layout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center|top"
-            app:tabBackground="@drawable/selector_indicator"
-            app:tabGravity="center"
-            app:tabIndicatorHeight="0dp"
-            app:tabIndicatorFullWidth="false"
-            app:tabRippleColor="@null" />
+        android:layout_weight="0.6"
+        android:background="@color/white">
 
         <!-- 各種マップ情報ページ -->
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/vp2_createMap"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:paddingTop="4dp"
             android:layout_gravity="center"/>
 
-    </LinearLayout>
-
-    <!--  ボタン  -->
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:gravity="center"
-        android:orientation="horizontal">
-
-        <Button
-            android:id="@+id/bt_create"
-            android:layout_width="wrap_content"
+        <!-- インジケータ -->
+        <!-- ※ViewPager2よりも上に描画させたいため、ViewPager2の後に本ビューを定義 -->
+        <!-- ※translationZ()を使用してもいいが、そうすると影ができてしまうため、定義位置の順番を変更する形にしている -->
+        <com.google.android.material.tabs.TabLayout
+            android:id="@+id/tab_layout"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/bt_create"
-            android:text="@string/bt_create" />
+            android:layout_gravity="center|top"
+            android:background="@color/transparent_65_white"
+            app:tabIndicatorColor="@color/black"
+            app:tabGravity="center"
+            app:tabIndicatorFullWidth="false"
+            app:tabRippleColor="@null" />
 
-        <Button
-            android:id="@+id/bt_cancel"
-            android:layout_width="wrap_content"
+        <!--  ボタン  -->
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:background="@drawable/bt_create"
-            android:text="@string/cancel" />
+            android:layout_gravity="bottom"
+            android:paddingBottom="12dp"
+            android:background="@color/transparent_65_white"
+            android:gravity="center"
+            android:orientation="horizontal">
 
-    </LinearLayout>
+            <TextView
+                android:id="@+id/bt_create"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/bt_create"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toStartOf="@+id/bt_cancel"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+            <TextView
+                android:id="@+id/bt_cancel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="@string/cancel"
+                android:textSize="18sp"
+                android:textColor="@color/black"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.5"
+                app:layout_constraintStart_toEndOf="@+id/bt_create"
+                app:layout_constraintBottom_toBottomOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </FrameLayout>
 
 </LinearLayout>

@@ -10,13 +10,11 @@
         android:id="@+id/tv_titleMap"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="カラーパターン（３色）"/>
+        android:text="ノード数"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_colorPattern3"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_marginTop="0dp"
-        android:gravity="center" />
+    <NumberPicker
+        android:id="@+id/np_nodeNum"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

@@ -1,7 +1,6 @@
 package com.mapping.filemapping;
 
 import android.graphics.Typeface;
-import android.widget.Switch;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -516,7 +515,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
 
         switch( node.getKind() ){
             case NodeTable.NODE_KIND_ROOT:
-                pisd = getAllPictureNodes();
+                pisd = getAllPictureNodePids();
                 break;
 
             case NodeTable.NODE_KIND_NODE:
@@ -536,7 +535,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
     /*
      *　マップ上のすべてのピクチャノードを取得
      */
-    private List<Integer> getAllPictureNodes() {
+    private List<Integer> getAllPictureNodePids() {
 
         List<Integer> pids = new ArrayList<>();
 
@@ -548,6 +547,23 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
         }
 
         return pids;
+    }
+
+    /*
+     *　マップ上のすべてのピクチャノードを取得
+     */
+    public NodeArrayList<NodeTable> getAllPictureNodes() {
+
+        NodeArrayList<NodeTable> nodes = new NodeArrayList<>();
+
+        //リストの内の子ノードすべて
+        for( NodeTable node: this ){
+            if( node.getKind() == NodeTable.NODE_KIND_PICTURE ){
+                nodes.add( node );
+            }
+        }
+
+        return nodes;
     }
 
     /*
@@ -569,4 +585,26 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
 
         return pids;
     }
+
+    /*
+     *　指定一般ノードのすべてのピクチャノードを取得
+     */
+/*    public ArrayList<ThumbnailGridAdapter.PictureNodeInfo> getPictureNodeInfos() {
+
+        ArrayList<ThumbnailGridAdapter.PictureNodeInfo> infos = new ArrayList<>();
+
+        for( NodeTable node: this ){
+
+            if( node.getKind() == NodeTable.NODE_KIND_PICTURE ){
+
+
+
+                ThumbnailGridAdapter.PictureNodeInfo pictureNodeInfo = new ThumbnailGridAdapter.PictureNodeInfo();
+            }
+
+        }
+
+
+        return infos;
+    }*/
 }

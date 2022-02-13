@@ -37,7 +37,7 @@ public class MapEntryActivity extends AppCompatActivity {
         setContentView(R.layout.activity_map_entry);
 
         //マップ入力ページレイアウト
-        setupMapEntryPage();
+        setupCreateMapPage();
 
         //遷移元からの情報
         Intent intent = getIntent();
@@ -76,28 +76,33 @@ public class MapEntryActivity extends AppCompatActivity {
     /*
      * マップデザイン用のレイアウトを設定
      */
-    private void setupMapEntryPage() {
+    private void setupCreateMapPage() {
         //ノードデザイン設定レイアウト
         List<Integer> layoutIdList = new ArrayList<>();
         layoutIdList.add(R.layout.page_map_create_0);
+        //layoutIdList.add(R.layout.page_map_create_1_old);
         layoutIdList.add(R.layout.page_map_create_1);
         layoutIdList.add(R.layout.page_map_create_2);
-        layoutIdList.add(R.layout.page_map_create_3);
 
         //サンプルマップ
         FrameLayout fl_map = findViewById(R.id.fl_map);
 
         //ViewPager2にアダプタを割り当て
         ViewPager2 vp = findViewById(R.id.vp2_createMap);
-        MapEntryPageAdapter adapter = new MapEntryPageAdapter(layoutIdList, fl_map, getSupportFragmentManager(), vp);
+        CreateMapPageAdapter adapter = new CreateMapPageAdapter(layoutIdList, fl_map, getSupportFragmentManager(), vp);
         vp.setAdapter(adapter);
+
+        String[] titles = new String[]{
+                "マップ名",
+                "2Colors",
+                "3Colors"
+        };
 
         //インジケータの設定
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         new TabLayoutMediator(tabLayout, vp,
-                (tab, position) -> tab.setText("")
+                (tab, position) -> tab.setText(titles[position])
         ).attach();
-
     }
 
     /*

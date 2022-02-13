@@ -24,6 +24,10 @@
     <dimen name="font_item_size">80dp</dimen>
     <dimen name="font_item_half_size">40dp</dimen>
 
+    <!--  カラーパターン  -->
+    <dimen name="color_pattern_circle_size">40dp</dimen>
+    <dimen name="color_pattern_circle_half_size">20dp</dimen>
+
     <!--  tmp  -->
     <dimen name="tmp_cardCornerRadius">12dp</dimen>
 

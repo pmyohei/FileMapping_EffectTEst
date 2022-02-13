@@ -17,37 +17,37 @@
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/v_color0"
             android:theme="@style/Theme.MaterialComponents.Light"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="@dimen/color_pattern_circle_size"
+            android:layout_height="@dimen/color_pattern_circle_size"
             android:layout_marginTop="8dp"
             android:layout_marginStart="16dp"
             android:layout_marginBottom="16dp"
-            app:cardCornerRadius="24dp"
+            app:cardCornerRadius="@dimen/color_pattern_circle_half_size"
             app:cardElevation="8dp"
             />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/v_color1"
             android:theme="@style/Theme.MaterialComponents.Light"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="@dimen/color_pattern_circle_size"
+            android:layout_height="@dimen/color_pattern_circle_size"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
             android:layout_marginStart="2dp"
-            app:cardCornerRadius="24dp"
+            app:cardCornerRadius="@dimen/color_pattern_circle_half_size"
             app:cardElevation="8dp"
             />
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/v_color2"
             android:theme="@style/Theme.MaterialComponents.Light"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
+            android:layout_width="@dimen/color_pattern_circle_size"
+            android:layout_height="@dimen/color_pattern_circle_size"
             android:layout_marginTop="8dp"
             android:layout_marginBottom="16dp"
             android:layout_marginStart="2dp"
             android:layout_marginEnd="16dp"
-            app:cardCornerRadius="24dp"
+            app:cardCornerRadius="@dimen/color_pattern_circle_half_size"
             app:cardElevation="8dp"
             />
 

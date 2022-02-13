@@ -338,7 +338,7 @@ public class MapCommonData extends Application {
             Log.i("finishDeleteNodes", "マップ内ノード(削除前)=" + node.getNodeName());
         }
         Log.i("finishDeleteNodes", "----------");
-        //log---------------
+        //---------------
 
         //マップ内ノードリストから、削除リストのノードを削除する
         mNodes.deleteNodes( mDeleteNodes );
@@ -347,7 +347,7 @@ public class MapCommonData extends Application {
         for( NodeTable node: mNodes ){
             Log.i("finishDeleteNodes", "マップ内ノード(削除後)=" + node.getNodeName());
         }
-        //log---------------
+        //---------------
 
         //削除対象クリア
         mDeleteNodes.clear();

@@ -46,7 +46,7 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
 
             Picasso.get()
                     .load( new File( picture.getPath() ) )
-                    .fit()
+                    //.fit()
                     .error(R.drawable.baseline_picture_read_error_24)
                     .into( iv_singlePicture );
         }
@@ -105,6 +105,16 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
         //表示データ数を返す
         Log.i("単体表示", "mData.size()=" + mData.size());
         return mData.size();
+    }
+
+    /*
+     * アイテム削除
+     */
+    public void removeItem( int index ) {
+        //リストから削除
+        mData.remove( index );
+        //自身に削除通知
+        this.notifyItemRemoved( index );
     }
 
 }

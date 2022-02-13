@@ -6,7 +6,9 @@
     <color name="transparent_50">#80FFFFFF</color>
 
     <color name="black">#FF000000</color>
+    <color name="transparent_50_black">#80000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="transparent_65_white">#A6FFFFFF</color>
     <color name="gray">#FFEAEAEA</color>
 
     <!--  ノード  -->
@@ -67,6 +69,7 @@
         <item>color_2_pattern_32</item>
         <item>color_2_pattern_33</item>
         <item>color_2_pattern_34</item>
+        <item>color_2_pattern_35</item>
         <!--<item>color_2_pattern_35</item>-->
     </string-array>
 
@@ -241,7 +244,10 @@
         <item>#D1F1DC</item>
     </string-array>
 
-
+    <string-array name="color_2_pattern_35">
+        <item>#F1E2DE</item>
+        <item>#000000</item>
+    </string-array>
 
 
     <!-- 配色パターンリスト（3色） -->

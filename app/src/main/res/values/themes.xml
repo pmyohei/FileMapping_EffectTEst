@@ -33,6 +33,14 @@
         <item name="android:elevation">@dimen/node_toolIcon_elevation</item>
     </style>
 
+    <!--  カラーパターン用  -->
+    <style name="color_pattern_item">
+        <item name="android:layout_width">48dp</item>
+        <item name="android:layout_height">48dp</item>
+    </style>
+
+
+
     <!-- Base application theme. -->
     <style name="Theme.FileMapping" parent="Theme.MaterialComponents.DayNight.DarkActionBar">
         <!-- Primary brand color. -->
