@@ -20,7 +20,10 @@ public class AsyncReadGallery {
     private final int mMapPid;
     private final List<Integer> mPictureNodePids;
     private final OnFinishListener mOnFinishListener;
+
+    //処理結果
     private List<PictureArrayList<PictureTable>> mGalleries;
+    private List<PictureTable> mThumbnails;
 
     /*
      * コンストラクタ
@@ -74,22 +77,30 @@ public class AsyncReadGallery {
 
             //各ギャラリーのリスト
             mGalleries = new ArrayList<>();
+            //ピクチャノードのサムネイルリスト
+            mThumbnails = new ArrayList<>();
+
             //「すべて」タグ用の全写真
             PictureArrayList<PictureTable> allPictures = new PictureArrayList<>();
 
             //ピクチャノード分ループ
-            for( Integer picturePid: mPictureNodePids ){
-                Log.i("ギャラリー確認", "DBから取得=" + picturePid);
+            for( Integer pictureNodePid: mPictureNodePids ){
+                Log.i("ギャラリー確認", "DBから取得=" + pictureNodePid);
 
                 //ピクチャノードに格納された写真
                 PictureArrayList<PictureTable> galleryInPictureNode = new PictureArrayList<>();
-                galleryInPictureNode.addAll( dao.getGallery( mMapPid, picturePid ) );
+                galleryInPictureNode.addAll( dao.getGallery( mMapPid, pictureNodePid ) );
 
                 //全写真リストに追加
                 allPictures.addAll( galleryInPictureNode );
 
                 //ギャラリーリストに写真リストを格納
                 mGalleries.add( galleryInPictureNode );
+
+                //サムネイルを取得
+                //※ない場合はnullがはいる
+                PictureTable thumbnail = dao.getThumbnail( pictureNodePid );
+                mThumbnails.add( thumbnail );
             }
 
             //ギャラリーリストの先頭に、「すべて」の写真リストを格納
@@ -132,7 +143,7 @@ public class AsyncReadGallery {
      */
     void onPostExecute() {
         //生成完了
-        mOnFinishListener.onFinish( mGalleries );
+        mOnFinishListener.onFinish( mGalleries, mThumbnails);
     }
 
     /*
@@ -142,7 +153,7 @@ public class AsyncReadGallery {
         /*
          * 生成完了時、コールされる
          */
-        void onFinish( List<PictureArrayList<PictureTable>> galleries);
+        void onFinish( List<PictureArrayList<PictureTable>> galleries, List<PictureTable> dbThumbnails);
     }
 
 

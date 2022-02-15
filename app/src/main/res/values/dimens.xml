@@ -7,7 +7,7 @@
     <dimen name="node_elevation">4dp</dimen>
     <dimen name="node_toolIcon_elevation">12dp</dimen>   <!-- ノードより大きい値にすること -->
     <dimen name="picture_node_default_size">100dp</dimen>
-    <dimen name="node_shape_sample_size">60dp</dimen>
+    <dimen name="node_shape_sample_size">40dp</dimen>
 
     <!--  ノードアイコンマージン（初期値）  -->
     <dimen name="node_icon_default_radius">100dp</dimen>
@@ -18,11 +18,15 @@
     <dimen name="node_icon_margin_middle2">60dp</dimen>
 
     <!--  デザインレイアウト  -->
+    <!--  色選択ダイアログの選択色の円  -->
     <dimen name="color_picker_check_circle">60dp</dimen>
     <dimen name="color_picker_check_circle_half">30dp</dimen>
-    <dimen name="color_history_item_size">60dp</dimen>
-    <dimen name="font_item_size">80dp</dimen>
-    <dimen name="font_item_half_size">40dp</dimen>
+    <!--  色選択ビューの各種アイコンサイズ  -->
+    <dimen name="color_history_item_size">48dp</dimen>
+    <dimen name="color_history_item_half_size">24dp</dimen>
+    <!--  フォント選択肢の円のサイズ  -->
+    <dimen name="font_item_size">48dp</dimen>
+    <dimen name="font_item_half_size">24dp</dimen>
 
     <!--  カラーパターン  -->
     <dimen name="color_pattern_circle_size">40dp</dimen>

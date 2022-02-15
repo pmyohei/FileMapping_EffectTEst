@@ -16,17 +16,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/tv_titleNodeDesign"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_gravity="center_horizontal"
-                android:text="ノードの形"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="parent" />
-
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

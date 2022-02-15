@@ -1,5 +1,6 @@
 package com.mapping.filemapping;
 
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,7 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
      */
     class GuideViewHolder extends RecyclerView.ViewHolder {
 
+        //ギャラリー表示用のGridView
         private final GridView gv_gallery;
 
         /*
@@ -106,7 +108,6 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
 
         //ページ設定
         viewHolder.setPage( i );
-
     }
 
     /*
@@ -118,7 +119,16 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
         return mLayoutIds.size();
     }
 
+    /*
+     * 複数選択状態の解除
+     */
+    public void cancellationMultipleSelection() {
 
+        //表示中のページ
+        //int page = getItemCount();
+
+        //
+    }
 
 
 }

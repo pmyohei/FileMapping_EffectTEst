@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -15,6 +14,9 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.util.ArrayList;
 
+/*
+ * 写真単体をリスト表示するアダプタ
+ */
 public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdapter.ViewHolder> {
 
     private final ArrayList<PictureTable> mData;
@@ -27,7 +29,7 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
      */
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final ImageView iv_singlePicture;
+        private final SingleImageView iv_singlePicture;
 
         /*
          * コンストラクタ
@@ -49,6 +51,9 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
                     //.fit()
                     .error(R.drawable.baseline_picture_read_error_24)
                     .into( iv_singlePicture );
+
+            //★ページ遷移後の更新はこれだけやりたい
+            iv_singlePicture.setScaleTypeA();
         }
     }
 

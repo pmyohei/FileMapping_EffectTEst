@@ -12,53 +12,68 @@ import android.view.View;
 
 import java.util.ArrayList;
 
+/*
+ * 写真単体表示アクティビティ
+ */
 public class SinglePictureDisplayActivity extends AppCompatActivity {
 
+    /*-- 定数 --*/
+    /* 画面遷移-レスポンスコード */
+    public static final int RESULT_UPDATE = 100;
+    /* 画面遷移-キー */
+    public static String UPDATE = "update";
+
+    //表示する写真リスト
+    ArrayList<PictureTable> mGalley;
+    //マップ上のピクチャノード情報
     private ArrayList<ThumbnailGridAdapter.PictureNodeInfo> mPictureNodeInfo;
-
-
+    //写真の格納先変更フラグ
+    private boolean mIsUpdate;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_single_picture_display);
 
-        //共通データから、選択されたギャラリーのリストを取得
         Intent intent = getIntent();
-        ArrayList<PictureTable> galley = (ArrayList) intent.getSerializableExtra("test");
+        //選択されたギャラリーのリスト
+        mGalley = (ArrayList) intent.getSerializableExtra("pictures");
+        //表示開始位置
+        int showPosition = intent.getIntExtra("position", 0);;
 
-
+        //格納先更新フラグ（削除か格納先の移動が発生したとき、フラグを更新する）
+        mIsUpdate = false;
 
         //マップ上のピクチャノードpid
         MapCommonData mapCommonData = (MapCommonData) getApplication();
         NodeArrayList<NodeTable> nodes = mapCommonData.getNodes();
         NodeArrayList<NodeTable> pictureNodePids = nodes.getAllPictureNodes();
 
-        //マップ上のピクチャノード情報（写真移動先の表示用）
+        //マップ上のピクチャノード情報（写真移動先の選択用）
         mPictureNodeInfo = new ArrayList<>();
 
         //サムネイルを取得
         int mapPid = nodes.get(0).getPidMap();
         AsyncReadThumbnail db = new AsyncReadThumbnail(this, mapPid, new AsyncReadThumbnail.OnFinishListener() {
             @Override
-            public void onFinish( PictureArrayList<PictureTable> thumbnails ) {
+            public void onFinish(PictureArrayList<PictureTable> thumbnails) {
 
                 //全ピクチャノード数
-                for( NodeTable node: pictureNodePids  ){
+                for (NodeTable node : pictureNodePids) {
                     //各ピクチャノード情報
                     int pid = node.getPid();
 
-                    NodeTable parentNode = nodes.getNode( node.getPidParentNode() );
+                    NodeTable parentNode = nodes.getNode(node.getPidParentNode());
                     String parentNodeName = parentNode.getNodeName();
 
-                    PictureTable thumbnail = thumbnails.getThumbnail( pid );
+                    PictureTable thumbnail = thumbnails.getThumbnail(pid);
 
                     //ピクチャノード情報を生成
-                    mPictureNodeInfo.add( new ThumbnailGridAdapter.PictureNodeInfo(
+                    mPictureNodeInfo.add(new ThumbnailGridAdapter.PictureNodeInfo(
                             pid,
                             thumbnail,
                             parentNodeName
-                    ) );
+                    ));
                 }
             }
         });
@@ -66,19 +81,56 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
         //非同期処理開始
         db.execute();
 
-        Log.i("単体表示", "galley.size()=" + galley.size());
+        Log.i("単体表示", "galley.size()=" + mGalley.size());
 
         //各写真の表示設定
         ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
-        vp2_singlePicture.setAdapter(new SinglePictureAdapter(this, galley));
-        //vp2_singlePicture.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.HORIZONTAL, false ));
+        SinglePictureAdapter adapter = new SinglePictureAdapter(this, mGalley);
+        vp2_singlePicture.setAdapter(adapter);
+        //表示開始位置を設定
+        vp2_singlePicture.setCurrentItem( showPosition );
+
+/*        vp2_singlePicture.setOnTouchListener(new View.OnTouchListener() {
+                 @Override
+                 public boolean onTouch(View view, MotionEvent motionEvent) {
+                     Log.i("コールバック", "setOnTouchListener");
+                     return false;
+                 }
+             }
+        );*/
+
+        //vp2_singlePicture.
+
+        vp2_singlePicture.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+
+            int preIndex = 0;
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                Log.i("コールバック", "onPageScrollStateChanged state=" + state);
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
+                adapter.notifyItemChanged(preIndex);
+                preIndex = position;
+
+                Log.i("コールバック", "onPageSelected");
+            }
+
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                Log.i("コールバック", "onPageScrolled");
+            }
+        });
 
         //写真削除リスナー
         findViewById(R.id.iv_trash).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //確認ダイアログを表示
-                //confirmDeletePicture(vp2_singlePicture.getCurrentItem());
+                confirmDeletePicture();
             }
         });
 
@@ -93,9 +145,17 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
     }
 
     /*
-     * 削除確認
+     * ViewPagerのスクロール制御
      */
-    private void confirmDeletePicture(PictureTable aa) {
+    public void controlScroll() {
+        ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
+
+    }
+
+    /*
+     * 格納ノードからの削除確認
+     */
+    private void confirmDeletePicture() {
 
         //削除確認ダイアログを表示
         new AlertDialog.Builder(this)
@@ -105,34 +165,24 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
-                        //アダプタから削除
+                        //表示中の写真のindex
                         ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
-                        SinglePictureAdapter adapter = (SinglePictureAdapter) vp2_singlePicture.getAdapter();
-                        if (adapter != null) {
-                            //フェールセーフ
-                            int index = vp2_singlePicture.getCurrentItem();
-                            adapter.removeItem(index);
-                        }
+                        int index = vp2_singlePicture.getCurrentItem();
 
-/*                        //削除対象ノード
-                        NodeArrayList<NodeTable> nodes = mapCommonData.getDeleteNodes();
+                        //ノードから削除対象のピクチャ
+                        PictureTable picture = mGalley.get(index);
 
                         //DBからノード削除
-                        AsyncDeleteNode db = new AsyncDeleteNode(getContext(), nodes, new AsyncDeleteNode.OnFinishListener() {
+                        AsyncDeletePicture db = new AsyncDeletePicture( vp2_singlePicture.getContext(), picture, new AsyncDeletePicture.OnFinishListener() {
                             @Override
                             public void onFinish() {
-
-                                //自身と配下ノードをレイアウトから削除
-                                ((ChildNode)v_baseNode).removeLayoutUnderSelf();
-
-                                //共通データに削除完了処理を行わせる
-                                mapCommonData.finishDeleteNode();
+                                //アダプタから削除
+                                updatePictureAdapter();
                             }
                         });
 
                         //非同期処理開始
                         db.execute();
-                        */
                     }
                 })
                 .setNegativeButton("Cancel", null)
@@ -141,14 +191,54 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
     }
 
     /*
-     * 所属するピクチャノードの変更
+     * 所属するピクチャノードの変更先をダイアログで表示
      */
-    private void showMoveDestination(){
+    private void showMoveDestination() {
+
+        //参照中の写真
+        ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
+        int index = vp2_singlePicture.getCurrentItem();
+        PictureTable showPicture = mGalley.get(index);
+
         //マップ上のピクチャノードを移動先候補として表示
-        PictureNodesBottomSheetDialog bottomSheetDialog = PictureNodesBottomSheetDialog.newInstance( mPictureNodeInfo );
+        PictureNodesBottomSheetDialog bottomSheetDialog = PictureNodesBottomSheetDialog.newInstance(mPictureNodeInfo, showPicture);
         bottomSheetDialog.show(getSupportFragmentManager(), "");
+    }
 
+    /*
+     * 単体表示中の写真をアダプタから削除
+     */
+    public void updatePictureAdapter() {
 
+        //表示中の写真をリストから削除
+        ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
+        int index = vp2_singlePicture.getCurrentItem();
+
+        //削除通知
+        SinglePictureAdapter adapter = (SinglePictureAdapter) vp2_singlePicture.getAdapter();
+        if( adapter != null ){
+            adapter.removeItem( index );
+        }
+
+        //Intentに更新ありの情報を設定
+        setUpdateIntent();
+    }
+
+    /*
+     * Intentに更新ありを設定
+     *   ※一度のみ設定
+     */
+    private void setUpdateIntent() {
+        //更新なしの場合
+        if( !mIsUpdate ){
+            //resultコード設定
+            Intent intent = getIntent();
+            intent.putExtra(UPDATE, true );
+            setResult(RESULT_UPDATE, intent );
+
+            //更新あり
+            mIsUpdate = true;
+        }
     }
 
 }

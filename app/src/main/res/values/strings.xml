@@ -11,6 +11,19 @@
     <string name="node_createButtom">作成</string>
     <string name="node_cancelButtom">キャンセル</string>a
 
+
+    <!-- ノードデザインタブ -->
+    <string name="tab_node_name">ノード名</string>
+    <string name="tab_map_color">マップ色</string>
+    <string name="tab_font">フォント</string>
+    <string name="tab_text_color">テキスト色</string>
+    <string name="tab_size">サイズ</string>
+    <string name="tab_node_color">ノード色</string>
+    <string name="tab_border_color">枠色</string>
+    <string name="tab_line_color">ライン色</string>
+    <string name="tab_shadow">影</string>
+    <string name="tab_shape">ノードの形</string>
+
     <!-- ノードデザイン -->
     <string name="coloeCodeHint">123456</string>
     <string name="node_nameHint">最大16文字</string>
@@ -31,6 +44,9 @@
 
     <string name="color_rgb">RGB</string>
     <string name="color_graphic">Graphic</string>
+
+
+
 
     <!--  レイアウト確認用（実際にユーザーに表示されることはない） -->
     <string name="sample">Sample</string>

@@ -113,12 +113,6 @@ public class DesignBottomSheet extends CoordinatorLayout {
             heightRatio = ONE_THIRD;
         }
 
-        //インジケータの設定
-        TabLayout tabLayout = findViewById(R.id.tab_layout);
-        new TabLayoutMediator(tabLayout, vp,
-                (tab, position) -> tab.setText("")
-        ).attach();
-
         //高さ設定
         setBottomSheetHeight( getContext(), heightRatio );
 
@@ -133,18 +127,44 @@ public class DesignBottomSheet extends CoordinatorLayout {
     private ViewPager2 setupNodeDesignLayout( View v_node ) {
         //ノードデザイン設定レイアウト
         List<Integer> layoutIdList = new ArrayList<>();
-        layoutIdList.add(R.layout.page_node_text);
-        layoutIdList.add(R.layout.page_node_design);
-
+        layoutIdList.add(R.layout.page_node_name);
+        layoutIdList.add(R.layout.page_node_font);
+        layoutIdList.add(R.layout.page_node_size);
+        layoutIdList.add(R.layout.page_node_text_color);
+        layoutIdList.add(R.layout.page_node_color);
+        layoutIdList.add(R.layout.page_node_border_color);
         if( ((BaseNode)v_node).getNode().getKind() != NodeTable.NODE_KIND_ROOT ){
             //ルートノード以外は、ライン用ページを追加
-            layoutIdList.add(R.layout.page_node_line_design);
+            layoutIdList.add(R.layout.page_node_line_color);
         }
+        layoutIdList.add(R.layout.page_node_shadow);
+        layoutIdList.add(R.layout.page_node_shape);
 
         //ViewPager2を生成
         ViewPager2 vp2 = findViewById(R.id.vp2_design);
         DesignNodePageAdapter adapter = new DesignNodePageAdapter(layoutIdList, v_node, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp2);
         vp2.setAdapter(adapter);
+
+        //タブインジケータの文字列
+        List<String> tabs = new ArrayList<>();
+        tabs.add(getResources().getString(R.string.tab_node_name));
+        tabs.add(getResources().getString(R.string.tab_font));
+        tabs.add(getResources().getString(R.string.tab_size));
+        tabs.add(getResources().getString(R.string.tab_text_color));
+        tabs.add(getResources().getString(R.string.tab_node_color));
+        tabs.add(getResources().getString(R.string.tab_border_color));
+        if( ((BaseNode)v_node).getNode().getKind() != NodeTable.NODE_KIND_ROOT ) {
+            //ルートノード以外
+            tabs.add(getResources().getString(R.string.tab_line_color));
+        }
+        tabs.add(getResources().getString(R.string.tab_shadow));
+        tabs.add(getResources().getString(R.string.tab_shape));
+
+        //インジケータの設定
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        new TabLayoutMediator(tabLayout, vp2,
+                (tab, position) -> tab.setText( tabs.get(position) )
+        ).attach();
 
         return vp2;
     }
@@ -169,6 +189,12 @@ public class DesignBottomSheet extends CoordinatorLayout {
         DesignPicturePageAdapter adapter = new DesignPicturePageAdapter(layoutIdList, v_node, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp2);
         vp2.setAdapter(adapter);
 
+        //インジケータの設定
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        new TabLayoutMediator(tabLayout, vp2,
+                (tab, position) -> tab.setText("")
+        ).attach();
+
         return vp2;
     }
 
@@ -182,11 +208,17 @@ public class DesignBottomSheet extends CoordinatorLayout {
         layoutIdList.add(R.layout.page_all_node_design);
         layoutIdList.add(R.layout.page_node_line_design);
 
-        ViewPager2 vp = findViewById(R.id.vp2_design);
-        DesignMapPageAdapter adapter = new DesignMapPageAdapter(layoutIdList, v_map, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp);
-        vp.setAdapter(adapter);
+        ViewPager2 vp2 = findViewById(R.id.vp2_design);
+        DesignMapPageAdapter adapter = new DesignMapPageAdapter(layoutIdList, v_map, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp2);
+        vp2.setAdapter(adapter);
 
-        return vp;
+        //インジケータの設定
+        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        new TabLayoutMediator(tabLayout, vp2,
+                (tab, position) -> tab.setText("")
+        ).attach();
+
+        return vp2;
     }
 
 

@@ -5,9 +5,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.util.Log;
 
-import org.w3c.dom.Node;
-
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ExecutorService;
@@ -77,7 +74,7 @@ public class AsyncReadNodes {
             mNodeList.addAll( nodeList );
 
             //マップ内のサムネイル写真のみを取得
-            List<PictureTable> thumbnailPictureList = pictureDao.getThumbnailPicture(mMapPid);
+            List<PictureTable> thumbnailPictureList = pictureDao.getThumbnailPictureList(mMapPid);
             mThumbnailList.addAll( thumbnailPictureList );
         }
 

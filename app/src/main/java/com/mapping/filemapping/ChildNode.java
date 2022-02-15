@@ -611,7 +611,7 @@ public class ChildNode extends BaseNode {
 
         //クリックリスナーに制御を渡すかどうかを判定するMove回数
         //この回数よりも多くMoveを検出したとき、本Touchリスナーで制御を終了する
-        final int MOVE_DETECTION_COUNT = 3;
+        final int MOVE_DETECTION_COUNT = 5;
 
         //親ノードに対する自ノードのX座標における相対位置（親ノードより正側か負側か）
         private int mParentRelative;

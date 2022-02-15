@@ -10,6 +10,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="transparent_65_white">#A6FFFFFF</color>
     <color name="gray">#FFEAEAEA</color>
+    <color name="transparent_50_blue">#800000FF</color>
 
     <!--  ノード  -->
     <color name="node_default">#222831</color>

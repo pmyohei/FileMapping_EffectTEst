@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,9 +11,12 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
+import com.google.android.material.card.MaterialCardView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 
 public class GalleryAdapter extends BaseAdapter {
 
@@ -26,8 +28,147 @@ public class GalleryAdapter extends BaseAdapter {
     private final float mDp;
     private final Context mContext;
     private final LayoutInflater mInflater;
-    private int mPictureNumOnLine;            //1行で表示する写真の数
+    private int mPictureNumOnLine;              //1行で表示する写真の数
+    private boolean mIsMultipleSelection;       //複数選択状態
+    private List<Integer> mSelectedList;        //選択中の写真Index
 
+
+    /*
+     * ViewHolder
+     */
+    private class ViewHolder {
+
+        //セル位置
+        //private int position;
+        private final ImageView mIv_picture;
+        private final MaterialCardView mMcv_picture;
+
+        /*
+         * コンストラクタ
+         */
+        public ViewHolder(View view){
+            mMcv_picture = view.findViewById( R.id.mcv_picture );
+            mIv_picture = view.findViewById( R.id.iv_picture );
+        }
+
+        /*
+         * ビューの設定
+         */
+        @SuppressLint("ClickableViewAccessibility")
+        public void setView( View view, int position ) {
+
+            //Picassoを利用して画像を設定
+            Picasso.get()
+                    .load( new File( mData.get(position).getPath() ) )
+                    .error(R.drawable.baseline_picture_read_error_24)
+                    .into( mIv_picture );
+
+            //選択中状態の設定
+            initSelectedState( position );
+
+            //クリックリスナー
+            mIv_picture.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    //複数選択状態かどうか
+                    if( mIsMultipleSelection ){
+                        //選択状態の設定
+                        updateSelectedState(position);
+                    } else {
+                        //画面遷移
+                        transitionScreen(position);
+                    }
+                }
+            });
+
+            //クリックリスナー
+            mIv_picture.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View view) {
+
+                    if( !mIsMultipleSelection ){
+                        //複数選択状態になければ、複数選択状態へ移行
+                        mIsMultipleSelection = true;
+
+                        //選択中にする
+                        updateSelectedState(position);
+
+                        //ツールバーにメニューを表示
+                        ((PictureGalleryActivity)mContext).setMultipleOptionMenu(true);
+                    }
+
+                    return true;
+                }
+            });
+        }
+
+        /*
+         * 画面遷移
+         */
+        public void transitionScreen(int position) {
+
+            //渡す情報を設定
+            Intent intent = new Intent( ((PictureGalleryActivity)mContext).getApplication(), SinglePictureDisplayActivity.class );
+            intent.putExtra( "pictures", mData );       //表示する写真リスト
+            intent.putExtra( "position", position );    //表示開始写真位置
+
+            //ランチャーを使用して画面開始
+            ((PictureGalleryActivity)mContext).getSinglePictureLauncher().launch(intent);
+        }
+
+        /*
+         * 選択中状態の更新
+         */
+        public void updateSelectedState(int position) {
+
+            for( Integer index: mSelectedList ){
+                //既に選択済みであれば
+                if( position == index ){
+                    mSelectedList.remove(index);
+                    setSelectedView(false);
+
+                    return;
+                }
+            }
+
+            //なければ追加
+            mSelectedList.add(position);
+            setSelectedView(true);
+        }
+
+        /*
+         * 選択中状態の初期化
+         */
+        public void initSelectedState(int position) {
+
+            for( Integer index: mSelectedList ){
+                if( position == index ){
+                    //選択中リストにあれば、ビューを選択中に
+                    setSelectedView(true);
+                    return;
+                }
+            }
+
+            //なし設定
+            setSelectedView(false);
+        }
+
+        /*
+         * 選択中状態の設定
+         */
+        public void setSelectedView( boolean isSelected ) {
+
+            if( isSelected ){
+                //選択中に設定
+                mMcv_picture.setStrokeWidth( 20 );
+            } else {
+                //非選択中に設定
+                mMcv_picture.setStrokeWidth( 0 );
+            }
+        }
+
+    }
 
     /*
      * コンストラクタ
@@ -37,6 +178,10 @@ public class GalleryAdapter extends BaseAdapter {
         mData = data;
         mInflater = LayoutInflater.from(context);
 
+        //複数選択状態
+        mIsMultipleSelection = false;
+        //選択中リスト初期化
+        mSelectedList = new ArrayList<>();
         //画面密度
         mDp = context.getResources().getDisplayMetrics().density;
 
@@ -68,44 +213,45 @@ public class GalleryAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        //初めて表示されるなら、セルを割り当て。セルはレイアウトファイルを使用。
+        ViewHolder holder;
+
         if (convertView == null) {
+            //ビュー未生成の場合、新たに生成
             convertView = mInflater.inflate(R.layout.item_gallery_picture, null);
 
             //写真用ビューのサイズ
-            int sideLength = (parent.getWidth() / mPictureNumOnLine) - (int)mDp;
+            int sideLength = (parent.getWidth() / mPictureNumOnLine) - (int)mDp*2;
             AbsListView.LayoutParams params = new AbsListView.LayoutParams(
                     sideLength,
                     sideLength);
             convertView.setLayoutParams(params);
 
+            //ViewHolderを生成し、タグ設定
+            holder = new ViewHolder( convertView );
+            convertView.setTag(holder);
+
             //float dp = mContext.getResources().getDisplayMetrics().density;
             //Log.i("ギャラリー", "position=" + position + " 前回設定サイズ=" + (parent.getWidth() / 2 - (int)dp) );
             //Log.i("ギャラリー", "position=" + position + " mPictureNumOnLine=" + mPictureNumOnLine);
+
+        } else {
+            //一度表示されているなら、そのまま活用
+            holder = (ViewHolder)convertView.getTag();
         }
 
-        //Picassoを利用して画像を設定
-        ImageView iv_picture = convertView.findViewById( R.id.iv_picture );
-        Picasso.get()
-                .load( new File( mData.get(position).getPath() ) )
-                .error(R.drawable.baseline_picture_read_error_24)
-                .into( iv_picture );
-
-        iv_picture.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    //画面遷移
-                    Intent intent = new Intent( ((PictureGalleryActivity)mContext).getApplication(), SinglePictureDisplayActivity.class );
-                    intent.putExtra( "test", mData );
-
-                    mContext.startActivity(intent);
-                }
-            }
-        );
+        //写真ビュー設定
+        holder.setView( convertView, position );
 
         //設定したビューを返す
         return convertView;
     }
+
+
+
+
+
+
+
 
 
     @Override

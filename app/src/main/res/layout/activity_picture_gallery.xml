@@ -7,6 +7,17 @@
     android:background="@color/white"
     android:orientation="vertical">
 
+    <!--  ツールバー  -->
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar_gallery"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:elevation="4dp"
+        android:background="@android:color/white"
+        android:theme="@style/Toolbar.NoActionBar"
+        app:titleTextAppearance="@style/Toolbar.TitleText"
+        app:menu="@menu/toolbar_map"/>
+
     <!-- インジケータ -->
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tab_layout"

@@ -3,6 +3,7 @@ package com.mapping.filemapping;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.util.Log;
@@ -62,9 +63,54 @@ public class PictureNodeView extends ChildNode implements Serializable  /*implem
      * ノードに画像を設定
      */
     private void setBitmap(PictureTable thumbnail) {
+        //画像ビュー
+        ImageView iv_node = findViewById(R.id.iv_node);
+
+/*        //サムネイルなし
+        if (thumbnail == null) {
+            //なし用のアイコンを設定
+            iv_node.setBackgroundResource(R.drawable.baseline_no_thumbnail_24);
+            return;
+        }*/
 
         //サムネイルのBitmapを生成
-        Bitmap bitmap = createThumbnail( thumbnail );
+        Bitmap bitmap = createThumbnail( getResources(), thumbnail );
+
+
+
+        /*        if( bitmap == null ){
+            //ビットマップ化に失敗した場合、なし用のアイコンを設定
+            iv_node.setBackgroundResource(R.drawable.baseline_no_thumbnail_24);
+            return;
+        }*/
+
+        //サムネイルを設定
+        iv_node.setImageBitmap(bitmap);
+
+/*        if( thumbnail != null ){
+            //サムネイルのBitmapを生成
+            Bitmap bitmap = createThumbnail( thumbnail );
+            if( bitmap != null ){
+                //Bitmapが生成できれば、その画像を設定
+                iv_node.setImageBitmap(bitmap);
+                return;
+            }
+        }*/
+
+        //サムネイルなしか、ビットマップ化に失敗した場合、なし用のアイコンを設定
+        //iv_node.setBackgroundResource( R.drawable.bmp_sample_cafe );
+
+/*        if( thumbnail == null ){
+            //サムネイル情報がなければ、なし用アイコンを設定
+            iv_node.setBackgroundResource( R.drawable.bmp_sample_cafe );
+
+        } else {
+            //サムネイルのBitmapを生成
+            Bitmap bitmap = createThumbnail( thumbnail );
+            //設定
+            iv_node.setImageBitmap(bitmap);
+        }*/
+
 
 /*
         String path = thumbnail.getPath();
@@ -78,22 +124,23 @@ public class PictureNodeView extends ChildNode implements Serializable  /*implem
         Bitmap bitmap = BitmapFactory.decodeFile(path);
         bitmap = Bitmap.createBitmap(bitmap, thumbnail.getTrgLeft(), thumbnail.getTrgTop(), thumbnail.getTrgWidth(), thumbnail.getTrgHeight());
 */
-
-        //画像設定
-        ImageView iv_node = findViewById(R.id.iv_node);
-        iv_node.setImageBitmap(bitmap);
     }
 
     /*
      * サムネイルとなるBitmapを生成
      */
-    public static Bitmap createThumbnail(PictureTable thumbnail)  {
+    public static Bitmap createThumbnail(Resources resources, PictureTable thumbnail)  {
+
+        if (thumbnail == null) {
+            Log.i("URI", "createThumbnail() 指定サムネイル=null");
+            return BitmapFactory.decodeResource( resources, R.drawable.baseline_priority_high_black_24 );
+        }
 
         String path = thumbnail.getPath();
         if (path == null) {
             //フェールセーフ
-            Log.i("URI", "setBitmap() pathなし");
-            return null;
+            Log.i("URI", "createThumbnail() pathなし");
+            return BitmapFactory.decodeResource( resources, R.drawable.baseline_priority_high_black_24 );
         }
 
         //トリミング範囲で切り取り

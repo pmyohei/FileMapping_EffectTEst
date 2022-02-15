@@ -4,32 +4,29 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /*
  * DB非同期処理
- *   read用
+ *   指定ピクチャノード内に指定した写真があるかどうかを確認
  */
-public class AsyncReadThumbnail {
+public class AsyncUpdateBelongsPicture {
 
-    private final AppDatabase                       mDB;
-    private final OnFinishListener                  mOnFinishListener;
-    private final int                               mMapPid;
-    private       PictureArrayList<PictureTable>    mThumbnailList;
+    private final AppDatabase mDB;
+    private final int mPicutureNodePid;
+    private final PictureTable mPicture;
+    private final OnFinishListener mOnFinishListener;
 
     /*
      * コンストラクタ
      */
-    public AsyncReadThumbnail(Context context,int mapPid, OnFinishListener listener) {
+    public AsyncUpdateBelongsPicture(Context context, int picutureNodePid, PictureTable picture, OnFinishListener listener) {
         mDB = AppDatabaseManager.getInstance(context);
         mOnFinishListener = listener;
-        mMapPid = mapPid;
-
-        mThumbnailList  = new PictureArrayList<>();
+        mPicutureNodePid = picutureNodePid;
+        mPicture = picture;
     }
-
 
     /*
      * 非同期処理
@@ -45,7 +42,7 @@ public class AsyncReadThumbnail {
         public void run() {
 
             //メイン処理
-            readDB();
+            operationDB();
 
             //後処理
             handler.post(new Runnable() {
@@ -59,16 +56,17 @@ public class AsyncReadThumbnail {
         /*
          * DBからデータを取得
          */
-        private void readDB(){
+        private void operationDB(){
+            //PictureTableDao
+            PictureTableDao dao = mDB.daoPictureTable();
 
-            //PictureDao
-            PictureTableDao pictureDao = mDB.daoPictureTable();
+            //格納先ノードを更新
+            mPicture.setPidParentNode( mPicutureNodePid );
+            //サムネイル情報を無効化（移動先では別のサムネイルがあるため）
+            mPicture.setDisableThumbnail();
 
-            //マップ内のサムネイル写真のみを取得
-            List<PictureTable> thumbnailPictureList = pictureDao.getThumbnailPictureList(mMapPid);
-            mThumbnailList.addAll( thumbnailPictureList );
+            dao.update( mPicture );
         }
-
     }
 
     /*
@@ -96,16 +94,18 @@ public class AsyncReadThumbnail {
      * バックグランド処理終了後の処理
      */
     void onPostExecute() {
-
-        //読み取り完了
-        mOnFinishListener.onFinish( mThumbnailList );
+        //処理完了
+        mOnFinishListener.onFinish();
     }
 
     /*
-     * データ読み取り完了リスナー
+     * データ作成完了リスナー
      */
     public interface OnFinishListener {
-        void onFinish(PictureArrayList<PictureTable> thumbnailList );
+        /*
+         * 処理完了時、コールされる
+         */
+        void onFinish();
     }
 
 

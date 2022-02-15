@@ -10,26 +10,27 @@ import java.util.concurrent.Executors;
 
 /*
  * DB非同期処理
- *   read用
+ *   指定ピクチャノード内に指定した写真があるかどうかを確認
  */
-public class AsyncReadThumbnail {
+public class AsyncHasPicture {
 
-    private final AppDatabase                       mDB;
-    private final OnFinishListener                  mOnFinishListener;
-    private final int                               mMapPid;
-    private       PictureArrayList<PictureTable>    mThumbnailList;
+    private final AppDatabase mDB;
+    private final int mPicutureNodePid;
+    private final String mPath;
+    private final OnFinishListener mOnFinishListener;
+
+    //判定結果
+    private boolean mHasPicture;
 
     /*
      * コンストラクタ
      */
-    public AsyncReadThumbnail(Context context,int mapPid, OnFinishListener listener) {
+    public AsyncHasPicture(Context context, int picutureNodePid, String path, OnFinishListener listener) {
         mDB = AppDatabaseManager.getInstance(context);
         mOnFinishListener = listener;
-        mMapPid = mapPid;
-
-        mThumbnailList  = new PictureArrayList<>();
+        mPicutureNodePid = picutureNodePid;
+        mPath = path;
     }
-
 
     /*
      * 非同期処理
@@ -45,7 +46,7 @@ public class AsyncReadThumbnail {
         public void run() {
 
             //メイン処理
-            readDB();
+            operationDB();
 
             //後処理
             handler.post(new Runnable() {
@@ -59,16 +60,16 @@ public class AsyncReadThumbnail {
         /*
          * DBからデータを取得
          */
-        private void readDB(){
+        private void operationDB(){
 
-            //PictureDao
-            PictureTableDao pictureDao = mDB.daoPictureTable();
+            //PictureTableDao
+            PictureTableDao dao = mDB.daoPictureTable();
 
-            //マップ内のサムネイル写真のみを取得
-            List<PictureTable> thumbnailPictureList = pictureDao.getThumbnailPictureList(mMapPid);
-            mThumbnailList.addAll( thumbnailPictureList );
+            //ピクチャノード内に指定されたパスがあるかをチェック
+            PictureTable picture = dao.hasPictureInPictureNode( mPicutureNodePid, mPath );
+            //保持結果
+            mHasPicture = ( picture != null );
         }
-
     }
 
     /*
@@ -96,16 +97,18 @@ public class AsyncReadThumbnail {
      * バックグランド処理終了後の処理
      */
     void onPostExecute() {
-
-        //読み取り完了
-        mOnFinishListener.onFinish( mThumbnailList );
+        //生成完了
+        mOnFinishListener.onFinish( mHasPicture );
     }
 
     /*
-     * データ読み取り完了リスナー
+     * データ作成完了リスナー
      */
     public interface OnFinishListener {
-        void onFinish(PictureArrayList<PictureTable> thumbnailList );
+        /*
+         * 生成完了時、コールされる
+         */
+        void onFinish( boolean hasPicture);
     }
 
 

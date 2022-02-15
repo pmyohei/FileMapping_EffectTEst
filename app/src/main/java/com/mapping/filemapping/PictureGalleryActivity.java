@@ -1,16 +1,27 @@
 package com.mapping.filemapping;
 
-import static java.security.AccessController.getContext;
-
+import androidx.activity.result.ActivityResult;
+import androidx.activity.result.ActivityResultCallback;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
+import androidx.core.view.GravityCompat;
+import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.viewpager2.widget.ViewPager2;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.widget.Adapter;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
@@ -19,7 +30,15 @@ import com.google.android.material.tabs.TabLayoutMediator;
 import java.util.ArrayList;
 import java.util.List;
 
+/*
+ * 指定配下ノードの写真を一覧表示する
+ */
 public class PictureGalleryActivity extends AppCompatActivity {
+
+    //表示指定されたノード
+    private int mNodePid;
+    //写真単体表示画面へのランチャー
+    ActivityResultLauncher<Intent> mSinglePictureLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,49 +47,94 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
         //選択ノードを取得
         Intent intent = getIntent();
-        int nodePid = intent.getIntExtra( MapActivity.INTENT_NODE_PID, 0 );
-        if( nodePid == 0 ){
+        mNodePid = intent.getIntExtra( MapActivity.INTENT_NODE_PID, 0 );
+        if( mNodePid == 0 ){
             //ノード取得エラーはこのまま本画面を終了する
             //★
             Toast.makeText( this, "エラー", Toast.LENGTH_SHORT ).show();
             finish();
         }
 
+        //写真の単体表示画面ランチャー
+        mSinglePictureLauncher = registerForActivityResult(
+                new ActivityResultContracts.StartActivityForResult(),
+                new ActivityResultCallback<ActivityResult>() {
+
+                    /*
+                     * 写真単体表示画面からの戻り処理
+                     */
+                    @Override
+                    public void onActivityResult(ActivityResult result) {
+
+                        Log.i("colorPickerLauncher", "onActivityResult()");
+
+                        if(result.getResultCode() == SinglePictureDisplayActivity.RESULT_UPDATE) {
+
+                            Intent intent = result.getData();
+                            if(intent != null){
+                                //更新の有無
+                                boolean isUpdate = intent.getBooleanExtra( SinglePictureDisplayActivity.UPDATE, false );
+
+                                //更新ありの場合、DBから最新の情報を取得し、再表示
+                                if( isUpdate ){
+                                    readGallery();
+                                }
+                            }
+                        }
+
+                    }
+                }
+        );
+
+
+        //ツールバー設定
+        Toolbar toolbar = findViewById(R.id.toolbar_gallery);
+        toolbar.setTitle("ギャラリー");
+        setSupportActionBar(toolbar);
+
+        //ギャラリー情報を取得し画面上に表示
+        readGallery();
+    }
+
+    /*
+     * ギャラリー用ページの設定
+     */
+    private void readGallery() {
+
         //指定ノード配下のピクチャノードPidをリスト化
         MapCommonData mapCommonData = (MapCommonData) getApplication();
-        List<Integer> pictureNodes = mapCommonData.getNodes().getPictureNodes( nodePid );
+        List<Integer> pictureNodes = mapCommonData.getNodes().getPictureNodes( mNodePid );
         int mapPid = mapCommonData.getMapPid();
-
-        //Log.i("ギャラリー確認", "ルートチェック1");
-        //for( Integer bbb: pictureNodes ){
-        //    Log.i("ギャラリー確認", "getPictureNodes=" + bbb);
-        //}
-
-
-
 
         //配下の写真を取得
         AsyncReadGallery db = new AsyncReadGallery(this, mapPid, pictureNodes, new AsyncReadGallery.OnFinishListener() {
             //DB読み取り完了
             @Override
-            public void onFinish(List<PictureArrayList<PictureTable>> galleries) {
+            public void onFinish(List<PictureArrayList<PictureTable>> galleries, List<PictureTable> dbThumbnails) {
 
                 //本ノードのサムネイルを取得
                 MapCommonData mapCommonData = (MapCommonData)getApplication();
 
                 //サムネイルのBitmapリスト
-                List<Bitmap> thumbnails = new ArrayList<>();
+                List<Bitmap> thumbnailBitmaps = new ArrayList<>();
 
                 //ViewPagerのページレイアウトリスト
                 List<Integer> layoutIdList = new ArrayList<>();
-                layoutIdList.add(R.layout.page_grid_gallery);       //「すべて」のページは必ず用意する
-                for( Integer pid: pictureNodes  ){                  //ピクチャノード数だけページを用意
+                //「すべて」のページは必ず用意する
+                layoutIdList.add(R.layout.page_grid_gallery);
+                //ピクチャノード数だけページを用意
+                int i = 0;
+                for( Integer pid: pictureNodes ){
                     //ページレイアウト
                     layoutIdList.add(R.layout.page_grid_gallery);
 
                     //サムネイルのビットマップ
-                    PictureTable thumbnail = mapCommonData.getThumbnails().getThumbnail( pid );
-                    thumbnails.add( PictureNodeView.createThumbnail( thumbnail ) );
+                    //※nullの場合は、なし用画像が設定される
+                    //PictureTable thumbnail = mapCommonData.getThumbnails().getThumbnail( pid );
+                    PictureTable thumbnail = dbThumbnails.get(i);
+                    thumbnailBitmaps.add( PictureNodeView.createThumbnail( getResources(), thumbnail ) );
+
+                    i++;
                 }
 
                 //ViewPagerの設定
@@ -96,7 +160,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
                                     //アイコンとして設定
                                     ImageView iv_picture = tab.getCustomView().findViewById( R.id.iv_picture);
-                                    iv_picture.setImageBitmap( thumbnails.get( position - 1 ) );
+                                    iv_picture.setImageBitmap( thumbnailBitmaps.get( position - 1 ) );
                                 }
                             }
                         }
@@ -115,15 +179,93 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
         //非同期処理開始
         db.execute();
-
     }
 
     /*
-     * ギャラリー用ページの設定
+     * 画面遷移用ランチャー（画像ギャラリー）を取得
      */
-    private void setupGalleryPage() {
+    public ActivityResultLauncher<Intent> getSinglePictureLauncher() {
+        return mSinglePictureLauncher;
+    }
+
+    /*
+     * 複数選択操作用のメニューを設定
+     */
+    public void setMultipleOptionMenu( boolean isOpen ) {
+
+        //メニュー
+        Toolbar toolbar = findViewById(R.id.toolbar_gallery);
+        Menu menu = toolbar.getMenu();
+
+        if( isOpen ){
+            //オープン指定
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.toolbar_gallery, menu);
+
+            //ツールバー
+            toolbar.setBackgroundColor( Color.BLACK );
+            toolbar.setTitleTextColor( Color.WHITE );
+            toolbar.setTitle("複数選択");
+
+        } else{
+            //クローズ指定
+            menu.clear();
+
+            //ツールバー
+            toolbar.setBackgroundColor( Color.WHITE );
+            toolbar.setTitleTextColor( Color.BLACK );
+            toolbar.setTitle("ギャラリー");
+        }
+    }
+
+    /*
+     * ツールバーオプションメニュー生成
+     */
+/*    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.toolbar_gallery, menu);
 
 
 
+        return true;
+    }*/
+
+    /*
+     * ツールバーアクション選択
+     */
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+
+            //格納先ノードの移動
+            case R.id.action_move:
+
+                return true;
+
+            //格納先ノードからの削除
+            case R.id.action_delete:
+
+                return true;
+
+            //複数選択状態を解除
+            case R.id.action_close:
+                //複数選択メニューを閉じる
+                setMultipleOptionMenu(false);
+
+                //選択状態を解除させる
+                //★処理が重t
+                ViewPager2 vp2_gallery = findViewById(R.id.vp2_gallery);
+                int page = vp2_gallery.getCurrentItem();
+
+                GalleryPageAdapter adapter = (GalleryPageAdapter)vp2_gallery.getAdapter();
+                adapter.notifyItemChanged( page);
+
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+
+        }
     }
 }

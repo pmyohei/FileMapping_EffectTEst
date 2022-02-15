@@ -6,6 +6,16 @@
     android:layout_height="match_parent"
     android:background="@color/black">
 
+<!--    <com.mapping.filemapping.SingleImageView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:id="@+id/iv_singlePicture"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center_horizontal"
+        android:gravity="center_horizontal"
+        android:adjustViewBounds="true"
+        />-->
+
     <!-- 写真ページ -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vp2_singlePicture"

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -16,15 +15,15 @@ public class AsyncDeletePicture {
 
     private final AppDatabase mDB;
     private final PictureTable mPicture;
-    private final OnCreateListener mOnCreateListener;
+    private final OnFinishListener mOnFinishListener;
 
     /*
      * コンストラクタ
      */
-    public AsyncDeletePicture(Context context, PictureTable picture, OnCreateListener listener) {
+    public AsyncDeletePicture(Context context, PictureTable picture, OnFinishListener listener) {
         mDB               = AppDatabaseManager.getInstance(context);
-        mOnCreateListener = listener;
         mPicture          = picture;
+        mOnFinishListener = listener;
     }
 
     /*
@@ -56,13 +55,11 @@ public class AsyncDeletePicture {
          * DB操作
          */
         private void operationDB(){
-
             //PictureTableDao
             PictureTableDao dao = mDB.daoPictureTable();
 
-
-
-
+            //テーブルから削除
+            dao.delete(mPicture);
         }
     }
 
@@ -91,18 +88,18 @@ public class AsyncDeletePicture {
      * バックグランド処理終了後の処理
      */
     void onPostExecute() {
-        //挿入完了
-        mOnCreateListener.onCreate();
+        //完了
+        mOnFinishListener.onFinish();
     }
 
     /*
      * データ作成完了リスナー
      */
-    public interface OnCreateListener {
+    public interface OnFinishListener {
         /*
          * 完了時、コールされる
          */
-        void onCreate();
+        void onFinish();
     }
 
 
