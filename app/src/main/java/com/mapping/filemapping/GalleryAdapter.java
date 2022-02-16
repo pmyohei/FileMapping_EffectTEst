@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,6 @@ import android.widget.AbsListView;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.google.android.material.card.MaterialCardView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -41,13 +41,13 @@ public class GalleryAdapter extends BaseAdapter {
         //セル位置
         //private int position;
         private final ImageView mIv_picture;
-        private final MaterialCardView mMcv_picture;
+        //private final MaterialCardView mMcv_picture;
 
         /*
          * コンストラクタ
          */
         public ViewHolder(View view){
-            mMcv_picture = view.findViewById( R.id.mcv_picture );
+            //mMcv_picture = view.findViewById( R.id.mcv_picture );
             mIv_picture = view.findViewById( R.id.iv_picture );
         }
 
@@ -55,7 +55,7 @@ public class GalleryAdapter extends BaseAdapter {
          * ビューの設定
          */
         @SuppressLint("ClickableViewAccessibility")
-        public void setView( View view, int position ) {
+        public void setView( PictureInGalleryView pictureInGalleryView, int position ) {
 
             //Picassoを利用して画像を設定
             Picasso.get()
@@ -64,7 +64,7 @@ public class GalleryAdapter extends BaseAdapter {
                     .into( mIv_picture );
 
             //選択中状態の設定
-            initSelectedState( position );
+            initSelectedState( pictureInGalleryView, position );
 
             //クリックリスナー
             mIv_picture.setOnClickListener(new View.OnClickListener() {
@@ -74,7 +74,7 @@ public class GalleryAdapter extends BaseAdapter {
                     //複数選択状態かどうか
                     if( mIsMultipleSelection ){
                         //選択状態の設定
-                        updateSelectedState(position);
+                        updateSelectedState(pictureInGalleryView, position);
                     } else {
                         //画面遷移
                         transitionScreen(position);
@@ -82,7 +82,7 @@ public class GalleryAdapter extends BaseAdapter {
                 }
             });
 
-            //クリックリスナー
+            //ロングクリックリスナー
             mIv_picture.setOnLongClickListener(new View.OnLongClickListener() {
                 @Override
                 public boolean onLongClick(View view) {
@@ -92,7 +92,7 @@ public class GalleryAdapter extends BaseAdapter {
                         mIsMultipleSelection = true;
 
                         //選択中にする
-                        updateSelectedState(position);
+                        updateSelectedState(pictureInGalleryView, position);
 
                         //ツールバーにメニューを表示
                         ((PictureGalleryActivity)mContext).setMultipleOptionMenu(true);
@@ -118,15 +118,61 @@ public class GalleryAdapter extends BaseAdapter {
         }
 
         /*
+         * 選択中状態の初期化
+         */
+        public void initSelectedState(PictureInGalleryView pictureInGalleryView, int position) {
+
+            boolean isSelected = false;
+
+            //選択中リストにあるかチェック
+            for( Integer index: mSelectedList ){
+                if( position == index ){
+                    isSelected = true;
+                    break;
+                }
+            }
+
+            //非選択中に設定
+            pictureInGalleryView.setChecked(isSelected);
+        }
+
+        /*
          * 選択中状態の更新
          */
-        public void updateSelectedState(int position) {
+        public void updateSelectedState(PictureInGalleryView pictureInGalleryView, int position) {
 
-            for( Integer index: mSelectedList ){
+            if( pictureInGalleryView.isChecked() ){
+                int i = 0;
+                for( Integer queData: mSelectedList ){
+                    if( queData == position ){
+                        //選択中リストから削除
+                        mSelectedList.remove( i );
+                        //ビューの状態を更新
+                        pictureInGalleryView.toggle();
+
+                        //※リストループ中で削除しているため、ここで処理を終了
+                        //※（次のループにいくとおちる）
+                        return;
+                    }
+                    i++;
+                }
+
+            } else {
+                //選択中リストに追加
+                mSelectedList.add( position );
+
+                //ビューの状態を更新
+                pictureInGalleryView.toggle();
+            }
+
+            //ビューの状態を更新
+            //pictureInGalleryView.toggle();
+
+/*            for( Integer index: mSelectedList ){
                 //既に選択済みであれば
                 if( position == index ){
                     mSelectedList.remove(index);
-                    setSelectedView(false);
+                    pictureInGalleryView.setCheckStateView(false);
 
                     return;
                 }
@@ -134,30 +180,14 @@ public class GalleryAdapter extends BaseAdapter {
 
             //なければ追加
             mSelectedList.add(position);
-            setSelectedView(true);
+            pictureInGalleryView.setCheckStateView(true);*/
         }
 
-        /*
-         * 選択中状態の初期化
-         */
-        public void initSelectedState(int position) {
-
-            for( Integer index: mSelectedList ){
-                if( position == index ){
-                    //選択中リストにあれば、ビューを選択中に
-                    setSelectedView(true);
-                    return;
-                }
-            }
-
-            //なし設定
-            setSelectedView(false);
-        }
 
         /*
          * 選択中状態の設定
          */
-        public void setSelectedView( boolean isSelected ) {
+/*        public void setSelectedView( boolean isSelected ) {
 
             if( isSelected ){
                 //選択中に設定
@@ -166,7 +196,7 @@ public class GalleryAdapter extends BaseAdapter {
                 //非選択中に設定
                 mMcv_picture.setStrokeWidth( 0 );
             }
-        }
+        }*/
 
     }
 
@@ -213,11 +243,14 @@ public class GalleryAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
+        Log.i("複数選択対応", "getView position=" + position);
+
         ViewHolder holder;
 
         if (convertView == null) {
             //ビュー未生成の場合、新たに生成
-            convertView = mInflater.inflate(R.layout.item_gallery_picture, null);
+            //convertView = mInflater.inflate(R.layout.item_gallery_picture, null);
+            convertView = new PictureInGalleryView(mContext);
 
             //写真用ビューのサイズ
             int sideLength = (parent.getWidth() / mPictureNumOnLine) - (int)mDp*2;
@@ -240,19 +273,11 @@ public class GalleryAdapter extends BaseAdapter {
         }
 
         //写真ビュー設定
-        holder.setView( convertView, position );
+        holder.setView( (PictureInGalleryView)convertView, position );
 
         //設定したビューを返す
         return convertView;
     }
-
-
-
-
-
-
-
-
 
     @Override
     public long getItemId(int position) {
@@ -261,6 +286,15 @@ public class GalleryAdapter extends BaseAdapter {
     @Override
     public Object getItem(int position) {
         return null;
+    }
+
+
+    /*
+     * 選択状態の解除
+     */
+    public void clearSelectedState() {
+        mIsMultipleSelection = false;
+        mSelectedList.clear();
     }
 
 }

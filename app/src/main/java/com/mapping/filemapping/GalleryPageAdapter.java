@@ -1,31 +1,34 @@
 package com.mapping.filemapping;
 
-import android.content.Intent;
 import android.content.res.Configuration;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.AdapterView;
 import android.widget.GridView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.card.MaterialCardView;
-
 import java.util.List;
 
-public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.GuideViewHolder> {
+public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.ViewHolder> {
 
     //レイアウトIDリスト
     private final List<Integer> mLayoutIds;
     //各ページのギャラリー
     private final List<PictureArrayList<PictureTable>> mGallerys;
+    //複数選択状態
+    private boolean mIsMultipleSelection;
+    //選択中の写真Indexリスト
+    private List<Integer> mSelectedList;
 
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
      */
-    class GuideViewHolder extends RecyclerView.ViewHolder {
+    class ViewHolder extends RecyclerView.ViewHolder {
 
         //ギャラリー表示用のGridView
         private final GridView gv_gallery;
@@ -33,7 +36,7 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
         /*
          * コンストラクタ
          */
-        public GuideViewHolder(View itemView, int position) {
+        public ViewHolder(View itemView) {
             super(itemView);
 
             //画像を表示
@@ -60,6 +63,19 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
                         public void onGlobalLayout() {
                             //アダプタを設定
                             gv_gallery.setAdapter( new GalleryAdapter( gv_gallery.getContext(), mGallerys.get(position) ) );
+                            //※setItemChecked()を有効にするために必要
+                            gv_gallery.setChoiceMode( GridView.CHOICE_MODE_MULTIPLE );
+
+                            int count = gv_gallery.getCount();
+                            for( int i = 0; i < count; i++ ){
+                                //gv_gallery.setItemChecked( i, true );
+                            }
+
+
+
+
+
+
 
                             //レイアウト確定後は、不要なので本リスナー削除
                             gv_gallery.getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -91,20 +107,20 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
      */
     @NonNull
     @Override
-    public GuideViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
+    public ViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
 
         //レイアウトを生成
         LayoutInflater inflater = LayoutInflater.from( viewGroup.getContext() );
         View view = inflater.inflate(mLayoutIds.get(position), viewGroup, false);
 
-        return new GuideViewHolder(view, position);
+        return new ViewHolder(view);
     }
 
     /*
      * ViewHolderの設定
      */
     @Override
-    public void onBindViewHolder(@NonNull GuideViewHolder viewHolder, final int i) {
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
 
         //ページ設定
         viewHolder.setPage( i );

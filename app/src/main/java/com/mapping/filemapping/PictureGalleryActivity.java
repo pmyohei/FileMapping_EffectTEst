@@ -19,7 +19,10 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Adapter;
+import android.widget.AdapterView;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -112,9 +115,6 @@ public class PictureGalleryActivity extends AppCompatActivity {
             @Override
             public void onFinish(List<PictureArrayList<PictureTable>> galleries, List<PictureTable> dbThumbnails) {
 
-                //本ノードのサムネイルを取得
-                MapCommonData mapCommonData = (MapCommonData)getApplication();
-
                 //サムネイルのBitmapリスト
                 List<Bitmap> thumbnailBitmaps = new ArrayList<>();
 
@@ -130,7 +130,6 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
                     //サムネイルのビットマップ
                     //※nullの場合は、なし用画像が設定される
-                    //PictureTable thumbnail = mapCommonData.getThumbnails().getThumbnail( pid );
                     PictureTable thumbnail = dbThumbnails.get(i);
                     thumbnailBitmaps.add( PictureNodeView.createThumbnail( getResources(), thumbnail ) );
 
@@ -226,8 +225,6 @@ public class PictureGalleryActivity extends AppCompatActivity {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.toolbar_gallery, menu);
 
-
-
         return true;
     }*/
 
@@ -253,13 +250,28 @@ public class PictureGalleryActivity extends AppCompatActivity {
                 //複数選択メニューを閉じる
                 setMultipleOptionMenu(false);
 
-                //選択状態を解除させる
-                //★処理が重t
+                //表示中ギャラリーのGridView
                 ViewPager2 vp2_gallery = findViewById(R.id.vp2_gallery);
-                int page = vp2_gallery.getCurrentItem();
+                GridView gv_gallery = vp2_gallery.findViewById(R.id.gv_gallery);
 
-                GalleryPageAdapter adapter = (GalleryPageAdapter)vp2_gallery.getAdapter();
-                adapter.notifyItemChanged( page);
+                //選択中の写真を非選択にする
+                int count = gv_gallery.getCount();
+                for( int i = 0; i < count; i++ ){
+                    if( gv_gallery.isItemChecked(i) ){
+                        //選択中のものを解除
+                        gv_gallery.setItemChecked( i, false );
+                        Log.i("複数選択対応", "コールチェック　false");
+                    }
+                    Log.i("複数選択対応", "コールチェック");
+                }
+
+                //ギャラリーの選択中状態を解除
+                ((GalleryAdapter)gv_gallery.getAdapter()).clearSelectedState();
+
+                Log.i("複数選択対応", "写真の数？ count=" + count);
+
+                //GalleryPageAdapter adapter = (GalleryPageAdapter)vp2_gallery.getAdapter();
+                //adapter.notifyItemChanged( page);
 
                 return true;
 
