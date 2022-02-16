@@ -22,10 +22,6 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
     private final List<Integer> mLayoutIds;
     //各ページのギャラリー
     private final List<PictureArrayList<PictureTable>> mGallerys;
-    //複数選択状態
-    private boolean mIsMultipleSelection;
-    //選択中の写真Indexリスト
-    private List<Integer> mSelectedList;
 
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
@@ -86,17 +82,6 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
 
                     /*--- 複数選択モードの場合、クリック時に自動でCheckable処理が入るため、本リスナー内では何もしない ---*/
 
-
-
-
-/*                    //複数選択状態かどうか
-                    if (mIsMultipleSelection) {
-                        //選択状態の設定
-                        //updateSelectedState(i);
-                    } else {
-                        //画面遷移
-                        transitionScreen(pagePosition, i);
-                    }*/
                 }
             });
 
@@ -139,81 +124,6 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
             activity.getSinglePictureLauncher().launch(intent);
         }
 
-        /*
-         * 選択中状態の初期化
-         */
-        public void initSelectedState(int position) {
-
-            boolean isSelected = false;
-
-            //選択中リストにあるかチェック
-            for( Integer index: mSelectedList ){
-                if( position == index ){
-                    //あれば選択中にする
-                    isSelected = true;
-                    break;
-                }
-            }
-
-            //選択状態を設定
-            gv_gallery.setItemChecked( position, isSelected);
-        }
-
-        /*
-         * 選択中状態の更新
-         */
-        public void updateSelectedState(int position) {
-
-            //選択中の場合
-            if( gv_gallery.isItemChecked( position ) ){
-                int i = 0;
-                for( Integer queData: mSelectedList ){
-                    if( queData == position ){
-                        //選択中リストから削除
-                        mSelectedList.remove( i );
-                        //ビューの状態を更新
-                        //gv_gallery.setItemChecked( position, false );
-
-                        //※リストループ中で削除しているため、ここで処理を終了
-                        //※（次のループにいくとおちる）
-                        return;
-                    }
-                    i++;
-                }
-
-            } else {
-                //選択中リストに追加
-                mSelectedList.add( position );
-
-                //ビューの状態を更新
-                //gv_gallery.setItemChecked( position, true );
-            }
-
-/*            if( pictureInGalleryView.isChecked() ){
-                int i = 0;
-                for( Integer queData: mSelectedList ){
-                    if( queData == position ){
-                        //選択中リストから削除
-                        mSelectedList.remove( i );
-                        //ビューの状態を更新
-                        pictureInGalleryView.toggle();
-
-                        //※リストループ中で削除しているため、ここで処理を終了
-                        //※（次のループにいくとおちる）
-                        return;
-                    }
-                    i++;
-                }
-
-            } else {
-                //選択中リストに追加
-                mSelectedList.add( position );
-
-                //ビューの状態を更新
-                pictureInGalleryView.toggle();
-            }*/
-        }
-
     }
 
     /*
@@ -222,11 +132,6 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
     public GalleryPageAdapter(List<Integer> layoutIdList, List<PictureArrayList<PictureTable>> gallery) {
         mLayoutIds = layoutIdList;
         mGallerys = gallery;
-
-        //複数選択状態
-        mIsMultipleSelection = false;
-        //選択中リスト初期化
-        mSelectedList = new ArrayList<>();
     }
 
     /*
@@ -279,9 +184,6 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
      * 複数選択状態の解除
      */
     public void cancellationMultipleSelection(GridView gv_gallery) {
-        //mIsMultipleSelection = false;
-        //mSelectedList.clear();
-
         //表示中GridViewの複数選択モードを解除
         gv_gallery.setChoiceMode( GridView.CHOICE_MODE_NONE );
     }
