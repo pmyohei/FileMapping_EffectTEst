@@ -19,7 +19,7 @@ public class AsyncDecordBitmap {
 
     public AsyncDecordBitmap(){
         //
-        mExecutorService  = Executors.newFixedThreadPool(4);
+        mExecutorService  = Executors.newFixedThreadPool(12);
     }
 
     /*

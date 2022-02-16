@@ -17,7 +17,9 @@
         android:layout_height="match_parent"
         android:layout_gravity="center_horizontal"
         android:gravity="center_horizontal"
-        android:scaleType="centerCrop"
         />
 
+<!--
+    android:scaleType="centerCrop"
+    -->
 </com.google.android.material.card.MaterialCardView>

@@ -4,6 +4,8 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
+import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +19,8 @@ import com.squareup.picasso.Picasso;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class GalleryAdapter extends BaseAdapter {
 
@@ -57,16 +61,27 @@ public class GalleryAdapter extends BaseAdapter {
         @SuppressLint("ClickableViewAccessibility")
         public void setView( PictureInGalleryView pictureInGalleryView, int position ) {
 
+            Log.i("Picasso", "パス=" + mData.get(position).getPath());
+
+            //↓重い
+            //mIv_picture.setImageBitmap( BitmapFactory.decodeFile( mData.get(position).getPath() ));
+            //BitmapFactory.decodeFile( mData.get(position).getPath());
+
+            //Uri uri = Uri.fromFile(new File( mData.get(position).getPath()));
+
+            //mExecutorService.submit( new RunnableDecordBitmap(mData.get(position).getPath(), mIv_picture) );
+
             //Picassoを利用して画像を設定
             Picasso.get()
                     .load( new File( mData.get(position).getPath() ) )
+                    .fit().centerCrop()                                    //※画像の表示範囲の指定はxmlではなくここでやること（表示がかなり重くなるため）
                     .error(R.drawable.baseline_picture_read_error_24)
                     .into( mIv_picture );
 
             //選択中状態の設定
             initSelectedState( pictureInGalleryView, position );
 
-            //クリックリスナー
+/*            //クリックリスナー
             mIv_picture.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -100,7 +115,7 @@ public class GalleryAdapter extends BaseAdapter {
 
                     return true;
                 }
-            });
+            });*/
         }
 
         /*
@@ -122,7 +137,7 @@ public class GalleryAdapter extends BaseAdapter {
          */
         public void initSelectedState(PictureInGalleryView pictureInGalleryView, int position) {
 
-            boolean isSelected = false;
+/*            boolean isSelected = false;
 
             //選択中リストにあるかチェック
             for( Integer index: mSelectedList ){
@@ -133,7 +148,7 @@ public class GalleryAdapter extends BaseAdapter {
             }
 
             //非選択中に設定
-            pictureInGalleryView.setChecked(isSelected);
+            pictureInGalleryView.setChecked(isSelected);*/
         }
 
         /*
@@ -243,7 +258,8 @@ public class GalleryAdapter extends BaseAdapter {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
 
-        Log.i("複数選択対応", "getView position=" + position);
+        //Log.i("複数選択対応", "getView position=" + position + "parent.getWidth()=" + parent.getWidth());
+        //Log.i("複数選択対応", "parent.getRootView().getWidth()=" + parent.getRootView().getWidth());
 
         ViewHolder holder;
 
@@ -253,7 +269,9 @@ public class GalleryAdapter extends BaseAdapter {
             convertView = new PictureInGalleryView(mContext);
 
             //写真用ビューのサイズ
-            int sideLength = (parent.getWidth() / mPictureNumOnLine) - (int)mDp*2;
+            //※parent(=GridView)は、レイアウトが確定していない状態にあるため、その親のレイアウトのサイズを取得
+            //※（横幅は同じため、問題なし）
+            int sideLength = (parent.getRootView().getWidth() / mPictureNumOnLine) - (int)mDp*2;
             AbsListView.LayoutParams params = new AbsListView.LayoutParams(
                     sideLength,
                     sideLength);

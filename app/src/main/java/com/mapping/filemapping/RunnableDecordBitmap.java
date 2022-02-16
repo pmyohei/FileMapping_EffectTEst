@@ -7,6 +7,9 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+
+import java.io.File;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -65,6 +68,15 @@ public class RunnableDecordBitmap implements Runnable {
     private void operation() {
         //トリミング範囲で切り取り
         mBitmap = BitmapFactory.decodeFile( mFilePath );
+        mImageView.setImageBitmap( mBitmap );
+
+/*        //表示されない
+        Picasso.get()
+           //.load( new File( mFilePath ) )
+           .load( R.drawable.bmp_sample_cafe )
+           //.load( "file://" + mFilePath )
+           .error(R.drawable.baseline_picture_read_error_24)
+           .into( mImageView );*/
     }
 
     /*
@@ -72,7 +84,7 @@ public class RunnableDecordBitmap implements Runnable {
      */
     void onPostExecute() {
         //生成完了
-        mImageView.setImageBitmap( mBitmap );
+        //mImageView.setImageBitmap( mBitmap );
     }
 
     /*

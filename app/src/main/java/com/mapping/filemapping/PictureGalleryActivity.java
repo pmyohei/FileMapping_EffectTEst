@@ -20,6 +20,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Adapter;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -50,11 +51,11 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
         //選択ノードを取得
         Intent intent = getIntent();
-        mNodePid = intent.getIntExtra( MapActivity.INTENT_NODE_PID, 0 );
-        if( mNodePid == 0 ){
+        mNodePid = intent.getIntExtra(MapActivity.INTENT_NODE_PID, 0);
+        if (mNodePid == 0) {
             //ノード取得エラーはこのまま本画面を終了する
             //★
-            Toast.makeText( this, "エラー", Toast.LENGTH_SHORT ).show();
+            Toast.makeText(this, "エラー", Toast.LENGTH_SHORT).show();
             finish();
         }
 
@@ -71,15 +72,15 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
                         Log.i("colorPickerLauncher", "onActivityResult()");
 
-                        if(result.getResultCode() == SinglePictureDisplayActivity.RESULT_UPDATE) {
+                        if (result.getResultCode() == SinglePictureDisplayActivity.RESULT_UPDATE) {
 
                             Intent intent = result.getData();
-                            if(intent != null){
+                            if (intent != null) {
                                 //更新の有無
-                                boolean isUpdate = intent.getBooleanExtra( SinglePictureDisplayActivity.UPDATE, false );
+                                boolean isUpdate = intent.getBooleanExtra(SinglePictureDisplayActivity.UPDATE, false);
 
                                 //更新ありの場合、DBから最新の情報を取得し、再表示
-                                if( isUpdate ){
+                                if (isUpdate) {
                                     readGallery();
                                 }
                             }
@@ -106,7 +107,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
         //指定ノード配下のピクチャノードPidをリスト化
         MapCommonData mapCommonData = (MapCommonData) getApplication();
-        List<Integer> pictureNodes = mapCommonData.getNodes().getPictureNodes( mNodePid );
+        List<Integer> pictureNodes = mapCommonData.getNodes().getPictureNodes(mNodePid);
         int mapPid = mapCommonData.getMapPid();
 
         //配下の写真を取得
@@ -124,46 +125,20 @@ public class PictureGalleryActivity extends AppCompatActivity {
                 layoutIdList.add(R.layout.page_grid_gallery);
                 //ピクチャノード数だけページを用意
                 int i = 0;
-                for( Integer pid: pictureNodes ){
+                for (Integer pid : pictureNodes) {
                     //ページレイアウト
                     layoutIdList.add(R.layout.page_grid_gallery);
 
                     //サムネイルのビットマップ
                     //※nullの場合は、なし用画像が設定される
                     PictureTable thumbnail = dbThumbnails.get(i);
-                    thumbnailBitmaps.add( PictureNodeView.createThumbnail( getResources(), thumbnail ) );
+                    thumbnailBitmaps.add(PictureNodeView.createThumbnail(getResources(), thumbnail));
 
                     i++;
                 }
 
                 //ViewPagerの設定
-                ViewPager2 vp2_gallery = findViewById(R.id.vp2_gallery);
-                vp2_gallery.setAdapter( new GalleryPageAdapter(layoutIdList, galleries) );
-
-                //インジケータの設定
-                TabLayout tabLayout = findViewById(R.id.tab_layout);
-                new TabLayoutMediator(tabLayout, vp2_gallery,
-                        new TabLayoutMediator.TabConfigurationStrategy(){
-                            @Override
-                            public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                                //タブの設定
-                                if( position == 0 ){
-                                    //★string
-                                    //先頭のタブはすべての写真を表示する
-                                    tab.setText("すべて");
-                                } else {
-                                    //先頭より後はピクチャノードのサムネイルを設定
-                                    tab.setCustomView( R.layout.item_gallery_tab );
-
-                                    //サムネイルのbitmap
-
-                                    //アイコンとして設定
-                                    ImageView iv_picture = tab.getCustomView().findViewById( R.id.iv_picture);
-                                    iv_picture.setImageBitmap( thumbnailBitmaps.get( position - 1 ) );
-                                }
-                            }
-                        }
-                ).attach();
+                setGalleryViewPager(galleries, thumbnailBitmaps, layoutIdList);
 
                 //Log.i("ギャラリー確認", "ルートチェック2");
                 //for( PictureTable aa: pictures ){
@@ -178,6 +153,62 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
         //非同期処理開始
         db.execute();
+    }
+
+    /*
+     * 写真ギャラリー表示用のViewPagerの設定
+     *   para1：ギャラリーリスト
+     *   para2：タブのサムネイルリスト
+     *   para3：タブ内のレイアウトIDリスト
+     */
+    private void setGalleryViewPager(List<PictureArrayList<PictureTable>> galleries,
+                                     List<Bitmap> thumbnailBitmaps,
+                                     List<Integer> layoutIdList) {
+
+        ViewPager2 vp2_gallery = findViewById(R.id.vp2_gallery);
+
+        //レイアウト確定後、アダプタの設定を行う
+        //※表示する写真サイズを確実に設定するため
+        ViewTreeObserver observer = vp2_gallery.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(
+            new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+
+                    //レイアウト確定後は、不要なので本リスナー削除
+                    vp2_gallery.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                    //アダプタの設定
+                    vp2_gallery.setAdapter(new GalleryPageAdapter(layoutIdList, galleries));
+
+                    //インジケータの設定
+                    TabLayout tabLayout = findViewById(R.id.tab_layout);
+                    new TabLayoutMediator(tabLayout, vp2_gallery,
+                            new TabLayoutMediator.TabConfigurationStrategy() {
+                                @Override
+                                public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                                    //タブの設定
+                                    if (position == 0) {
+                                        //★string
+                                        //先頭のタブはすべての写真を表示する
+                                        tab.setText("すべて");
+                                    } else {
+                                        //先頭より後はピクチャノードのサムネイルを設定
+                                        tab.setCustomView(R.layout.item_gallery_tab);
+
+                                        //サムネイルのbitmap
+
+                                        //アイコンとして設定
+                                        ImageView iv_picture = tab.getCustomView().findViewById(R.id.iv_picture);
+                                        iv_picture.setImageBitmap(thumbnailBitmaps.get(position - 1));
+                                    }
+                                }
+                            }
+                    ).attach();
+
+                }
+            }
+        );
     }
 
     /*
@@ -260,13 +291,28 @@ public class PictureGalleryActivity extends AppCompatActivity {
                     if( gv_gallery.isItemChecked(i) ){
                         //選択中のものを解除
                         gv_gallery.setItemChecked( i, false );
-                        Log.i("複数選択対応", "コールチェック　false");
+                        //Log.i("複数選択対応", "コールチェック　false");
                     }
-                    Log.i("複数選択対応", "コールチェック");
+                    //Log.i("複数選択対応", "コールチェック");
                 }
 
-                //ギャラリーの選択中状態を解除
-                ((GalleryAdapter)gv_gallery.getAdapter()).clearSelectedState();
+                //表示中のGridViewの選択モードの変更は、レイアウト確定後に行う
+                //※setItemChecked(false)の反映が完了する前にモードを変更すると、状態が変わらなくなるため
+                ViewTreeObserver observer = gv_gallery.getViewTreeObserver();
+                observer.addOnGlobalLayoutListener(
+                    new ViewTreeObserver.OnGlobalLayoutListener() {
+                        @Override
+                        public void onGlobalLayout() {
+
+                            //レイアウト確定後は、不要なので本リスナー削除
+                            gv_gallery.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                            //ギャラリーの選択中状態を解除
+                            GalleryPageAdapter galleryPageAdapter = (GalleryPageAdapter)vp2_gallery.getAdapter();
+                            galleryPageAdapter.cancellationMultipleSelection(gv_gallery);
+                        }
+                    }
+                );
 
                 Log.i("複数選択対応", "写真の数？ count=" + count);
 
