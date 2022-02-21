@@ -14,14 +14,14 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.ClipData;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.LayoutInflater;
@@ -33,15 +33,12 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
-import android.view.WindowManager;
-import android.view.WindowMetrics;
-import android.view.animation.Animation;
-import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.Scroller;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.Objects;
 
@@ -58,11 +55,15 @@ public class MapActivity extends AppCompatActivity {
     /* 画面遷移-キー */
     public static String INTENT_MAP_PID = "MapPid";
     public static String INTENT_NODE_PID = "NodePid";
+    public static String INTENT_COLORS = "colors";
     public static String INTENT_EDIT = "edit";
 
     //ノードフォーカス処理
     public static final int MOVE_CENTER = 0;
     public static final int MOVE_UPPER = 1;
+
+    //無効ノードpid
+    private static final int INVALID_PID = -1;
 
     /* マップ位置操作 */
     //GestureDetector
@@ -96,6 +97,9 @@ public class MapActivity extends AppCompatActivity {
     /* 制御 */
     //ノード生成ができる状態か
     private boolean mEnableDrawNode = false;
+    //親ノード変更モード
+    private boolean mChangeParentMode = false;
+    private int mChangeParentNodePid = INVALID_PID;
 
     //画面遷移ランチャー
     ActivityResultLauncher<Intent> mNodeOperationLauncher;
@@ -111,24 +115,7 @@ public class MapActivity extends AppCompatActivity {
         setContentView(R.layout.activity_map);
 
         //ツールバー設定
-        Toolbar toolbar = findViewById(R.id.toolbar);
-        toolbar.setTitle("(仮)マップ名を入れる");
-        setSupportActionBar(toolbar);
-
-        toolbar.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //半透明→完全に透明 のアニメーション開始
-                //表示アニメーション
-                Animation animation = AnimationUtils.loadAnimation(view.getContext(), R.anim.show_toolbar);
-                //animation.setStartOffset( ANIM_OFFSET * count );
-                view.startAnimation(animation);
-            }
-        });
-
-        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        initToolBar();
 
         //フリング用スクロール生成
         mFlingScroller = new Scroller(this, new DecelerateInterpolator());
@@ -157,7 +144,7 @@ public class MapActivity extends AppCompatActivity {
 
         //画面上部の中心位置
         int screenHeight = ResourceManager.getScreenHeight(this);
-        mTopScreanY = (int) ( screenHeight * (1f - ResourceManager.NODE_DESIGN_DIALOG_RATIO) ) / 2;
+        mTopScreanY = (int) (screenHeight * (1f - ResourceManager.NODE_DESIGN_DIALOG_RATIO)) / 2;
 
         //Log.d("移動", "mTopScreanX=" + mTopScreanX);
         //Log.d("移動", "mTopScreanY=" + mTopScreanY);
@@ -204,7 +191,7 @@ public class MapActivity extends AppCompatActivity {
                 MapCommonData mapCommonData = (MapCommonData) getApplication();
                 mapCommonData.setNodes(nodeList);
                 mapCommonData.setThumbnails(thumbnailList);
-                mapCommonData.createColorHistory( mMap, findViewById(R.id.fl_screenMap) );
+                mapCommonData.createColorHistory(mMap, findViewById(R.id.fl_screenMap));
 
                 //フィールド変数として保持
                 mNodes = nodeList;
@@ -225,7 +212,7 @@ public class MapActivity extends AppCompatActivity {
 
         //マップ色を設定
         String firstColor = mMap.getFirstColor();
-        if( firstColor != null ){
+        if (firstColor != null) {
             setMapColor(firstColor);
         }
 
@@ -258,16 +245,68 @@ public class MapActivity extends AppCompatActivity {
     }
 
     /*
+     * ツールバーの初期設定
+     */
+    private void initToolBar() {
+        //ツールバー設定
+        Toolbar toolbar = findViewById(R.id.toolbar_map);
+        toolbar.setTitle("(仮)マップ名を入れる");
+        setSupportActionBar(toolbar);
+
+        /*-- アニメーションにするならこの方法 --*/
+        /*
+        int colorFrom = getResources().getColor(R.color.transparent_20_white);
+        int colorTo = getResources().getColor(R.color.transparent_0_white);
+        ValueAnimator colorAnimation = ValueAnimator.ofObject(new ArgbEvaluator(), colorFrom, colorTo);
+        colorAnimation.setDuration(1200);
+        colorAnimation.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animator) {
+                toolbar.setBackgroundColor((int)animator.getAnimatedValue());
+                getWindow().setStatusBarColor( (int)animator.getAnimatedValue() );
+            }
+        });
+        */
+
+        //クリックリスナー
+        toolbar.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //colorAnimation.start();
+
+                //透明と半透明を切り替える
+                int alpha = toolbar.getBackground().getAlpha();
+                if( alpha == 0 ){
+                    //ツールバー
+                    toolbar.setBackgroundColor( getResources().getColor(R.color.transparent_20_white) );
+                    //システムバー
+                    //getWindow().setStatusBarColor( getResources().getColor(R.color.transparent_20_white) );
+                } else {
+                    //ツールバー
+                    toolbar.setBackgroundColor( Color.TRANSPARENT );
+                    //システムバー
+                    //getWindow().setStatusBarColor( Color.TRANSPARENT );
+                }
+            }
+        });
+
+        //戻るボタンを有効化
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+    }
+
+
+    /*
      * マップ背景色の設定
      */
-    public void setMapColor( String color ) {
+    public void setMapColor(String color) {
 
-        int value = Color.parseColor( color );
+        int value = Color.parseColor(color);
 
         //マップ全体
-        findViewById( R.id.fl_screenMap ).setBackgroundColor( value );
+        findViewById(R.id.fl_screenMap).setBackgroundColor(value);
         //システムバー
-        getWindow().setStatusBarColor( value );
+        getWindow().setStatusBarColor(value);
     }
 
 
@@ -294,20 +333,103 @@ public class MapActivity extends AppCompatActivity {
     }
 
     /*
-     * ツールアイコンを表示
+     * ノードクリック
      */
-    private void showToolIcon(View node ) {
+    private void nodeClickListener(View node) {
 
         //開いているなら、何もしない
-        if( ((BaseNode)node).hasIconView() ){
+        if (((BaseNode) node).hasIconView()) {
+            return;
+        }
+
+        //ボトムシートが開いている場合、ツールアイコンは開かせない
+
+        //親ノード選択状態
+        if (mChangeParentMode) {
+            //親ノード変更処理
+            confirmChangeParentNode((BaseNode) node);
+        } else {
+            //ツールアイコン表示処理
+            showToolIcon(node);
+        }
+    }
+
+    /*
+     * ツールアイコンを表示
+     */
+    private void showToolIcon(View node) {
+
+        //デザインボトムシートが開いているなら、ツールアイコンは表示しない
+        DesignBottomSheet l_bottomSheet = findViewById(R.id.dbs_design);
+        if (!l_bottomSheet.isCloseBottomSheet()) {
             return;
         }
 
         //ツールアイコンをレイアウトに追加
-        FrameLayout fl_map = findViewById( R.id.fl_map );
+        FrameLayout fl_map = findViewById(R.id.fl_map);
         fl_map.addView(
-                new ToolIconsView( this, (BaseNode)node, MapActivity.this ),
+                new ToolIconsView(this, (BaseNode) node, MapActivity.this),
                 new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+    }
+
+    /*
+     * デザインボトムシートのオープン状態をチェック
+     */
+/*    private boolean isOpenDesignBottomSheet() {
+
+        //BottomSheet
+        DesignBottomSheet l_bottomSheet = findViewById(R.id.dbs_design);
+
+        return ;
+    }*/
+
+    /*
+     * 親ノード変更の確認
+     *   para1：クリックされたノードビュー（変更先の親ノード）
+     */
+    private void confirmChangeParentNode(BaseNode baseNode) {
+
+        NodeTable parentNode = baseNode.getNode();
+
+        //変更先が自分自身の場合、ピクチャノードの場合は、変更不可
+        if ((mChangeParentNodePid == parentNode.getPid()) || (parentNode.getKind() == NodeTable.NODE_KIND_PICTURE)) {
+            Toast.makeText(this, "親ノードにできません", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //共通データ
+        MapCommonData mapCommonData = (MapCommonData) getApplication();
+        NodeArrayList<NodeTable> nodes = mapCommonData.getNodes();
+        NodeTable changeNode = nodes.getNode( mChangeParentNodePid );
+
+        //現状の親ノードの場合、変更不可
+        if ( changeNode.getPidParentNode() == parentNode.getPid() ) {
+            Toast.makeText(this, "現在の親ノードです", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //移動確認ダイアログを表示
+        new AlertDialog.Builder(this)
+            .setTitle("親ノード変更確認")
+            .setMessage("選択したノードを親ノードにします。")
+            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                    //マップ上ノードリストを更新
+                    changeNode.setPidParentNode( parentNode.getPid() );
+                    //ライン再描画
+                    ((ChildNode)changeNode.getNodeView()).getLineView().reDrawParent( baseNode );
+
+                    //更新対象キューに追加
+                    mapCommonData.enqueUpdateNodeWithUnique( changeNode );
+
+                    //親ノード選択状態を解除
+                    disableChangeParentMode();
+                }
+            })
+            .setNegativeButton("Cancel", null)
+            .show();
     }
 
     /*
@@ -351,7 +473,55 @@ public class MapActivity extends AppCompatActivity {
      */
     public BaseNode drawNode(FrameLayout fl_map, NodeTable node) {
 
+        //ノードビュー
+        BaseNode nodeView;
+
         //ルートノード
+        if (node.getKind() == NodeTable.NODE_KIND_ROOT) {
+            //元々レイアウト上にあるルートノード名を変更し、中心座標を保持
+            nodeView = findViewById(R.id.v_rootnode);
+
+            //ビューにノード情報を設定
+            nodeView.setNode(node);
+            //中心座標を設定
+            nodeView.addOnNodeGlobalLayoutListener();
+
+        } else {
+
+            //ビュー生成
+            nodeView = ( (node.getKind() == NodeTable.NODE_KIND_NODE)
+                            ? new NodeView(this, node)
+                            : new PictureNodeView(this, node) );
+
+            //ノードをマップに追加
+            fl_map.addView(nodeView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                                                                ViewGroup.LayoutParams.WRAP_CONTENT));
+
+            //位置設定
+            //※レイアウト追加後に行うこと（MarginLayoutParamsがnullになってしまうため）
+            int left = node.getPosX();
+            int top  = node.getPosY();
+
+            ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) nodeView.getLayoutParams();
+            mlp.setMargins(left, top, mlp.rightMargin, mlp.bottomMargin);
+
+            //レイアウト確定後の処理を設定
+            ((ChildNode) nodeView).addOnNodeGlobalLayoutListener();
+        }
+
+        //ノードクリックリスナー
+        nodeView.setOnNodeClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    nodeClickListener( view );
+                }
+            }
+        );
+
+        //ノードビューを保持
+        node.setNodeView(nodeView);
+
+/*        //ルートノード
         if (node.getKind() == NodeTable.NODE_KIND_ROOT) {
             //元々レイアウト上にあるルートノード名を変更し、中心座標を保持
             RootNodeView rootNodeView = findViewById(R.id.v_rootnode);
@@ -368,13 +538,10 @@ public class MapActivity extends AppCompatActivity {
             rootNodeView.setOnNodeClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        showToolIcon( view );
+                        nodeClickListener( view );
                     }
                 }
             );
-
-            //Log.i("drawNodes", "root centerx=" + (left + (rootNodeView.getWidth() / 2f)) + " left=" + left);
-            //Log.i("drawNodes", "root centery=" + (top + (rootNodeView.getHeight() / 2f)) + " top=" + top);
 
             return rootNodeView;
         }
@@ -410,13 +577,13 @@ public class MapActivity extends AppCompatActivity {
         nodeView.setOnNodeClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    showToolIcon( view );
+                    nodeClickListener( view );
                 }
             }
         );
 
         //ノードビューを保持
-        node.setNodeView(nodeView);
+        node.setNodeView(nodeView);*/
 
         return nodeView;
     }
@@ -425,7 +592,6 @@ public class MapActivity extends AppCompatActivity {
      *　ノードにフォーカスをあてる（画面中心に指定座標をもってくる）
      */
     public void focusNodeToCenterScreen(float nodeLeft, float nodeTop, int POS_KIND) {
-
         int height = 0;
 
         if (POS_KIND == MOVE_UPPER) {
@@ -499,12 +665,79 @@ public class MapActivity extends AppCompatActivity {
     /*
      * デザイン設定のBottomSheetを開く
      */
+    public void openDesignBottomSheet( int designKind, View view, float nodeLeft, float nodeTop, int POS_KIND ) {
+        //ボトムシートを開く
+        openDesignBottomSheet( designKind, view );
+
+        //ノードを画面上部の中心に移動させる
+        focusNodeToCenterScreen(nodeLeft, nodeTop, MOVE_UPPER);
+    }
+
+    /*
+     * デザイン設定のBottomSheetを開く
+     */
     public void openDesignBottomSheet( int designKind, View view ) {
-        //BottomSheet
-        DesignBottomSheet l_bottomSheet = findViewById(R.id.dbs_map);
+        //デザインボトムシートが既に開いているなら、開かない
+        DesignBottomSheet l_bottomSheet = findViewById(R.id.dbs_design);
+        if ( !l_bottomSheet.isCloseBottomSheet() ) {
+            return;
+        }
+
+        //ボトムシートを開く
         l_bottomSheet.openBottomSheet(designKind, view);
     }
 
+    /*
+     * 親ノード変更モードを有効にする
+     *   para1：親ノードを変更したいノードのpid
+     */
+    public void enableChangeParentMode(int changeParentNodePid ) {
+        mChangeParentMode = true;
+        mChangeParentNodePid = changeParentNodePid;
+
+        //ツールバーを変更
+        setToolbarOptionMenu(true);
+    }
+
+    /*
+     * 親ノード変更モードを解除する
+     */
+    public void disableChangeParentMode() {
+        mChangeParentMode = false;
+        mChangeParentNodePid = INVALID_PID;
+
+        //ツールバーを変更
+        setToolbarOptionMenu(false);
+    }
+
+    /*
+     * メニュー設定
+     */
+    public void setToolbarOptionMenu(boolean isChangeParent) {
+
+        //メニューをクローズ
+        Toolbar toolbar = findViewById(R.id.toolbar_map);
+        Menu menu = toolbar.getMenu();
+        menu.clear();
+
+        //メニューインフレータ
+        MenuInflater inflater = getMenuInflater();
+
+        if ( isChangeParent ) {
+            //親ノード変更モード
+            inflater.inflate(R.menu.toolbar_close, menu);
+
+            toolbar.setBackgroundColor(Color.WHITE);
+            toolbar.setTitle("親ノード変更");
+        } else {
+            //通常モード
+            inflater.inflate(R.menu.toolbar_map, menu);
+
+            toolbar.setBackgroundColor(Color.TRANSPARENT);
+            //toolbar.setTitleTextColor(Color.BLACK);
+            toolbar.setTitle("マップタイトルを入れる");
+        }
+    }
 
     /*
      * onStop()
@@ -516,18 +749,22 @@ public class MapActivity extends AppCompatActivity {
 
         //位置情報を保存
         MapCommonData mapCommonData = (MapCommonData) getApplication();
-        NodeArrayList<NodeTable> nodeQue = mapCommonData.getMovedNodesQue();
+        NodeArrayList<NodeTable> nodeQue = mapCommonData.getUpdateNodeQue();
 
-        //Log.i("onStop", "nodeQue.size()=" + nodeQue.size());
+/*        Log.i("親変更", "nodeQue.size()=" + nodeQue.size());
+
+        for( NodeTable node: nodeQue){
+            Log.i("親変更", "ノード名=" + node.getNodeName() + " 親ノード=" + node.getPidParentNode());
+        }*/
 
         //座標移動したノードがあれば
         if (nodeQue.size() > 0) {
-            AsyncUpdateNodePosition db = new AsyncUpdateNodePosition(this, nodeQue, new AsyncUpdateNodePosition.OnFinishListener() {
+            AsyncUpdateNode db = new AsyncUpdateNode(this, nodeQue, new AsyncUpdateNode.OnFinishListener() {
                 //DB処理完了
                 @Override
                 public void onFinish() {
                     //更新完了後は、キュークリア
-                    mapCommonData.clearMovedNodesQue();
+                    mapCommonData.clearUpdateNodeQue();
                 }
             });
 
@@ -541,6 +778,7 @@ public class MapActivity extends AppCompatActivity {
      */
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+        //初期メニュー
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.toolbar_map, menu);
 
@@ -565,6 +803,7 @@ public class MapActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.action_palette:
+                //マップ全体デザイン変更
 
                 //BottomSheetを開く
                 openDesignBottomSheet(DesignBottomSheet.MAP, findViewById(R.id.fl_screenMap));
@@ -572,16 +811,25 @@ public class MapActivity extends AppCompatActivity {
                 return true;
 
             case R.id.action_search:
+                //検索機能
 
                 return true;
 
             case R.id.action_folder_tree:
+                //フォルダーツリー表示
 
                 Log.i("MenuItem", "action_folder_tree");
 
                 DrawerLayout drawer = findViewById(R.id.dl_map);
 
                 drawer.openDrawer(GravityCompat.END);
+
+                return true;
+
+
+            case R.id.action_close:
+                //親ノード変更モードの解除
+                disableChangeParentMode();
 
                 return true;
 
@@ -966,6 +1214,7 @@ public class MapActivity extends AppCompatActivity {
                 //リストに追加
                 MapCommonData mapCommonData = (MapCommonData) getApplication();
                 mapCommonData.addNodes(pictureNode);
+                //★サムネリストは廃止予定
                 mapCommonData.addThumbnail(thumbnail);
 
                 //ノードを描画

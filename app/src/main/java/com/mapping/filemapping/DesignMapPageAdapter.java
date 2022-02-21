@@ -3,6 +3,7 @@ package com.mapping.filemapping;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,11 +24,7 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
     //フィールド変数
     private final List<Integer>   mData;
     //マップ
-    private View                  mv_map;
-    //FragmentManager
-    private final FragmentManager mFragmentManager;
-    //ViewPager2
-    private final ViewPager2 mvp2;
+    private final View mv_map;
 
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
@@ -36,10 +33,6 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
 
         //マップ
         private final View            mv_map;
-        //FragmentManager
-        private final FragmentManager mFragmentManager;
-        //ViewPager2
-        private final ViewPager2      mvp2;
 
         //マップデザイン
         private ColorSelectionView csv_map;
@@ -53,6 +46,7 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         private ImageView iv_square;
         private ColorSelectionView csv_border;
         private SeekbarView  sbv_borderSize;
+        private SeekbarView  sbv_nodeSize;
         private ColorSelectionView csv_shadow;
 
         //ラインデザイン
@@ -63,42 +57,61 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         /*
          * コンストラクタ
          */
-        public PageViewHolder(View itemView, int position, View v_map, FragmentManager fragmentManager, ViewPager2 vp2) {
+        public PageViewHolder(View itemView, int position, View v_map) {
             super(itemView);
+            mv_map = v_map;
 
-            mv_map           = v_map;
-            mFragmentManager = fragmentManager;
-            mvp2 = vp2;
+            switch (position) {
+                case 0:
+                    //ノード名
+                    csv_map = itemView.findViewById(R.id.csv_map);
+                    break;
 
-            if (position == 0) {
-                //マップ色
-                csv_map = itemView.findViewById(R.id.csv_map);
+                case 1:
+                    //フォント
+                    rv_fontAlphabet = itemView.findViewById(R.id.rv_fontAlphabet);
+                    rv_fontjapanese = itemView.findViewById(R.id.rv_fontJapanese);
+                    break;
 
-            } else if (position == 1) {
-                //背景色
-                csv_background = itemView.findViewById(R.id.csv_background);
-                //テキスト色
-                csv_text = itemView.findViewById(R.id.csv_text);
-                //フォント
-                rv_fontAlphabet   = itemView.findViewById(R.id.rv_fontAlphabet);
-                rv_fontjapanese   = itemView.findViewById(R.id.rv_fontJapanese);
-                //ノード形
-                iv_circle    = itemView.findViewById(R.id.iv_circle);
-                iv_square    = itemView.findViewById(R.id.iv_square);
-                //枠線色
-                csv_border = itemView.findViewById(R.id.csv_border);
-                //枠線サイズ
-                //rg_borderSize = itemView.findViewById(R.id.rg_borderSize);
-                sbv_borderSize       = itemView.findViewById(R.id.sbv_borderSize);
-                //影色
-                csv_shadow = itemView.findViewById(R.id.csv_shadow);
+                case 2:
+                    //ラインサイズ
+                    sbv_nodeSize = itemView.findViewById(R.id.sbv_nodeSize);
+                    //ラインサイズ
+                    sbv_lineSize = itemView.findViewById(R.id.sbv_lineSize);
+                    //枠線サイズ
+                    sbv_borderSize = itemView.findViewById(R.id.sbv_borderSize);
+                    break;
 
-            } else if (position == 2) {
-                //色
-                csv_line = itemView.findViewById(R.id.csv_line);
-                //サイズ
-                //rg_lineSize = itemView.findViewById(R.id.rg_lineSize);
-                sbv_lineSize = itemView.findViewById(R.id.sbv_lineSize);
+                case 3:
+                    //ノード形
+                    iv_circle = itemView.findViewById(R.id.iv_circle);
+                    iv_square = itemView.findViewById(R.id.iv_square);
+                    break;
+
+                case 4:
+                    //テキスト色
+                    csv_text = itemView.findViewById(R.id.csv_text);
+                    break;
+
+                case 5:
+                    //背景色
+                    csv_background = itemView.findViewById(R.id.csv_background);
+                    break;
+
+                case 6:
+                    //枠線色
+                    csv_border = itemView.findViewById(R.id.csv_border);
+                    break;
+
+                case 7:
+                    //影色
+                    csv_shadow = itemView.findViewById(R.id.csv_shadow);
+                    break;
+
+                case 8:
+                    //ラインの色
+                    csv_line = itemView.findViewById(R.id.csv_line);
+                    break;
             }
         }
 
@@ -107,24 +120,42 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
          */
         public void setPage(int position) {
 
-            if (position == 0) {
-                setPage0();
-
-            } else if (position == 1) {
-                setPage1();
-
-            } else if (position == 2) {
-                setPage2();
+            switch (position){
+                case 0:
+                    setPage0();
+                    break;
+                case 1:
+                    setPage1();
+                    break;
+                case 2:
+                    setPage2();
+                    break;
+                case 3:
+                    setPage3();
+                    break;
+                case 4:
+                    setPage4();
+                    break;
+                case 5:
+                    setPage5();
+                    break;
+                case 6:
+                    setPage6();
+                    break;
+                case 7:
+                    setPage7();
+                    break;
+                case 8:
+                    setPage8();
+                    break;
             }
-
         }
 
         /*
          * ページ設定（０）
          */
         public void setPage0() {
-
-            //背景色-カラーコード
+            //マップ色
             csv_map.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_MAP, mv_map );
         }
 
@@ -132,12 +163,6 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
          * ページ設定（１）
          */
         public void setPage1() {
-
-            //背景色
-            csv_background.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_BACKGROUNG, mv_map );
-
-            //テキスト色
-            csv_text.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_TEXT, mv_map );
 
             Context context = mv_map.getContext();
 
@@ -160,65 +185,71 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
             rv_fontjapanese.setAdapter( new FontAdapter( jpFonts, null, mv_map, FontAdapter.JAPANESE ) );
 
             //スクロールリスナー（ViewPager2のタブ切り替えを制御）
-            rv_fontAlphabet.addOnItemTouchListener( new Vp2OnItemTouchListener( mvp2 ) );
-            rv_fontjapanese.addOnItemTouchListener( new Vp2OnItemTouchListener( mvp2 ) );
-
-            //ノード形
-            iv_circle.setOnClickListener(new ClickShapeImage(NodeTable.CIRCLE) );
-            iv_square.setOnClickListener( new ClickShapeImage(NodeTable.SQUARE) );
-
-            //枠色
-            csv_border.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_BORDER, mv_map );
-
-            //枠サイズのシークバー
-            sbv_borderSize.setBorderSizeSeekbar( null );
-
-            //★UIをラジオボタンにするなら、ライン側と統一させる
-/*            rg_borderSize.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-                    //選択されたindexを取得
-                    RadioButton rb = radioGroup.findViewById( checkedId );
-                    int idx = radioGroup.indexOfChild( rb );
-
-                    //マップ共通データ
-                    MapCommonData commonData = (MapCommonData)((Activity)mv_map.getContext()).getApplication();
-                    NodeArrayList<NodeTable> nodes = commonData.getNodes();
-
-                    nodes.setAllNodeBorderSize( idx + 1 );
-                }
-            });*/
-
-            //影色
-            csv_shadow.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_SHADOW, mv_map );
-
+            ViewPager2 vp2_design = mv_map.getRootView().findViewById(R.id.vp2_design);
+            rv_fontAlphabet.addOnItemTouchListener( new Vp2OnItemTouchListener( vp2_design ) );
+            rv_fontjapanese.addOnItemTouchListener( new Vp2OnItemTouchListener( vp2_design ) );
         }
 
         /*
          * ページ設定（２）
          */
         public void setPage2() {
-
-            //ラインカラー
-            csv_line.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_LINE, mv_map );
-
             //ラインサイズ
             sbv_lineSize.setLineSizeSeekbar( null );
+            //枠サイズのシークバー
+            sbv_borderSize.setBorderSizeSeekbar( null );
 
-/*            rg_lineSize.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
-                @Override
-                public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-                    //選択されたindexを取得
-                    RadioButton rb = radioGroup.findViewById( checkedId );
-                    int idx = radioGroup.indexOfChild( rb );
+            //ノードサイズは設定対象外のため、非表示
+            sbv_nodeSize.setVisibility( View.GONE );
+        }
 
-                    //マップ共通データ
-                    MapCommonData commonData = (MapCommonData)((Activity)mv_map.getContext()).getApplication();
-                    NodeArrayList<NodeTable> nodes = commonData.getNodes();
+        /*
+         * ページ設定（３）
+         */
+        private void setPage3() {
+            //ノード形
+            iv_circle.setOnClickListener(new ClickShapeImage(NodeTable.CIRCLE) );
+            iv_square.setOnClickListener( new ClickShapeImage(NodeTable.SQUARE) );
+        }
 
-                    nodes.setAllNodeLineSize( idx + 1 );
-                }
-            });*/
+        /*
+         * ページ設定（４）
+         */
+        private void setPage4() {
+            //テキスト色
+            csv_text.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_TEXT, mv_map );
+        }
+
+        /*
+         * ページ設定（５）
+         */
+        private void setPage5() {
+            //背景色
+            csv_background.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_BACKGROUNG, mv_map );
+        }
+
+        /*
+         * ページ設定（６）
+         */
+        private void setPage6() {
+            //枠色
+            csv_border.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_BORDER, mv_map );
+        }
+
+        /*
+         * ページ設定（７）
+         */
+        private void setPage7() {
+            //影色
+            csv_shadow.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_SHADOW, mv_map );
+        }
+
+        /*
+         * ページ設定（８）
+         */
+        private void setPage8() {
+            //ラインカラー
+            csv_line.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_LINE, mv_map );
         }
 
         /*
@@ -253,11 +284,9 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
     /*
      * コンストラクタ
      */
-    public DesignMapPageAdapter(List<Integer> layoutIdList, View v_map, FragmentManager fragmentManager, ViewPager2 vp2) {
+    public DesignMapPageAdapter(List<Integer> layoutIdList, View v_map) {
         mData            = layoutIdList;
         mv_map           = v_map;
-        mFragmentManager = fragmentManager;
-        mvp2             = vp2;
     }
 
     /*
@@ -280,7 +309,7 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         LayoutInflater inflater = LayoutInflater.from( viewGroup.getContext() );
         View view = inflater.inflate(mData.get(position), viewGroup, false);
 
-        return new PageViewHolder(view, position, mv_map, mFragmentManager, mvp2);
+        return new PageViewHolder(view, position, mv_map);
     }
 
     /*

@@ -133,14 +133,14 @@ public class PictureNodeView extends ChildNode implements Serializable  /*implem
 
         if (thumbnail == null) {
             Log.i("URI", "createThumbnail() 指定サムネイル=null");
-            return BitmapFactory.decodeResource( resources, R.drawable.baseline_priority_high_black_24 );
+            return BitmapFactory.decodeResource( resources, R.drawable.baseline_no_thumbnail_24);
         }
 
         String path = thumbnail.getPath();
         if (path == null) {
             //フェールセーフ
             Log.i("URI", "createThumbnail() pathなし");
-            return BitmapFactory.decodeResource( resources, R.drawable.baseline_priority_high_black_24 );
+            return BitmapFactory.decodeResource( resources, R.drawable.baseline_no_thumbnail_24);
         }
 
         //トリミング範囲で切り取り

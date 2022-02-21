@@ -6,14 +6,12 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.GridView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.ViewHolder> {
@@ -90,6 +88,11 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
                 @Override
                 public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
 
+                    if( pagePosition == PictureGalleryActivity.ALL_PAGE_INDEX ){
+                        //「すべて」タブのページでは、複数選択機能はなし
+                        return true;
+                    }
+
                     if( gv_gallery.getChoiceMode() == GridView.CHOICE_MODE_NONE ){
                         //複数選択モード出なければ、複数選択モードへ移行
                         //※この設定をすることで、クリックするとチェック状態が設定される
@@ -100,7 +103,7 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
 
                         //ツールバーにメニューを表示
                         PictureGalleryActivity activity = (PictureGalleryActivity)gv_gallery.getContext();
-                        activity.setMultipleOptionMenu(true);
+                        activity.setToolbarOptionMenu(true);
                     }
 
                     return true;
@@ -165,7 +168,7 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
 
-        Log.i("タブ写真", "onBindViewHolder ページ=" + i);
+        Log.i("クローズ処理 タブ写真", "onBindViewHolder ページ=" + i);
 
         //ページ設定
         viewHolder.setPage( i );

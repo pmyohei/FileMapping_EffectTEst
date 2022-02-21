@@ -5,7 +5,7 @@
 
     <!--  ノード  -->
     <dimen name="node_elevation">4dp</dimen>
-    <dimen name="node_toolIcon_elevation">12dp</dimen>   <!-- ノードより大きい値にすること -->
+    <dimen name="node_toolIcon_elevation">1dp</dimen>   <!-- 影は1とする -->
     <dimen name="picture_node_default_size">100dp</dimen>
     <dimen name="node_shape_sample_size">40dp</dimen>
 
@@ -27,6 +27,8 @@
     <!--  フォント選択肢の円のサイズ  -->
     <dimen name="font_item_size">48dp</dimen>
     <dimen name="font_item_half_size">24dp</dimen>
+    <!--  デザインボトムシートのトップパディング  -->
+    <dimen name="design_bottom_sheet_top_padding">36dp</dimen>
 
     <!--  カラーパターン  -->
     <dimen name="color_pattern_circle_size">40dp</dimen>

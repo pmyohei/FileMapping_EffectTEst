@@ -32,9 +32,6 @@
             android:name=".MapEntryActivity"
             android:exported="true" />
         <activity
-            android:name=".NodeEntryActivity"
-            android:exported="true" /> <!-- アプリバー無効化 -->
-        <activity
             android:name=".MapActivity"
             android:exported="true" />
         <activity

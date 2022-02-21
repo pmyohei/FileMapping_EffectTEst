@@ -80,7 +80,7 @@ public class SeekbarView extends LinearLayout {
 
         //現在の位置
         float scaleSize = node.getScaleWidth();
-        int progress    = (int)((scaleSize / maxSize) * 100f);
+        int progress = (int)((scaleSize / maxSize) * 100f);
 
         Log.i("sb_nodeSize", "scaleSize=" + scaleSize + " progress=" + progress);
 
@@ -105,7 +105,11 @@ public class SeekbarView extends LinearLayout {
                 float setSize = minSize + ( i * add);
                 float setRatio = setSize / node.getWidth();
 
-                node.setScale( setRatio );
+                if( node.getNode().getKind() == NodeTable.NODE_KIND_ROOT ){
+                    node.setScale( setRatio );
+                } else {
+                    ((ChildNode)node).setScale( setRatio );
+                }
 
                 //Log.i("sb_nodeSize", "設定比率=" + setRatio + " 目標サイズ=" + setSize);
                 //Log.i("sb_nodeSize", "結果サイズ=" + node.getScaleWidth());

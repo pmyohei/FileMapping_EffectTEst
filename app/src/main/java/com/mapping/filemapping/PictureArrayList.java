@@ -1,7 +1,10 @@
 package com.mapping.filemapping;
 
+import android.util.Log;
+
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.List;
 
 /*
  * ArrayList：ノード用
@@ -36,11 +39,11 @@ public class PictureArrayList<E> extends ArrayList<PictureTable> implements Seri
     /*
      * 指定パスを持つピクチャテーブルを取得
      */
-    public PictureTable getPicture(int pictureNodePid, String path ) {
+    public PictureTable getPicture(int pictureNodePid, String path) {
 
-        for( PictureTable picture: this ){
+        for (PictureTable picture : this) {
             //指令されたパスを持つテーブルを返す
-            if( (pictureNodePid == picture.getPidParentNode()) && (picture.getPath().equals( path )) ){
+            if ((pictureNodePid == picture.getPidParentNode()) && (picture.getPath().equals(path))) {
                 return picture;
             }
         }
@@ -53,9 +56,9 @@ public class PictureArrayList<E> extends ArrayList<PictureTable> implements Seri
      */
     public PictureTable getThumbnail(int pictureNodePid) {
 
-        for( PictureTable picture: this ){
+        for (PictureTable picture : this) {
             //指令されたパスを持つテーブルを返す
-            if( (pictureNodePid == picture.getPidParentNode()) && picture.isThumbnail()  ){
+            if ((pictureNodePid == picture.getPidParentNode()) && picture.isThumbnail()) {
                 return picture;
             }
         }
@@ -66,11 +69,11 @@ public class PictureArrayList<E> extends ArrayList<PictureTable> implements Seri
     /*
      * 指定パスを持つピクチャテーブルを取得
      */
-    public boolean hasPicture(String path ) {
+    public boolean hasPicture(String path) {
 
-        for( PictureTable picture: this ){
+        for (PictureTable picture : this) {
             //同じ絶対パスがあれば、true
-            if( path.equals( picture.getPath() ) ){
+            if (path.equals(picture.getPath())) {
                 return true;
             }
         }
@@ -81,10 +84,10 @@ public class PictureArrayList<E> extends ArrayList<PictureTable> implements Seri
     /*
      * 指定されたピクチャ情報を更新する
      */
-    public void updatePicture( PictureTable newPictureDate ) {
+    public void updatePicture(PictureTable newPictureDate) {
 
-        for( PictureTable picture: this ){
-            if( newPictureDate.getPid() == picture.getPid() ){
+        for (PictureTable picture : this) {
+            if (newPictureDate.getPid() == picture.getPid()) {
                 picture = newPictureDate;
             }
         }
@@ -93,18 +96,33 @@ public class PictureArrayList<E> extends ArrayList<PictureTable> implements Seri
     /*
      * 指定されたピクチャ情報を削除する
      */
-    public void deletePicture( PictureTable deletePicture ) {
+    public void deletePicture(PictureTable deletePicture) {
+        int i = 0;
+        for (PictureTable picture : this) {
+            if (deletePicture.getPid() == picture.getPid()) {
+                remove( i );
+                return;
+            }
+            i++;
+        }
+    }
+
+    /*
+     * 指定されたピクチャ情報を削除する
+     */
+    public int deletePicture(int pid) {
 
         int i = 0;
-        for( PictureTable picture: this ){
-            if( deletePicture.getPid() == picture.getPid() ){
-                break;
+        for (PictureTable picture : this) {
+            if (pid == picture.getPid()) {
+                remove(i);
+                return i;
             }
             i++;
         }
 
-        if( i >= size() ){
-            remove(i);
-        }
+        return NO_DATA;
     }
+
+
 }

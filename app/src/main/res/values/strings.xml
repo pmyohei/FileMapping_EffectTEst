@@ -4,6 +4,8 @@
     <!--  共通  -->
     <string name="bt_create">Create</string>
     <string name="cancel">Cancel</string>
+    <string name="waiting">処理中</string>
+    <string name="updating">更新</string>
 
     <!--  ノード  -->
     <string name="default_rootNode">ルート\nノード</string>
@@ -11,9 +13,9 @@
     <string name="node_createButtom">作成</string>
     <string name="node_cancelButtom">キャンセル</string>a
 
-
     <!-- ノードデザインタブ -->
     <string name="tab_node_name">ノード名</string>
+    <string name="tab_thumnbnail">サムネイル</string>
     <string name="tab_map_color">マップ色</string>
     <string name="tab_font">フォント</string>
     <string name="tab_text_color">テキスト色</string>

@@ -13,17 +13,12 @@ import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.database.Cursor;
-import android.database.DatabaseUtils;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.RectF;
 import android.net.Uri;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
-import android.provider.DocumentsContract;
-import android.provider.MediaStore;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -38,9 +33,9 @@ import android.widget.Toast;
 import com.google.android.material.card.MaterialCardView;
 import com.isseiaoki.simplecropview.CropImageView;
 
-import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Objects;
 
 public class PictureTrimmingActivity extends AppCompatActivity {
@@ -59,7 +54,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_picture_trimming);
 
         //ツールバー設定
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        Toolbar toolbar = findViewById(R.id.toolbar_trimming);
         toolbar.setTitle("写真ノードの選択");
         setSupportActionBar(toolbar);
         //戻るボタン
@@ -259,7 +254,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         Intent intent = getIntent();
         int mapPid = intent.getIntExtra(MapActivity.INTENT_MAP_PID, 0);
         int selectedNodePid = intent.getIntExtra(MapActivity.INTENT_NODE_PID, 0);
-        boolean isEdit = intent.getBooleanExtra(MapActivity.INTENT_EDIT, false);
+        String[] colors = (String[]) intent.getSerializableExtra( MapActivity.INTENT_COLORS );
 
         //マップ共通データ
         MapCommonData mapCommonData = (MapCommonData) getApplication();
@@ -281,7 +276,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
             return;
         }
 
-        //ノードを生成
+        //ピクチャノードを生成
         NodeTable newNode = new NodeTable(
                 "",
                 mapPid,
@@ -290,6 +285,8 @@ public class PictureTrimmingActivity extends AppCompatActivity {
                 posX,
                 posY
         );
+        //カラーパターン設定
+        newNode.setColorPattern( colors );
 
         //トリミング情報
         final CropImageView iv_cropTarget = findViewById(R.id.iv_cropTarget);

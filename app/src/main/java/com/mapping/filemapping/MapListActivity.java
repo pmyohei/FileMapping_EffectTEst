@@ -4,12 +4,15 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
+import android.graphics.Rect;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -32,6 +35,9 @@ public class MapListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map_list);
 
+        //システムバーの色を設定
+        getWindow().setStatusBarColor( Color.BLACK );
+
         //画面遷移ランチャー（マップ新規生成用）
         ActivityResultLauncher<Intent> createMapLauncher =
                 registerForActivityResult(
@@ -48,8 +54,6 @@ public class MapListActivity extends AppCompatActivity {
 
         //マップ情報取得
         AsyncReadMaps db = new AsyncReadMaps(this, new AsyncReadMaps.OnReadListener() {
-
-            //DB読み取り完了
             @Override
             public void onRead(ArrayList<MapTable> maps) {
 
@@ -61,8 +65,24 @@ public class MapListActivity extends AppCompatActivity {
                 //アダプタ設定
                 mMapListAdapter = new MapListAdapter(mMaps, editMapLauncher);
                 rv_mapList.setAdapter(mMapListAdapter);
-                //レイアウトマネージャの設定
                 rv_mapList.setLayoutManager(new LinearLayoutManager(context));
+
+                //リサイクラービューの上下にスペースを設定
+                rv_mapList.addItemDecoration(new RecyclerView.ItemDecoration() {
+                    @Override
+                    public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
+                        super.getItemOffsets(outRect, view, parent, state);
+
+                        int position = parent.getChildAdapterPosition(view);
+                        //先頭と最後尾に適当な大きさのスペースを設定
+                        //※以下の値は適当（ちょうどボタン分の高さには別にしない。）
+                        if (position == 0) {
+                            outRect.top = 200;
+                        } else if (position == state.getItemCount() - 1) {
+                            outRect.bottom = 300;
+                        }
+                    }
+                });
             }
         });
         //非同期処理開始
@@ -80,7 +100,7 @@ public class MapListActivity extends AppCompatActivity {
         });
 
 
-        //疑似-動作確認用----------------------------------------------------------------
+/*        //疑似-動作確認用----------------------------------------------------------------
         //仮；画面遷移
         findViewById(R.id.next).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -120,7 +140,7 @@ public class MapListActivity extends AppCompatActivity {
                 //mMapListAdapter.notifyAll();
             }
         });
-        //-----------------------------------------------------------------
+        //-----------------------------------------------------------------*/
 
     }
 

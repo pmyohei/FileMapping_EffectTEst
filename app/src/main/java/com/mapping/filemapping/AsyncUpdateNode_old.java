@@ -3,31 +3,28 @@ package com.mapping.filemapping;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
 
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /*
  * DB非同期処理
- *   read用
+ *   ノードupdate用
  */
-public class AsyncUpdateNodePosition {
+public class AsyncUpdateNode_old {
 
-    private final AppDatabase               mDB;
-    private final OnFinishListener          mOnFinishListener;
-    private       NodeArrayList<NodeTable>  mNodeList;
+    private final AppDatabase      mDB;
+    private final NodeTable        mNode;
+    private final OnFinishListener mOnFinishListener;
 
     /*
      * コンストラクタ
      */
-    public AsyncUpdateNodePosition(Context context, NodeArrayList<NodeTable> nodeQue, OnFinishListener listener) {
-        mDB       = AppDatabaseManager.getInstance(context);
-        mNodeList = nodeQue;
+    public AsyncUpdateNode_old(Context context, NodeTable node, OnFinishListener listener) {
+        mDB               = AppDatabaseManager.getInstance(context);
         mOnFinishListener = listener;
+        mNode             = node;
     }
-
 
     /*
      * 非同期処理
@@ -43,7 +40,7 @@ public class AsyncUpdateNodePosition {
         public void run() {
 
             //メイン処理
-            updatePosition();
+            dbOperation();
 
             //後処理
             handler.post(new Runnable() {
@@ -55,22 +52,16 @@ public class AsyncUpdateNodePosition {
         }
 
         /*
-         * DBからデータを取得
+         * ノードを更新
          */
-        private void updatePosition(){
+        private void dbOperation(){
 
             //NodeDao
             NodeTableDao nodeDao = mDB.daoNodeTable();
 
-            //指定ノードリストの位置情報を更新
-            for( NodeTable node: mNodeList ){
-
-                Log.i("updatePosition", "move Node=" + node.getNodeName() + " posx=" + node.getPosX() + " posy=" + node.getPosY());
-
-                nodeDao.updateNodePosition(node.getPid(), node.getPosX(), node.getPosY());
-            }
+            //ノードを更新
+            nodeDao.updateNode( mNode );
         }
-
     }
 
     /*
@@ -104,9 +95,12 @@ public class AsyncUpdateNodePosition {
     }
 
     /*
-     * データ読み取り完了リスナー
+     * データ作成完了リスナー
      */
     public interface OnFinishListener {
+        /*
+         * ノード生成完了時、コールされる
+         */
         void onFinish();
     }
 

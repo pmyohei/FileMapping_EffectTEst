@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 
@@ -26,7 +27,7 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
     //表示する写真リスト
     ArrayList<PictureTable> mGalley;
     //マップ上のピクチャノード情報
-    private ArrayList<ThumbnailGridAdapter.PictureNodeInfo> mPictureNodeInfo;
+    private ArrayList<PictureNodesBottomSheetDialog.PictureNodeInfo> mPictureNodeInfo;
     //写真の格納先変更フラグ
     private boolean mIsUpdate;
 
@@ -44,42 +45,8 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
         //格納先更新フラグ（削除か格納先の移動が発生したとき、フラグを更新する）
         mIsUpdate = false;
 
-        //マップ上のピクチャノードpid
-        MapCommonData mapCommonData = (MapCommonData) getApplication();
-        NodeArrayList<NodeTable> nodes = mapCommonData.getNodes();
-        NodeArrayList<NodeTable> pictureNodePids = nodes.getAllPictureNodes();
-
-        //マップ上のピクチャノード情報（写真移動先の選択用）
-        mPictureNodeInfo = new ArrayList<>();
-
-        //サムネイルを取得
-        int mapPid = nodes.get(0).getPidMap();
-        AsyncReadThumbnail db = new AsyncReadThumbnail(this, mapPid, new AsyncReadThumbnail.OnFinishListener() {
-            @Override
-            public void onFinish(PictureArrayList<PictureTable> thumbnails) {
-
-                //全ピクチャノード数
-                for (NodeTable node : pictureNodePids) {
-                    //各ピクチャノード情報
-                    int pid = node.getPid();
-
-                    NodeTable parentNode = nodes.getNode(node.getPidParentNode());
-                    String parentNodeName = parentNode.getNodeName();
-
-                    PictureTable thumbnail = thumbnails.getThumbnail(pid);
-
-                    //ピクチャノード情報を生成
-                    mPictureNodeInfo.add(new ThumbnailGridAdapter.PictureNodeInfo(
-                            pid,
-                            thumbnail,
-                            parentNodeName
-                    ));
-                }
-            }
-        });
-
-        //非同期処理開始
-        db.execute();
+        //ピクチャノード情報リストを生成
+        createPictureNodeInfos();
 
         Log.i("単体表示", "galley.size()=" + mGalley.size());
 
@@ -145,6 +112,49 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
     }
 
     /*
+     * ピクチャノード情報リストの生成
+     */
+    private void createPictureNodeInfos() {
+
+        //マップ上のピクチャノードpid
+        MapCommonData mapCommonData = (MapCommonData) getApplication();
+        NodeArrayList<NodeTable> nodes = mapCommonData.getNodes();
+        NodeArrayList<NodeTable> pictureNodePids = nodes.getAllPictureNodes();
+
+        //マップ上のピクチャノード情報（写真移動先の選択用）
+        mPictureNodeInfo = new ArrayList<>();
+
+        //サムネイルを取得
+        int mapPid = nodes.get(0).getPidMap();
+        AsyncReadThumbnail db = new AsyncReadThumbnail(this, mapPid, new AsyncReadThumbnail.OnFinishListener() {
+            @Override
+            public void onFinish(PictureArrayList<PictureTable> thumbnails) {
+
+                //全ピクチャノード数
+                for (NodeTable node : pictureNodePids) {
+                    //ピクチャノードのpid
+                    int pid = node.getPid();
+                    //ピクチャノードの親ノード名
+                    NodeTable parentNode = nodes.getNode(node.getPidParentNode());
+                    String parentNodeName = parentNode.getNodeName();
+                    //ピクチャのノードのサムネイル写真（nullの場合あり）
+                    PictureTable thumbnail = thumbnails.getThumbnail(pid);
+
+                    //ピクチャノード情報を生成
+                    mPictureNodeInfo.add(new PictureNodesBottomSheetDialog.PictureNodeInfo(
+                            pid,
+                            thumbnail,
+                            parentNodeName
+                    ));
+                }
+            }
+        });
+
+        //非同期処理開始
+        db.execute();
+    }
+
+    /*
      * ViewPagerのスクロール制御
      */
     public void controlScroll() {
@@ -175,7 +185,7 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
                         //DBからノード削除
                         AsyncDeletePicture db = new AsyncDeletePicture( vp2_singlePicture.getContext(), picture, new AsyncDeletePicture.OnFinishListener() {
                             @Override
-                            public void onFinish() {
+                            public void onFinish(boolean isThumbnail) {
                                 //アダプタから削除
                                 updatePictureAdapter();
                             }
@@ -201,7 +211,8 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
         PictureTable showPicture = mGalley.get(index);
 
         //マップ上のピクチャノードを移動先候補として表示
-        PictureNodesBottomSheetDialog bottomSheetDialog = PictureNodesBottomSheetDialog.newInstance(mPictureNodeInfo, showPicture);
+        //PictureNodesBottomSheetDialog bottomSheetDialog = PictureNodesBottomSheetDialog.newInstance(mPictureNodeInfo, showPicture);
+        PictureNodesBottomSheetDialog bottomSheetDialog = new PictureNodesBottomSheetDialog(this, mPictureNodeInfo, showPicture);
         bottomSheetDialog.show(getSupportFragmentManager(), "");
     }
 
@@ -209,6 +220,9 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
      * 単体表示中の写真をアダプタから削除
      */
     public void updatePictureAdapter() {
+
+        //トースト表示
+        Toast.makeText(this, "写真を削除しました", Toast.LENGTH_SHORT).show();
 
         //表示中の写真をリストから削除
         ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);

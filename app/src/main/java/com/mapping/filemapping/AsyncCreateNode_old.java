@@ -1,8 +1,13 @@
 package com.mapping.filemapping;
 
 import android.content.Context;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.os.Handler;
 import android.os.Looper;
+
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -11,23 +16,26 @@ import java.util.concurrent.Executors;
  * DB非同期処理
  *   ノードcreate用
  */
-public class AsyncCreateNode extends AsyncShowProgress {
+public class AsyncCreateNode_old {
 
-    private final AppDatabase      mDB;
-    private final NodeTable        mNode;
-    private       int              mPid;
-    private final OnFinishListener mOnFinishListener;
+    private final Context               mContext;
+    private final AppDatabase           mDB;
+    private final NodeTable             mNode;
+    private       int                   mPid;
+    private final OnFinishListener      mOnCreateListener;
+
+    DialogFragment mProgressDialog;
 
     /*
      * コンストラクタ
      */
-    public AsyncCreateNode(Context context, NodeTable newNode, OnFinishListener listener) {
-        super(context);
-
+    public AsyncCreateNode_old(Context context, NodeTable newNode, OnFinishListener listener) {
+        mContext          = context;
         mDB               = AppDatabaseManager.getInstance(context);
-        mOnFinishListener = listener;
+        mOnCreateListener = listener;
         mNode             = newNode;
     }
+
 
     /*
      * 非同期処理
@@ -69,9 +77,20 @@ public class AsyncCreateNode extends AsyncShowProgress {
     /*
      * バックグラウンド前処理
      */
-    @Override
     void onPreExecute() {
-        super.onPreExecute();
+
+        //画面の向きを現在の向きで固定化
+        //※処理中ダイアログ表示中に向きが変わると落ちるため
+        Configuration config = mContext.getResources().getConfiguration();
+        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            ((FragmentActivity)mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else if (config.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            ((FragmentActivity)mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+
+        //処理中ダイアログを開く
+        mProgressDialog = MyProgressDialog.newInstance();
+        mProgressDialog.show( ((FragmentActivity)mContext).getSupportFragmentManager(), "TEST" );
     }
 
     /*
@@ -91,12 +110,18 @@ public class AsyncCreateNode extends AsyncShowProgress {
     /*
      * バックグランド処理終了後の処理
      */
-    @Override
     void onPostExecute() {
-        super.onPostExecute();
+
+        //処理待ち用のダイアログをクローズ
+        if (mProgressDialog != null && mProgressDialog.getShowsDialog()) {
+            mProgressDialog.dismiss();
+        }
+
+        //画面向き固定化解除
+        ((FragmentActivity)mContext).setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_UNSPECIFIED);
 
         //読み取り完了
-        mOnFinishListener.onFinish( mPid );
+        mOnCreateListener.onFinish( mPid );
     }
 
     /*

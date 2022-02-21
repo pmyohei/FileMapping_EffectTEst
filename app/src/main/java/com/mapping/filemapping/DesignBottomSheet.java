@@ -1,9 +1,12 @@
 package com.mapping.filemapping;
 
+import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED;
+
 import android.app.Activity;
 import android.content.Context;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -51,17 +54,17 @@ public class DesignBottomSheet extends CoordinatorLayout {
      * 高さ設定
      *   画面の縦サイズに対して、指定された割合のサイズをBottomSheetの高さに設定
      */
-    public void setBottomSheetHeight(Context context, float ratio ) {
+    public void setBottomSheetHeight(Context context, float ratio) {
 
         //BottomSheet
         LinearLayout bs_design = findViewById(R.id.ll_bottomSheet);
 
         //高さを設定
-        ViewGroup.LayoutParams layoutParams= bs_design.getLayoutParams();
-        int windowHeight= getWindowHeight( context );
+        ViewGroup.LayoutParams layoutParams = bs_design.getLayoutParams();
+        int windowHeight = getWindowHeight(context);
         if (layoutParams != null) {
             //画面の高さの半分
-            layoutParams.height = (int)(windowHeight * ratio);
+            layoutParams.height = (int) (windowHeight * ratio);
         }
         bs_design.setLayoutParams(layoutParams);
     }
@@ -69,16 +72,16 @@ public class DesignBottomSheet extends CoordinatorLayout {
     /*
      * 画面縦サイズの取得
      */
-    private int getWindowHeight( Context context ) {
+    private int getWindowHeight(Context context) {
         DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((Activity)context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         return displayMetrics.heightPixels;
     }
 
     /*
      * BottomSheetを開く
      */
-    public void openBottomSheet( int kind, View view ) {
+    public void openBottomSheet(int kind, View view) {
 
         final float HALF = 0.5f;
         final float ONE_THIRD = 0.4f;
@@ -87,10 +90,10 @@ public class DesignBottomSheet extends CoordinatorLayout {
 
         //レイアウト構築
         ViewPager2 vp;
-        if( kind == NODE ){
+        if (kind == NODE) {
 
             //ノード種別で切り分け
-            if( ((BaseNode)view).getNode().getKind() == NodeTable.NODE_KIND_PICTURE ){
+            if (((BaseNode) view).getNode().getKind() == NodeTable.NODE_KIND_PICTURE) {
                 //ノードピクチャデザイン指定
                 vp = setupPictureNodeDesignLayout(view);
             } else {
@@ -100,7 +103,7 @@ public class DesignBottomSheet extends CoordinatorLayout {
 
             heightRatio = HALF;
 
-        } else if( kind == MAP ){
+        } else if (kind == MAP) {
             //マップデザイン指定
             vp = setupMapDesignLayout(view);
 
@@ -114,56 +117,56 @@ public class DesignBottomSheet extends CoordinatorLayout {
         }
 
         //高さ設定
-        setBottomSheetHeight( getContext(), heightRatio );
+        setBottomSheetHeight(getContext(), heightRatio);
 
         //オープン
-        BottomSheetBehavior<View> behavior = BottomSheetBehavior.from( findViewById(R.id.ll_bottomSheet) );
+        BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(findViewById(R.id.ll_bottomSheet));
         behavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
     /*
      * ノードデザイン用のレイアウトを設定
      */
-    private ViewPager2 setupNodeDesignLayout( View v_node ) {
+    private ViewPager2 setupNodeDesignLayout(View v_node) {
         //ノードデザイン設定レイアウト
         List<Integer> layoutIdList = new ArrayList<>();
         layoutIdList.add(R.layout.page_node_name);
         layoutIdList.add(R.layout.page_node_font);
         layoutIdList.add(R.layout.page_node_size);
+        layoutIdList.add(R.layout.page_node_shape);
         layoutIdList.add(R.layout.page_node_text_color);
         layoutIdList.add(R.layout.page_node_color);
         layoutIdList.add(R.layout.page_node_border_color);
-        if( ((BaseNode)v_node).getNode().getKind() != NodeTable.NODE_KIND_ROOT ){
-            //ルートノード以外は、ライン用ページを追加
+        layoutIdList.add(R.layout.page_node_shadow);
+        //ルートノード以外は、ライン用ページを追加
+        if (((BaseNode) v_node).getNode().getKind() != NodeTable.NODE_KIND_ROOT) {
             layoutIdList.add(R.layout.page_node_line_color);
         }
-        layoutIdList.add(R.layout.page_node_shadow);
-        layoutIdList.add(R.layout.page_node_shape);
-
-        //ViewPager2を生成
-        ViewPager2 vp2 = findViewById(R.id.vp2_design);
-        DesignNodePageAdapter adapter = new DesignNodePageAdapter(layoutIdList, v_node, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp2);
-        vp2.setAdapter(adapter);
 
         //タブインジケータの文字列
         List<String> tabs = new ArrayList<>();
         tabs.add(getResources().getString(R.string.tab_node_name));
         tabs.add(getResources().getString(R.string.tab_font));
         tabs.add(getResources().getString(R.string.tab_size));
+        tabs.add(getResources().getString(R.string.tab_shape));
         tabs.add(getResources().getString(R.string.tab_text_color));
         tabs.add(getResources().getString(R.string.tab_node_color));
         tabs.add(getResources().getString(R.string.tab_border_color));
-        if( ((BaseNode)v_node).getNode().getKind() != NodeTable.NODE_KIND_ROOT ) {
+        tabs.add(getResources().getString(R.string.tab_shadow));
+        if (((BaseNode) v_node).getNode().getKind() != NodeTable.NODE_KIND_ROOT) {
             //ルートノード以外
             tabs.add(getResources().getString(R.string.tab_line_color));
         }
-        tabs.add(getResources().getString(R.string.tab_shadow));
-        tabs.add(getResources().getString(R.string.tab_shape));
+
+        //ViewPager2を生成
+        ViewPager2 vp2 = findViewById(R.id.vp2_design);
+        DesignNodePageAdapter adapter = new DesignNodePageAdapter(layoutIdList, v_node);
+        vp2.setAdapter(adapter);
 
         //インジケータの設定
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         new TabLayoutMediator(tabLayout, vp2,
-                (tab, position) -> tab.setText( tabs.get(position) )
+                (tab, position) -> tab.setText(tabs.get(position))
         ).attach();
 
         return vp2;
@@ -173,16 +176,24 @@ public class DesignBottomSheet extends CoordinatorLayout {
     /*
      * ピクチャノードデザイン用のレイアウトを設定
      */
-    private ViewPager2 setupPictureNodeDesignLayout( View v_node ) {
+    private ViewPager2 setupPictureNodeDesignLayout(View v_node) {
         //ノードデザイン設定レイアウト
         List<Integer> layoutIdList = new ArrayList<>();
         layoutIdList.add(R.layout.page_set_thumbnail);
-        layoutIdList.add(R.layout.page_node_design);
+        layoutIdList.add(R.layout.page_node_size);
+        layoutIdList.add(R.layout.page_node_shape);
+        layoutIdList.add(R.layout.page_node_border_color);
+        layoutIdList.add(R.layout.page_node_shadow);
+        layoutIdList.add(R.layout.page_node_line_color);
 
-        if( ((BaseNode)v_node).getNode().getKind() != NodeTable.NODE_KIND_ROOT ){
-            //ルートノード以外は、ライン用ページを追加
-            layoutIdList.add(R.layout.page_node_line_design);
-        }
+        //タブインジケータの文字列
+        List<String> tabs = new ArrayList<>();
+        tabs.add(getResources().getString(R.string.tab_thumnbnail));
+        tabs.add(getResources().getString(R.string.tab_size));
+        tabs.add(getResources().getString(R.string.tab_shape));
+        tabs.add(getResources().getString(R.string.tab_border_color));
+        tabs.add(getResources().getString(R.string.tab_shadow));
+        tabs.add(getResources().getString(R.string.tab_line_color));
 
         //ViewPager2を生成
         ViewPager2 vp2 = findViewById(R.id.vp2_design);
@@ -192,7 +203,7 @@ public class DesignBottomSheet extends CoordinatorLayout {
         //インジケータの設定
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         new TabLayoutMediator(tabLayout, vp2,
-                (tab, position) -> tab.setText("")
+                (tab, position) -> tab.setText(tabs.get(position))
         ).attach();
 
         return vp2;
@@ -201,31 +212,49 @@ public class DesignBottomSheet extends CoordinatorLayout {
     /*
      * マップデザイン用のレイアウトを設定
      */
-    private ViewPager2 setupMapDesignLayout( View v_map ) {
+    private ViewPager2 setupMapDesignLayout(View v_map) {
         //ノードデザイン設定レイアウト
         List<Integer> layoutIdList = new ArrayList<>();
         layoutIdList.add(R.layout.page_map_design);
-        layoutIdList.add(R.layout.page_all_node_design);
-        layoutIdList.add(R.layout.page_node_line_design);
+        layoutIdList.add(R.layout.page_node_font);
+        layoutIdList.add(R.layout.page_node_size);
+        layoutIdList.add(R.layout.page_node_shape);
+        layoutIdList.add(R.layout.page_node_text_color);
+        layoutIdList.add(R.layout.page_node_color);
+        layoutIdList.add(R.layout.page_node_border_color);
+        layoutIdList.add(R.layout.page_node_shadow);
+        layoutIdList.add(R.layout.page_node_line_color);
 
+        //タブインジケータの文字列
+        List<String> tabs = new ArrayList<>();
+        tabs.add(getResources().getString(R.string.tab_map_color));
+        tabs.add(getResources().getString(R.string.tab_font));
+        tabs.add(getResources().getString(R.string.tab_size));
+        tabs.add(getResources().getString(R.string.tab_shape));
+        tabs.add(getResources().getString(R.string.tab_text_color));
+        tabs.add(getResources().getString(R.string.tab_node_color));
+        tabs.add(getResources().getString(R.string.tab_border_color));
+        tabs.add(getResources().getString(R.string.tab_shadow));
+        tabs.add(getResources().getString(R.string.tab_line_color));
+
+        //ページアダプタを設定
         ViewPager2 vp2 = findViewById(R.id.vp2_design);
-        DesignMapPageAdapter adapter = new DesignMapPageAdapter(layoutIdList, v_map, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp2);
+        DesignMapPageAdapter adapter = new DesignMapPageAdapter(layoutIdList, v_map);
         vp2.setAdapter(adapter);
 
         //インジケータの設定
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         new TabLayoutMediator(tabLayout, vp2,
-                (tab, position) -> tab.setText("")
+                (tab, position) -> tab.setText(tabs.get(position))
         ).attach();
 
         return vp2;
     }
 
-
     /*
      * ノードサイズ限定のレイアウトを設定
      */
-    private ViewPager2 setupNodeSizeLayout( View v_node ) {
+    private ViewPager2 setupNodeSizeLayout(View v_node) {
         //ノードデザイン設定レイアウト
         List<Integer> layoutIdList = new ArrayList<>();
         layoutIdList.add(R.layout.page_node_shape);
@@ -237,4 +266,15 @@ public class DesignBottomSheet extends CoordinatorLayout {
         return vp;
     }
 
+    /*
+     * ボトムシートが閉じているかどうか
+     */
+    public boolean isCloseBottomSheet() {
+
+        //Log.i("ボトムシートの状態チェック", "getState()=" + behavior.getState());
+
+        //※「STATE_COLLAPSED」：完全に閉じている時の状態
+        BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(findViewById(R.id.ll_bottomSheet));
+        return ( behavior.getState() == STATE_COLLAPSED );
+    }
 }

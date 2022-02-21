@@ -19,7 +19,7 @@
 
         <!--  ツールバー  -->
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/toolbar_map"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:elevation="4dp"
@@ -27,7 +27,8 @@
             android:background="@android:color/transparent"
             android:theme="@style/Toolbar.NoActionBar"
             app:titleTextAppearance="@style/Toolbar.TitleText"
-            app:menu="@menu/toolbar_map"/>
+            app:menu="@menu/toolbar_map"
+            />
 
         <!--  マップ全体  -->
         <FrameLayout
@@ -69,7 +70,7 @@
 -->
 
         <com.mapping.filemapping.DesignBottomSheet
-            android:id="@+id/dbs_map"
+            android:id="@+id/dbs_design"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"/>

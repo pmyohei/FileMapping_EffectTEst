@@ -15,6 +15,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.card.MaterialCardView;
 
@@ -33,7 +34,6 @@ public class ColorSelectionView extends LinearLayout {
     public static final int COLOR_SHADOW = 3;
     public static final int COLOR_LINE = 4;
     public static final int COLOR_MAP = 5;
-
 
     private int  mViewKind;       //ビュー種別（ノードorマップ(全ノード)）
     private int  mPart;           //カラー設定個所
@@ -86,10 +86,6 @@ public class ColorSelectionView extends LinearLayout {
                 mColorHistoryAdapter.notifyDataSetChanged();
             }
         });
-
-        //横スクロールを本リサイクラービューに優先させる
-        //ViewPager2 vp2 = rv_history.getRootView().findViewById( R.id.vp2_design );
-        //rv_history.addOnItemTouchListener( new Vp2OnItemTouchListener( vp2 ) );
     }
 
     /*
@@ -103,6 +99,11 @@ public class ColorSelectionView extends LinearLayout {
         //リスナーの設定
         findViewById(R.id.tv_rgb).setOnClickListener(new ClickColor( ClickColor.RGB) );
         findViewById(R.id.tv_graphic).setOnClickListener( new ClickColor( ClickColor.PICKER) );
+
+        //横スクロールを本リサイクラービューに優先させる
+        ViewPager2 vp2 = mSetView.getRootView().findViewById( R.id.vp2_design );
+        RecyclerView rv_history = findViewById(R.id.rv_history);
+        rv_history.addOnItemTouchListener( new Vp2OnItemTouchListener( vp2 ) );
     }
 
     /*

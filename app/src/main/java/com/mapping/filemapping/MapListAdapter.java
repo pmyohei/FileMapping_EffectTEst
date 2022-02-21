@@ -4,6 +4,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,6 +15,8 @@ import android.widget.TextView;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 
@@ -32,7 +35,7 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
     class MapViewHolder extends RecyclerView.ViewHolder {
 
         private final TextView     tv_mapName;
-        private final ImageButton  ib_map;
+        private final MaterialCardView mcv_map;
         private final ImageButton  ib_edit;
         private final ImageButton  ib_delete;
 
@@ -42,8 +45,8 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
         public MapViewHolder(View itemView) {
             super(itemView);
 
+            mcv_map    = itemView.findViewById(R.id.mcv_map);
             tv_mapName = itemView.findViewById(R.id.tv_mapName);
-            ib_map     = itemView.findViewById(R.id.ib_map);
             ib_edit    = itemView.findViewById(R.id.ib_edit);
             ib_delete  = itemView.findViewById(R.id.ib_delete);
         }
@@ -53,11 +56,18 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
          */
         public void setView( MapTable map ){
 
+            //お試し
+/*            if( map.getFirstColor() != null ){
+                mcv_map.setBackgroundColor( Color.parseColor(map.getFirstColor()) );
+                tv_mapName.setTextColor( Color.parseColor(map.getSecondColor()) );
+            }*/
+            //--
+
             //マップ名
             tv_mapName.setText( map.getMapName() );
 
             //マップオープンボタンリスナー
-            ib_map.setOnClickListener(new View.OnClickListener() {
+            mcv_map.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
@@ -127,7 +137,6 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
      */
     public MapListAdapter( ArrayList<MapTable> data, ActivityResultLauncher<Intent> startCreateMapForResult ) {
         mData = data;
-
         mEditMapLauncher = startCreateMapForResult;
     }
 
@@ -136,7 +145,6 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
      */
     @Override
     public int getItemViewType(int position) {
-
         return position;
     }
 

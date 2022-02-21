@@ -214,6 +214,9 @@ public class BaseNode extends FrameLayout {
     public void setNodeName(String name) {
         ((TextView) findViewById(R.id.tv_node)).setText(name);
         mNode.setNodeName( name );
+
+        //ノード名の変更時は、スケールを標準に戻す
+        setScale( NodeTable.DEFAULT_SIZE_RATIO );
     }
 
     /*
@@ -395,8 +398,10 @@ public class BaseNode extends FrameLayout {
      */
     public void setSetScale() {
         float ratio = mNode.getSizeRatio();
-        findViewById( R.id.cl_node ).setScaleX( ratio );
-        findViewById( R.id.cl_node ).setScaleY( ratio );
+        //findViewById( R.id.cl_node ).setScaleX( ratio );
+        //findViewById( R.id.cl_node ).setScaleY( ratio );
+        setScaleX( ratio );
+        setScaleY( ratio );
     }
 
     /*

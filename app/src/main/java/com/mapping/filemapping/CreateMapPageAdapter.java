@@ -180,9 +180,9 @@ public class CreateMapPageAdapter extends RecyclerView.Adapter<CreateMapPageAdap
                 //先頭と最後尾に適当な大きさのスペースを設定
                 //※以下の値は適当（ちょうどボタン分の高さには別にしない。）
                 if (position == 0) {
-                    outRect.top = 240;
+                    outRect.top = 200;
                 } else if (position == state.getItemCount() - 1) {
-                    outRect.bottom = 320;
+                    outRect.bottom = 300;
                 }
             }
         }

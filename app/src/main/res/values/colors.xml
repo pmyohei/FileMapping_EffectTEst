@@ -6,9 +6,15 @@
     <color name="transparent_50">#80FFFFFF</color>
 
     <color name="black">#FF000000</color>
+    <color name="transparent_90_black">#E6000000</color>
+    <color name="transparent_70_black">#B3000000</color>
     <color name="transparent_50_black">#80000000</color>
+    <color name="transparent_4_black">#0A000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="transparent_80_white">#CCFFFFFF</color>
     <color name="transparent_65_white">#A6FFFFFF</color>
+    <color name="transparent_20_white">#80FFFFFF</color>
+    <color name="transparent_0_white">#00FFFFFF</color>
     <color name="gray">#FFEAEAEA</color>
     <color name="transparent_50_blue">#800000FF</color>
 
@@ -71,6 +77,10 @@
         <item>color_2_pattern_33</item>
         <item>color_2_pattern_34</item>
         <item>color_2_pattern_35</item>
+        <item>color_2_pattern_36</item>
+        <item>color_2_pattern_37</item>
+        <item>color_2_pattern_38</item>
+        <item>color_2_pattern_39</item>
         <!--<item>color_2_pattern_35</item>-->
     </string-array>
 
@@ -246,10 +256,29 @@
     </string-array>
 
     <string-array name="color_2_pattern_35">
-        <item>#F1E2DE</item>
-        <item>#000000</item>
+        <item>#FFCCBC</item>
+        <item>#3E2723</item>
     </string-array>
 
+    <string-array name="color_2_pattern_36">
+        <item>#ffdf98</item>
+        <item>#59575c</item>
+    </string-array>
+
+    <string-array name="color_2_pattern_37">
+        <item>#ddcbbe</item>
+        <item>#ff582c</item>
+    </string-array>
+
+    <string-array name="color_2_pattern_38">
+        <item>#ddcbbe</item>
+        <item>#64b0cb</item>
+    </string-array>
+
+    <string-array name="color_2_pattern_39">
+        <item>#ddcbbe</item>
+        <item>#ffbe0d</item>
+    </string-array>
 
     <!-- 配色パターンリスト（3色） -->
     <string-array name="color_3_pattern_list">
@@ -281,6 +310,10 @@
         <item>color_3_pattern_26</item>
         <item>color_3_pattern_27</item>
         <item>color_3_pattern_28</item>
+        <item>color_3_pattern_29</item>
+        <item>color_3_pattern_30</item>
+        <item>color_3_pattern_31</item>
+        <item>color_3_pattern_32</item>
     </string-array>
 
     <!--  ※3色の並びは、濃・薄・濃（or 薄・濃・薄）にする  -->
@@ -471,11 +504,29 @@
         <item>#dfe2ea</item>
     </string-array>
 
+    <string-array name="color_3_pattern_29">
+        <item>#FFCCBC</item>
+        <item>#FFF3E0</item>
+        <item>#3E2723</item>
+    </string-array>
 
+    <string-array name="color_3_pattern_30">
+        <item>#E57373</item>
+        <item>#EDE7F6</item>
+        <item>#3E2723</item>
+    </string-array>
 
+    <string-array name="color_3_pattern_31">
+        <item>#EEEEEE</item>
+        <item>#004D40</item>
+        <item>#E57373</item>
+    </string-array>
 
-
-
+    <string-array name="color_3_pattern_32">
+        <item>#EFEBE9</item>
+        <item>#FFB74D</item>
+        <item>#FF8F00</item>
+    </string-array>
 
     <!--
         <string-array name="color_3_pattern_">

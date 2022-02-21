@@ -1,15 +1,11 @@
 package com.mapping.filemapping;
 
-import static android.app.Activity.RESULT_OK;
 import static com.mapping.filemapping.MapActivity.MOVE_UPPER;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,11 +16,6 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 
-import androidx.activity.ComponentActivity;
-import androidx.activity.result.ActivityResult;
-import androidx.activity.result.ActivityResultCallback;
-import androidx.activity.result.ActivityResultLauncher;
-import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import java.util.ArrayList;
@@ -38,7 +29,6 @@ public class ToolIconsView extends ConstraintLayout {
     private class TooliconData {
 
         //アイコン種別
-        //★整数でよい
         public static final int CREATE_NODE = 0;
         public static final int CREATE_PICTURE_NODE = 1;
         public static final int EDIT = 2;
@@ -332,10 +322,26 @@ public class ToolIconsView extends ConstraintLayout {
                         //ノードをマップに追加
                         BaseNode v_node = mMapActivity.drawNode( mMapActivity.findViewById(R.id.fl_map), newNode );
 
-                        //BottomSheetを開く
-                        mMapActivity.openDesignBottomSheet(DesignBottomSheet.NODE, v_node);
-                        //画面上部中央にノードがくるようにする
-                        mMapActivity.focusNodeToCenterScreen(posX, posY, MOVE_UPPER);
+                        //DB保存処理
+                        AsyncCreateNode db = new AsyncCreateNode(mMapActivity, newNode, new AsyncCreateNode.OnFinishListener() {
+                            @Override
+                            public void onFinish(int nodePid) {
+                                //データ挿入されたため、レコードに割り当てられたpidをテーブルに設定
+                                newNode.setPid(nodePid);
+
+                                //マップ内ノードリストに追加
+                                MapCommonData mapCommonData = (MapCommonData) mMapActivity.getApplication();
+                                mapCommonData.addNodes(newNode);
+
+                                //更新対象ビューに追加
+                                mapCommonData.enqueUpdateNodeWithUnique(newNode);
+                            }
+                        });
+
+                        db.execute();
+
+                        //BottomSheetを開く（画面移動あり）
+                        mMapActivity.openDesignBottomSheet(DesignBottomSheet.NODE, v_node, posX, posY, MOVE_UPPER);
 
                         //ノードに持たせていた自分をクローズ
                         v_baseNode.closeIconView();
@@ -361,6 +367,7 @@ public class ToolIconsView extends ConstraintLayout {
                         Intent intent = new Intent(context, PictureTrimmingActivity.class);
                         intent.putExtra(MapActivity.INTENT_MAP_PID, node.getPidMap());
                         intent.putExtra(MapActivity.INTENT_NODE_PID, node.getPid());
+                        intent.putExtra(MapActivity.INTENT_COLORS, mMapActivity.getMapDefaultColors());
 
                         //開始
                         mMapActivity.getTrimmingLauncher().launch(intent);
@@ -376,14 +383,16 @@ public class ToolIconsView extends ConstraintLayout {
                     public void onClick(View view) {
                         //Log.i("アイコン", "クリックされました");
 
+                        //更新対象ビューに追加
+                        MapCommonData mapCommonData = (MapCommonData) mMapActivity.getApplication();
+                        mapCommonData.enqueUpdateNodeWithUnique(v_baseNode.getNode());
+
                         //ノード本体のマージンを取得
                         float marginLeft = v_baseNode.getLeft();
                         float marginTop  = v_baseNode.getTop();
 
-                        //BottomSheetを開く
-                        mMapActivity.openDesignBottomSheet(DesignBottomSheet.NODE, v_baseNode);
-                        //画面上部中央にノードがくるようにする
-                        mMapActivity.focusNodeToCenterScreen(marginLeft, marginTop, MOVE_UPPER);
+                        //BottomSheetを開く（画面移動あり）
+                        mMapActivity.openDesignBottomSheet(DesignBottomSheet.NODE, v_baseNode, marginLeft, marginTop, MOVE_UPPER);
 
                         //ノードに持たせていた自分をクローズ
                         v_baseNode.closeIconView();
@@ -410,6 +419,7 @@ public class ToolIconsView extends ConstraintLayout {
                 };
 
                 break;
+
             case TooliconData.DELETE:
 
                 listener = new OnClickListener() {
@@ -417,7 +427,7 @@ public class ToolIconsView extends ConstraintLayout {
                     public void onClick(View view) {
 
                         //本ノード配下のノード（本ノード含む）を全て取得する
-                        MapCommonData mapCommonData = (MapCommonData) ((Activity) getContext()).getApplication();
+                        MapCommonData mapCommonData = (MapCommonData) mMapActivity.getApplication();
                         mapCommonData.setDeleteNodes(v_baseNode.getNode().getPid());
 
                         //削除確認ダイアログを表示
@@ -464,6 +474,10 @@ public class ToolIconsView extends ConstraintLayout {
                     @Override
                     public void onClick(View view) {
                         //Log.i("アイコン", "クリックされました");
+
+                        //マップアクティビティを親ノード変更モードにする
+                        mMapActivity.enableChangeParentMode( v_baseNode.getNode().getPid() );
+
                         //ノードに持たせていた自分をクローズ
                         v_baseNode.closeIconView();
                     }
@@ -500,11 +514,8 @@ public class ToolIconsView extends ConstraintLayout {
                         //開始
                         mMapActivity.getGalleryLauncher().launch(intent);
 
-                        //※ノードに持たせていた自分をクローズしない
-                        //ギャラリーから戻ってきたとき、マップ画面側でどのピクチャノードがタッチされたのかを
-                        //判別するため
-                        //閉じないことが仕様
-                        //v_baseNode.closeIconView();
+                        /*-- 自分のクローズ処理は行わない仕様とする --*/
+                        /*-- ギャラリーから戻ってきたとき、マップ画面側でどのピクチャノードがタッチされたのかを判別するため --*/
                     }
                 };
                 break;
@@ -532,8 +543,8 @@ public class ToolIconsView extends ConstraintLayout {
     public void closeShowingIcon() {
 
         //ノードリスト
-        MapCommonData mapCommonData = (MapCommonData)((Activity)getContext()).getApplication();
-        NodeArrayList<NodeTable> nodes = mapCommonData.getMovedNodesQue();
+        MapCommonData mapCommonData = (MapCommonData) mMapActivity.getApplication();
+        NodeArrayList<NodeTable> nodes = mapCommonData.getNodes();
 
         BaseNode haveNode = nodes.getShowingIconNode();
         if( haveNode == null ){

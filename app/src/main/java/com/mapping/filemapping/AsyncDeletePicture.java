@@ -14,16 +14,37 @@ import java.util.concurrent.Executors;
 public class AsyncDeletePicture {
 
     private final AppDatabase mDB;
-    private final PictureTable mPicture;
     private final OnFinishListener mOnFinishListener;
+    //削除対象の写真（単体）
+    private PictureTable mPicture;
+    //削除対象の写真（複数）
+    private PictureArrayList<PictureTable> mPictures;
+    //単体か複数か
+    private final boolean mIsSingle;
+
+    //処理結果：更新写真にサムネイルがあったかどうか
+    private boolean mIsThumbnail;
 
     /*
-     * コンストラクタ
+     * コンストラクタ（単体）
      */
     public AsyncDeletePicture(Context context, PictureTable picture, OnFinishListener listener) {
         mDB               = AppDatabaseManager.getInstance(context);
         mPicture          = picture;
         mOnFinishListener = listener;
+
+        mIsSingle = true;
+    }
+
+    /*
+     * コンストラクタ（複数）
+     */
+    public AsyncDeletePicture(Context context, PictureArrayList<PictureTable> pictures, OnFinishListener listener) {
+        mDB = AppDatabaseManager.getInstance(context);
+        mPictures = pictures;
+        mOnFinishListener = listener;
+
+        mIsSingle = false;
     }
 
     /*
@@ -55,11 +76,49 @@ public class AsyncDeletePicture {
          * DB操作
          */
         private void operationDB(){
+
+            if( mIsSingle ){
+                //単体写真の更新
+                operationDBSingle();
+            } else {
+                //複数写真の更新
+                operationDBMultiple();
+            }
+        }
+
+        /*
+         * 単体写真処理
+         */
+        private void operationDBSingle(){
+
+            //サムネイルかどうか
+            mIsThumbnail = mPicture.isThumbnail();
+
+            //テーブルから削除
+            PictureTableDao dao = mDB.daoPictureTable();
+            dao.delete(mPicture);
+        }
+
+        /*
+         * 複数写真処理
+         */
+        private void operationDBMultiple(){
+
             //PictureTableDao
             PictureTableDao dao = mDB.daoPictureTable();
 
+            mIsThumbnail = false;
+
             //テーブルから削除
-            dao.delete(mPicture);
+            for( PictureTable picture: mPictures ){
+
+                //サムネイルならフラグを更新
+                if( picture.isThumbnail() ){
+                    mIsThumbnail = true;
+                }
+
+                dao.delete(picture);
+            }
         }
     }
 
@@ -89,7 +148,7 @@ public class AsyncDeletePicture {
      */
     void onPostExecute() {
         //完了
-        mOnFinishListener.onFinish();
+        mOnFinishListener.onFinish(mIsThumbnail);
     }
 
     /*
@@ -99,7 +158,7 @@ public class AsyncDeletePicture {
         /*
          * 完了時、コールされる
          */
-        void onFinish();
+        void onFinish(boolean isThumbnail);
     }
 
 

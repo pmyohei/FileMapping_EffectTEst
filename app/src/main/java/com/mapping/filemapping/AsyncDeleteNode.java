@@ -14,7 +14,7 @@ import java.util.concurrent.Executors;
  * DB非同期処理
  *   ノードdelete用
  */
-public class AsyncDeleteNode {
+public class AsyncDeleteNode extends AsyncShowProgress {
 
     private final AppDatabase               mDB;
     private final NodeArrayList<NodeTable>  mNodes;
@@ -24,7 +24,9 @@ public class AsyncDeleteNode {
      * コンストラクタ
      */
     public AsyncDeleteNode(Context context, NodeArrayList<NodeTable> node, OnFinishListener listener) {
-        mDB               = AppDatabaseManager.getInstance(context);
+        super(context);
+
+        mDB = AppDatabaseManager.getInstance(context);
         mOnFinishListener = listener;
         mNodes = node;
     }
@@ -72,8 +74,9 @@ public class AsyncDeleteNode {
     /*
      * バックグラウンド前処理
      */
+    @Override
     void onPreExecute() {
-        //
+        super.onPreExecute();
     }
 
     /*
@@ -94,14 +97,7 @@ public class AsyncDeleteNode {
      * バックグランド処理終了後の処理
      */
     void onPostExecute() {
-
-        //削除したビューをレイアウトから削除
-        //レイアウトからノードとラインを削除
-/*        for( NodeTable node: mNodes ){
-            NodeView self = node.getNodeView();
-            ((ViewGroup)self.getParent()).removeView( self.getLineView() );
-            ((ViewGroup)self.getParent()).removeView( self );
-        }*/
+        super.onPostExecute();
 
         //読み取り完了
         mOnFinishListener.onFinish();

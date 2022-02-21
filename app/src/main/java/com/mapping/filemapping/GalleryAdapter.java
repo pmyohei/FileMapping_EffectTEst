@@ -22,6 +22,9 @@ import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+/*
+ * ギャラリー（ノード配下の写真リスト表示）用アダプタ
+ */
 public class GalleryAdapter extends BaseAdapter {
 
     //写真数

@@ -9,22 +9,23 @@ import java.util.concurrent.Executors;
 
 /*
  * DB非同期処理
- *   ノードupdate用
+ *   read用
  */
 public class AsyncUpdateNode {
 
-    private final AppDatabase      mDB;
-    private final NodeTable        mNode;
-    private final OnFinishListener mOnFinishListener;
+    private final AppDatabase               mDB;
+    private final OnFinishListener          mOnFinishListener;
+    private       NodeArrayList<NodeTable>  mNodeList;          //保存対象ノードキュー
 
     /*
      * コンストラクタ
      */
-    public AsyncUpdateNode(Context context, NodeTable node, OnFinishListener listener) {
-        mDB               = AppDatabaseManager.getInstance(context);
+    public AsyncUpdateNode(Context context, NodeArrayList<NodeTable> nodeQue, OnFinishListener listener) {
+        mDB = AppDatabaseManager.getInstance(context);
+        mNodeList = nodeQue;
         mOnFinishListener = listener;
-        mNode             = node;
     }
+
 
     /*
      * 非同期処理
@@ -40,7 +41,7 @@ public class AsyncUpdateNode {
         public void run() {
 
             //メイン処理
-            dbOperation();
+            operationDB();
 
             //後処理
             handler.post(new Runnable() {
@@ -52,16 +53,21 @@ public class AsyncUpdateNode {
         }
 
         /*
-         * ノードを更新
+         * DB処理
          */
-        private void dbOperation(){
+        private void operationDB(){
 
             //NodeDao
             NodeTableDao nodeDao = mDB.daoNodeTable();
 
-            //ノードを更新
-            nodeDao.updateNode( mNode );
+            //指定ノードリストを更新
+            for( NodeTable node: mNodeList ){
+                //Log.i("updatePosition", "move Node=" + node.getNodeName() + " posx=" + node.getPosX() + " posy=" + node.getPosY());
+                //nodeDao.updateNodePosition(node.getPid(), node.getPosX(), node.getPosY());
+                nodeDao.updateNode(node);
+            }
         }
+
     }
 
     /*
@@ -95,12 +101,9 @@ public class AsyncUpdateNode {
     }
 
     /*
-     * データ作成完了リスナー
+     * データ読み取り完了リスナー
      */
     public interface OnFinishListener {
-        /*
-         * ノード生成完了時、コールされる
-         */
         void onFinish();
     }
 

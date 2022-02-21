@@ -36,7 +36,7 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
      */
-    class GuideViewHolder extends RecyclerView.ViewHolder implements TextWatcher {
+    class GuideViewHolder extends RecyclerView.ViewHolder {
 
         //設定対象ノードビュー
         private final BaseNode        mv_node;
@@ -58,7 +58,6 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
         private ColorSelectionView csv_line;
         private SeekbarView  sbv_lineSize;
 
-
         /*
          * コンストラクタ
          */
@@ -68,51 +67,75 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
             mv_node = node;
             mvp2 = vp2;
 
-            if (position == 0) {
-                //サムネイルの変更
-                iv_thumbnail    = itemView.findViewById(R.id.iv_thumbnail);
+            switch (position) {
+                case 0:
+                    //サムネイルの変更
+                    iv_thumbnail    = itemView.findViewById(R.id.iv_thumbnail);
+                    break;
 
-            } else if (position == 1) {
-                //ノード形
-                iv_circle    = itemView.findViewById(R.id.iv_circle);
-                iv_square    = itemView.findViewById(R.id.iv_square);
-                //ノードサイズ
-                sbv_nodeSize       = itemView.findViewById(R.id.sbv_nodeSize);
-                //枠線色
-                csv_border = itemView.findViewById(R.id.csv_border);
-                //枠線サイズ
-                sbv_borderSize       = itemView.findViewById(R.id.sbv_borderSize);
-                //影色
-                csv_shadow = itemView.findViewById(R.id.csv_shadow);
+                case 1:
+                    //ノードサイズ
+                    sbv_nodeSize = itemView.findViewById(R.id.sbv_nodeSize);
+                    //ラインサイズ
+                    sbv_lineSize = itemView.findViewById(R.id.sbv_lineSize);
+                    //枠線サイズ
+                    sbv_borderSize = itemView.findViewById(R.id.sbv_borderSize);
+                    break;
 
-            } else if (position == 2) {
-                //色
-                csv_line = itemView.findViewById(R.id.csv_line);
-                //サイズ
-                sbv_lineSize       = itemView.findViewById(R.id.sbv_lineSize);
+                case 2:
+                    //ノード形
+                    iv_circle = itemView.findViewById(R.id.iv_circle);
+                    iv_square = itemView.findViewById(R.id.iv_square);
+                    break;
+
+                case 3:
+                    //枠線色
+                    csv_border = itemView.findViewById(R.id.csv_border);
+                    break;
+
+                case 4:
+                    //影色
+                    csv_shadow = itemView.findViewById(R.id.csv_shadow);
+                    break;
+
+                case 5:
+                    //ラインの色
+                    csv_line = itemView.findViewById(R.id.csv_line);
+                    break;
             }
         }
 
         /*
          * 各種ページ設定
          */
-        public void setPage(int position) {
+        private void setPage(int position) {
 
-            if (position == 0) {
-                setPage0();
-
-            } else if (position == 1) {
-                setPage1();
-
-            } else if (position == 2) {
-                setPage2();
+            switch (position){
+                case 0:
+                    setPage0();
+                    break;
+                case 1:
+                    setPage1();
+                    break;
+                case 2:
+                    setPage2();
+                    break;
+                case 3:
+                    setPage3();
+                    break;
+                case 4:
+                    setPage4();
+                    break;
+                case 5:
+                    setPage5();
+                    break;
             }
         }
 
         /*
          * ページ設定（０）
          */
-        public void setPage0() {
+        private void setPage0() {
 
             //ノード生成
             iv_thumbnail.setOnClickListener(new View.OnClickListener() {
@@ -135,49 +158,46 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
         /*
          * ページ設定（１）
          */
-        public void setPage1() {
-
-            //ノード形
-            iv_circle.setOnClickListener(new ClickShapeImage(NodeTable.CIRCLE) );
-            iv_square.setOnClickListener( new ClickShapeImage(NodeTable.SQUARE) );
-
+        private void setPage1() {
             //ノードサイズのシークバー
             sbv_nodeSize.setNodeSizeSeekbar( mv_node );
-
-            //枠色
-            csv_border.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_BORDER, mv_node );
             //枠サイズのシークバー
             sbv_borderSize.setBorderSizeSeekbar( mv_node );
-
-            //影色
-            csv_shadow.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_SHADOW, mv_node );
+            //ラインサイズ
+            sbv_lineSize.setLineSizeSeekbar( mv_node );
         }
 
         /*
          * ページ設定（２）
          */
-        public void setPage2() {
+        private void setPage2() {
+            //ノード形
+            iv_circle.setOnClickListener(new ClickShapeImage(NodeTable.CIRCLE) );
+            iv_square.setOnClickListener( new ClickShapeImage(NodeTable.SQUARE) );
+        }
+
+        /*
+         * ページ設定（３）
+         */
+        private void setPage3() {
+            //枠色
+            csv_border.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_BORDER, mv_node );
+        }
+
+        /*
+         * ページ設定（４）
+         */
+        private void setPage4() {
+            //影色
+            csv_shadow.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_SHADOW, mv_node );
+        }
+
+        /*
+         * ページ設定（５）
+         */
+        private void setPage5() {
             //ラインカラー
             csv_line.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_LINE, mv_node );
-            //ラインサイズ
-            sbv_lineSize.setLineSizeSeekbar( mv_node );
-        }
-
-        @Override
-        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-        }
-
-        @Override
-        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-            //ノードに反映
-            mv_node.setNodeName( charSequence.toString() );
-        }
-
-        @Override
-        public void afterTextChanged(Editable editable) {
-            //ノードに反映
-            mv_node.setNodeName( editable.toString() );
-            mv_node.addOnNodeGlobalLayoutListener();
         }
 
 

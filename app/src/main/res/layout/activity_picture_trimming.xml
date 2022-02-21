@@ -12,7 +12,7 @@
 
         <!--  ツールバー  -->
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
+            android:id="@+id/toolbar_trimming"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:elevation="4dp"

@@ -346,6 +346,7 @@ public class NodeTable implements Serializable {
             this.borderColor = colors[1];
             this.shadowColor = colors[1];
             this.lineColor   = colors[1];
+
         } else {
             //3色
             //ノード名、枠、ライン

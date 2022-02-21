@@ -21,9 +21,11 @@ public class MapCommonData extends Application {
     //マップ内のノードリスト
     private NodeArrayList<NodeTable> mNodes;
     //マップ内のサムネイルリスト
+    //★不要な見込み
     private PictureArrayList<PictureTable> mThumbnails;
     //位置変更ノードキュー
-    private NodeArrayList<NodeTable> mMovedNodesQue;
+    //★更新したらこのキューに保存するため、名前を変更する
+    private NodeArrayList<NodeTable> mUpdateNodeQue;
     //削除対象ノード
     private NodeArrayList<NodeTable> mDeleteNodes;
     //ツールアイコン表示中ノード
@@ -41,7 +43,7 @@ public class MapCommonData extends Application {
         super.onCreate();
 
         mNodes = new NodeArrayList<>();
-        mMovedNodesQue = new NodeArrayList<>();
+        mUpdateNodeQue = new NodeArrayList<>();
         mThumbnails = new PictureArrayList<>();
         mDeleteNodes = new NodeArrayList<>();
         mColorHistory = new ArrayList<>();
@@ -55,7 +57,7 @@ public class MapCommonData extends Application {
         super.onTerminate();
 
         mNodes = null;
-        mMovedNodesQue = null;
+        mUpdateNodeQue = null;
         mThumbnails = null;
         //mToolOpeningNode = null;
         mEditNode = null;
@@ -71,7 +73,7 @@ public class MapCommonData extends Application {
         //リストクリア
         mNodes.clear();
         mThumbnails.clear();
-        mMovedNodesQue.clear();
+        mUpdateNodeQue.clear();
         mDeleteNodes.clear();
         mColorHistory.clear();
 
@@ -167,11 +169,15 @@ public class MapCommonData extends Application {
         //大文字変換
         color = color.toUpperCase(Locale.ROOT);
 
-        final String A = "#FF";
-        if( ( color.length() == 9 ) && ( color.contains(A)) ){
+        //透明度の情報があれば、除外する
+        final String TRANCEPARENT = "#FF";
+        if( ( color.length() == 9 ) && ( color.contains(TRANCEPARENT)) ){
             //#FF001122→#001122 にする
-            color = color.replace(A, "#");
+            color = color.replace(TRANCEPARENT, "#");
         }
+
+        //小文字に変換
+        color = color.toLowerCase(Locale.ROOT);
 
         tmp.add( color );
         Log.i("色履歴", "v_map color=" + color);
@@ -179,14 +185,22 @@ public class MapCommonData extends Application {
         //マップ中のノードに設定されている色を取得
         tmp.addAll( mNodes.getAllNodeColors() );
 
+/*        //log
+        Log.i("色履歴", "tmpリストの情報--------");
+        for( String cc: tmp ){
+            Log.i("色履歴", "cc=" + cc);
+        }
+        //*/
+
         //重複なしで設定
         mColorHistory.addAll( new ArrayList<>(new LinkedHashSet<>(tmp)) );
 
-        //log
-        //for( String cc: mColorHistory ){
-        //    Log.i("色履歴", "cc=" + cc);
-        //}
-        //
+/*        //log
+        Log.i("色履歴", "重複なしリストの情報--------");
+        for( String cc: mColorHistory ){
+            Log.i("色履歴", "cc=" + cc);
+        }
+        //*/
     }
 
     /*
@@ -226,29 +240,26 @@ public class MapCommonData extends Application {
     /*
      * 位置移動ノードキュー取得・設定・クリア
      */
-    public NodeArrayList<NodeTable> getMovedNodesQue() {
-        return mMovedNodesQue;
+    public NodeArrayList<NodeTable> getUpdateNodeQue() {
+        return mUpdateNodeQue;
     }
-    public void setMovedNodesQue(NodeArrayList<NodeTable> mMovedNodesQue) {
-        this.mMovedNodesQue = mMovedNodesQue;
-    }
-    public void clearMovedNodesQue() {
-        this.mMovedNodesQue.clear();
+    public void clearUpdateNodeQue() {
+        this.mUpdateNodeQue.clear();
     }
 
     /*
-     * 位置移動ノードキューへエンキュー
+     * 更新対象ノードキューへエンキュー
      * 　※既に追加済みの場合は、エンキューしない
      */
-    public void enqueMovedNodeWithUnique(NodeTable node) {
+    public void enqueUpdateNodeWithUnique(NodeTable node) {
 
         //追加済みなら、何もしない
-        if( mMovedNodesQue.getNode(node.getPid()) != null ){
+        if( mUpdateNodeQue.getNode(node.getPid()) != null ){
             return;
         }
 
         //エンキュー
-        this.mMovedNodesQue.add(node);
+        this.mUpdateNodeQue.add(node);
     }
 
     /*
@@ -325,12 +336,14 @@ public class MapCommonData extends Application {
 
     /*
      * 削除対象ノードの削除完了処理
-     *   マップ上のノードリストから、削除対象ノードを削除する
+     *   ※本処理は、DBからノードの削除が完了した時にコールされる想定
+     *   ・マップ上のノードリストから、削除対象ノードを削除する
+     *   ・ノード更新対象キューから、削除対象ノードを削除する
      */
     public void finishDeleteNode() {
 
         //log---------------
-        for( NodeTable node: mDeleteNodes ){
+/*        for( NodeTable node: mDeleteNodes ){
             Log.i("finishDeleteNodes", "削除対象ノード=" + node.getNodeName());
         }
         Log.i("finishDeleteNodes", "----------");
@@ -338,15 +351,24 @@ public class MapCommonData extends Application {
             Log.i("finishDeleteNodes", "マップ内ノード(削除前)=" + node.getNodeName());
         }
         Log.i("finishDeleteNodes", "----------");
+        for( NodeTable node: mUpdateNodeQue ){
+            Log.i("finishDeleteNodes", "更新キュー(削除前)=" + node.getNodeName());
+        }
+        Log.i("finishDeleteNodes", "----------");*/
         //---------------
 
-        //マップ内ノードリストから、削除リストのノードを削除する
+        //ノードリストから、削除リストのノードを削除する
         mNodes.deleteNodes( mDeleteNodes );
+        mUpdateNodeQue.deleteNodes( mDeleteNodes );
 
         //log---------------
-        for( NodeTable node: mNodes ){
+/*        for( NodeTable node: mNodes ){
             Log.i("finishDeleteNodes", "マップ内ノード(削除後)=" + node.getNodeName());
         }
+        Log.i("finishDeleteNodes", "----------");
+        for( NodeTable node: mUpdateNodeQue ){
+            Log.i("finishDeleteNodes", "更新キュー(削除後)=" + node.getNodeName());
+        }*/
         //---------------
 
         //削除対象クリア

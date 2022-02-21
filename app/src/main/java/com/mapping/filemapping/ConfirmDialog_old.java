@@ -17,12 +17,12 @@ import androidx.fragment.app.DialogFragment;
 /*
  * 確認ダイアログ
  */
-public class ConfirmDialog extends DialogFragment {
+public class ConfirmDialog_old extends DialogFragment {
 
     /*
      * コンストラクタ
      */
-    public ConfirmDialog() {
+    public ConfirmDialog_old() {
 
     }
 
@@ -51,11 +51,5 @@ public class ConfirmDialog extends DialogFragment {
             return;
         }
 
-
-
-
     }
-
-
-
 }

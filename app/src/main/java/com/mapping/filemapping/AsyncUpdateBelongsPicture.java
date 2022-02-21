@@ -14,18 +14,43 @@ import java.util.concurrent.Executors;
 public class AsyncUpdateBelongsPicture {
 
     private final AppDatabase mDB;
+    //移動先のピクチャノード
     private final int mPicutureNodePid;
-    private final PictureTable mPicture;
+    //移動対象の写真
+    private PictureTable mPicture;
+    //移動対象の写真（複数）
+    private PictureArrayList<PictureTable> mPictures;
+    //リスナー
     private final OnFinishListener mOnFinishListener;
+    //単体か複数か
+    private final boolean mIsSingle;
+
+    //処理結果：更新写真にサムネイルがあったかどうか
+    private boolean mIsThumbnail;
+
 
     /*
-     * コンストラクタ
+     * コンストラクタ（単体写真）
      */
     public AsyncUpdateBelongsPicture(Context context, int picutureNodePid, PictureTable picture, OnFinishListener listener) {
         mDB = AppDatabaseManager.getInstance(context);
         mOnFinishListener = listener;
         mPicutureNodePid = picutureNodePid;
         mPicture = picture;
+
+        mIsSingle = true;
+    }
+
+    /*
+     * コンストラクタ（複数写真）
+     */
+    public AsyncUpdateBelongsPicture(Context context, int picutureNodePid, PictureArrayList<PictureTable> pictures, OnFinishListener listener) {
+        mDB = AppDatabaseManager.getInstance(context);
+        mOnFinishListener = listener;
+        mPicutureNodePid = picutureNodePid;
+        mPictures = pictures;
+
+        mIsSingle = false;
     }
 
     /*
@@ -57,16 +82,77 @@ public class AsyncUpdateBelongsPicture {
          * DBからデータを取得
          */
         private void operationDB(){
-            //PictureTableDao
-            PictureTableDao dao = mDB.daoPictureTable();
+
+            if( mIsSingle ){
+                //単体写真の更新
+                operationDBSingle();
+            } else {
+                //複数写真の更新
+                operationDBMultiple();
+            }
+        }
+
+        /*
+         * 単体写真処理
+         */
+        private void operationDBSingle(){
+
+            //サムネイルなし
+            mIsThumbnail = false;
 
             //格納先ノードを更新
             mPicture.setPidParentNode( mPicutureNodePid );
-            //サムネイル情報を無効化（移動先では別のサムネイルがあるため）
-            mPicture.setDisableThumbnail();
 
+            //対象写真がサムネイル写真の場合
+            if( mPicture.isThumbnail() ){
+                //サムネイル情報を無効化（移動先では別のサムネイルがあるため）
+                mPicture.setDisableThumbnail();
+                //フラグ更新
+                mIsThumbnail = true;
+            }
+
+            //PictureTableDao
+            PictureTableDao dao = mDB.daoPictureTable();
             dao.update( mPicture );
         }
+
+        /*
+         * 複数写真処理
+         */
+        private void operationDBMultiple(){
+
+            //PictureTableDao
+            PictureTableDao dao = mDB.daoPictureTable();
+
+            //サムネイルなし
+            mIsThumbnail = false;
+
+            for( PictureTable picture: mPictures ){
+
+                //移動先にも同じ写真がある場合、テーブルから削除
+                if( dao.hasPictureInPictureNode( mPicutureNodePid, picture.getPath() ) != null){
+                    //テーブルから削除
+                    dao.delete( picture );
+
+                    continue;
+                }
+
+                //格納先ノードを更新
+                picture.setPidParentNode( mPicutureNodePid );
+
+                //対象写真がサムネイル写真の場合
+                if( picture.isThumbnail() ){
+                    //サムネイル情報を無効化（移動先では別のサムネイルがあるため）
+                    picture.setDisableThumbnail();
+                    //フラグ更新
+                    mIsThumbnail = true;
+                }
+
+                //更新
+                dao.update( picture );
+            }
+        }
+
     }
 
     /*
@@ -95,7 +181,7 @@ public class AsyncUpdateBelongsPicture {
      */
     void onPostExecute() {
         //処理完了
-        mOnFinishListener.onFinish();
+        mOnFinishListener.onFinish(mIsThumbnail);
     }
 
     /*
@@ -105,7 +191,7 @@ public class AsyncUpdateBelongsPicture {
         /*
          * 処理完了時、コールされる
          */
-        void onFinish();
+        void onFinish( boolean isThumbnail );
     }
 
 

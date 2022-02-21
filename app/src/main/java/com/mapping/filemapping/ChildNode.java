@@ -2,10 +2,7 @@ package com.mapping.filemapping;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Context;
-import android.content.DialogInterface;
-import android.content.Intent;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -17,8 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
-
-import androidx.activity.result.ActivityResultLauncher;
 
 import java.io.Serializable;
 
@@ -66,57 +61,6 @@ public class ChildNode extends BaseNode {
         //setChildToolIcon();
     }
 
-
-    /*
-     * ツールアイコン設定
-     * ・ノード削除
-     * ・親ノードの変更
-     */
-    public void setChildToolIcon() {
-
-/*        //ノード削除
-        findViewById(R.id.ib_delete).setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-
-                //本ノード配下のノード（本ノード含む）を全て取得する
-                MapCommonData mapCommonData = (MapCommonData) ((Activity) getContext()).getApplication();
-                mapCommonData.setDeleteNodes(mNode.getPid());
-
-                //削除確認ダイアログを表示
-                new AlertDialog.Builder(getContext())
-                        .setTitle("ノード削除確認")
-                        .setMessage("配下のノードも全て削除されます。\nなお、端末上から写真は削除されません。")
-                        .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-
-                                //削除対象ノード
-                                NodeArrayList<NodeTable> nodes = mapCommonData.getDeleteNodes();
-
-                                //DBからノード削除
-                                AsyncDeleteNode db = new AsyncDeleteNode(getContext(), nodes, new AsyncDeleteNode.OnFinishListener() {
-                                    @Override
-                                    public void onFinish() {
-
-                                        //自身と配下ノードをレイアウトから削除
-                                        removeLayoutUnderSelf();
-
-                                        //共通データに削除完了処理を行わせる
-                                        mapCommonData.finishDeleteNode();
-                                    }
-                                });
-
-                                //非同期処理開始
-                                db.execute();
-                            }
-                        })
-                        .setNegativeButton("Cancel", null)
-                        .show();
-            }
-        });*/
-
-    }
 
     /*
      * ノードテーブルの情報をノードビューに反映する
@@ -168,29 +112,47 @@ public class ChildNode extends BaseNode {
     }
 
     /*
-     * ラインカラーの設定
+     * ノードに設定中のノードサイズに設定
+     */
+    @Override
+    public void setSetScale() {
+        super.setSetScale();
+
+        //ライン再描画
+        if( mLineView != null ){
+            mLineView.reDraw();
+        }
+    }
+
+    /*
+     * ノードサイズを設定
+     */
+    @Override
+    public void setScale( float ratio ) {
+        super.setScale( ratio );
+
+        //ライン再描画
+        if( mLineView != null ){
+            mLineView.reDraw();
+        }
+    }
+
+    /*
+     * ラインカラーの設定・取得
      */
     public void setLineColor(String color) {
         mLineView.setColor(color);
     }
-
-    /*
-     * ラインカラーの取得
-     */
     public String getLineColor() {
         return mLineView.getColor();
     }
 
     /*
-     * ラインサイズ（太さ）の設定
+     * ラインサイズ（太さ）の設定・取得
      */
     public void setLineSize(float thick) {
         mLineView.setSize(thick);
     }
-
-    /*
-     * ラインサイズ（太さ）の取得
-     */
     public float getLineSize() {
         return mLineView.getSize();
     }
@@ -429,7 +391,7 @@ public class ChildNode extends BaseNode {
 
         //位置が変更されたため、自身(のNodeTable)を位置変更キューに追加
         MapCommonData mapCommonData = (MapCommonData) ((Activity) getContext()).getApplication();
-        mapCommonData.enqueMovedNodeWithUnique(mNode);
+        mapCommonData.enqueUpdateNodeWithUnique(mNode);
 
         //子ノードも同様
         setLayoutMarginChildNodes();
@@ -785,10 +747,16 @@ public class ChildNode extends BaseNode {
      */
     public class LineView extends View {
 
+        //親ノードと自ノードを両端とする2等辺三角形の両端の角度
+        private final int CONTROL_POINT_DEGREES = 45;
+        //制御点の位置の割合（親ノード自ノードの線分と直角頂点の垂直線の中で、制御点の位置とする割合）
+        //(0＜f＜1 の範囲で指定)
+        private final float CONTROL_POINT_POS_RATIO = 0.5f;
+
         //ペイント情報
-        Paint mPaint;
+        private final Paint mPaint;
         //親ノード
-        BaseNode mParentNode;
+        private BaseNode mParentNode;
         //描画開始座標（親ノード位置）
         private float mStartPosX;
         private float mStartPosY;
@@ -806,19 +774,19 @@ public class ChildNode extends BaseNode {
             mParentNode = parentNode;
 
             //ライン情報
-            float  thick = mNode.getLineSize();
+            float thick = mNode.getLineSize();
             String color = mNode.getLineColor();
 
             //ペイント情報を生成
             mPaint = new Paint();
-            mPaint.setStrokeWidth( thick );
-            mPaint.setColor( Color.parseColor( color ) );
+            mPaint.setStrokeWidth(thick);
+            mPaint.setColor(Color.parseColor(color));
             mPaint.setAntiAlias(true);
             mPaint.setStyle(Paint.Style.STROKE);
             mPaint.setStrokeCap(Paint.Cap.ROUND);
 
             //ライン端点の計算
-            calcSelfPos();
+            calcSelfEdgePos();
             //ノードに対して背面になるようにする（デフォルト値は0のため、0未満の値を指定）
             setTranslationZ(-1);
         }
@@ -827,38 +795,38 @@ public class ChildNode extends BaseNode {
         /*
          * 自身のライン端点を計算
          */
-        public void calcSelfPos() {
+        public void calcSelfEdgePos() {
 
             //親ノード位置
             float parentPosX = mParentNode.getCenterPosX();
             float parentPosY = mParentNode.getCenterPosY();
 
             //ノード間の線分の傾き
-            float a = ( parentPosY - mCenterPosY ) / (parentPosX - mCenterPosX);
+            float a = (parentPosY - mCenterPosY) / (parentPosX - mCenterPosX);
             //ラジアン角度を取得
-            double radian = Math.atan( a );
+            double radian = Math.atan(a);
 
             final float CROSS_RADIUS_RATIO = 1.2f;
 
             //交点に相当する座標を計算（自ノード側）
             //ノードよりも少し大きい半径を取得
-            float radius = ( getScaleNodeBodyWidth() / 2f) * CROSS_RADIUS_RATIO;
-            int x = (int)(Math.cos(radian) * radius);
-            int y = (int)(Math.sin(radian) * radius);
+            float radius = (getScaleNodeBodyWidth() / 2f) * CROSS_RADIUS_RATIO;
+            int x = (int) (Math.cos(radian) * radius);
+            int y = (int) (Math.sin(radian) * radius);
 
             //親の位置に応じて、端点を計算
-            mSelfPosX = mCenterPosX + ( (parentPosX > mCenterPosX) ? (x) : (-x));
-            mSelfPosY = mCenterPosY + ( (parentPosX > mCenterPosX) ? (y) : (-y));
+            mSelfPosX = mCenterPosX + ((parentPosX > mCenterPosX) ? (x) : (-x));
+            mSelfPosY = mCenterPosY + ((parentPosX > mCenterPosX) ? (y) : (-y));
 
             //交点に相当する座標を計算（親ノード側）
             //ノードよりも少し大きい半径を取得
             radius = (mParentNode.getScaleNodeBodyWidth() / 2f) * CROSS_RADIUS_RATIO;
-            x = (int)(Math.cos(radian) * radius);
-            y = (int)(Math.sin(radian) * radius);
+            x = (int) (Math.cos(radian) * radius);
+            y = (int) (Math.sin(radian) * radius);
 
             //親の位置に応じて、端点を計算
-            mStartPosX = parentPosX + ( (parentPosX > mCenterPosX) ? (-x) : (x));
-            mStartPosY = parentPosY + ( (parentPosX > mCenterPosX) ? (-y) : (y));
+            mStartPosX = parentPosX + ((parentPosX > mCenterPosX) ? (-x) : (x));
+            mStartPosY = parentPosY + ((parentPosX > mCenterPosX) ? (-y) : (y));
 
             //Log.i("三角関数", "傾き=" + a);
             //Log.i("三角関数", "Math.cos(radian)=" + Math.cos(radian));
@@ -876,11 +844,25 @@ public class ChildNode extends BaseNode {
         }
 
         /*
+         * 自身と親ノードとの距離（単純な直線距離）を算出
+         */
+        public float calcSelfParentDistance() {
+
+            //親ノード位置
+            float parentPosX = mParentNode.getCenterPosX();
+            float parentPosY = mParentNode.getCenterPosY();
+
+            //距離を返す
+            return (float) Math.sqrt(((mCenterPosX - parentPosX) * (mCenterPosX - parentPosX))
+                    + ((mCenterPosY - parentPosY) * (mCenterPosY - parentPosY)));
+        }
+
+        /*
          * ラインカラーの設定
          */
-        public void setColor( String color ) {
+        public void setColor(String color) {
             //色設定
-            mPaint.setColor( Color.parseColor(color) );
+            mPaint.setColor(Color.parseColor(color));
             //再描画
             invalidate();
         }
@@ -890,15 +872,15 @@ public class ChildNode extends BaseNode {
          */
         public String getColor() {
 
-            return ( "#" + Integer.toHexString( mPaint.getColor() ) );
+            return ("#" + Integer.toHexString(mPaint.getColor()));
         }
 
         /*
          * ラインサイズ（太さ）の設定
          */
-        public void setSize( float thick ) {
+        public void setSize(float thick) {
             //太さ設定
-            mPaint.setStrokeWidth( thick );
+            mPaint.setStrokeWidth(thick);
             //再描画
             invalidate();
         }
@@ -910,29 +892,15 @@ public class ChildNode extends BaseNode {
             return mPaint.getStrokeWidth();
         }
 
-/*    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-
-        xZahyou = event.getX();
-        yZahyou = event.getY();
-
-        Log.i("onTouchEvent", "xZahyou=" + xZahyou + " yZahyou=" + yZahyou);
-
-        this.invalidate();
-
-        return true;
-    }*/
-
-
         /*
-         * ライン再描画(始端位置更新あり)
+         * ライン再描画(指定された親ノードの位置からラインを描画)
          */
-        public void reDraw(float startPosX, float startPosY) {
+        public void reDrawParent(BaseNode parentNode) {
 
-            //開始位置を更新
-            mStartPosX = startPosX;
-            mStartPosY = startPosY;
-
+            //親ノードを変更
+            mParentNode = parentNode;
+            //ライン端点再計算
+            calcSelfEdgePos();
             //再描画
             invalidate();
         }
@@ -943,15 +911,107 @@ public class ChildNode extends BaseNode {
         public void reDraw() {
 
             //ライン端点再計算
-            calcSelfPos();
+            calcSelfEdgePos();
             //再描画
             invalidate();
         }
 
-        @Override
-        protected void onDraw(Canvas canvas) {
+        /*
+         * 1次ベジェ曲線のPathを作成
+         */
+        public Path createFirstOrderBezierCurve() {
 
-            super.onDraw(canvas);
+            //Path生成
+            //★初期生成させる
+            @SuppressLint("DrawAllocation") Path path = new Path();
+
+            //スタート地点を移動
+            path.moveTo(mStartPosX, mStartPosY);
+
+            //親との距離を取得
+            float distance = calcSelfParentDistance();
+
+            //制御点のX座標を取得
+            //※この時点では角度0の場合の座標
+            double ControlPointRadians = Math.toRadians(CONTROL_POINT_DEGREES);
+            float baseX = (float) Math.cos(ControlPointRadians) * distance;
+            //float baseY = (float)Math.sin(ControlPointRadians) * distance;
+
+            Log.i("ライン調査", "distance=" + distance);
+            Log.i("ライン調査", "親 baseX=" + mStartPosX + "\ty=" + mStartPosY);
+            Log.i("ライン調査", "自分 baseX=" + mCenterPosX + "\ty=" + mCenterPosY);
+
+            //必要な回転角度を取得
+            double radian = getRotaionRadian();
+
+            //回転後の座標を取得
+            float rotationX = baseX * (float) Math.cos(radian);// - 0 * (float) Math.sin(radian);
+            float rotationY = baseX * (float) Math.sin(radian);// + 0 * (float) Math.cos(radian);
+
+            //自分の座標を基準に直角点座標を算出
+            rotationX += mCenterPosX;
+            rotationY = mCenterPosY - rotationY;
+
+            //親ノードとノードの中間点（直角点から垂線を引いた時の交点座標）
+            float middleX = (mParentNode.getCenterPosX() + mCenterPosX) / 2;
+            float middleY = (mParentNode.getCenterPosY() + mCenterPosY) / 2;
+
+            //制御点座標（垂線上の指定割合位置をその座標とする）
+            float controlX = (middleX + rotationX) * CONTROL_POINT_POS_RATIO;
+            float controlY = (middleY + rotationY) * CONTROL_POINT_POS_RATIO;
+
+            //Log.i("制御点", "rotationX=" + rotationX + "\trotationY=" + rotationY);
+            //Log.i("制御点", "middleX=" + middleX + "\tmiddleY=" + middleY);
+            //Log.i("制御点", "controlX=" + controlX + "\tcontrolY=" + controlY);
+
+            //path
+            path.quadTo(controlX, controlY, mSelfPosX, mSelfPosY);
+            return path;
+        }
+
+        /*
+         * 回転角度を取得
+         */
+        public float getRotaionRadian() {
+
+            //線分の傾きの角度を取得
+            float parentPosX = mParentNode.getCenterPosX();
+            float parentPosY = mParentNode.getCenterPosY();
+            float slope = (parentPosY - mCenterPosY) / (parentPosX - mCenterPosX);
+
+            //左上が原点（Y軸方向が反対）のため、－1する（「一般的な2次元座標と同じように考えるため）
+            slope *= -1;
+
+            //傾きの角度を保持
+            //※傾き→ラジアン角度→角度
+            double radian = Math.atan(slope);
+            double degrees = Math.toDegrees(radian);
+            //double slopeDegrees = degrees;
+
+            Log.i("ライン調査", "傾き=" + slope);
+            Log.i("ライン調査", "傾き（角度）=" + degrees);
+
+            //回転角度
+            if (mSelfPosX >= mStartPosX) {
+                //親よりも右にいる場合
+                degrees = 180 + degrees - CONTROL_POINT_DEGREES;
+            } else {
+                //親よりも左にいる場合
+                degrees = CONTROL_POINT_DEGREES + degrees;
+            }
+
+            //回転角度をラジアン角度に変換
+            radian = Math.toRadians(degrees);
+
+            Log.i("ライン調査", "回転角度=" + degrees);
+
+            return (float)radian;
+        }
+
+        /*
+         * 2次ベジェ曲線の作成
+         */
+        public Path createSecondOrderBezierCurve() {
 
             //Path生成
             //★初期生成させる
@@ -1004,6 +1064,21 @@ public class ChildNode extends BaseNode {
             path.cubicTo(controlX1, controlY1, controlX1, controlY2, mSelfPosX, mSelfPosY);
 
             Log.i("onDraw", "mParentPosX=" + mStartPosX + " mParentPosY=" + mStartPosY);
+
+            return path;
+        }
+
+
+        @Override
+        protected void onDraw(Canvas canvas) {
+
+            super.onDraw(canvas);
+
+            //2次ベジェ曲線のパスを生成
+            //Path path = createSecondOrderBezierCurve();
+
+            //1次ベジェ曲線のパスを生成
+            Path path = createFirstOrderBezierCurve();
 
             //描画
             canvas.drawPath(path, mPaint);

@@ -32,10 +32,6 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
     private final List<Integer>   mData;
     //設定対象ノードビュー
     private final BaseNode        mv_node;
-    //FragmentManager
-    private final FragmentManager mFragmentManager;
-    //ViewPager2
-    private final ViewPager2 mvp2;
 
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
@@ -44,10 +40,6 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
 
         //設定対象ノードビュー
         private final BaseNode        mv_node;
-        //FragmentManager
-        private final FragmentManager mFragmentManager;
-        //ViewPager2
-        private final ViewPager2      mvp2;
 
         /*--- ノードテキスト ---*/
         private EditText et_nodeName;
@@ -72,12 +64,10 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
         /*
          * コンストラクタ
          */
-        public GuideViewHolder(View itemView, int position, BaseNode node, FragmentManager fragmentManager, ViewPager2 vp2) {
+        public GuideViewHolder(View itemView, int position, BaseNode node) {
             super(itemView);
 
             mv_node = node;
-            mFragmentManager = fragmentManager;
-            mvp2 = vp2;
 
             switch (position) {
                 case 0:
@@ -101,23 +91,24 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
                     break;
 
                 case 3:
+                    //ノード形
+                    iv_circle = itemView.findViewById(R.id.iv_circle);
+                    iv_square = itemView.findViewById(R.id.iv_square);
+                    break;
+
+                case 4:
                     //テキスト色
                     csv_text = itemView.findViewById(R.id.csv_text);
                     break;
 
-                case 4:
+                case 5:
                     //背景色
                     csv_background = itemView.findViewById(R.id.csv_background);
                     break;
 
-                case 5:
+                case 6:
                     //枠線色
                     csv_border = itemView.findViewById(R.id.csv_border);
-                    break;
-
-                case 6:
-                    //ラインの色
-                    csv_line = itemView.findViewById(R.id.csv_line);
                     break;
 
                 case 7:
@@ -126,9 +117,8 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
                     break;
 
                 case 8:
-                    //ノード形
-                    iv_circle = itemView.findViewById(R.id.iv_circle);
-                    iv_square = itemView.findViewById(R.id.iv_square);
+                    //ラインの色
+                    csv_line = itemView.findViewById(R.id.csv_line);
                     break;
             }
         }
@@ -136,7 +126,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
         /*
          * 各種ページ設定
          */
-        public void setPage(int position) {
+        private void setPage(int position) {
 
             switch (position){
                 case 0:
@@ -172,15 +162,17 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
         /*
          * ページ設定（０）
          */
-        public void setPage0() {
+        private void setPage0() {
             //文字入力リスナーを設定
             et_nodeName.addTextChangedListener(this);
+            //ノード名を設定
+            et_nodeName.setText( mv_node.getNode().getNodeName() );
         }
 
         /*
          * ページ設定（１）
          */
-        public void setPage1() {
+        private void setPage1() {
             Context context = mv_node.getContext();
 
             //フォントアダプタ
@@ -202,14 +194,15 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
             rv_fontjapanese.setAdapter( new FontAdapter( jpFonts, mv_node, null, FontAdapter.JAPANESE ) );
 
             //スクロールリスナー（ViewPager2のタブ切り替えを制御）
-            rv_fontAlphabet.addOnItemTouchListener( new Vp2OnItemTouchListener( mvp2 ) );
-            rv_fontjapanese.addOnItemTouchListener( new Vp2OnItemTouchListener( mvp2 ) );
+            ViewPager2 vp2_design = mv_node.getRootView().findViewById(R.id.vp2_design);
+            rv_fontAlphabet.addOnItemTouchListener( new Vp2OnItemTouchListener( vp2_design ) );
+            rv_fontjapanese.addOnItemTouchListener( new Vp2OnItemTouchListener( vp2_design ) );
         }
 
         /*
          * ページ設定（２）
          */
-        public void setPage2() {
+        private void setPage2() {
             //ノードサイズ
             sbv_nodeSize.setNodeSizeSeekbar( mv_node );
             //枠サイズ
@@ -225,54 +218,54 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
         /*
          * ページ設定（３）
          */
-        public void setPage3() {
-            //テキスト色
-            csv_text.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_TEXT, mv_node );
-        }
-
-        /*
-         * ページ設定（4）
-         */
-        public void setPage4() {
-            //背景色
-            csv_background.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_BACKGROUNG, mv_node );
-        }
-
-        /*
-         * ページ設定（5）
-         */
-        public void setPage5() {
-            //枠色
-            csv_border.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_BORDER, mv_node );
-        }
-
-        /*
-         * ページ設定（6）
-         */
-        public void setPage6() {
-            //ラインカラー
-            csv_line.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_LINE, mv_node );
-        }
-        /*
-         * ページ設定（7）
-         */
-        public void setPage7() {
-            //影色
-            csv_shadow.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_SHADOW, mv_node );
-
-            //影のon/off
-
-        }
-        /*
-         * ページ設定（8）
-         */
-        public void setPage8() {
+        private void setPage3() {
             //ノード形
             iv_circle.setOnClickListener( new ClickShapeImage(NodeTable.CIRCLE) );
             iv_square.setOnClickListener( new ClickShapeImage(NodeTable.SQUARE) );
         }
 
+        /*
+         * ページ設定（４）
+         */
+        private void setPage4() {
+            //テキスト色
+            csv_text.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_TEXT, mv_node );
+        }
 
+        /*
+         * ページ設定（５）
+         */
+        private void setPage5() {
+            //背景色
+            csv_background.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_BACKGROUNG, mv_node );
+        }
+
+        /*
+         * ページ設定（６）
+         */
+        private void setPage6() {
+            //枠色
+            csv_border.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_BORDER, mv_node );
+        }
+
+        /*
+         * ページ設定（７）
+         */
+        private void setPage7() {
+            //影色
+            csv_shadow.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_SHADOW, mv_node );
+
+            //影のon/off
+        }
+        /*
+         * ページ設定（８）
+         */
+        private void setPage8() {
+            //ラインカラー
+            csv_line.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_LINE, mv_node );
+        }
+
+        /*--  TextChangedListener  --*/
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
         }
@@ -289,6 +282,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
             mv_node.setNodeName( editable.toString() );
             mv_node.addOnNodeGlobalLayoutListener();
         }
+        /*--  --*/
 
 
         /*
@@ -318,11 +312,9 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
     /*
      * コンストラクタ
      */
-    public DesignNodePageAdapter(List<Integer> layoutIdList, View v_node, FragmentManager fragmentManager, ViewPager2 vp) {
-        mData            = layoutIdList;
-        mv_node          =  (BaseNode)v_node;
-        mFragmentManager = fragmentManager;
-        mvp2             = vp;
+    public DesignNodePageAdapter(List<Integer> layoutIdList, View v_node) {
+        mData = layoutIdList;
+        mv_node =  (BaseNode)v_node;
     }
 
     /*
@@ -346,7 +338,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
         LayoutInflater inflater = LayoutInflater.from( viewGroup.getContext() );
         View view = inflater.inflate(mData.get(position), viewGroup, false);
 
-        return new GuideViewHolder(view, position, mv_node, mFragmentManager, mvp2);
+        return new GuideViewHolder(view, position, mv_node);
     }
 
     /*
