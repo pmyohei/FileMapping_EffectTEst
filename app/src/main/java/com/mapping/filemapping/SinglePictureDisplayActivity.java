@@ -8,7 +8,10 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -52,15 +55,39 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
 
         //各写真の表示設定
         ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
-        SinglePictureAdapter adapter = new SinglePictureAdapter(this, mGalley);
+        ViewTreeObserver observer = vp2_singlePicture.getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        //レイアウト確定後は、不要なので本リスナー削除
+                        vp2_singlePicture.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                        Log.i("写真スクロール", "vp2_singlePicture height=" + vp2_singlePicture.getHeight());
+                        Log.i("写真スクロール", "vp2_singlePicture width=" + vp2_singlePicture.getWidth());
+
+                        SinglePictureAdapter adapter = new SinglePictureAdapter(vp2_singlePicture.getContext(), mGalley);
+                        vp2_singlePicture.setAdapter(adapter);
+                        //表示開始位置を設定
+                        vp2_singlePicture.setCurrentItem( showPosition );
+                    }
+                }
+        );
+
+/*        SinglePictureAdapter adapter = new SinglePictureAdapter(this, mGalley);
         vp2_singlePicture.setAdapter(adapter);
         //表示開始位置を設定
-        vp2_singlePicture.setCurrentItem( showPosition );
+        vp2_singlePicture.setCurrentItem( showPosition );*/
+
+        //ページ送りなし
+        //vp2_singlePicture.requestDisallowInterceptTouchEvent(true);
+        //vp2_singlePicture.setUserInputEnabled(false);
+
 
 /*        vp2_singlePicture.setOnTouchListener(new View.OnTouchListener() {
                  @Override
                  public boolean onTouch(View view, MotionEvent motionEvent) {
-                     Log.i("コールバック", "setOnTouchListener");
+                     Log.i("コール順確認", "ViewPager");
                      return false;
                  }
              }
@@ -74,21 +101,23 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                Log.i("コールバック", "onPageScrollStateChanged state=" + state);
+                Log.i("コール順確認", "onPageScrollStateChanged state=" + state);
             }
 
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                adapter.notifyItemChanged(preIndex);
+
+                //見ていたページのスケールを元に戻す
+                //adapter.notifyItemChanged(preIndex);
                 preIndex = position;
 
-                Log.i("コールバック", "onPageSelected");
+                Log.i("コール順確認", "onPageSelected");
             }
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.i("コールバック", "onPageScrolled");
+                Log.i("コール順確認", "onPageScrolled");
             }
         });
 

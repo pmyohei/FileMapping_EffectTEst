@@ -142,6 +142,9 @@ public class ChildNode extends BaseNode {
      */
     public void setLineColor(String color) {
         mLineView.setColor(color);
+
+        //テーブル側も更新
+        mNode.setLineColor( color );
     }
     public String getLineColor() {
         return mLineView.getColor();
@@ -152,6 +155,9 @@ public class ChildNode extends BaseNode {
      */
     public void setLineSize(float thick) {
         mLineView.setSize(thick);
+
+        //テーブル側も更新
+        mNode.setLineSize( thick );
     }
     public float getLineSize() {
         return mLineView.getSize();

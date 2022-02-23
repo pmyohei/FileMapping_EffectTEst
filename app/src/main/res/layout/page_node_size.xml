@@ -18,18 +18,47 @@
             android:orientation="vertical">
 
             <!-- ノードサイズ -->
+            <TextView
+                android:id="@+id/tv_titel_nodeSize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layout_marginStart="12dp"
+                android:gravity="center"
+                android:text="@string/size_node"
+                android:textColor="@color/black" />
+
             <com.mapping.filemapping.SeekbarView
                 android:id="@+id/sbv_nodeSize"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
             <!-- 枠のサイズ -->
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="12dp"
+                android:gravity="center"
+                android:text="@string/size_border"
+                android:textColor="@color/black" />
+
             <com.mapping.filemapping.SeekbarView
                 android:id="@+id/sbv_borderSize"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
             <!-- ラインのサイズ -->
+            <TextView
+                android:id="@+id/tv_titel_lineSize"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="32dp"
+                android:layout_marginStart="12dp"
+                android:gravity="center"
+                android:text="@string/size_line"
+                android:textColor="@color/black" />
+
             <com.mapping.filemapping.SeekbarView
                 android:id="@+id/sbv_lineSize"
                 android:layout_width="match_parent"

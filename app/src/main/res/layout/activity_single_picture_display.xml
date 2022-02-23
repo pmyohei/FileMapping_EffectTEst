@@ -23,6 +23,39 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"/>
 
+<!--    <com.mapping.filemapping.NestedScrollView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <HorizontalScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center">
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <ImageView
+                    android:layout_width="2000dp"
+                    android:layout_height="2000dp"
+                    android:layout_gravity="center_horizontal"
+                    android:gravity="center"
+                    android:adjustViewBounds="true"
+                    android:background="@drawable/bmp_sample_cafe"
+                    />
+
+            </LinearLayout>
+
+        </HorizontalScrollView>
+
+    </com.mapping.filemapping.NestedScrollView>-->
+
+
     <!-- 操作アイコン -->
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"

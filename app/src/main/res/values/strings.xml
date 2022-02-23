@@ -47,8 +47,14 @@
     <string name="color_rgb">RGB</string>
     <string name="color_graphic">Graphic</string>
 
+    <string name="size_node">ノードサイズ</string>
+    <string name="size_border">枠の太さ</string>
+    <string name="size_line">ラインの太さ</string>
 
-
+    <!-- フォルダツリー -->
+    <string name="tree_title">ノード一覧\n（クリックで画面中央へ移動）</string>
+    <string name="no_nodeName">（ノード名なし）</string>
+    <string name="top_nodeName">・</string>
 
     <!--  レイアウト確認用（実際にユーザーに表示されることはない） -->
     <string name="sample">Sample</string>

@@ -124,7 +124,7 @@ public class SampleMapView extends FrameLayout {
         NodeTable nodeD = new NodeTable();
         NodeTable nodeE = new NodeTable();
         //ノード名（仮）
-        nodeR.setNodeName("Root");
+        nodeR.setNodeName("Sample");
         nodeA.setNodeName("A");
         nodeB.setNodeName("B");
         nodeC.setNodeName("C");
@@ -147,7 +147,7 @@ public class SampleMapView extends FrameLayout {
         //位置
         //※中心に対するoffsetを指定
         //nodeA.setPos(100, -300);
-        nodeA.setPos(100, -150);
+        nodeA.setPos(200, -150);
         nodeB.setPos(-400, -300);
         nodeC.setPos(100, 100);
         nodeD.setPos(-400, 100);
@@ -288,6 +288,7 @@ public class SampleMapView extends FrameLayout {
 
             //Log.i("配色", "first=" + first + " second=" + second + " third=" + third);
 
+            //2色の配色でマップを色付け
             set2ColorToMap(first, second);
 
             switchMaxNum = COLOR2_SWITCH_MAX;
@@ -300,6 +301,7 @@ public class SampleMapView extends FrameLayout {
 
             //Log.i("配色", "first=" + first + " second=" + second + " third=" + third);
 
+            //3色の配色でマップを色付け
             set3ColorToMap(first, second, third);
 
             switchMaxNum = COLOR3_SWITCH_MAX;

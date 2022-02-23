@@ -352,8 +352,12 @@ public class BaseNode extends FrameLayout {
      * ノード影色の設定
      */
     public void setShadowColor( String color, int nodeKind ) {
+
+        //現在の影の有無
+        boolean isShadow = mNode.isShadow();
+
         //影色を設定
-        ((NodeOutsideView)findViewById( R.id.l_nodeBody )).setShadowColor( Color.parseColor(color), nodeKind );
+        ((NodeOutsideView)findViewById( R.id.l_nodeBody )).setShadowColor( Color.parseColor(color), nodeKind, isShadow );
 
         mNode.setShadowColor( color );
     }

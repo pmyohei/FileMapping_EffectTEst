@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
@@ -47,6 +48,7 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         private ColorSelectionView csv_border;
         private SeekbarView  sbv_borderSize;
         private SeekbarView  sbv_nodeSize;
+        private TextView tv_titel_nodeSize;
         private ColorSelectionView csv_shadow;
 
         //ラインデザイン
@@ -74,7 +76,8 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
                     break;
 
                 case 2:
-                    //ラインサイズ
+                    //ノードサイズ
+                    tv_titel_nodeSize = itemView.findViewById(R.id.tv_titel_nodeSize);
                     sbv_nodeSize = itemView.findViewById(R.id.sbv_nodeSize);
                     //ラインサイズ
                     sbv_lineSize = itemView.findViewById(R.id.sbv_lineSize);
@@ -200,6 +203,7 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
             sbv_borderSize.setBorderSizeSeekbar( null );
 
             //ノードサイズは設定対象外のため、非表示
+            tv_titel_nodeSize.setVisibility( View.GONE );
             sbv_nodeSize.setVisibility( View.GONE );
         }
 

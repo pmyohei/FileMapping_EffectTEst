@@ -8,7 +8,7 @@
     android:gravity="center_horizontal"
     android:adjustViewBounds="true"
     />-->
-<com.mapping.filemapping.SingleImageView
+<!--<com.mapping.filemapping.SingleImageView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/iv_singlePicture"
     android:layout_width="match_parent"
@@ -16,4 +16,132 @@
     android:layout_gravity="center_horizontal"
     android:gravity="center_horizontal"
     android:adjustViewBounds="true"
-    />
+    />-->
+
+
+<!--
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:orientation="vertical">
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:overScrollMode="never">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.mapping.filemapping.SingleScrollImageView
+                android:id="@+id/iv_singleScrollPicture"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:adjustViewBounds="true"
+                />
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</LinearLayout>-->
+
+<!--<com.mapping.filemapping.SingleScrollImageView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">-->
+
+<com.mapping.filemapping.NestedScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nsv_vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.mapping.filemapping.NestedHorizontalScrollView
+        android:id="@+id/hsv_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+<!--
+    <HorizontalScrollView
+        android:id="@+id/hsv_horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+-->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+<!--            <ImageView
+                android:id="@+id/iv_singleScrollPicture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:adjustViewBounds="true"
+                />-->
+            <com.mapping.filemapping.SingleScrollImageView
+                android:id="@+id/iv_singleScrollPicture"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:adjustViewBounds="true"
+                />
+        </LinearLayout>
+<!--
+    </HorizontalScrollView>
+-->
+
+    </com.mapping.filemapping.NestedHorizontalScrollView>
+
+</com.mapping.filemapping.NestedScrollView>
+
+<!--
+</com.mapping.filemapping.SingleScrollImageView>
+-->
+
+<!--
+<HorizontalScrollView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.mapping.filemapping.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <com.mapping.filemapping.SingleScrollImageView
+                android:id="@+id/iv_singleScrollPicture"
+                android:layout_width="2000dp"
+                android:layout_height="2000dp"
+                android:layout_gravity="center_horizontal"
+                android:gravity="center_horizontal"
+                android:adjustViewBounds="true"
+                />
+
+        </LinearLayout>
+
+    </com.mapping.filemapping.NestedScrollView>
+
+</HorizontalScrollView>
+-->

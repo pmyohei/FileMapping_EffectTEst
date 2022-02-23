@@ -9,6 +9,7 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -16,7 +17,7 @@ import androidx.viewpager2.widget.ViewPager2;
  * 写真単体表示用ビュー
  * 　　ズームや参照箇所のタッチ移動に対応
  */
-public class SingleImageView extends androidx.appcompat.widget.AppCompatImageView {
+public class SingleScrollImageView_old extends androidx.appcompat.widget.AppCompatImageView {
     private Matrix matrix = new Matrix();
     private ScaleGestureDetector scaleGestureDetector;
     private GestureDetector gestureDetector;
@@ -28,16 +29,16 @@ public class SingleImageView extends androidx.appcompat.widget.AppCompatImageVie
 
     private boolean mPinch = false;
 
-    public SingleImageView(Context context) {
+    public SingleScrollImageView_old(Context context) {
         super(context);
     }
 
-    public SingleImageView(Context context, AttributeSet attrs) {
+    public SingleScrollImageView_old(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public SingleImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SingleScrollImageView_old(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -50,16 +51,19 @@ public class SingleImageView extends androidx.appcompat.widget.AppCompatImageVie
         Log.i("マトリクス", "previousScale=" + previousScale );
 */
 
+        //findViewById(R.id.iv_singleScrollPicture).setScaleX(10);
+        //findViewById(R.id.iv_singleScrollPicture).setScaleY(10);
+
 
         scaleGestureDetector = new ScaleGestureDetector(context, new ScaleListener());
-        gestureDetector = new GestureDetector(context,simpleOnGestureListener);
+        gestureDetector = new GestureDetector(context, simpleOnGestureListener);
     }
 
     public void setScaleTypeA() {
         setScaleType(ScaleType.FIT_CENTER);
         //matrix = getImageMatrix();
         //setImageMatrix(matrix);
-        Log.i("マトリクス", "FIT_CENTERの設定" );
+        Log.i("マトリクス", "FIT_CENTERの設定");
     }
 
     public void setScaleType() {
@@ -70,7 +74,39 @@ public class SingleImageView extends androidx.appcompat.widget.AppCompatImageVie
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
-        if( !test ){
+        //ページ送りなし
+/*
+        getParent().requestDisallowInterceptTouchEvent(true);
+
+        View root = getRootView();
+        ViewPager2 vp2_singlePicture = root.findViewById(R.id.vp2_singlePicture);
+        vp2_singlePicture.setUserInputEnabled(false);
+*/
+
+        if (!test) {
+
+/*
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.WRAP_CONTENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            layoutParams.height = 2500;
+            layoutParams.width = 2500;
+
+            ImageView iv_singleScrollPicture = findViewById(R.id.iv_singleScrollPicture);
+            iv_singleScrollPicture.setLayoutParams(layoutParams);
+*/
+
+            test = true;
+        }
+
+
+        //ピンチ操作
+        scaleGestureDetector.onTouchEvent(event);
+
+
+
+/*        if( !test ){
             setScaleType(ScaleType.MATRIX);
             //if (matrix == null) {
                 matrix = getImageMatrix();
@@ -89,14 +125,13 @@ public class SingleImageView extends androidx.appcompat.widget.AppCompatImageVie
         setImageMatrix(matrix);
         //ピンチ操作
         scaleGestureDetector.onTouchEvent(event);
-
-
-
         //タッチ移動操作
-        gestureDetector.onTouchEvent(event);
+        gestureDetector.onTouchEvent(event);*/
 
         return true;
     }
+
+
 
     /*
      * 写真のピンチ操作リスナー
@@ -116,6 +151,18 @@ public class SingleImageView extends androidx.appcompat.widget.AppCompatImageVie
         float mScale;
         float mStartScale;
 
+        //------------
+
+
+        private LinearLayout.LayoutParams mLayoutParams = null;
+
+        //ピンチ操作開始時点のマップスケールを保持
+        float mHeight;
+        float mWidth;
+
+
+
+
 /*        public ScaleListener(){
             INIT_SCALE = getMatrixValue(Matrix.MSCALE_Y);
             MAX_SCALE  = getMatrixValue(Matrix.MSCALE_Y) * 2.5f;
@@ -123,6 +170,24 @@ public class SingleImageView extends androidx.appcompat.widget.AppCompatImageVie
 
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
+
+            //ピンチ倍率
+            float scaleFactor = detector.getScaleFactor();
+
+            ImageView iv_singleScrollPicture = findViewById(R.id.iv_singleScrollPicture);
+            int height = iv_singleScrollPicture.getHeight();
+            int width  = iv_singleScrollPicture.getWidth();
+
+            mLayoutParams.height = (int)(mHeight * scaleFactor);
+            mLayoutParams.width  = (int)(mWidth * scaleFactor);
+
+            iv_singleScrollPicture.setLayoutParams(mLayoutParams);
+
+            Log.i("ピンチ操作", "scaleFactor=" + scaleFactor);
+            Log.i("ピンチ操作", "mHeight=" + mHeight + " → " + mLayoutParams.height);
+
+
+/*
             float scaleFactor;
             //スケール操作前の比率（前回比率変更後の比率）
             float previousScale = getMatrixValue(Matrix.MSCALE_Y);
@@ -156,14 +221,26 @@ public class SingleImageView extends androidx.appcompat.widget.AppCompatImageVie
 
             //マトリクスを更新して、再描画
             matrix.postScale(scaleFactor, scaleFactor, focusX, focusY);
-            invalidate();
+            invalidate();*/
 
             return super.onScale(detector);
         }
 
         @Override
         public boolean onScaleBegin(ScaleGestureDetector detector) {
-            focusX = detector.getFocusX();
+
+            if( mLayoutParams == null ){
+                mLayoutParams = new LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.WRAP_CONTENT,
+                        LinearLayout.LayoutParams.WRAP_CONTENT);
+            }
+
+            ImageView iv_singleScrollPicture = findViewById(R.id.iv_singleScrollPicture);
+            mHeight = iv_singleScrollPicture.getHeight();
+            mWidth  = iv_singleScrollPicture.getWidth();
+
+
+/*            focusX = detector.getFocusX();
             focusY = detector.getFocusY();
 
             //ピンチ操作中
@@ -178,7 +255,7 @@ public class SingleImageView extends androidx.appcompat.widget.AppCompatImageVie
             mStartScale = getMatrixValue(Matrix.MSCALE_Y);
 
             //ページスクロールを停止
-            setPageScroll(false);
+            setPageScroll(false);*/
 
             return super.onScaleBegin(detector);
         }

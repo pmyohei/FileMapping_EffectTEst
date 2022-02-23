@@ -89,7 +89,7 @@ public class MapEntryActivity extends AppCompatActivity {
 
         //ViewPager2にアダプタを割り当て
         ViewPager2 vp = findViewById(R.id.vp2_createMap);
-        CreateMapPageAdapter adapter = new CreateMapPageAdapter(layoutIdList, fl_map, getSupportFragmentManager(), vp);
+        CreateMapPageAdapter adapter = new CreateMapPageAdapter(layoutIdList, fl_map);
         vp.setAdapter(adapter);
 
         String[] titles = new String[]{
@@ -99,6 +99,7 @@ public class MapEntryActivity extends AppCompatActivity {
         };
 
         //インジケータの設定
+        //★フォントの適用
         TabLayout tabLayout = findViewById(R.id.tab_layout);
         new TabLayoutMediator(tabLayout, vp,
                 (tab, position) -> tab.setText(titles[position])

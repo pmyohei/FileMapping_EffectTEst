@@ -112,7 +112,7 @@ public class NodeOutsideView extends LinearLayout {
     /*
      * 影色の設定
      */
-    public void setShadowColor(int colorHex, int nodeKind) {
+    public void setShadowColor(int colorHex, int nodeKind, boolean isShadow) {
 
         //ペイント未生成なら生成
         if( mPaint == null ){
@@ -122,15 +122,10 @@ public class NodeOutsideView extends LinearLayout {
         //色更新
         mShadowColor = colorHex;
 
-/*        //ノードの横幅
-        int width = findViewById(R.id.cv_node).getWidth();
-        //影の設定
-        mPaint.setShadowLayer((width / 8f), 0, 0, mShadowColor);
-
-        Log.i("影", "mShadowColor＝" + mShadowColor);
-
-        //再描画
-        invalidate();*/
+        //影設定ありなら、設定色で描画
+        if( isShadow ){
+            setShadowOnOff( true, nodeKind );
+        }
     }
 
     /*

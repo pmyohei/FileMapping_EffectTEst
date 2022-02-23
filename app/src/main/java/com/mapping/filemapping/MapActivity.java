@@ -804,28 +804,20 @@ public class MapActivity extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_palette:
                 //マップ全体デザイン変更
-
-                //BottomSheetを開く
                 openDesignBottomSheet(DesignBottomSheet.MAP, findViewById(R.id.fl_screenMap));
 
                 return true;
 
             case R.id.action_search:
                 //検索機能
-
                 return true;
 
             case R.id.action_folder_tree:
                 //フォルダーツリー表示
-
-                Log.i("MenuItem", "action_folder_tree");
-
                 DrawerLayout drawer = findViewById(R.id.dl_map);
-
                 drawer.openDrawer(GravityCompat.END);
 
                 return true;
-
 
             case R.id.action_close:
                 //親ノード変更モードの解除
@@ -1143,11 +1135,11 @@ public class MapActivity extends AppCompatActivity {
             LinearLayout ll_toAdd = findViewById(R.id.ll_toAdd);
 
             //階層毎のマージン差分
-            final int MARGIN_SIZE = 100;
+            final int MARGIN_SIZE = 60;
 
             for (NodeTable node : hierarchyNodes) {
                 //1行分のレイアウトをビュー化
-                ViewGroup item = (ViewGroup) inflater.inflate(R.layout.hierarchy_node_item, null);
+                ViewGroup item = (ViewGroup) inflater.inflate(R.layout.item_hierarchy_node, null);
                 //追加
                 ll_toAdd.addView(item);
 
@@ -1173,8 +1165,17 @@ public class MapActivity extends AppCompatActivity {
 
             //ノード名を設定
             TextView tv_node = vg_item.findViewById(R.id.tv_node);
-            tv_node.setText( node.getNodeName() );
-            //tv_node.setText("1234567890123456789012345678901234567890");
+
+            String nodeName = node.getNodeName();
+            if( nodeName.isEmpty() ){
+                //ノード名未入力なら、名称ない旨の文言を設定
+                nodeName = getResources().getString(R.string.no_nodeName);
+
+            } else {
+                //ノード名がある場合、改行をなくす
+                nodeName = nodeName.replaceAll("\n", "");
+            }
+            tv_node.setText( nodeName );
 
             //クリックリスナー
             vg_item.setOnClickListener(new View.OnClickListener() {

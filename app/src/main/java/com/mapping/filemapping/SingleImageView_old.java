@@ -8,7 +8,6 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
-import android.widget.ImageView;
 
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -16,7 +15,7 @@ import androidx.viewpager2.widget.ViewPager2;
  * 写真単体表示用ビュー
  * 　　ズームや参照箇所のタッチ移動に対応
  */
-public class SingleImageView extends androidx.appcompat.widget.AppCompatImageView {
+public class SingleImageView_old extends androidx.appcompat.widget.AppCompatImageView {
     private Matrix matrix = new Matrix();
     private ScaleGestureDetector scaleGestureDetector;
     private GestureDetector gestureDetector;
@@ -28,16 +27,16 @@ public class SingleImageView extends androidx.appcompat.widget.AppCompatImageVie
 
     private boolean mPinch = false;
 
-    public SingleImageView(Context context) {
+    public SingleImageView_old(Context context) {
         super(context);
     }
 
-    public SingleImageView(Context context, AttributeSet attrs) {
+    public SingleImageView_old(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
 
-    public SingleImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SingleImageView_old(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
@@ -49,7 +48,6 @@ public class SingleImageView extends androidx.appcompat.widget.AppCompatImageVie
         float previousScale = getMatrixValue(Matrix.MSCALE_Y);
         Log.i("マトリクス", "previousScale=" + previousScale );
 */
-
 
         scaleGestureDetector = new ScaleGestureDetector(context, new ScaleListener());
         gestureDetector = new GestureDetector(context,simpleOnGestureListener);

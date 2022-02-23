@@ -5,6 +5,9 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
+import android.widget.ImageView;
+import android.widget.LinearLayout;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -22,6 +25,8 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
     private final ArrayList<PictureTable> mData;
     private final Context mContext;
     private final LayoutInflater mInflater;
+    private int mParentHeight;
+    private int mParentWidth;
 
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
@@ -29,14 +34,17 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
      */
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final SingleImageView iv_singlePicture;
+        //private final SingleImageView iv_singlePicture;
+        //private final SingleScrollImageView iv_singleScrollPicture;
+        private final ImageView iv_singleScrollPicture;
 
         /*
          * コンストラクタ
          */
         public ViewHolder(View itemView) {
             super(itemView);
-            iv_singlePicture = itemView.findViewById(R.id.iv_singlePicture);
+            //iv_singlePicture = itemView.findViewById(R.id.iv_singlePicture);
+            iv_singleScrollPicture = itemView.findViewById(R.id.iv_singleScrollPicture);
         }
 
         /*
@@ -46,14 +54,24 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
 
             Log.i("単体表示", "getPath=" + picture.getPath() );
 
+            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.WRAP_CONTENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT);
+
+            layoutParams.height = mParentHeight;
+            layoutParams.width = mParentWidth;
+
+            iv_singleScrollPicture.setLayoutParams(layoutParams);
+
             Picasso.get()
                     .load( new File( picture.getPath() ) )
-                    //.fit()
+                    //.fit().centerInside()
                     .error(R.drawable.baseline_picture_read_error_24)
-                    .into( iv_singlePicture );
+                    //.into( iv_singlePicture );
+                    .into( iv_singleScrollPicture );
 
             //★ページ遷移後の更新はこれだけやりたい
-            iv_singlePicture.setScaleTypeA();
+            //iv_singlePicture.setScaleTypeA();
         }
     }
 
@@ -84,8 +102,15 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
         Log.i("単体表示", "onCreateViewHolder");
 
         //ビューを生成
-        //View view = mInflater.inflate(R.layout.item_single_picture, viewGroup, false);
         View view = mInflater.inflate(R.layout.item_single_picture, viewGroup, false);
+        //View view = new SingleScrollImageView( viewGroup.getContext(), viewGroup );
+
+        Log.i("写真スクロール", "親=" + viewGroup.getClass());
+        Log.i("写真スクロール", "親 height=" + viewGroup.getHeight());
+        Log.i("写真スクロール", "親 width=" + viewGroup.getWidth());
+
+        mParentHeight = viewGroup.getHeight();
+        mParentWidth = viewGroup.getWidth();
 
         return new ViewHolder(view);
     }

@@ -26,10 +26,6 @@ public class CreateMapPageAdapter extends RecyclerView.Adapter<CreateMapPageAdap
     private final List<Integer>   mData;
     //
     private final View mfl_sampleMap;
-    //FragmentManager
-    private final FragmentManager mFragmentManager;
-    //ViewPager2
-    private final ViewPager2 mvp2;
 
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
@@ -38,14 +34,8 @@ public class CreateMapPageAdapter extends RecyclerView.Adapter<CreateMapPageAdap
 
         //設定対象ノードビュー
         private final View mfl_sampleMap;
-        //FragmentManager
-        private final FragmentManager mFragmentManager;
-        //ViewPager2
-        private final ViewPager2      mvp2;
-
         /*--- マップ名 ---*/
         private EditText et_mapName;
-
         /*--- ノード数 ---*/
         private NumberPicker np_nodeNum ;
 
@@ -56,12 +46,10 @@ public class CreateMapPageAdapter extends RecyclerView.Adapter<CreateMapPageAdap
         /*
          * コンストラクタ
          */
-        public GuideViewHolder(View itemView, int position, View fl_sampleMap, FragmentManager fragmentManager, ViewPager2 vp2) {
+        public GuideViewHolder(View itemView, int position, View fl_sampleMap) {
             super(itemView);
 
             mfl_sampleMap = fl_sampleMap;
-            mFragmentManager = fragmentManager;
-            mvp2 = vp2;
 
             if (position == 0) {
                 //マップ名
@@ -192,11 +180,9 @@ public class CreateMapPageAdapter extends RecyclerView.Adapter<CreateMapPageAdap
     /*
      * コンストラクタ
      */
-    public CreateMapPageAdapter(List<Integer> layoutIdList, View fl_sampleMap, FragmentManager fragmentManager, ViewPager2 vp) {
+    public CreateMapPageAdapter(List<Integer> layoutIdList, View fl_sampleMap) {
         mData            = layoutIdList;
         mfl_sampleMap    = fl_sampleMap;
-        mFragmentManager = fragmentManager;
-        mvp2             = vp;
     }
 
     /*
@@ -219,7 +205,7 @@ public class CreateMapPageAdapter extends RecyclerView.Adapter<CreateMapPageAdap
         LayoutInflater inflater = LayoutInflater.from( viewGroup.getContext() );
         View view = inflater.inflate(mData.get(position), viewGroup, false);
 
-        return new GuideViewHolder(view, position, mfl_sampleMap, mFragmentManager, mvp2);
+        return new GuideViewHolder(view, position, mfl_sampleMap);
     }
 
     /*

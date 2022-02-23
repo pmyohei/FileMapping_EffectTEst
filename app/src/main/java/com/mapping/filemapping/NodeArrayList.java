@@ -244,7 +244,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
     
     /*
      *　ノードの階層を取得
-     *   ＜階層レベル参考＞
+     *   ＜参考：階層レベル＞
      *     　・ルートノード　：１
      *       　・ノードA　　：２
      *       　　・ノードa　：３

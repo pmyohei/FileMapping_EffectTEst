@@ -58,6 +58,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
 
         /*--- ライン ---*/
         private ColorSelectionView csv_line;
+        private TextView tv_titel_lineSize;
         private SeekbarView  sbv_lineSize;
 
 
@@ -85,6 +86,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
                     //ノードサイズ
                     sbv_nodeSize = itemView.findViewById(R.id.sbv_nodeSize);
                     //ラインサイズ
+                    tv_titel_lineSize = itemView.findViewById(R.id.tv_titel_lineSize);
                     sbv_lineSize = itemView.findViewById(R.id.sbv_lineSize);
                     //枠線サイズ
                     sbv_borderSize = itemView.findViewById(R.id.sbv_borderSize);
@@ -209,7 +211,10 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
             sbv_borderSize.setBorderSizeSeekbar( mv_node );
 
             //ルートノード以外はラインサイズも設定対象
-            if( mv_node.getNode().getKind() != NodeTable.NODE_KIND_ROOT ){
+            if( mv_node.getNode().getKind() == NodeTable.NODE_KIND_ROOT ){
+                tv_titel_lineSize.setVisibility( View.GONE );
+                sbv_lineSize.setVisibility( View.GONE );
+            } else {
                 //ラインサイズ
                 sbv_lineSize.setLineSizeSeekbar( mv_node );
             }

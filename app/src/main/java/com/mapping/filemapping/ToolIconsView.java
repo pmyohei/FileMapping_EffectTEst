@@ -115,15 +115,6 @@ public class ToolIconsView extends ConstraintLayout {
                         //レイアウト確定後は、不要なので本リスナー削除
                         getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-/*
-                        //Padding設定
-                        //※アイコンの影が見切れるため、このタイミングで設定
-                        int padding = (int)getResources().getDimension( R.dimen.node_icon_parent_padding);
-                        ConstraintLayout cl_toolIcon = findViewById( R.id.cl_toolIcon );
-                        Log.i("アイコン", "padding 初期値=" + cl_toolIcon.getPaddingLeft() + " 設定値=" + padding);
-                        cl_toolIcon.setPadding( padding, padding, padding, padding );
-*/
-
                         //ノードの中心位置
                         int nodex = v_baseNode.getLeft() + (v_baseNode.getWidth() / 2);
                         int nodey = v_baseNode.getTop() + (v_baseNode.getHeight() / 2);
@@ -196,15 +187,6 @@ public class ToolIconsView extends ConstraintLayout {
 
             count++;
         }
-
-
-        /*//Padding設定
-        //※アイコンの影が見切れるため、このタイミングで設定
-        int padding = (int)getResources().getDimension( R.dimen.node_icon_parent_padding);
-        ConstraintLayout cl_toolIcon = findViewById( R.id.cl_toolIcon );
-        Log.i("アイコン", "padding 初期値=" + cl_toolIcon.getPaddingLeft() + " 設定値=" + padding);
-        cl_toolIcon.setPadding( padding, padding, padding, padding );
-        */
 
         //生成位置
         //※ツールアイコン表示後に行う
@@ -569,14 +551,6 @@ public class ToolIconsView extends ConstraintLayout {
         Log.i("ツールアイコン", "クローズチェック");
     }
 
-
-
-    /*
-     *
-     */
-    public void tm(  ) {
-
-    }
 
 }
 
