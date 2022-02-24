@@ -8,7 +8,7 @@
     android:gravity="center_horizontal"
     android:adjustViewBounds="true"
     />-->
-<!--<com.mapping.filemapping.SingleImageView
+<com.mapping.filemapping.SingleMatrixImageView
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/iv_singlePicture"
     android:layout_width="match_parent"
@@ -16,7 +16,7 @@
     android:layout_gravity="center_horizontal"
     android:gravity="center_horizontal"
     android:adjustViewBounds="true"
-    />-->
+    />
 
 
 <!--
@@ -61,7 +61,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical">-->
 
-<com.mapping.filemapping.NestedScrollView
+<!--<com.mapping.filemapping.NestedScrollView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nsv_vertical"
@@ -73,26 +73,26 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-<!--
+&lt;!&ndash;
     <HorizontalScrollView
         android:id="@+id/hsv_horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
--->
+&ndash;&gt;
 
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-<!--            <ImageView
+&lt;!&ndash;            <ImageView
                 android:id="@+id/iv_singleScrollPicture"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal"
                 android:gravity="center_horizontal"
                 android:adjustViewBounds="true"
-                />-->
+                />&ndash;&gt;
             <com.mapping.filemapping.SingleScrollImageView
                 android:id="@+id/iv_singleScrollPicture"
                 android:layout_width="match_parent"
@@ -102,13 +102,13 @@
                 android:adjustViewBounds="true"
                 />
         </LinearLayout>
-<!--
+&lt;!&ndash;
     </HorizontalScrollView>
--->
+&ndash;&gt;
 
     </com.mapping.filemapping.NestedHorizontalScrollView>
 
-</com.mapping.filemapping.NestedScrollView>
+</com.mapping.filemapping.NestedScrollView>-->
 
 <!--
 </com.mapping.filemapping.SingleScrollImageView>

@@ -6,16 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/black">
 
-<!--    <com.mapping.filemapping.SingleImageView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        android:id="@+id/iv_singlePicture"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_gravity="center_horizontal"
-        android:gravity="center_horizontal"
-        android:adjustViewBounds="true"
-        />-->
-
     <!-- 写真ページ -->
     <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vp2_singlePicture"
@@ -23,38 +13,23 @@
         android:layout_height="match_parent"
         android:layout_gravity="center"/>
 
-<!--    <com.mapping.filemapping.NestedScrollView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent">
+    <ImageView
+        android:id="@+id/iv_pre"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginStart="4dp"
+        android:layout_gravity="start|center_vertical"
+        android:visibility="gone"
+        android:src="@drawable/baseline_circle_left_24" />
 
-        <HorizontalScrollView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center">
-
-            <LinearLayout
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:gravity="center"
-                android:orientation="vertical">
-
-                <ImageView
-                    android:layout_width="2000dp"
-                    android:layout_height="2000dp"
-                    android:layout_gravity="center_horizontal"
-                    android:gravity="center"
-                    android:adjustViewBounds="true"
-                    android:background="@drawable/bmp_sample_cafe"
-                    />
-
-            </LinearLayout>
-
-        </HorizontalScrollView>
-
-    </com.mapping.filemapping.NestedScrollView>-->
-
+    <ImageView
+        android:id="@+id/iv_next"
+        android:layout_width="64dp"
+        android:layout_height="64dp"
+        android:layout_marginEnd="4dp"
+        android:layout_gravity="end|center_vertical"
+        android:visibility="gone"
+        android:src="@drawable/baseline_circle_right_24" />
 
     <!-- 操作アイコン -->
     <androidx.constraintlayout.widget.ConstraintLayout

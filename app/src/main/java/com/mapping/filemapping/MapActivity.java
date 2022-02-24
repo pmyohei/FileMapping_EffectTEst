@@ -1052,7 +1052,7 @@ public class MapActivity extends AppCompatActivity {
                     (int) nowy,                    //scroll の開始位置 (Y)
                     (int) (velocityX / SCALE),     //初速
                     (int) (velocityY / SCALE),     //初速
-                    -2000,
+                    -2000,  //★最大値に合わせて可変にする必要あり
                     2000,
                     -2000,
                     2000

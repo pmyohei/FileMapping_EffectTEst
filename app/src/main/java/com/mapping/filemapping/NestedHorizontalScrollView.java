@@ -18,8 +18,6 @@ import androidx.viewpager2.widget.ViewPager2;
  */
 public class NestedHorizontalScrollView extends HorizontalScrollView {
 
-    public boolean mIsIntercept = false;
-
     public NestedHorizontalScrollView(Context context) {
         super(context);
     }
@@ -28,6 +26,25 @@ public class NestedHorizontalScrollView extends HorizontalScrollView {
     }
     public NestedHorizontalScrollView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
+    }
+
+    @Override
+    protected int computeHorizontalScrollRange() {
+        Log.i("ズーム問題", "super.computeHorizontalScrollRange()=" + super.computeHorizontalScrollRange() );
+        return 4000;
+    }
+
+    @Override
+    public void scrollTo(int x, int y) {
+        if (x < 0) x = 0;
+        else {
+            int maxWidth = computeHorizontalScrollRange() - getWidth();
+            if (maxWidth < 0) x = 0;
+            else if (x > maxWidth) x = maxWidth;
+        }
+
+        Log.i("ズーム問題","scrollTo()");
+        super.scrollTo(x, y);
     }
 
     @Override

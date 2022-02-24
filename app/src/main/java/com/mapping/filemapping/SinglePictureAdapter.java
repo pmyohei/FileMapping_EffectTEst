@@ -5,7 +5,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 
@@ -34,7 +33,7 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
      */
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        //private final SingleImageView iv_singlePicture;
+        private final ImageView iv_singlePicture;
         //private final SingleScrollImageView iv_singleScrollPicture;
         private final ImageView iv_singleScrollPicture;
 
@@ -43,7 +42,7 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
          */
         public ViewHolder(View itemView) {
             super(itemView);
-            //iv_singlePicture = itemView.findViewById(R.id.iv_singlePicture);
+            iv_singlePicture = itemView.findViewById(R.id.iv_singlePicture);
             iv_singleScrollPicture = itemView.findViewById(R.id.iv_singleScrollPicture);
         }
 
@@ -51,6 +50,8 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
          * ビューの設定
          */
         public void setView( PictureTable picture ){
+
+            //--スクロールで写真を操作する時用
 
             Log.i("単体表示", "getPath=" + picture.getPath() );
 
@@ -69,6 +70,24 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
                     .error(R.drawable.baseline_picture_read_error_24)
                     //.into( iv_singlePicture );
                     .into( iv_singleScrollPicture );
+
+            //★ページ遷移後の更新はこれだけやりたい
+            //iv_singlePicture.setScaleTypeA();
+        }
+
+        /*
+         * ビューの設定
+         */
+        public void setViewMatrix( PictureTable picture ){
+
+            Log.i("単体表示", "getPath=" + picture.getPath() );
+
+            Picasso.get()
+                    .load( new File( picture.getPath() ) )
+                    //.fit().centerInside()
+                    .error(R.drawable.baseline_picture_read_error_24)
+                    //.into( iv_singlePicture );
+                    .into( iv_singlePicture );
 
             //★ページ遷移後の更新はこれだけやりたい
             //iv_singlePicture.setScaleTypeA();
@@ -102,7 +121,8 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
         Log.i("単体表示", "onCreateViewHolder");
 
         //ビューを生成
-        View view = mInflater.inflate(R.layout.item_single_picture, viewGroup, false);
+        //View view = mInflater.inflate(R.layout.item_single_scroll_picture, viewGroup, false);
+        View view = mInflater.inflate(R.layout.item_single_matrix_picture, viewGroup, false);
         //View view = new SingleScrollImageView( viewGroup.getContext(), viewGroup );
 
         Log.i("写真スクロール", "親=" + viewGroup.getClass());
@@ -124,7 +144,8 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
         Log.i("単体表示", "onBindViewHolder");
 
         //ビューの設定
-        viewHolder.setView( mData.get(i) );
+        //viewHolder.setView( mData.get(i) );
+        viewHolder.setViewMatrix( mData.get(i) );
     }
 
     /*

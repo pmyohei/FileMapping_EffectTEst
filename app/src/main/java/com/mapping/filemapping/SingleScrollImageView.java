@@ -241,11 +241,19 @@ public class SingleScrollImageView extends androidx.appcompat.widget.AppCompatIm
         //親から子（自分）へのタッチ処理止めを無効化
         //getParent().requestDisallowInterceptTouchEvent(true);
 
+
+
         if( mParentView == null ){
             mParentView = (ViewGroup) getRootView();
         }
         ViewPager2 vp2_singlePicture = mParentView.findViewById(R.id.vp2_singlePicture);
         vp2_singlePicture.requestDisallowInterceptTouchEvent(true);
+
+        Log.i("スクロール制御", "タッチ点の数=" + event.getPointerCount());
+        if( event.getPointerCount() >= 2 ){
+
+        }
+
 
         //タッチ開始
         if( event.getAction() == MotionEvent.ACTION_DOWN ){
@@ -376,7 +384,7 @@ public class SingleScrollImageView extends androidx.appcompat.widget.AppCompatIm
             float scaleFactor = detector.getScaleFactor();
 
             //ピンチ比率をそのまま適用すると大きいため、小数点部分を狭める
-            final float REDUCTION_RATE_SCALEUP   = 0.2f;    //拡大時の比率縮小割合
+            final float REDUCTION_RATE_SCALEUP   = 0.4f;    //拡大時の比率縮小割合
             final float REDUCTION_RATE_SCALEDOWN = 0.4f;    //縮小時の比率縮小割合
 
             //小数点部分

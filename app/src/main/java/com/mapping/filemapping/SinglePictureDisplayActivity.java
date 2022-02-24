@@ -55,7 +55,7 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
 
         //各写真の表示設定
         ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
-        ViewTreeObserver observer = vp2_singlePicture.getViewTreeObserver();
+/*        ViewTreeObserver observer = vp2_singlePicture.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
@@ -72,38 +72,19 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
                         vp2_singlePicture.setCurrentItem( showPosition );
                     }
                 }
-        );
-
-/*        SinglePictureAdapter adapter = new SinglePictureAdapter(this, mGalley);
-        vp2_singlePicture.setAdapter(adapter);
-        //表示開始位置を設定
-        vp2_singlePicture.setCurrentItem( showPosition );*/
-
-        //ページ送りなし
-        //vp2_singlePicture.requestDisallowInterceptTouchEvent(true);
-        //vp2_singlePicture.setUserInputEnabled(false);
-
-
-/*        vp2_singlePicture.setOnTouchListener(new View.OnTouchListener() {
-                 @Override
-                 public boolean onTouch(View view, MotionEvent motionEvent) {
-                     Log.i("コール順確認", "ViewPager");
-                     return false;
-                 }
-             }
         );*/
 
-        //vp2_singlePicture.
+        SinglePictureAdapter adapter = new SinglePictureAdapter(this, mGalley);
+        vp2_singlePicture.setAdapter(adapter);
+        //表示開始位置を設定
+        vp2_singlePicture.setCurrentItem( showPosition );
 
         vp2_singlePicture.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-
             int preIndex = 0;
-
             @Override
             public void onPageScrollStateChanged(int state) {
                 Log.i("コール順確認", "onPageScrollStateChanged state=" + state);
             }
-
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
@@ -114,10 +95,43 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
 
                 Log.i("コール順確認", "onPageSelected");
             }
-
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 Log.i("コール順確認", "onPageScrolled");
+            }
+        });
+
+        //ページ送りリスナー（右）
+        findViewById(R.id.iv_next).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //ページ送り後は非表示に
+                view.setVisibility( View.GONE );
+
+                //次の写真へ
+                int current = vp2_singlePicture.getCurrentItem();
+                if( current == (vp2_singlePicture.getAdapter().getItemCount() - 1) ){
+                    //一応ガード
+                    return;
+                }
+                vp2_singlePicture.setCurrentItem( current + 1 );
+            }
+        });
+
+        //ページ送りリスナー（左）
+        findViewById(R.id.iv_pre).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //ページ送り後は非表示に
+                view.setVisibility( View.GONE );
+
+                //前の写真へ
+                int current = vp2_singlePicture.getCurrentItem();
+                if( current == 0 ){
+                    //一応ガード
+                    return;
+                }
+                vp2_singlePicture.setCurrentItem( current - 1 );
             }
         });
 
