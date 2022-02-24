@@ -8,7 +8,6 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
-import android.view.View;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 import android.widget.Scroller;
@@ -21,8 +20,10 @@ import androidx.viewpager2.widget.ViewPager2;
  */
 public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatImageView {
 
+    public int page;
+
     //ページ送り指定定数
-    private final int PAGE_FEED_PRE  = 0x01;
+    private final int PAGE_FEED_PRE = 0x01;
     private final int PAGE_FEED_NEXT = 0x02;
     private final int PAGE_FEED_BOTH = PAGE_FEED_PRE | PAGE_FEED_NEXT;
 
@@ -34,36 +35,45 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
     private Scroller mFlingScroller;
 
     //マトリックス上の画像初期位置
-    private final float PRE_INIT_VALUE = -1;
+    private final float PRESET_VALUE = -1;
     private float mImageInitPosX;
     private float mImageInitPosY;
 
     //画像のScaleTypeをマトリクスにしたかどうか
-    private boolean mIsSetScaleTypeToMatrix = false;
+    //private boolean mIsSetScaleTypeToMatrix;
 
     //ピンチ操作中
-    private boolean mIsPinching = false;
+    private boolean mIsPinching;
+    //ピンチ拡大あり（少しでも拡大していれば、true）
+    private boolean mIsPinchUp;
     //画像の初期比率
-    private float mInitMatrixScale = PRE_INIT_VALUE;
+    private float mInitMatrixScale;
 
     public SingleMatrixImageView(Context context) {
         super(context);
     }
-
     public SingleMatrixImageView(Context context, AttributeSet attrs) {
         super(context, attrs);
         init(context);
     }
-
     public SingleMatrixImageView(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
 
+    /*
+     * 初期化
+     */
     private void init(Context context) {
-
         //初期位置
-        mImageInitPosX = PRE_INIT_VALUE;
-        mImageInitPosY = PRE_INIT_VALUE;
+        mImageInitPosX = PRESET_VALUE;
+        mImageInitPosY = PRESET_VALUE;
+
+        //mIsSetScaleTypeToMatrix = false;
+        mIsPinching = false;
+        mInitMatrixScale = PRESET_VALUE;
+
+        //未拡大
+        mIsPinchUp = false;
 
         //フリング用スクロール生成
         mFlingScroller = new Scroller(context, new DecelerateInterpolator());
@@ -73,24 +83,110 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
         gestureDetector = new GestureDetector(context, simpleOnGestureListener);
     }
 
+    /*
+     * マトリクス情報初期化
+     */
+    public void resetMatrixData() {
+
+        Log.i("ピンチ拡大チェック", "リセットコール=" + page);
+
+        //if( !mIsSetScaleTypeToMatrix ){
+        if( !mIsPinchUp ){
+            //拡大されていないなら、リセット不要
+            return;
+        }
+
+        Log.i("ピンチ拡大チェック", "リセットコール処理あり=" + page);
+
+        //スケールタイプをデフォルトに戻す
+        setScaleType( ImageView.ScaleType.FIT_CENTER );
+
+        //初期位置
+        mImageInitPosX = PRESET_VALUE;
+        mImageInitPosY = PRESET_VALUE;
+
+        //mIsSetScaleTypeToMatrix = false;
+        mIsPinching = false;
+        mInitMatrixScale = PRESET_VALUE;
+
+        //ピンチ拡大なし
+        mIsPinchUp = false;
+    }
+
+    /*
+     * ピンチ操作で拡大されている状態にあるか
+     */
+    public boolean isPinchUp() {
+
+        //現在の拡大状態を返す
+        return mIsPinchUp;
+
+        /*-- 以下で確認すると、拡大していてもgetMatrixValue()で想定していない値が返されるため、フラグで拡大を管理 --*/
+        /*
+        Log.i("ピンチ拡大チェック", "通知テスト mInitMatrixScale=" + mInitMatrixScale);
+        Log.i("ピンチ拡大チェック", "通知テスト getMatrixValue(Matrix.MSCALE_Y)=" + getMatrixValue(Matrix.MSCALE_Y));
+
+        //初期スケール未設定なら、非拡大状態
+        if( mInitMatrixScale == PRE_INIT_VALUE ){
+            return false;
+        }
+
+        return (mInitMatrixScale < getMatrixValue(Matrix.MSCALE_Y));
+        */
+    }
+
+
+    /*
+     * 画像を初期位置に収める
+     */
+    private void setImageFitScreen() {
+        //現在位置
+        final float currentX = getMatrixValue(Matrix.MTRANS_X);
+        final float currentY = getMatrixValue(Matrix.MTRANS_Y);
+
+        //初期位置との差分
+        float offsetX = mImageInitPosX - currentX;
+        float offsetY = mImageInitPosY - currentY;
+
+        //Matrixを操作
+        matrix.postTranslate(offsetX, offsetY);
+        invalidate();
+    }
+
+    /*
+     * 画像の横幅（拡大率を考慮）
+     */
+    private float getImageWidth(){
+        return (getDrawable().getIntrinsicWidth()) * getMatrixValue(Matrix.MSCALE_X);
+    }
+
+    /*
+     * 画像の高さ（拡大率を考慮）
+     */
+    private float getImageHeight(){
+        return (getDrawable().getIntrinsicHeight()) * getMatrixValue(Matrix.MSCALE_Y);
+    }
+
     @Override
     public boolean onTouchEvent(MotionEvent event) {
 
         //画像のScaleTypeをマトリクスに設定
-        if (!mIsSetScaleTypeToMatrix) {
+        //if (!mIsSetScaleTypeToMatrix) {
+        if ( mInitMatrixScale == PRESET_VALUE) {
             //ビュー生成時点では、ScaleTypeがMATRIXではないため、ここでマトリクスに設定
             setScaleType(ScaleType.MATRIX);
             //※このタイミングで必要
             matrix = getImageMatrix();
 
+            //画像の初期マトリクス比率を保持
             mInitMatrixScale = getMatrixValue(Matrix.MSCALE_Y);
-            //mMaxImageScale = getMatrixValue(Matrix.MSCALE_Y) * MAX_RATIO;
 
-            //画像初期位置
+            //画像初期マトリクス位置
             mImageInitPosX = getMatrixValue(Matrix.MTRANS_X);
             mImageInitPosY = getMatrixValue(Matrix.MTRANS_Y);
 
-            mIsSetScaleTypeToMatrix = true;
+            //マトリクス設定完了
+            //mIsSetScaleTypeToMatrix = true;
         }
 
         //マトリクスを設定
@@ -115,16 +211,9 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
      */
     private void checkShowPageFeedIcon() {
 
-        Log.i("ページ送り", "mInitMatrixScale=" + mInitMatrixScale);
-        Log.i("ページ送り", "getMatrixValue(Matrix.MSCALE_Y)=" + getMatrixValue(Matrix.MSCALE_Y));
-
-        //if( mInitMatrixScale == getMatrixValue(Matrix.MSCALE_Y) ){
+        //拡大していないなら、アイコン非表示にする
         if( mInitMatrixScale >= getMatrixValue(Matrix.MSCALE_Y) ){
-            //拡大していないなら、アイコン非表示にする
             hidePageFeedIcon( PAGE_FEED_BOTH );
-
-            Log.i("ページ送り", "拡大していない状態 mInitMatrixScale=" + mInitMatrixScale);
-            Log.i("ページ送り", "拡大していない状態 getMatrixValue(Matrix.MSCALE_Y)=" + getMatrixValue(Matrix.MSCALE_Y));
             return;
         }
 
@@ -132,16 +221,10 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
         ViewPager2 vp2_singlePicture = getRootView().findViewById(R.id.vp2_singlePicture);
         int currentPage = vp2_singlePicture.getCurrentItem();
 
-        Log.i("ページ送り", "rightSideX=" + (getMatrixValue(Matrix.MTRANS_X) + getImageWidth()));
-        Log.i("ページ送り", "getWidth()=" + getWidth());
-
         //右端判定
         float rightSideX = getMatrixValue(Matrix.MTRANS_X) + getImageWidth();
         if( rightSideX == getWidth() ){
             //画像が画面右端にある場合
-
-            Log.i("ページ送り", "currentPage=" + currentPage);
-            Log.i("ページ送り", "pageNum=" + vp2_singlePicture.getAdapter().getItemCount());
 
             //自身が最後のページであれば何もしない
             int pageNum = vp2_singlePicture.getAdapter().getItemCount();
@@ -153,10 +236,9 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
             getRootView().findViewById(R.id.iv_next).setVisibility(VISIBLE);
 
         } else {
+            //右端でなければ、アイコン非表示
             hidePageFeedIcon( PAGE_FEED_NEXT );
         }
-
-        Log.i("ページ送り", "leftSideX=" + getMatrixValue(Matrix.MTRANS_X));
 
         //左端判定
         float leftSideX = getMatrixValue(Matrix.MTRANS_X);
@@ -171,6 +253,7 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
             getRootView().findViewById(R.id.iv_pre).setVisibility(VISIBLE);
 
         } else {
+            //左端でなければ、アイコン非表示
             hidePageFeedIcon( PAGE_FEED_PRE );
         }
     }
@@ -206,16 +289,8 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
      *   false：スクロール停止
      */
     private void setPageScroll(boolean isScroll) {
-
-        //test用--------
-        //if( isScroll ){
-        //    isScroll = false;
-        //}
-        //---------------
-
         //ページスクロール制御
-        View root = getRootView();
-        ViewPager2 vp2_singlePicture = root.findViewById(R.id.vp2_singlePicture);
+        ViewPager2 vp2_singlePicture = getRootView().findViewById(R.id.vp2_singlePicture);
         vp2_singlePicture.setUserInputEnabled(isScroll);
     }
 
@@ -240,18 +315,16 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
         //許容最大比率
         final float MAX_RATIO = 8f;
 
-        //画像の初期比率
-        //float INIT_SCALE = PRSET_SCALE;
         //最大拡大比率（画像）
-        float mMaxImageScale = PRE_INIT_VALUE;
+        float mMaxImageScale = PRESET_VALUE;
 
         //焦点
         float focusX;
         float focusY;
         //前回、画像に設定した比率
         float mPreScaleFactor;
-        //画像の拡大率
-        float mImageScale;
+        //ピンチの拡大率を適用した場合の画像の拡大率
+        float mImageScaleApplyFactor;
 
         @Override
         public boolean onScaleBegin(ScaleGestureDetector detector) {
@@ -262,23 +335,15 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
             //ピンチ操作ON
             mIsPinching = true;
 
-            Log.i("不具合", "onScaleBegin()");
-
-            //初期スケール未保持かどうか
-            //if (mInitMatrixScale == PRE_INIT_VALUE) {
-            if (mMaxImageScale == PRE_INIT_VALUE) {
-                //mInitMatrixScale = getMatrixValue(Matrix.MSCALE_Y);
+            //拡大可能な最大比率を保持（初めのピンチ開始でのみ行う）
+            if (mMaxImageScale == PRESET_VALUE) {
                 mMaxImageScale = getMatrixValue(Matrix.MSCALE_Y) * MAX_RATIO;
-
-                //画像初期位置
-                //mImageInitPosX = getMatrixValue(Matrix.MTRANS_X);
-                //mImageInitPosY = getMatrixValue(Matrix.MTRANS_Y);
             }
 
             //ピンチ開始比率初期化
             mPreScaleFactor = 1.0f;
 
-            //ページスクロールを停止
+            //ピンチ操作中はページスクロール停止
             setPageScroll(false);
 
             return super.onScaleBegin(detector);
@@ -286,8 +351,6 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
 
         @Override
         public boolean onScale(ScaleGestureDetector detector) {
-
-            Log.i("不具合", "onScale()");
 
             float factor = detector.getScaleFactor();
             float currentImageScale = getMatrixValue(Matrix.MSCALE_Y);
@@ -309,23 +372,29 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
             //前回の比率を取り除く
             //※これをしないと、加速度的にズームされる
             scaleFactor /= mPreScaleFactor;
-
             //前回設定値として保持
             mPreScaleFactor = scaleFactor;
 
             //マトリクスに対する初期比率からの累計比率
-            mImageScale = scaleFactor * currentImageScale;
+            mImageScaleApplyFactor = scaleFactor * currentImageScale;
 
             //想定比率以上は拡大させない
-            if (mImageScale > mMaxImageScale) {
+            if (mImageScaleApplyFactor > mMaxImageScale) {
                 return false;
             }
 
-            //想定比率以下は縮小させない
-            if (mImageScale < mInitMatrixScale) {
+            Log.i("ピンチ縮小チェック", "最小判定直前：mImageScale=" + mImageScaleApplyFactor);
+            Log.i("ピンチ縮小チェック", "最小判定直前：mInitMatrixScale=" + mInitMatrixScale);
+
+            //本来の大きさより縮小させない
+            if (mImageScaleApplyFactor < mInitMatrixScale) {
                 //元の比率に収める
-                mImageScale = mInitMatrixScale;
-                scaleFactor = mInitMatrixScale / currentImageScale;
+                mImageScaleApplyFactor = mInitMatrixScale;
+                scaleFactor = mImageScaleApplyFactor / currentImageScale;
+
+                Log.i("ピンチ縮小チェック", "最小判定後：mInitMatrixScale=" + mInitMatrixScale);
+                Log.i("ピンチ縮小チェック", "最小判定後：currentImageScale=" + currentImageScale);
+                Log.i("ピンチ縮小チェック", "最小判定後：scaleFactor=" + scaleFactor);
             }
 
             //マトリクスを更新して、再描画
@@ -343,40 +412,23 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
             mIsPinching = false;
 
             //スケールが初期状態になっていれば、ページスクロールを可能にする
-            if (mImageScale == mInitMatrixScale) {
+            if (mImageScaleApplyFactor == mInitMatrixScale) {
                 Log.i("スクロール制御", "ピンチ操作終了→可能に設定");
                 //画像の位置を元の状態にする
                 setImageFitScreen();
-                //ページ制御
+                //ページ送り可能にする
                 setPageScroll(true);
+
+                //最小のため、フラグを落とす
+                mIsPinchUp = false;
+
+            } else {
+                //少しでも拡大されているなら、フラグON
+                mIsPinchUp = true;
             }
-
-            //ページ送りアイコンの表示判定
-            //checkShowPageFeedIcon();
         }
 
-        /*
-         * 画像を初期位置に収める
-         */
-        private void setImageFitScreen() {
-            //現在位置
-            final float currentX = getMatrixValue(Matrix.MTRANS_X);
-            final float currentY = getMatrixValue(Matrix.MTRANS_Y);
-
-            //初期位置との差分
-            float offsetX = mImageInitPosX - currentX;
-            float offsetY = mImageInitPosY - currentY;
-
-            //Log.i("位置リセット", "offsetX=" + offsetX);
-            //Log.i("位置リセット", "offsetY=" + offsetY);
-
-            //Matrixを操作
-            matrix.postTranslate(offsetX, offsetY);
-            invalidate();
-        }
     };
-
-
 
     /*
      * 写真のスクロールリスナー
@@ -385,7 +437,6 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
 
         @Override
         public boolean onScroll(MotionEvent event1, MotionEvent event2, float distanceX, float distanceY) {
-
             //指の動きに合わせて画像の描画範囲を変更
             translateImageMatrix(distanceX, distanceY);
 
@@ -395,11 +446,9 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
 
-            Log.i("画像フリング", "開始");
-
             //加速度の減算調整
             //※そのままの指の加速度だと、値が大きすぎるため
-            final float ACCELERATION_SUBTRACTION = 2.5f;
+            final float ACCELERATION_SUBTRACTION = 2.0f;
             //スクローラーの移動可能範囲（とりあえず大きな値を設定しておく）
             final int RANGE = 2000;
 
@@ -434,11 +483,8 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
                         float moveX = mFlingScroller.getCurrX() - preX;
                         float moveY = mFlingScroller.getCurrY() - preY;
 
-                        //画像のメトリクスを移動させる
+                        //画像のメトリクスを移動
                         translateImageMatrix(-moveX, -moveY);
-
-                        //Log.i("画像フリング", "getCurrX=" + mFlingScroller.getCurrX());
-                        //Log.i("画像フリング", "getCurrY=" + mFlingScroller.getCurrY());
 
                         //前回位置として保持
                         preX = mFlingScroller.getCurrX();
@@ -476,10 +522,10 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
             }
 
             //指の動きに追随してほしいため符号を反転
-            float x = -distanceX;       //x；左から右にスワイプ：＋ 右から左にスワイプ：ー
-            float y = -distanceY;       //y：上から下にスワイプ：＋ 下から上にスワイプ：ー
+            float x = -distanceX;
+            float y = -distanceY;
 
-            //画像移動量
+            //画像移動量を計算
             x = getMatrixTransX(x, imageWidth, viewWidth);
             y = getMatrixTransY(y, imageHeight, viewHeight);
 
@@ -493,6 +539,9 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
 
         /*
          * 画像の移動量の取得：x軸
+         *   ・一番端にいて、さらにその端に移動しようとしていた場合は、移動量なし
+         *   ・画像が画面に収まっていない状態にある場合は、画面にフィットさせるようにする
+         *     （写真右端が、画面右端よりも左側にある、など）
          */
         private float getMatrixTransX(float x, float imageWidth, float viewWidth) {
 
@@ -511,7 +560,6 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
                 //画像の位置を端に設定
 
                 Log.i("端の挙動変問題", "x 画像の位置を端に設定");
-                Log.i("スクロール", "xを反転 x=" + x + " leftSideX=" + leftSideX);
 
                 //画面端に収める
                 return (leftSideX * -1);
@@ -522,7 +570,6 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
                 //ビュー端（画面端）と画像右端との差
 
                 Log.i("端の挙動変問題", "x ビュー端（画面端）と画像右端との差");
-                Log.i("スクロール", "xを計算 x=" + x + " viewWidth=" + viewWidth + " rightSideX=" + rightSideX);
 
                 //画面端に収める
                 return (viewWidth - rightSideX);
@@ -532,32 +579,25 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
             if ((rightSideX == viewWidth)) {
                 if (x > 0) {
                     Log.i("端の挙動変問題", "x 移動なし：右端を参照中に左へ");
-
                     return x;
 
                 } else {
                     Log.i("端の挙動変問題", "x 移動なし：右端を参照中にさらに左へ");
-
                     //移動なし
-                    //return -1f;
                     return 0;
                 }
             }
 
             //画面左端に画像左端がきている場合
             if ((leftSideX == 0)) {
-
                 if (x > 0) {
                     //画像が一番左にある状態で、左に移動させようとしたとき
-
                     Log.i("端の挙動変問題", "x 移動なし：左にいる想定でさらに左を見る行為");
-
                     //移動なし
-                    //return 1f;
                     return 0;
+
                 } else {
                     Log.i("端の挙動変問題", "x 移動なし：左端参照中に右を参照");
-
                     return x;
                 }
             }
@@ -591,9 +631,7 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
 
             //下がった分を埋める
             if ((bottomY < viewHeight) && (y < 0)) {
-
                 Log.i("端の挙動変問題", "y 下がった分を埋める");
-
                 return (viewHeight - bottomY);
             }
 
@@ -602,31 +640,25 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
 
                 if (y > 0) {
                     Log.i("端の挙動変問題", "y 移動なし：一番上");
-
                     return y;
 
                 } else {
                     Log.i("端の挙動変問題", "y 移動なし：一番上からさらに上を見る行為");
-
                     //さらに画像下を見ようとする場合は、移動なしにする
-                    //return -1f;
                     return 0;
                 }
             }
 
             //画像の上辺が画面上辺と一致している
             if (topY == 0) {
-
                 //一番下まできていれば、移動なし
                 if (y > 0) {
                     Log.i("端の挙動変問題", "y 移動なし：一番下");
-
                     //移動なし
-                    //return  1;
                     return 0;
+
                 } else {
                     Log.i("端の挙動変問題", "y 移動なし：一番下からさらに下を見る行為");
-
                     return y;
                 }
             }
@@ -636,18 +668,6 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
         }
     };
 
-    /*
-     * 画像の横幅（拡大率を考慮）
-     */
-    private float getImageWidth(){
-        return (getDrawable().getIntrinsicWidth()) * getMatrixValue(Matrix.MSCALE_X);
-    }
 
-    /*
-     * 画像の高さ（拡大率を考慮）
-     */
-    private float getImageHeight(){
-        return (getDrawable().getIntrinsicHeight()) * getMatrixValue(Matrix.MSCALE_Y);
-    }
 
 }

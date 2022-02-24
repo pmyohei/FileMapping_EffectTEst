@@ -185,22 +185,31 @@ public class MapCommonData extends Application {
         //マップ中のノードに設定されている色を取得
         tmp.addAll( mNodes.getAllNodeColors() );
 
-/*        //log
+        //log
         Log.i("色履歴", "tmpリストの情報--------");
         for( String cc: tmp ){
             Log.i("色履歴", "cc=" + cc);
         }
-        //*/
+        //
 
+        for( String cc: tmp ){
+            cc = cc.toUpperCase(Locale.ROOT);
+        }
+        //log
+        Log.i("色履歴", "tmpリストの情報 大文字--------");
+        for( String cc: tmp ){
+            Log.i("色履歴", "cc=" + cc);
+        }
+        //
         //重複なしで設定
         mColorHistory.addAll( new ArrayList<>(new LinkedHashSet<>(tmp)) );
 
-/*        //log
+        //log
         Log.i("色履歴", "重複なしリストの情報--------");
         for( String cc: mColorHistory ){
             Log.i("色履歴", "cc=" + cc);
         }
-        //*/
+        //
     }
 
     /*

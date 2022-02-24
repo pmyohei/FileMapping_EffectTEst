@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
-import android.view.View;
 import android.view.ViewGroup;
 import android.widget.HorizontalScrollView;
 import android.widget.ImageView;
@@ -18,7 +17,7 @@ import androidx.viewpager2.widget.ViewPager2;
  * 写真単体表示用ビュー
  * 　　ズームや参照箇所のタッチ移動に対応
  */
-public class SingleScrollImageView extends androidx.appcompat.widget.AppCompatImageView {
+public class SingleScrollImageView_old2 extends androidx.appcompat.widget.AppCompatImageView {
     private ScaleGestureDetector scaleGestureDetector;
     private GestureDetector gestureDetector;
 
@@ -36,13 +35,13 @@ public class SingleScrollImageView extends androidx.appcompat.widget.AppCompatIm
     private float mPreTouchPosX;
 
 
-    public SingleScrollImageView(Context context) {
+    public SingleScrollImageView_old2(Context context) {
         this(context, null);
     }
-    public SingleScrollImageView(Context context, AttributeSet attrs) {
+    public SingleScrollImageView_old2(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
-    public SingleScrollImageView(Context context, AttributeSet attrs, int defStyleAttr) {
+    public SingleScrollImageView_old2(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
 
         init(context);
@@ -94,7 +93,7 @@ public class SingleScrollImageView extends androidx.appcompat.widget.AppCompatIm
             mParentView = (ViewGroup) getRootView();
         }
 
-        NestedScrollView nsv_vertical = mParentView.findViewById(R.id.nsv_vertical);
+        NestedScrollView_old nsv_vertical = mParentView.findViewById(R.id.nsv_vertical);
         nsv_vertical.mIsIntercept = disable;
         nsv_vertical.requestDisallowInterceptTouchEvent(disable);
 
@@ -226,7 +225,7 @@ public class SingleScrollImageView extends androidx.appcompat.widget.AppCompatIm
         //hsv_horizontal.scrollBy( 10, 0 );
 
         //
-        NestedScrollView nsv_vertical = mParentView.findViewById(R.id.nsv_vertical);
+        NestedScrollView_old nsv_vertical = mParentView.findViewById(R.id.nsv_vertical);
         nsv_vertical.scrollBy( 0, scrolly * -1 / 2 ) ;
         //nsv_vertical.scrollBy( 0, -10 ) ;
 

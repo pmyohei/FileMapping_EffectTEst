@@ -22,10 +22,9 @@ import java.util.ArrayList;
 public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdapter.ViewHolder> {
 
     private final ArrayList<PictureTable> mData;
-    private final Context mContext;
     private final LayoutInflater mInflater;
-    private int mParentHeight;
-    private int mParentWidth;
+
+    int Test;
 
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
@@ -33,9 +32,7 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
      */
     class ViewHolder extends RecyclerView.ViewHolder {
 
-        private final ImageView iv_singlePicture;
-        //private final SingleScrollImageView iv_singleScrollPicture;
-        private final ImageView iv_singleScrollPicture;
+        private final SingleMatrixImageView iv_singlePicture;
 
         /*
          * コンストラクタ
@@ -43,36 +40,6 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
         public ViewHolder(View itemView) {
             super(itemView);
             iv_singlePicture = itemView.findViewById(R.id.iv_singlePicture);
-            iv_singleScrollPicture = itemView.findViewById(R.id.iv_singleScrollPicture);
-        }
-
-        /*
-         * ビューの設定
-         */
-        public void setView( PictureTable picture ){
-
-            //--スクロールで写真を操作する時用
-
-            Log.i("単体表示", "getPath=" + picture.getPath() );
-
-            LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.WRAP_CONTENT,
-                LinearLayout.LayoutParams.WRAP_CONTENT);
-
-            layoutParams.height = mParentHeight;
-            layoutParams.width = mParentWidth;
-
-            iv_singleScrollPicture.setLayoutParams(layoutParams);
-
-            Picasso.get()
-                    .load( new File( picture.getPath() ) )
-                    //.fit().centerInside()
-                    .error(R.drawable.baseline_picture_read_error_24)
-                    //.into( iv_singlePicture );
-                    .into( iv_singleScrollPicture );
-
-            //★ページ遷移後の更新はこれだけやりたい
-            //iv_singlePicture.setScaleTypeA();
         }
 
         /*
@@ -80,17 +47,22 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
          */
         public void setViewMatrix( PictureTable picture ){
 
-            Log.i("単体表示", "getPath=" + picture.getPath() );
+            Log.i("ページ更新チェック", "★更新発生 アダプタ側=" + Test );
 
+            //画像設定前に、マトリクス関連の状態をリセット
+            //※画像設定済みでピンチ操作が発生しているビューへの対策
+            //　これをしないと画像の初期サイズが安定しない状態になる
+            iv_singlePicture.resetMatrixData();
+
+            //
+            iv_singlePicture.page = Test;
+            //
+
+            //画像割り当て
             Picasso.get()
                     .load( new File( picture.getPath() ) )
-                    //.fit().centerInside()
                     .error(R.drawable.baseline_picture_read_error_24)
-                    //.into( iv_singlePicture );
                     .into( iv_singlePicture );
-
-            //★ページ遷移後の更新はこれだけやりたい
-            //iv_singlePicture.setScaleTypeA();
         }
     }
 
@@ -98,7 +70,6 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
      * コンストラクタ
      */
     public SinglePictureAdapter(Context context, ArrayList<PictureTable> data){
-        mContext = context;
         mData = data;
         mInflater = LayoutInflater.from(context);
     }
@@ -121,16 +92,7 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
         Log.i("単体表示", "onCreateViewHolder");
 
         //ビューを生成
-        //View view = mInflater.inflate(R.layout.item_single_scroll_picture, viewGroup, false);
         View view = mInflater.inflate(R.layout.item_single_matrix_picture, viewGroup, false);
-        //View view = new SingleScrollImageView( viewGroup.getContext(), viewGroup );
-
-        Log.i("写真スクロール", "親=" + viewGroup.getClass());
-        Log.i("写真スクロール", "親 height=" + viewGroup.getHeight());
-        Log.i("写真スクロール", "親 width=" + viewGroup.getWidth());
-
-        mParentHeight = viewGroup.getHeight();
-        mParentWidth = viewGroup.getWidth();
 
         return new ViewHolder(view);
     }
@@ -141,10 +103,11 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
 
-        Log.i("単体表示", "onBindViewHolder");
+        //Log.i("単体表示", "onBindViewHolder");
+
+        Test = i;
 
         //ビューの設定
-        //viewHolder.setView( mData.get(i) );
         viewHolder.setViewMatrix( mData.get(i) );
     }
 
@@ -154,7 +117,6 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
     @Override
     public int getItemCount() {
         //表示データ数を返す
-        Log.i("単体表示", "mData.size()=" + mData.size());
         return mData.size();
     }
 

@@ -23,17 +23,17 @@ import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 
-public class NestedScrollView extends ScrollView {
+public class NestedScrollView_old extends ScrollView {
 
     public boolean mIsIntercept = false;
 
-    public NestedScrollView(Context context) {
+    public NestedScrollView_old(Context context) {
         super(context);
     }
-    public NestedScrollView(Context context, AttributeSet attrs) {
+    public NestedScrollView_old(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-    public NestedScrollView(Context context, AttributeSet attrs, int defStyle) {
+    public NestedScrollView_old(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 

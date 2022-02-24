@@ -39,7 +39,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <com.mapping.filemapping.SingleScrollImageView
+            <com.mapping.filemapping.SingleScrollImageView_old2
                 android:id="@+id/iv_singleScrollPicture"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -54,21 +54,21 @@
 
 </LinearLayout>-->
 
-<!--<com.mapping.filemapping.SingleScrollImageView
+<!--<com.mapping.filemapping.SingleScrollImageView_old2
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">-->
 
-<com.mapping.filemapping.NestedScrollView
+<com.mapping.filemapping.NestedScrollView_old
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/nsv_vertical"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.mapping.filemapping.NestedHorizontalScrollView
+    <com.mapping.filemapping.NestedHorizontalScrollView_old
         android:id="@+id/hsv_horizontal"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
@@ -93,7 +93,7 @@
                 android:gravity="center_horizontal"
                 android:adjustViewBounds="true"
                 />-->
-            <com.mapping.filemapping.SingleScrollImageView
+            <com.mapping.filemapping.SingleScrollImageView_old2
                 android:id="@+id/iv_singleScrollPicture"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
@@ -106,12 +106,12 @@
     </HorizontalScrollView>
 -->
 
-    </com.mapping.filemapping.NestedHorizontalScrollView>
+    </com.mapping.filemapping.NestedHorizontalScrollView_old>
 
-</com.mapping.filemapping.NestedScrollView>
+</com.mapping.filemapping.NestedScrollView_old>
 
 <!--
-</com.mapping.filemapping.SingleScrollImageView>
+</com.mapping.filemapping.SingleScrollImageView_old2>
 -->
 
 <!--
@@ -121,7 +121,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.mapping.filemapping.NestedScrollView
+    <com.mapping.filemapping.NestedScrollView_old
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -130,7 +130,7 @@
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <com.mapping.filemapping.SingleScrollImageView
+            <com.mapping.filemapping.SingleScrollImageView_old2
                 android:id="@+id/iv_singleScrollPicture"
                 android:layout_width="2000dp"
                 android:layout_height="2000dp"
@@ -141,7 +141,7 @@
 
         </LinearLayout>
 
-    </com.mapping.filemapping.NestedScrollView>
+    </com.mapping.filemapping.NestedScrollView_old>
 
 </HorizontalScrollView>
 -->

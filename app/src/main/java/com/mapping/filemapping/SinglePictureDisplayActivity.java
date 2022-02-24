@@ -1,5 +1,10 @@
 package com.mapping.filemapping;
 
+import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
+
+import static androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_DRAGGING;
+import static androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_SETTLING;
+
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -8,10 +13,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -34,6 +36,8 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
     //写真の格納先変更フラグ
     private boolean mIsUpdate;
 
+    private int mIconTouchPage;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,66 +59,139 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
 
         //各写真の表示設定
         ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
-/*        ViewTreeObserver observer = vp2_singlePicture.getViewTreeObserver();
-        observer.addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        //レイアウト確定後は、不要なので本リスナー削除
-                        vp2_singlePicture.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-                        Log.i("写真スクロール", "vp2_singlePicture height=" + vp2_singlePicture.getHeight());
-                        Log.i("写真スクロール", "vp2_singlePicture width=" + vp2_singlePicture.getWidth());
-
-                        SinglePictureAdapter adapter = new SinglePictureAdapter(vp2_singlePicture.getContext(), mGalley);
-                        vp2_singlePicture.setAdapter(adapter);
-                        //表示開始位置を設定
-                        vp2_singlePicture.setCurrentItem( showPosition );
-                    }
-                }
-        );*/
-
         SinglePictureAdapter adapter = new SinglePictureAdapter(this, mGalley);
         vp2_singlePicture.setAdapter(adapter);
+
         //表示開始位置を設定
         vp2_singlePicture.setCurrentItem( showPosition );
 
+        //ページスクロールリスナー
         vp2_singlePicture.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
-            int preIndex = 0;
+
+            boolean isStateSettingOn;
+            int scrollingPage = 0;
+            int prePage = 0;
+            int selectedPage = 0;
+
+            int preCurrent = 0;
+            int current = 0;
+
+            SingleMatrixImageView singleMatrixImageView;
+
             @Override
             public void onPageScrollStateChanged(int state) {
                 Log.i("コール順確認", "onPageScrollStateChanged state=" + state);
+
+                if( state == SCROLL_STATE_DRAGGING ){
+                    isStateSettingOn = false;
+                    preCurrent = vp2_singlePicture.getCurrentItem();
+
+                    Log.i("コール順確認", "onPageScrollStateChanged preCurrent（ドラッグ）=" + preCurrent);
+
+                    singleMatrixImageView = vp2_singlePicture.findViewById( R.id.iv_singlePicture );
+
+                    Log.i("コール順確認", "どらっぎんぐタイミングの写真ビューページ=" + singleMatrixImageView.page);
+
+                }else if( state == SCROLL_STATE_SETTLING ){
+                    isStateSettingOn = true;
+
+                    if( mIconTouchPage < 0 ){
+                        preCurrent = vp2_singlePicture.getCurrentItem();
+                        Log.i("コール順確認", "onPageScrollStateChanged preCurrent（セットリング スクロール）=" + preCurrent);
+                    }else{
+                        preCurrent = mIconTouchPage;
+                        Log.i("コール順確認", "onPageScrollStateChanged preCurrent（セットリング アイコン）=" + preCurrent);
+                    }
+
+                    mIconTouchPage = -1;
+
+
+                    //ドラッグタイミングで取得できていない
+                    if( singleMatrixImageView == null ){
+                        singleMatrixImageView = vp2_singlePicture.findViewById( R.id.iv_singlePicture );
+                    }
+
+                    Log.i("コール順確認", "セットリングタイミングの写真ビューページ=" + singleMatrixImageView.page);
+
+                    //Log.i("コール順確認", "onPageScrollStateChanged preCurrent（セットリング）=" + preCurrent);
+
+                } else if( state == SCROLL_STATE_IDLE ){
+
+                    current = vp2_singlePicture.getCurrentItem();
+
+                    Log.i("コール順確認", "onPageScrollStateChanged preCurrent（アイドル）=" + current);
+
+
+                    Log.i("ページ更新チェック", "更新チェック preCurrent=" + preCurrent);
+                    Log.i("ページ更新チェック", "更新チェック current=" + current);
+
+                    //ページ遷移している場合
+                    if( preCurrent != current ){
+
+                        Log.i("ページ更新チェック", "★更新発生 preCurrent=" + preCurrent);
+
+                        Log.i("ページ更新チェック", "★更新発生 通知テスト 通知判定直前 preCurrent→" + preCurrent);
+                        Log.i("ページ更新チェック", "★更新発生 通知テスト 通知判定直前 current→" + current);
+                        Log.i("ページ更新チェック", "★更新発生 通知テスト 通知判定直前 isScaleUp→" + singleMatrixImageView.isPinchUp());
+
+                        if( singleMatrixImageView != null && singleMatrixImageView.isPinchUp() ){
+                            Log.i("ページ更新チェック", "★更新発生 通知テスト 拡大しているので更新通知を送る→" + preCurrent);
+
+                            //前のページを更新
+                            vp2_singlePicture.getAdapter().notifyItemChanged( preCurrent );
+                        }
+                    }
+
+                    singleMatrixImageView = null;
+                }
+
             }
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
 
-                //見ていたページのスケールを元に戻す
-                //adapter.notifyItemChanged(preIndex);
-                preIndex = position;
+                Log.i("コール順確認", "onPageSelected ページ=" + position);
 
-                Log.i("コール順確認", "onPageSelected");
+                //遷移先ページを保持
+                selectedPage = position;
+
             }
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.i("コール順確認", "onPageScrolled");
+                Log.i("コール順確認", "onPageScrolled ページ=" + position);
+
+/*                //
+                if( isStateSettingOn ){
+                    prePage = position;
+
+                    isStateSettingOn = false;
+                }
+
+                //スクロール中のページ
+                scrollingPage = position;*/
             }
         });
+
+        mIconTouchPage = -1;
 
         //ページ送りリスナー（右）
         findViewById(R.id.iv_next).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //ページ送り後は非表示に
-                view.setVisibility( View.GONE );
-
                 //次の写真へ
                 int current = vp2_singlePicture.getCurrentItem();
                 if( current == (vp2_singlePicture.getAdapter().getItemCount() - 1) ){
                     //一応ガード
                     return;
                 }
+
+                mIconTouchPage = current;
                 vp2_singlePicture.setCurrentItem( current + 1 );
+
+                //ページ送り後はアイコン非表示
+                view.setVisibility( View.GONE );
+                //スクロールでのページ送りをリセット（有効化）
+                vp2_singlePicture.setUserInputEnabled(true);
             }
         });
 
@@ -122,16 +199,20 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
         findViewById(R.id.iv_pre).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                //ページ送り後は非表示に
-                view.setVisibility( View.GONE );
-
                 //前の写真へ
                 int current = vp2_singlePicture.getCurrentItem();
                 if( current == 0 ){
                     //一応ガード
                     return;
                 }
+                mIconTouchPage = current;
                 vp2_singlePicture.setCurrentItem( current - 1 );
+
+
+                //ページ送り後は非表示に
+                view.setVisibility( View.GONE );
+                //スクロールでのページ送りをリセット（有効化）
+                vp2_singlePicture.setUserInputEnabled(true);
             }
         });
 
@@ -141,6 +222,10 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //確認ダイアログを表示
                 confirmDeletePicture();
+
+                //お試し
+                //vp2_singlePicture.getAdapter().notifyItemChanged( vp2_singlePicture.getCurrentItem() );
+                //
             }
         });
 

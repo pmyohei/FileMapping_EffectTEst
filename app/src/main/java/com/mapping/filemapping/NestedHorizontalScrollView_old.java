@@ -16,15 +16,15 @@ import androidx.viewpager2.widget.ViewPager2;
  *     スクロールされた時、移動の方向と左右のスクロール可否をチェックし、ページ送りを制御する
  *     ※ページ送りの制御はできるが、タッチムーブ中にページ送りができなかったため、廃案
  */
-public class NestedHorizontalScrollView extends HorizontalScrollView {
+public class NestedHorizontalScrollView_old extends HorizontalScrollView {
 
-    public NestedHorizontalScrollView(Context context) {
+    public NestedHorizontalScrollView_old(Context context) {
         super(context);
     }
-    public NestedHorizontalScrollView(Context context, AttributeSet attrs) {
+    public NestedHorizontalScrollView_old(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
-    public NestedHorizontalScrollView(Context context, AttributeSet attrs, int defStyle) {
+    public NestedHorizontalScrollView_old(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
 

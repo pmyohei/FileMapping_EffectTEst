@@ -23,15 +23,18 @@
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_edit_gray_24.xml" value="0.103" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_folder_tree_24.xml" value="0.12760416666666666" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_menu_book_24.xml" value="0.2234375" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_next_24.xml" value="0.119" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_no_thumbnail_24.xml" value="0.1" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_node_shape_24.xml" value="0.14947916666666666" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_node_square_24.xml" value="0.22923076923076924" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_open_map_24.xml" value="0.1" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_palette_20.xml" value="0.14947916666666666" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_photo_library_24.xml" value="0.2234375" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_pre_24.xml" value="0.119" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_restart_alt_24.xml" value="0.2234375" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/bt_create.xml" value="0.15260416666666668" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/bt_image.xml" value="0.12135416666666667" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/circle.xml" value="0.119" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/circle_node.xml" value="0.1505" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/circle_tool_icon.xml" value="0.2234375" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/frame_color.xml" value="0.15260416666666668" />
@@ -122,6 +125,7 @@
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/picture_node.xml" value="0.23731884057971014" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/progress_dialog.xml" value="0.17" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/root_node.xml" value="0.23007246376811594" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/root_node_old.xml" value="0.23007246376811594" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/sample_map.xml" value="0.136" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/size_seekbar.xml" value="0.264" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/menu/toolbar_close.xml" value="0.225" />
