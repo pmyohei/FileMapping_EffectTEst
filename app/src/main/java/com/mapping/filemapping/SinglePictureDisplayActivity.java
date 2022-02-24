@@ -6,6 +6,7 @@ import static androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_DRAGGING;
 import static androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_SETTLING;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.AlertDialog;
@@ -40,6 +41,8 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
     private boolean mIsUpdate;
     //ページ遷移アイコン押下時のページindex
     private int mIconTouchPage;
+    //表示中の写真が拡大しているか否か
+    private boolean mIsImagePinchUp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +57,9 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
 
         //格納先更新フラグ（削除か格納先の移動が発生したとき、フラグを更新する）
         mIsUpdate = false;
+
+        //
+        mIsImagePinchUp = false;
 
         //ピクチャノード情報リストを生成
         createPictureNodeInfos();
@@ -71,8 +77,6 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
         //ページスクロールリスナー
         vp2_singlePicture.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 
-            //ページ遷移前のビュー
-            private SingleMatrixImageView preMatrixImageView;
             //ページ遷移前のページindex
             private int prePage = 0;
 
@@ -91,8 +95,6 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
                     case SCROLL_STATE_DRAGGING:
                         //ページ遷移前のページindexを取得
                         prePage = vp2_singlePicture.getCurrentItem();
-                        //ページ遷移前のビュー
-                        preMatrixImageView = vp2_singlePicture.findViewById(R.id.iv_singlePicture);
 
                         //Log.i("コール順確認", "onPageScrollStateChanged preCurrent（ドラッグ）=" + prePage);
                         //Log.i("コール順確認", "どらっぎんぐタイミングの写真ビューページ=" + preMatrixImageView.page);
@@ -103,7 +105,7 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
                         SCROLL_STATE_DRAGGING の次にコールされる
                         ※アイコン操作によるページ送りの場合、SCROLL_STATE_DRAGGINGがコールされることなく
                         本状態がコールされる
-                        -------------------------*/
+                      -------------------------*/
                     case SCROLL_STATE_SETTLING:
 
                         if (mIconTouchPage == NO_TOUCH_PAGE_FEED_ICON) {
@@ -120,14 +122,6 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
                         //押下時の処理が完了したため、初期状態に戻す
                         mIconTouchPage = NO_TOUCH_PAGE_FEED_ICON;
 
-                        //ドラッグタイミングで取得できていない
-                        //（アイコン操作でページ遷移した場合）
-                        if (preMatrixImageView == null) {
-                            preMatrixImageView = vp2_singlePicture.findViewById(R.id.iv_singlePicture);
-                        }
-
-                        Log.i("コール順確認", "セットリングタイミングの写真ビューページ=" + preMatrixImageView.page);
-
                         //Log.i("コール順確認", "onPageScrollStateChanged preCurrent（セットリング）=" + preCurrent);
 
                         break;
@@ -142,29 +136,35 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
                         //遷移後のページを取得
                         int nextPage = vp2_singlePicture.getCurrentItem();
 
+                        //アダプタ
+                        RecyclerView.Adapter adapter = vp2_singlePicture.getAdapter();
+
                         //Log.i("コール順確認", "onPageScrollStateChanged preCurrent（アイドル）=" + nextPage);
                         //Log.i("ページ更新チェック", "更新チェック preCurrent=" + prePage);
                         //Log.i("ページ更新チェック", "更新チェック current=" + nextPage);
 
+                        int pageDiff = Math.abs( prePage - nextPage );
+
                         //ページ遷移している場合
-                        if (prePage != nextPage) {
+                        if ( pageDiff == 1 ) {
+                            //ページ遷移が１ページだけ
 
                             //Log.i("ページ更新チェック", "★更新発生 preCurrent=" + prePage);
-                            //Log.i("ページ更新チェック", "★更新発生 通知テスト 通知判定直前 preCurrent→" + prePage);
-                            //Log.i("ページ更新チェック", "★更新発生 通知テスト 通知判定直前 current→" + nextPage);
-                            //Log.i("ページ更新チェック", "★更新発生 通知テスト 通知判定直前 isScaleUp→" + preMatrixImageView.isPinchUp());
+                            Log.i("ページ更新チェック", "★更新発生 通知テスト ピンチフラグ 通知判定直前 preCurrent→" + prePage);
+                            Log.i("ページ更新チェック", "★更新発生 通知テスト ピンチフラグ 通知判定直前 current→" + nextPage);
 
                             //参照していた写真が拡大された状態で画面遷移された場合
-                            if (preMatrixImageView != null && preMatrixImageView.isPinchUp()) {
-                                //Log.i("ページ更新チェック", "★更新発生 通知テスト 拡大しているので更新通知を送る→" + prePage);
+                            //if (preMatrixImageView != null && preMatrixImageView.isPinchUp()) {
+                            if ( mIsImagePinchUp ) {
+                                Log.i("ページ更新チェック", "★更新発生 通知テスト ピンチフラグ 拡大しているので更新通知を送る→" + prePage);
 
                                 //参照していたページを更新
-                                vp2_singlePicture.getAdapter().notifyItemChanged(prePage);
+                                adapter.notifyItemChanged(prePage);
                             }
                         }
 
-                        //初期化
-                        preMatrixImageView = null;
+                        //ピンチ状態リセット
+                        mIsImagePinchUp = false;
 
                         break;
                 }
@@ -236,10 +236,6 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //確認ダイアログを表示
                 confirmDeletePicture();
-
-                //お試し
-                //vp2_singlePicture.getAdapter().notifyItemChanged( vp2_singlePicture.getCurrentItem() );
-                //
             }
         });
 
@@ -325,6 +321,9 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
                             }
                         });
 
+                        //写真削除後は、ページ送り有効にする
+                        vp2_singlePicture.setUserInputEnabled(true);
+
                         //非同期処理開始
                         db.execute();
                     }
@@ -386,6 +385,15 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
             //更新あり
             mIsUpdate = true;
         }
+    }
+
+    /*
+     * 写真が拡大されているか否かを設定する
+     *   ※本メソッドは、単体写真用ビューから、ピンチ操作があった時に
+     * 　　直接コールされる想定
+     */
+    public void setIsImagePinchUp( boolean isPinchUp ) {
+        mIsImagePinchUp = isPinchUp;
     }
 
 }

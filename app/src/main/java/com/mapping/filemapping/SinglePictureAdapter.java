@@ -24,7 +24,7 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
     private final ArrayList<PictureTable> mData;
     private final LayoutInflater mInflater;
 
-    int Test;
+    //int Test;
 
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
@@ -47,7 +47,7 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
          */
         public void setViewMatrix( PictureTable picture ){
 
-            Log.i("ページ更新チェック", "★更新発生 アダプタ側=" + Test );
+            //Log.i("ページ更新チェック", "★更新発生 アダプタ側=" + Test );
 
             //画像設定前に、マトリクス関連の状態をリセット
             //※画像設定済みでピンチ操作が発生しているビューへの対策
@@ -55,7 +55,7 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
             iv_singlePicture.resetMatrixData();
 
             //
-            iv_singlePicture.page = Test;
+            //iv_singlePicture.page = Test;
             //
 
             //画像割り当て
@@ -105,7 +105,7 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
 
         //Log.i("単体表示", "onBindViewHolder");
 
-        Test = i;
+        //Test = i;
 
         //ビューの設定
         viewHolder.setViewMatrix( mData.get(i) );
