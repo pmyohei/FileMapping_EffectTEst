@@ -39,9 +39,6 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
     private float mImageInitPosX;
     private float mImageInitPosY;
 
-    //画像のScaleTypeをマトリクスにしたかどうか
-    //private boolean mIsSetScaleTypeToMatrix;
-
     //ピンチ操作中
     private boolean mIsPinching;
     //ピンチ拡大あり（少しでも拡大していれば、true）
@@ -68,7 +65,6 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
         mImageInitPosX = PRESET_VALUE;
         mImageInitPosY = PRESET_VALUE;
 
-        //mIsSetScaleTypeToMatrix = false;
         mIsPinching = false;
         mInitMatrixScale = PRESET_VALUE;
 
@@ -90,7 +86,6 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
 
         Log.i("ピンチ拡大チェック", "リセットコール=" + page);
 
-        //if( !mIsSetScaleTypeToMatrix ){
         if( !mIsPinchUp ){
             //拡大されていないなら、リセット不要
             return;
@@ -105,7 +100,6 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
         mImageInitPosX = PRESET_VALUE;
         mImageInitPosY = PRESET_VALUE;
 
-        //mIsSetScaleTypeToMatrix = false;
         mIsPinching = false;
         mInitMatrixScale = PRESET_VALUE;
 
@@ -171,7 +165,6 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
     public boolean onTouchEvent(MotionEvent event) {
 
         //画像のScaleTypeをマトリクスに設定
-        //if (!mIsSetScaleTypeToMatrix) {
         if ( mInitMatrixScale == PRESET_VALUE) {
             //ビュー生成時点では、ScaleTypeがMATRIXではないため、ここでマトリクスに設定
             setScaleType(ScaleType.MATRIX);
@@ -184,9 +177,6 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
             //画像初期マトリクス位置
             mImageInitPosX = getMatrixValue(Matrix.MTRANS_X);
             mImageInitPosY = getMatrixValue(Matrix.MTRANS_Y);
-
-            //マトリクス設定完了
-            //mIsSetScaleTypeToMatrix = true;
         }
 
         //マトリクスを設定

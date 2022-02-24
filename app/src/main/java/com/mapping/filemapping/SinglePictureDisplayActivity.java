@@ -29,13 +29,16 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
     /* 画面遷移-キー */
     public static String UPDATE = "update";
 
+    //ページ送りボタン未押下
+    public static final int NO_TOUCH_PAGE_FEED_ICON = -1;
+
     //表示する写真リスト
     ArrayList<PictureTable> mGalley;
     //マップ上のピクチャノード情報
     private ArrayList<PictureNodesBottomSheetDialog.PictureNodeInfo> mPictureNodeInfo;
     //写真の格納先変更フラグ
     private boolean mIsUpdate;
-
+    //ページ遷移アイコン押下時のページindex
     private int mIconTouchPage;
 
     @Override
@@ -68,111 +71,118 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
         //ページスクロールリスナー
         vp2_singlePicture.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
 
-            boolean isStateSettingOn;
-            int scrollingPage = 0;
-            int prePage = 0;
-            int selectedPage = 0;
-
-            int preCurrent = 0;
-            int current = 0;
-
-            SingleMatrixImageView singleMatrixImageView;
+            //ページ遷移前のビュー
+            private SingleMatrixImageView preMatrixImageView;
+            //ページ遷移前のページindex
+            private int prePage = 0;
 
             @Override
             public void onPageScrollStateChanged(int state) {
                 Log.i("コール順確認", "onPageScrollStateChanged state=" + state);
 
-                if( state == SCROLL_STATE_DRAGGING ){
-                    isStateSettingOn = false;
-                    preCurrent = vp2_singlePicture.getCurrentItem();
+                //スクロール状態
+                switch (state) {
 
-                    Log.i("コール順確認", "onPageScrollStateChanged preCurrent（ドラッグ）=" + preCurrent);
+                    /*------------------
+                       ドラッグ開始
+                       ※タッチでのページ送りのみこの状態がコールされる
+                        アイコンでの遷移時、この状態ではコールされない
+                        --------------------------*/
+                    case SCROLL_STATE_DRAGGING:
+                        //ページ遷移前のページindexを取得
+                        prePage = vp2_singlePicture.getCurrentItem();
+                        //ページ遷移前のビュー
+                        preMatrixImageView = vp2_singlePicture.findViewById(R.id.iv_singlePicture);
 
-                    singleMatrixImageView = vp2_singlePicture.findViewById( R.id.iv_singlePicture );
+                        //Log.i("コール順確認", "onPageScrollStateChanged preCurrent（ドラッグ）=" + prePage);
+                        //Log.i("コール順確認", "どらっぎんぐタイミングの写真ビューページ=" + preMatrixImageView.page);
 
-                    Log.i("コール順確認", "どらっぎんぐタイミングの写真ビューページ=" + singleMatrixImageView.page);
+                        break;
 
-                }else if( state == SCROLL_STATE_SETTLING ){
-                    isStateSettingOn = true;
+                    /*------------------
+                        SCROLL_STATE_DRAGGING の次にコールされる
+                        ※アイコン操作によるページ送りの場合、SCROLL_STATE_DRAGGINGがコールされることなく
+                        本状態がコールされる
+                        -------------------------*/
+                    case SCROLL_STATE_SETTLING:
 
-                    if( mIconTouchPage < 0 ){
-                        preCurrent = vp2_singlePicture.getCurrentItem();
-                        Log.i("コール順確認", "onPageScrollStateChanged preCurrent（セットリング スクロール）=" + preCurrent);
-                    }else{
-                        preCurrent = mIconTouchPage;
-                        Log.i("コール順確認", "onPageScrollStateChanged preCurrent（セットリング アイコン）=" + preCurrent);
-                    }
-
-                    mIconTouchPage = -1;
-
-
-                    //ドラッグタイミングで取得できていない
-                    if( singleMatrixImageView == null ){
-                        singleMatrixImageView = vp2_singlePicture.findViewById( R.id.iv_singlePicture );
-                    }
-
-                    Log.i("コール順確認", "セットリングタイミングの写真ビューページ=" + singleMatrixImageView.page);
-
-                    //Log.i("コール順確認", "onPageScrollStateChanged preCurrent（セットリング）=" + preCurrent);
-
-                } else if( state == SCROLL_STATE_IDLE ){
-
-                    current = vp2_singlePicture.getCurrentItem();
-
-                    Log.i("コール順確認", "onPageScrollStateChanged preCurrent（アイドル）=" + current);
-
-
-                    Log.i("ページ更新チェック", "更新チェック preCurrent=" + preCurrent);
-                    Log.i("ページ更新チェック", "更新チェック current=" + current);
-
-                    //ページ遷移している場合
-                    if( preCurrent != current ){
-
-                        Log.i("ページ更新チェック", "★更新発生 preCurrent=" + preCurrent);
-
-                        Log.i("ページ更新チェック", "★更新発生 通知テスト 通知判定直前 preCurrent→" + preCurrent);
-                        Log.i("ページ更新チェック", "★更新発生 通知テスト 通知判定直前 current→" + current);
-                        Log.i("ページ更新チェック", "★更新発生 通知テスト 通知判定直前 isScaleUp→" + singleMatrixImageView.isPinchUp());
-
-                        if( singleMatrixImageView != null && singleMatrixImageView.isPinchUp() ){
-                            Log.i("ページ更新チェック", "★更新発生 通知テスト 拡大しているので更新通知を送る→" + preCurrent);
-
-                            //前のページを更新
-                            vp2_singlePicture.getAdapter().notifyItemChanged( preCurrent );
+                        if (mIconTouchPage == NO_TOUCH_PAGE_FEED_ICON) {
+                            //アイコン操作されていないなら、この時点のページ数を取得
+                            prePage = vp2_singlePicture.getCurrentItem();
+                            //Log.i("コール順確認", "onPageScrollStateChanged preCurrent（セットリング スクロール）=" + prePage);
+                        } else {
+                            //アイコン操作されている場合、getCurrentItem()では正しい値を取得できないため、
+                            //アイコンタッチ時に保持していたページを設定
+                            prePage = mIconTouchPage;
+                            //Log.i("コール順確認", "onPageScrollStateChanged preCurrent（セットリング アイコン）=" + prePage);
                         }
-                    }
 
-                    singleMatrixImageView = null;
+                        //押下時の処理が完了したため、初期状態に戻す
+                        mIconTouchPage = NO_TOUCH_PAGE_FEED_ICON;
+
+                        //ドラッグタイミングで取得できていない
+                        //（アイコン操作でページ遷移した場合）
+                        if (preMatrixImageView == null) {
+                            preMatrixImageView = vp2_singlePicture.findViewById(R.id.iv_singlePicture);
+                        }
+
+                        Log.i("コール順確認", "セットリングタイミングの写真ビューページ=" + preMatrixImageView.page);
+
+                        //Log.i("コール順確認", "onPageScrollStateChanged preCurrent（セットリング）=" + preCurrent);
+
+                        break;
+
+                    /*------------------
+                        スクロールが安定（停止）して完全に次のページが表示された時
+                        前回参照していたページと別のページになっており、
+                        少しでも写真が拡大されているなら、
+                        次に参照されたときは初期状態とするために、更新通知を送る
+                        -------------------------------*/
+                    case SCROLL_STATE_IDLE:
+                        //遷移後のページを取得
+                        int nextPage = vp2_singlePicture.getCurrentItem();
+
+                        //Log.i("コール順確認", "onPageScrollStateChanged preCurrent（アイドル）=" + nextPage);
+                        //Log.i("ページ更新チェック", "更新チェック preCurrent=" + prePage);
+                        //Log.i("ページ更新チェック", "更新チェック current=" + nextPage);
+
+                        //ページ遷移している場合
+                        if (prePage != nextPage) {
+
+                            //Log.i("ページ更新チェック", "★更新発生 preCurrent=" + prePage);
+                            //Log.i("ページ更新チェック", "★更新発生 通知テスト 通知判定直前 preCurrent→" + prePage);
+                            //Log.i("ページ更新チェック", "★更新発生 通知テスト 通知判定直前 current→" + nextPage);
+                            //Log.i("ページ更新チェック", "★更新発生 通知テスト 通知判定直前 isScaleUp→" + preMatrixImageView.isPinchUp());
+
+                            //参照していた写真が拡大された状態で画面遷移された場合
+                            if (preMatrixImageView != null && preMatrixImageView.isPinchUp()) {
+                                //Log.i("ページ更新チェック", "★更新発生 通知テスト 拡大しているので更新通知を送る→" + prePage);
+
+                                //参照していたページを更新
+                                vp2_singlePicture.getAdapter().notifyItemChanged(prePage);
+                            }
+                        }
+
+                        //初期化
+                        preMatrixImageView = null;
+
+                        break;
                 }
-
             }
+
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-
                 Log.i("コール順確認", "onPageSelected ページ=" + position);
-
-                //遷移先ページを保持
-                selectedPage = position;
-
             }
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 Log.i("コール順確認", "onPageScrolled ページ=" + position);
-
-/*                //
-                if( isStateSettingOn ){
-                    prePage = position;
-
-                    isStateSettingOn = false;
-                }
-
-                //スクロール中のページ
-                scrollingPage = position;*/
             }
         });
 
-        mIconTouchPage = -1;
+        //アイコンタッチページ初期化
+        mIconTouchPage = NO_TOUCH_PAGE_FEED_ICON;
 
         //ページ送りリスナー（右）
         findViewById(R.id.iv_next).setOnClickListener(new View.OnClickListener() {
@@ -185,12 +195,14 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
                     return;
                 }
 
+                //遷移前のページとして保持
                 mIconTouchPage = current;
+                //ページを変更
                 vp2_singlePicture.setCurrentItem( current + 1 );
 
                 //ページ送り後はアイコン非表示
                 view.setVisibility( View.GONE );
-                //スクロールでのページ送りをリセット（有効化）
+                //スクロールでのページ送りをリセット（ページ送り有効化）
                 vp2_singlePicture.setUserInputEnabled(true);
             }
         });
@@ -205,13 +217,15 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
                     //一応ガード
                     return;
                 }
-                mIconTouchPage = current;
-                vp2_singlePicture.setCurrentItem( current - 1 );
 
+                //遷移前のページとして保持
+                mIconTouchPage = current;
+                //ページを変更
+                vp2_singlePicture.setCurrentItem( current - 1 );
 
                 //ページ送り後は非表示に
                 view.setVisibility( View.GONE );
-                //スクロールでのページ送りをリセット（有効化）
+                //スクロールでのページ送りをリセット（ページ送り有効化）
                 vp2_singlePicture.setUserInputEnabled(true);
             }
         });
@@ -283,14 +297,6 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
     }
 
     /*
-     * ViewPagerのスクロール制御
-     */
-    public void controlScroll() {
-        ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
-
-    }
-
-    /*
      * 格納ノードからの削除確認
      */
     private void confirmDeletePicture() {
@@ -339,7 +345,6 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
         PictureTable showPicture = mGalley.get(index);
 
         //マップ上のピクチャノードを移動先候補として表示
-        //PictureNodesBottomSheetDialog bottomSheetDialog = PictureNodesBottomSheetDialog.newInstance(mPictureNodeInfo, showPicture);
         PictureNodesBottomSheetDialog bottomSheetDialog = new PictureNodesBottomSheetDialog(this, mPictureNodeInfo, showPicture);
         bottomSheetDialog.show(getSupportFragmentManager(), "");
     }
