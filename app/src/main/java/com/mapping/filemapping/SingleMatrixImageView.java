@@ -545,14 +545,34 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
                 return (leftSideX * -1);
             }
 
+            //左側にまだ参照できる領域がある状態で、その方向を参照しようとした場合
+            if (leftSideX < 0 && x > 0) {
+                //ビュー端（画面端）と画像右端との差
+                Log.i("端の挙動変問題", "画面サイズに収まる分だけ移動 左");
+
+                //移動量が見えていないサイズを超過している場合は、見えていないサイズ分だけにする
+                return Math.min(x, (leftSideX * -1));
+            }
+
             //画像がビューよりも右側にある状態で、指の方向が左側
             if (rightSideX < viewWidth && x < 0) {
                 //ビュー端（画面端）と画像右端との差
-
                 Log.i("端の挙動変問題", "x ビュー端（画面端）と画像右端との差");
 
                 //画面端に収める
                 return (viewWidth - rightSideX);
+            }
+
+            //右側にまだ参照できる領域がある状態で、その方向を参照しようとした場合
+            if (rightSideX > viewWidth && x < 0) {
+                //ビュー端（画面端）と画像右端との差
+                Log.i("端の挙動変問題", "画面サイズに収まる分だけ移動 右");
+
+                //見えていない写真の横サイズ
+                float restSize = viewWidth - rightSideX;
+
+                //移動量が見えていないサイズを超過している場合は、見えていないサイズ分だけにする
+                return Math.max(x, restSize);
             }
 
             //画面右端に画像右端がきている場合
@@ -609,10 +629,26 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
                 return (topY * -1f);
             }
 
+            //写真上にまだ行ける状態で、写真上を見ようとしたとき
+            if (topY < 0 && y > 0) {
+                Log.i("端の挙動変問題", "見えない分だけに調整");
+
+                //見えない分だけ移動させる
+                return Math.min( y, (topY * -1f));
+            }
+
             //下がった分を埋める
             if ((bottomY < viewHeight) && (y < 0)) {
                 Log.i("端の挙動変問題", "y 下がった分を埋める");
                 return (viewHeight - bottomY);
+            }
+
+            //写真下にまだ行ける状態で、写真下を見ようとしたとき
+            if ((bottomY > viewHeight) && (y < 0)) {
+                Log.i("端の挙動変問題", "見えていない分だけに丸める");
+
+                //見えていない分だけにする
+                return Math.max( y, (viewHeight - bottomY));
             }
 
             //画像の底辺が画面底辺と一致している
