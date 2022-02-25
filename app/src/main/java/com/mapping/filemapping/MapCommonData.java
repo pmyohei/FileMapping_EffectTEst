@@ -151,67 +151,46 @@ public class MapCommonData extends Application {
      */
     public void createColorHistory( MapTable map, View v_map ) {
 
-        ArrayList<String> tmp = new ArrayList<>();
+        //色履歴一時リスト（重複あり、大文字小文字混在）
+        ArrayList<String> tmpColors = new ArrayList<>();
 
-        //デフォルトカラーをリストに追加
+        //デフォルトカラーを一時リストに追加
         String[] colors = map.getDefaultColors();
         for( String defaultColor: colors ){
             if( defaultColor != null ){
-                tmp.add( defaultColor );
+                tmpColors.add( defaultColor );
             }
         }
 
-        //現在のマップ背景色を追加
+        //現在のマップ背景色
         ColorDrawable colorDrawable = (ColorDrawable) v_map.getBackground();
         int colorInt = colorDrawable.getColor();
-        String color = "#" + Integer.toHexString(colorInt);
-
+        String mapColor = "#" + Integer.toHexString(colorInt);
         //大文字変換
-        color = color.toUpperCase(Locale.ROOT);
+        mapColor = mapColor.toUpperCase(Locale.ROOT);
 
         //透明度の情報があれば、除外する
         final String TRANCEPARENT = "#FF";
-        if( ( color.length() == 9 ) && ( color.contains(TRANCEPARENT)) ){
+        if( ( mapColor.length() == 9 ) && ( mapColor.contains(TRANCEPARENT)) ){
             //#FF001122→#001122 にする
-            color = color.replace(TRANCEPARENT, "#");
+            mapColor = mapColor.replace(TRANCEPARENT, "#");
         }
 
-        //小文字に変換
-        color = color.toLowerCase(Locale.ROOT);
-
-        tmp.add( color );
-        Log.i("色履歴", "v_map color=" + color);
+        //一時リストに追加
+        tmpColors.add( mapColor );
 
         //マップ中のノードに設定されている色を取得
-        tmp.addAll( mNodes.getAllNodeColors() );
+        tmpColors.addAll( mNodes.getAllNodeColors() );
 
-        //log
-        Log.i("色履歴", "tmpリストの情報--------");
-        for( String cc: tmp ){
-            Log.i("色履歴", "cc=" + cc);
+        //色情報をすべて大文字にしてリストを再作成
+        //※重複を排除するとき、大文字と小文字で別の色と判定されるのを回避するため
+        ArrayList<String> tmpUpperColors = new ArrayList<>();
+        for( String color: tmpColors ){
+            tmpUpperColors.add( color.toUpperCase(Locale.ROOT) );
         }
-        //
 
-        for( String cc: tmp ){
-            Log.i("色履歴", "そのまま　cc=" + cc);
-            Log.i("色履歴", "大文字化　cc=" + cc.toUpperCase(Locale.ROOT));
-            cc = cc.toUpperCase(Locale.ROOT);
-        }
-        //log
-        Log.i("色履歴", "tmpリストの情報 大文字--------");
-        for( String cc: tmp ){
-            Log.i("色履歴", "cc=" + cc);
-        }
-        //
         //重複なしで設定
-        mColorHistory.addAll( new ArrayList<>(new LinkedHashSet<>(tmp)) );
-
-        //log
-        Log.i("色履歴", "重複なしリストの情報--------");
-        for( String cc: mColorHistory ){
-            Log.i("色履歴", "cc=" + cc);
-        }
-        //
+        mColorHistory.addAll( new ArrayList<>(new LinkedHashSet<>(tmpUpperColors)) );
     }
 
     /*
