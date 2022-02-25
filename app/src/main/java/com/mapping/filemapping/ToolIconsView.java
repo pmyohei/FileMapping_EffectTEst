@@ -148,12 +148,19 @@ public class ToolIconsView extends ConstraintLayout {
         //アイコンビュー情報を取得
         List<TooliconData> iconViews = getIconResourceId();
 
-        //半径延長比率
-        final float RADIUS_EXTENSION_RATIO = 1.0f;
-        //半径
-        int radius = (int) ((v_baseNode.getWidth()) * RADIUS_EXTENSION_RATIO);
         //中心のビュー
         int v_center_id = findViewById(R.id.v_center).getId();
+        //半径
+        final int ADD_NODE_RADIUS = 80;     //ノード半径に対する延長サイズ
+        final int MINIMUN_RADIUS = 220;     //アイコン半径の最低ライン
+        int radius = (int) ((v_baseNode.getScaleNodeBodyWidth() / 2f) + ADD_NODE_RADIUS);
+        if ( radius < MINIMUN_RADIUS ){
+            //ノードとアイコンの距離が最低ラインよりも小さければ、最低サイズで設定
+            radius = MINIMUN_RADIUS;
+        }
+
+        //Log.i("アイコン半径", "getScaleNodeBodyWidth" + v_baseNode.getScaleNodeBodyWidth());
+        //Log.i("アイコン半径", "radius" + radius);
 
         //アイコン設置初期角度
         final int START_ANGLE = 30;
@@ -165,7 +172,7 @@ public class ToolIconsView extends ConstraintLayout {
                     ConstraintLayout.LayoutParams.WRAP_CONTENT,
                     ConstraintLayout.LayoutParams.WRAP_CONTENT);
 
-            Log.i("アイコン", "半径 初期値=" + layoutParams.circleRadius + " 設定値=" + radius);
+            //Log.i("アイコン", "半径 初期値=" + layoutParams.circleRadius + " 設定値=" + radius);
 
             //角度、半径を設定
             layoutParams.circleConstraint = v_center_id;
@@ -183,7 +190,7 @@ public class ToolIconsView extends ConstraintLayout {
             //リスナーの設定
             setIconListener(toolIconData);
 
-            Log.i("アイコン", "角度=" + START_ANGLE * count);
+            //Log.i("アイコン", "角度=" + START_ANGLE * count);
 
             count++;
         }

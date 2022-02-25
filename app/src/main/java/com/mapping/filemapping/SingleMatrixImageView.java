@@ -96,32 +96,9 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
     }
 
     /*
-     * ピンチ操作で拡大されている状態にあるか
-     */
-/*    public boolean isPinchUp() {
-
-        //現在の拡大状態を返す
-        return mIsPinchUp;
-
-        *//*-- 以下で確認すると、拡大していてもgetMatrixValue()で想定していない値が返されるため、フラグで拡大を管理 --*//*
-        *//*
-        Log.i("ピンチ拡大チェック", "通知テスト mInitMatrixScale=" + mInitMatrixScale);
-        Log.i("ピンチ拡大チェック", "通知テスト getMatrixValue(Matrix.MSCALE_Y)=" + getMatrixValue(Matrix.MSCALE_Y));
-
-        //初期スケール未設定なら、非拡大状態
-        if( mInitMatrixScale == PRE_INIT_VALUE ){
-            return false;
-        }
-
-        return (mInitMatrixScale < getMatrixValue(Matrix.MSCALE_Y));
-        *//*
-    }*/
-
-
-    /*
      * 画像を初期位置に収める
      */
-    private void setImageFitScreen() {
+    private void fitImageScreen() {
         //現在位置
         final float currentX = getMatrixValue(Matrix.MTRANS_X);
         final float currentY = getMatrixValue(Matrix.MTRANS_Y);
@@ -395,7 +372,7 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
             if (mImageScaleApplyFactor == mInitMatrixScale) {
                 Log.i("スクロール制御", "ピンチ操作終了→可能に設定");
                 //画像の位置を元の状態にする
-                setImageFitScreen();
+                fitImageScreen();
                 //ページ送り可能にする
                 setPageScroll(true);
 
