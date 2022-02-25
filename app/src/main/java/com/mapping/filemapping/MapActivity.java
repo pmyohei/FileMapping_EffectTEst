@@ -903,6 +903,10 @@ public class MapActivity extends AppCompatActivity {
      */
     private class PinchListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 
+        //スケールの上限下限
+        final float LOWER_SCALE = 0.5f;
+        final float UPPER_SCALE = 2.0f;
+
         //親レイアウト
         FrameLayout mfl_map;
         //ルートノード
@@ -922,7 +926,6 @@ public class MapActivity extends AppCompatActivity {
         //（ピンチ操作時の位置ズレ把握用）
         float startRootPosX;
         float startRootPosY;
-
 
         /*
          * コンストラクタ
@@ -971,10 +974,20 @@ public class MapActivity extends AppCompatActivity {
             float scaleFactor = detector.getScaleFactor();
 
             //Log.i("onScale", "getScaleFactor=" + scaleFactor);
+            Log.i("ピンチ機能", "設定比率=" + mPinchScaleX * scaleFactor);
+
+            //設定比率
+            float setScaleValue = mPinchScaleX * scaleFactor;
+            //上限下限に割り込んでいれば、限界値に設定
+            if( setScaleValue < LOWER_SCALE ){
+                setScaleValue = LOWER_SCALE;
+            }else if( setScaleValue > UPPER_SCALE ){
+                setScaleValue = UPPER_SCALE;
+            }
 
             //ピンチ操作開始時の比率に、ピンチ操作中の比率を掛ける
-            mfl_map.setScaleX(mPinchScaleX * scaleFactor);
-            mfl_map.setScaleY(mPinchScaleY * scaleFactor);
+            mfl_map.setScaleX(setScaleValue);
+            mfl_map.setScaleY(setScaleValue);
 
             return super.onScale(detector);
         }
@@ -1002,10 +1015,6 @@ public class MapActivity extends AppCompatActivity {
             mapCommonData.setPinchDistanceRatio(pinchDistanceRatioX, pinchDistanceRatioY);
 
             //Log.i("onScaleEnd", "pinchDistanceRatioX=" + pinchDistanceRatioX + " pinchDistanceRatioY=" + pinchDistanceRatioY);
-
-            //↓改修が必要
-            //mDragViewListener.setTestScaleX( testScaleX );
-            //mDragViewListener.setTestScaleY( testScaleY );
 
             //ピンチ開始時との位置のズレを保持
             //※連続で操作される可能性があるため、累計させる
