@@ -56,7 +56,85 @@
     <string name="no_nodeName">（ノード名なし）</string>
     <string name="top_nodeName">・</string>
 
+    <!-- ガイド -->
+    <!-- ツールアイコンのヘルプ -->
+    <string name="help_icon_title">アイコンの説明</string>
+    <string name="help_icon_add_name">ノード生成</string>
+    <string name="help_icon_add">新しいノードを追加します</string>
+    <string name="help_icon_add_note">※１つのノードに作成できるノードは「５つ」まで</string>
+    <string name="help_icon_add_picture_node_name">ピクチャノード生成</string>
+    <string name="help_icon_add_picture_node">写真格納用のノードを作成します\n写真を格納したい場合は、このアイコンを選択して、まずはピクチャノードを作成しましょう</string>
+    <string name="help_icon_add_picture_node_note">※１つのノードに作成できるピクチャノードは「２つ」まで</string>
+    <string name="help_icon_edit_name">ノード編集</string>
+    <string name="help_icon_edit">ノードを編集します\nデザインやノード名を変えたい場合は、このアイコンを選択してください</string>
+    <string name="help_icon_edit_note">※マップ上のすべてのノードデザインを統一したいときは、この画面の上にある以下のアイコンを選択してください</string>
+    <string name="help_icon_delete_name">ノード削除</string>
+    <string name="help_icon_delete">ノードとその下のノードをマップ上から削除します</string>
+    <string name="help_icon_delete_note">※削除ノードに紐づけた写真が、端末上から削除されることはありません</string>
+    <string name="help_icon_photo_library_name">ギャラリー表示</string>
+    <string name="help_icon_photo_library">このノードに紐づけた写真をギャラリーで確認ことができます</string>
+    <string name="help_icon_change_parent_name">親ノードの変更</string>
+    <string name="help_icon_change_parent">親ノードを変更します\n選択した後、親にしたいノードをタッチすると、そのノードを親にすることができます</string>
+    <string name="help_icon_change_parent_note">※「ピクチャノード」を親ノードにすることはできません</string>
+    <string name="help_icon_new_map_name">新規マップ化</string>
+    <string name="help_icon_new_map">このノードを中心ノードとして、新しいマップを作成します</string>
+    <string name="help_icon_add_photo_library_name">写真の格納（紐づけ）</string>
+    <string name="help_icon_add_photo_library">写真を格納します\n関連する写真を選択してギャラリーを作成しましょう</string>
+    <string name="help_icon_close_name">アイコンクローズ</string>
+    <string name="help_icon_close">アイコンを閉じます</string>
+
+    <!-- マップ画面のヘルプ -->
+    <string name="help_map_title">マップ画面の操作方法</string>
+    <string name="help_map_title_basic_ope">基本操作</string>
+    <string name="help_map_title_toolbar">マップ画面上部のアイコン</string>
+    <string name="help_map_title_picture">画像の扱いについて</string>
+    <string name="help_map_title_limitations">制限事項</string>
+
+    <string name="help_map_basic_details1">まずはノードをタッチしてみましょう！\nタッチすると操作アイコンが表示されます。\nアイコンをタッチすることで、新しいノードの作成や写真の紐づけをすることができます！</string>
+    <string name="help_map_basic_details1_note">※アイコンの詳細は、「？」アイコンでご確認下さい\n</string>
+    <string name="help_map_basic_sample1">操作例のご紹介①</string>
+    <string name="help_map_basic_sample1_title">～新しくノードを作成したい～</string>
+    <string name="help_map_basic_sample1_details1">①作成したいノードをタッチ</string>
+    <string name="help_map_basic_sample1_details2">②ノード作成アイコンを選択</string>
+
+    <string name="help_map_basic_sample2">操作例のご紹介②</string>
+    <string name="help_map_basic_sample2_title">～ノードに写真を格納したい～</string>
+    <string name="help_map_basic_sample2_details1">①格納したいノードをタッチ</string>
+    <string name="help_map_basic_sample2_details2">②ピクチャノード作成アイコンを選択</string>
+    <string name="help_map_basic_sample2_details3">③好きな写真を選択して、Create</string>
+    <string name="help_map_basic_sample2_details4">④作成されたピクチャノードをタッチ</string>
+    <string name="help_map_basic_sample2_details5">⑤写真追加アイコンを選択</string>
+    <string name="help_map_basic_sample2_details6">⑥好きな写真を選択</string>
+    <string name="help_map_basic_sample2_details7">ギャラリーアイコンを選択すると、ノードに格納された写真を確認することができます</string>
+
+    <string name="help_map_toolbar_details1">本画面上部のアイコンについて</string>
+    <string name="help_map_toolbar_palette1">マップ全体デザイン変更</string>
+    <string name="help_map_toolbar_palette2">マップの背景色やマップ上のすべてのノードのデザインを変更できます</string>
+    <string name="help_map_toolbar_tree1">ノードのツリー表示</string>
+    <string name="help_map_toolbar_tree2">マップ上にあるすべてのノードをツリー形式で確認できます</string>
+    <string name="help_map_toolbar_disable1">～アイコンが見えなくなったとき～</string>
+    <string name="help_map_toolbar_disable2">マップの色が暗くアイコンが見えにくくなったときは、ツールバーをタッチすると見えやすくなります</string>
+
+    <string name="help_map_picture_details1">本アプリでは、お使いの端末に保存された写真や画像をマップ上のノードに紐づけて管理しています。</string>
+    <string name="help_map_picture_details2">・端末内の画像が削除されたり保存場所が変更されると、マップからも削除されますのでご注意下さい</string>
+    <string name="help_map_picture_details3">・本アプリでは、端末内の画像を削除する機能はありません。マップからノードや写真を削除した場合でも、端末から画像が削除されることはないため、安心してご利用下さい。</string>
+
+    <string name="help_map_limitaions_details1">・１つのノードに作成できるノードは５つまでです。</string>
+    <string name="help_map_limitaions_details2">・１つのノードに作成できるピクチャノード（写真を格納するためのノード）は、２つまでです。</string>
+    <string name="help_map_limitaions_details3">・ノードの階層は５つまでです。</string>
+
+
     <!--  レイアウト確認用（実際にユーザーに表示されることはない） -->
     <string name="sample">Sample</string>
+
+    <!-- Admod（アプリID） -->
+    <string name="admob_app_id">ca-app-pub-8046295810838892~5800939677</string>
+
+    <!-- リリース時とテスト時で切り替える -->
+    <!--  テストID（バナー広告）  -->
+        <string name="admob_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <!-- リリース用 -->
+    <!--<string name="admob_unit_id">ca-app-pub-8046295810838892/1596264495</string>
+    -->
 
 </resources>

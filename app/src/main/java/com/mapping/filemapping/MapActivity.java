@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.DialogFragment;
 
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
@@ -802,15 +803,20 @@ public class MapActivity extends AppCompatActivity {
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+
+            case R.id.action_help:
+                //マップヘルプの表示
+                DialogFragment helpDialog = new HelpDialog( HelpDialog.HELP_KIND_MAP );
+                helpDialog.show( getSupportFragmentManager(), "");
+
+                return true;
+
             case R.id.action_palette:
                 //マップ全体デザイン変更
                 openDesignBottomSheet(DesignBottomSheet.MAP, findViewById(R.id.fl_screenMap));
 
                 return true;
 
-            case R.id.action_search:
-                //検索機能
-                return true;
 
             case R.id.action_folder_tree:
                 //フォルダーツリー表示

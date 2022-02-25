@@ -60,7 +60,7 @@
         app:layout_constraintCircleRadius="@dimen/node_icon_default_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/baseline_add_a_photo_24" />
+        app:srcCompat="@drawable/baseline_add_picture_node_24" />
 
 
     <ImageButton

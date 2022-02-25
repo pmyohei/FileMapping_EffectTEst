@@ -17,6 +17,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
+
 import java.util.ArrayList;
 
 public class MapListActivity extends AppCompatActivity {
@@ -48,6 +52,15 @@ public class MapListActivity extends AppCompatActivity {
                 registerForActivityResult(
                     new ActivityResultContracts.StartActivityForResult(),
                     new EditMapResultCallback());
+
+
+        //AdMob初期化
+        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+            @Override
+            public void onInitializationComplete(InitializationStatus initializationStatus) {
+                //※本画面では何もしない
+            }
+        });
 
         //コンテキスト
         Context context = this;

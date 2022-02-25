@@ -31,6 +31,7 @@
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_palette_20.xml" value="0.14947916666666666" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_photo_library_24.xml" value="0.2234375" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_pre_24.xml" value="0.119" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_question_24.xml" value="0.1" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_restart_alt_24.xml" value="0.2234375" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/bt_create.xml" value="0.15260416666666668" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/bt_image.xml" value="0.12135416666666667" />
@@ -43,6 +44,7 @@
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/frame_item_map.xml" value="0.11666666666666667" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/frame_sample_map.xml" value="0.14375" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/selector_guide_indicator.xml" value="0.14375" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/selector_indicator.xml" value="0.106" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/font/font.xml" value="0.20462962962962963" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_color_picker.xml" value="0.1140625" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_map.xml" value="0.1" />
@@ -51,7 +53,7 @@
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_map_list_old.xml" value="0.21965579710144928" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_node_information.xml" value="0.264" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_picture_gallery.xml" value="0.11510416666666666" />
-        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_picture_trimming.xml" value="0.17083333333333334" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_picture_trimming.xml" value="0.152" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_single_picture_display.xml" value="0.1" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/color_picker_dialog.xml" value="0.1703125" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/color_selection.xml" value="0.16044776119402984" />
@@ -63,6 +65,13 @@
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/design_bottom_sheet_old2.xml" value="0.1234375" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/design_dialog.xml" value="0.20153985507246377" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/grid_picture_node.xml" value="0.1" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/help_icon_dialog.xml" value="0.14659685863874344" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/help_map_about_photo_dialog.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/help_map_basic operation_dialog.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/help_map_basic_dialog.xml" value="0.23802083333333332" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/help_map_dialog.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/help_map_limitations_dialog.xml" value="0.22447916666666667" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/help_map_toolbar_dialog.xml" value="0.22447916666666667" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/hierarchy_node.xml" value="0.11946902654867257" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/hierarchy_node_item.xml" value="0.1793478260869565" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/input_all_node_design.xml" value="0.2" />

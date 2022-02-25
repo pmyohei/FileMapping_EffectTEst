@@ -39,7 +39,7 @@
         app:layout_constraintCircleRadius="@dimen/node_icon_default_radius"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/baseline_add_a_photo_24" />
+        app:srcCompat="@drawable/baseline_add_picture_node_24" />
 
 
     <ImageButton
@@ -86,7 +86,7 @@
         app:layout_constraintCircleRadius="@dimen/node_icon_default_radius"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/baseline_restart_alt_24" />
+        app:srcCompat="@drawable/baseline_change_parent_24" />
 
     <ImageButton
         style="@style/tool_icon"
@@ -97,7 +97,7 @@
         app:layout_constraintCircleRadius="@dimen/node_icon_default_radius"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/baseline_menu_book_24" />
+        app:srcCompat="@drawable/baseline_new_map_24" />
 
     <ImageButton
         style="@style/tool_icon"

@@ -17,6 +17,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.DialogFragment;
+import androidx.fragment.app.FragmentActivity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,7 +39,8 @@ public class ToolIconsView extends ConstraintLayout {
         public static final int CHANGE_PARENT = 5;
         public static final int NEW_MAP = 6;
         public static final int ADD_PICTURE = 7;
-        public static final int CLOSE = 8;
+        public static final int HELP = 8;
+        public static final int CLOSE = 9;
 
         private final int iconKind;
         private final ImageButton ibIcon;
@@ -55,10 +58,8 @@ public class ToolIconsView extends ConstraintLayout {
         }
     }
 
-    //次のアイコンの加算角度
-    private final int ADD_ANGLE = 30;
     //対象ノード
-    private BaseNode v_baseNode;
+    private BaseNode mBaseNode;
     //マップ画面
     private MapActivity mMapActivity;
 
@@ -67,7 +68,7 @@ public class ToolIconsView extends ConstraintLayout {
      */
     public ToolIconsView(Context context, BaseNode v_node, MapActivity mapActivity) {
         super(context);
-        v_baseNode = v_node;
+        mBaseNode = v_node;
         mMapActivity = mapActivity;
 
         //初期化
@@ -95,7 +96,7 @@ public class ToolIconsView extends ConstraintLayout {
         closeShowingIcon();
 
         //ノードに自分を持たせる
-        v_baseNode.setIconView(this);
+        mBaseNode.setIconView(this);
 
         //ツールアイコン設定
         setupIcon();
@@ -116,8 +117,8 @@ public class ToolIconsView extends ConstraintLayout {
                         getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
                         //ノードの中心位置
-                        int nodex = v_baseNode.getLeft() + (v_baseNode.getWidth() / 2);
-                        int nodey = v_baseNode.getTop() + (v_baseNode.getHeight() / 2);
+                        int nodex = mBaseNode.getLeft() + (mBaseNode.getWidth() / 2);
+                        int nodey = mBaseNode.getTop() + (mBaseNode.getHeight() / 2);
 
                         //本レイアウト位置
                         int left = nodex - (getWidth() / 2);
@@ -153,7 +154,7 @@ public class ToolIconsView extends ConstraintLayout {
         //半径
         final int ADD_NODE_RADIUS = 80;     //ノード半径に対する延長サイズ
         final int MINIMUN_RADIUS = 220;     //アイコン半径の最低ライン
-        int radius = (int) ((v_baseNode.getScaleNodeBodyWidth() / 2f) + ADD_NODE_RADIUS);
+        int radius = (int) ((mBaseNode.getScaleNodeBodyWidth() / 2f) + ADD_NODE_RADIUS);
         if ( radius < MINIMUN_RADIUS ){
             //ノードとアイコンの距離が最低ラインよりも小さければ、最低サイズで設定
             radius = MINIMUN_RADIUS;
@@ -235,13 +236,14 @@ public class ToolIconsView extends ConstraintLayout {
         //ツールアイコンリスト
         List<TooliconData> iconViews = new ArrayList<>();
         //ノード種別
-        int kind = v_baseNode.getNode().getKind();
+        int kind = mBaseNode.getNode().getKind();
 
         if (kind == NodeTable.NODE_KIND_ROOT) {
             iconViews.add( new TooliconData( TooliconData.CREATE_NODE, findViewById( R.id.ib_createNode ) ) );
             iconViews.add( new TooliconData( TooliconData.CREATE_PICTURE_NODE, findViewById( R.id.ib_createPictureNode ) ) );
             iconViews.add( new TooliconData( TooliconData.EDIT, findViewById( R.id.ib_edit ) ) );
             iconViews.add( new TooliconData( TooliconData.DISPLAY_ALL_PICTURE, findViewById( R.id.ib_displayAllPicture ) ) );
+            iconViews.add( new TooliconData( TooliconData.HELP, findViewById( R.id.ib_help ) ) );
             iconViews.add( new TooliconData( TooliconData.CLOSE, findViewById( R.id.ib_close ) ) );
 
         } else if (kind == NodeTable.NODE_KIND_NODE) {
@@ -252,6 +254,7 @@ public class ToolIconsView extends ConstraintLayout {
             iconViews.add( new TooliconData( TooliconData.DELETE, findViewById( R.id.ib_delete )) );
             iconViews.add( new TooliconData( TooliconData.CHANGE_PARENT, findViewById( R.id.ib_changeParent )) );
             //iconViews.add( new TooliconData( TooliconData.ICON_NEW_MAP, findViewById( R.id.ib_newMap )) );
+            iconViews.add( new TooliconData( TooliconData.HELP, findViewById( R.id.ib_help ) ) );
             iconViews.add( new TooliconData( TooliconData.CLOSE, findViewById( R.id.ib_close )) );
 
         } else {
@@ -260,6 +263,7 @@ public class ToolIconsView extends ConstraintLayout {
             iconViews.add( new TooliconData( TooliconData.DISPLAY_ALL_PICTURE, findViewById( R.id.ib_displayAllPicture )) );
             iconViews.add( new TooliconData( TooliconData.DELETE, findViewById( R.id.ib_delete )) );
             iconViews.add( new TooliconData( TooliconData.CHANGE_PARENT, findViewById( R.id.ib_changeParent )) );
+            iconViews.add( new TooliconData( TooliconData.HELP, findViewById( R.id.ib_help ) ) );
             iconViews.add( new TooliconData( TooliconData.CLOSE, findViewById( R.id.ib_close )) );
         }
 
@@ -288,7 +292,7 @@ public class ToolIconsView extends ConstraintLayout {
                         //Log.i("アイコン", "クリックされました");
 
                         //アイコンが開かれたノードを親ノードとする
-                        NodeTable parentNode = v_baseNode.getNode();
+                        NodeTable parentNode = mBaseNode.getNode();
 
                         //初期生成位置
                         int posX = (int)parentNode.getCenterPosX() + ResourceManager.POS_NODE_INIT_OFFSET;
@@ -333,7 +337,7 @@ public class ToolIconsView extends ConstraintLayout {
                         mMapActivity.openDesignBottomSheet(DesignBottomSheet.NODE, v_node, posX, posY, MOVE_UPPER);
 
                         //ノードに持たせていた自分をクローズ
-                        v_baseNode.closeIconView();
+                        mBaseNode.closeIconView();
                     }
                 };
 
@@ -346,10 +350,10 @@ public class ToolIconsView extends ConstraintLayout {
                     public void onClick(View view) {
 
                         //ノードに持たせていた自分をクローズ
-                        v_baseNode.closeIconView();
+                        mBaseNode.closeIconView();
 
                         //ノード
-                        NodeTable node = v_baseNode.getNode();
+                        NodeTable node = mBaseNode.getNode();
 
                         //ピクチャトリミング画面へ遷移
                         Context context = getContext();
@@ -374,17 +378,17 @@ public class ToolIconsView extends ConstraintLayout {
 
                         //更新対象ビューに追加
                         MapCommonData mapCommonData = (MapCommonData) mMapActivity.getApplication();
-                        mapCommonData.enqueUpdateNodeWithUnique(v_baseNode.getNode());
+                        mapCommonData.enqueUpdateNodeWithUnique(mBaseNode.getNode());
 
                         //ノード本体のマージンを取得
-                        float marginLeft = v_baseNode.getLeft();
-                        float marginTop  = v_baseNode.getTop();
+                        float marginLeft = mBaseNode.getLeft();
+                        float marginTop  = mBaseNode.getTop();
 
                         //BottomSheetを開く（画面移動あり）
-                        mMapActivity.openDesignBottomSheet(DesignBottomSheet.NODE, v_baseNode, marginLeft, marginTop, MOVE_UPPER);
+                        mMapActivity.openDesignBottomSheet(DesignBottomSheet.NODE, mBaseNode, marginLeft, marginTop, MOVE_UPPER);
 
                         //ノードに持たせていた自分をクローズ
-                        v_baseNode.closeIconView();
+                        mBaseNode.closeIconView();
                     }
                 };
 
@@ -398,12 +402,12 @@ public class ToolIconsView extends ConstraintLayout {
                         //Log.i("アイコン", "クリックされました");
 
                         Intent intent = new Intent( mMapActivity, PictureGalleryActivity.class );
-                        intent.putExtra(MapActivity.INTENT_NODE_PID, v_baseNode.getNode().getPid());
+                        intent.putExtra(MapActivity.INTENT_NODE_PID, mBaseNode.getNode().getPid());
 
                         mMapActivity.startActivity(intent);
 
                         //ノードに持たせていた自分をクローズ
-                        v_baseNode.closeIconView();
+                        mBaseNode.closeIconView();
                     }
                 };
 
@@ -417,7 +421,7 @@ public class ToolIconsView extends ConstraintLayout {
 
                         //本ノード配下のノード（本ノード含む）を全て取得する
                         MapCommonData mapCommonData = (MapCommonData) mMapActivity.getApplication();
-                        mapCommonData.setDeleteNodes(v_baseNode.getNode().getPid());
+                        mapCommonData.setDeleteNodes(mBaseNode.getNode().getPid());
 
                         //削除確認ダイアログを表示
                         new AlertDialog.Builder(getContext())
@@ -436,7 +440,7 @@ public class ToolIconsView extends ConstraintLayout {
                                             public void onFinish() {
 
                                                 //自身と配下ノードをレイアウトから削除
-                                                ((ChildNode)v_baseNode).removeLayoutUnderSelf();
+                                                ((ChildNode) mBaseNode).removeLayoutUnderSelf();
 
                                                 //共通データに削除完了処理を行わせる
                                                 mapCommonData.finishDeleteNode();
@@ -451,7 +455,7 @@ public class ToolIconsView extends ConstraintLayout {
                                 .show();
 
                         //ノードに持たせていた自分をクローズ
-                        v_baseNode.closeIconView();
+                        mBaseNode.closeIconView();
                     }
                 };
 
@@ -465,10 +469,10 @@ public class ToolIconsView extends ConstraintLayout {
                         //Log.i("アイコン", "クリックされました");
 
                         //マップアクティビティを親ノード変更モードにする
-                        mMapActivity.enableChangeParentMode( v_baseNode.getNode().getPid() );
+                        mMapActivity.enableChangeParentMode( mBaseNode.getNode().getPid() );
 
                         //ノードに持たせていた自分をクローズ
-                        v_baseNode.closeIconView();
+                        mBaseNode.closeIconView();
                     }
                 };
 
@@ -481,7 +485,7 @@ public class ToolIconsView extends ConstraintLayout {
                     public void onClick(View view) {
                         //Log.i("アイコン", "クリックされました");
                         //ノードに持たせていた自分をクローズ
-                        v_baseNode.closeIconView();
+                        mBaseNode.closeIconView();
                     }
                 };
 
@@ -509,6 +513,22 @@ public class ToolIconsView extends ConstraintLayout {
                 };
                 break;
 
+            case TooliconData.HELP:
+
+                listener = new OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        //Log.i("アイコン", "クリックされました");
+
+                        //ヘルプダイアログの表示
+                        showHelpIconDialog();
+
+                        //ノードに持たせていた自分をクローズ
+                        mBaseNode.closeIconView();
+                    }
+                };
+                break;
+
             case TooliconData.CLOSE:
 
                 listener = new OnClickListener() {
@@ -516,7 +536,7 @@ public class ToolIconsView extends ConstraintLayout {
                     public void onClick(View view) {
                         //Log.i("アイコン", "クリックされました");
                         //ノードに持たせていた自分をクローズ
-                        v_baseNode.closeIconView();
+                        mBaseNode.closeIconView();
                     }
                 };
                 break;
@@ -558,6 +578,12 @@ public class ToolIconsView extends ConstraintLayout {
         Log.i("ツールアイコン", "クローズチェック");
     }
 
-
+    /*
+     * ヘルプダイアログを表示する
+     */
+    private void showHelpIconDialog() {
+        DialogFragment helpDialog = new HelpDialog( HelpDialog.HELP_KIND_ICON, mBaseNode.getNode().getKind() );
+        helpDialog.show( ((FragmentActivity)mMapActivity).getSupportFragmentManager(), "");
+    }
 }
 

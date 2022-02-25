@@ -2,8 +2,10 @@
 <FrameLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:ads="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -61,16 +63,30 @@
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="3"
+            android:padding="12dp"
             android:layout_marginTop="4dp" />
 
+        <!-- 生成完了ボタン -->
         <Button
             android:id="@+id/bt_create"
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginBottom="8dp"
-            android:background="@drawable/bt_create"
-            android:text="@string/bt_create" />
+            android:background="@color/transparent_70_black"
+            android:text="@string/bt_create"
+            android:textColor="@color/white" />
+
+        <!-- バナー広告 -->
+        <com.google.android.gms.ads.AdView
+            xmlns:ads="http://schemas.android.com/apk/res-auto"
+            ads:adSize="SMART_BANNER"
+            ads:adUnitId="@string/admob_unit_id"
+            android:id="@+id/adView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="12dp"
+            tools:ignore="MissingConstraints" />
 
     </LinearLayout>
 

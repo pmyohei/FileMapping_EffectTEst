@@ -193,6 +193,8 @@ public class MapCommonData extends Application {
         //
 
         for( String cc: tmp ){
+            Log.i("色履歴", "そのまま　cc=" + cc);
+            Log.i("色履歴", "大文字化　cc=" + cc.toUpperCase(Locale.ROOT));
             cc = cc.toUpperCase(Locale.ROOT);
         }
         //log

@@ -30,6 +30,8 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 import com.google.android.material.card.MaterialCardView;
 import com.isseiaoki.simplecropview.CropImageView;
 
@@ -60,6 +62,11 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         //戻るボタン
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //Admobロード
+        AdView adView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder().build();
+        adView.loadAd(adRequest);
 
         //権限付与
         //※query()を発行するとき、権限エラーになるためここでも指定が必要
