@@ -39,10 +39,11 @@
 
         <!-- インジケータ -->
         <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tab_layout"
+            android:id="@+id/tab_bottomDesign"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@color/little_transparent"
+            app:tabTextAppearance="@style/tab_font_serif"
             app:tabGravity="center"
             app:tabIndicatorFullWidth="false"
             app:tabIndicatorColor="@color/black"

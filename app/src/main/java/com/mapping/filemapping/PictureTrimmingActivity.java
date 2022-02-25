@@ -37,7 +37,6 @@ import com.isseiaoki.simplecropview.CropImageView;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Objects;
 
 public class PictureTrimmingActivity extends AppCompatActivity {
@@ -57,7 +56,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
 
         //ツールバー設定
         Toolbar toolbar = findViewById(R.id.toolbar_trimming);
-        toolbar.setTitle("写真ノードの選択");
+        toolbar.setTitle( getString(R.string.toolbar_trimming_title) );
         setSupportActionBar(toolbar);
         //戻るボタン
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
@@ -275,11 +274,10 @@ public class PictureTrimmingActivity extends AppCompatActivity {
 
         //絶対パスを取得
         String path = ResourceManager.getPathFromUri(this, uri);
-        if (path == null ) {
+        if ( path == null ) {
             //絶対パスの取得に失敗した場合
             Log.i("URI", "絶対パス取得エラー");
-            //★
-            Toast.makeText(this, "失敗しました", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_error), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -390,8 +388,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         if (path == null ) {
             //絶対パスの取得に失敗した場合
             Log.i("URI", "絶対パス取得エラー");
-            //★
-            Toast.makeText(this, "失敗しました", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_error), Toast.LENGTH_SHORT).show();
             finish();
         }
 

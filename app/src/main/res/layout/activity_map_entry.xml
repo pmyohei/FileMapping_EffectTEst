@@ -36,11 +36,12 @@
         <!-- ※ViewPager2よりも上に描画させたいため、ViewPager2の後に本ビューを定義 -->
         <!-- ※translationZ()を使用してもいいが、そうすると影ができてしまうため、定義位置の順番を変更する形にしている -->
         <com.google.android.material.tabs.TabLayout
-            android:id="@+id/tab_layout"
+            android:id="@+id/tab_createMap"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center|top"
             android:background="@color/transparent_65_white"
+            app:tabTextAppearance="@style/tab_font_serif"
             app:tabIndicatorColor="@color/black"
             app:tabGravity="center"
             app:tabIndicatorFullWidth="false"

@@ -144,7 +144,7 @@ public class HelpDialog extends DialogFragment {
         vp2_help.setAdapter( new MapHelpPageAdapter(layoutIdList) );
 
         //インジケータの設定
-        TabLayout tabLayout = dialog.findViewById(R.id.tab_layout);
+        TabLayout tabLayout = dialog.findViewById(R.id.tab_help);
         new TabLayoutMediator(tabLayout, vp2_help,
                 (tab, position) -> tab.setText("")
         ).attach();

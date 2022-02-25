@@ -160,7 +160,7 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
 
                 if (hasPicture) {
                     //既に写真があれば、トースト表示して終了
-                    Toast.makeText(getActivity(), "既にあり", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), getString(R.string.toast_samePicture), Toast.LENGTH_SHORT).show();
                     return;
                 }
 
@@ -181,7 +181,7 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
 
         if (toPicutureNodePid == mTabPictureNodePid) {
             //移動先に選択されたノードが、移動元ノードと同じであれば、トーストを表示して終了
-            Toast.makeText(getActivity(), "既にあり", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), getString(R.string.toast_samePicture), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -195,8 +195,8 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
     private void confirmDialog(int toPicutureNodePid) {
 
         new AlertDialog.Builder(getActivity())
-                .setTitle("格納先の確認")
-                .setMessage("選択されたノードに写真を移動しますか？")
+                .setTitle( getActivity().getString(R.string.alert_movePicture_title) )
+                .setMessage( getActivity().getString(R.string.alert_movePicture_message) )
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {

@@ -105,8 +105,8 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
 
                     //削除確認ダイアログを表示
                     new AlertDialog.Builder(context)
-                            .setTitle("マップ削除確認")
-                            .setMessage("マップを削除します。\nなお、マップ内の写真は端末上からは削除されません。")
+                            .setTitle( context.getString(R.string.alert_map_delete_title) )
+                            .setMessage( context.getString(R.string.alert_map_delete_message) )
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {

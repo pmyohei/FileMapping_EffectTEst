@@ -853,14 +853,9 @@ public class ChildNode extends BaseNode {
          * 自身と親ノードとの距離（単純な直線距離）を算出
          */
         public float calcSelfParentDistance() {
-
-            //親ノード位置
-            float parentPosX = mParentNode.getCenterPosX();
-            float parentPosY = mParentNode.getCenterPosY();
-
             //距離を返す
-            return (float) Math.sqrt(((mCenterPosX - parentPosX) * (mCenterPosX - parentPosX))
-                    + ((mCenterPosY - parentPosY) * (mCenterPosY - parentPosY)));
+            return (float) Math.sqrt(((mSelfPosX - mStartPosX) * (mSelfPosX - mStartPosX))
+                    + ((mSelfPosY - mStartPosY) * (mSelfPosY - mStartPosY)));
         }
 
         /*
@@ -945,7 +940,7 @@ public class ChildNode extends BaseNode {
 
             Log.i("ライン調査", "distance=" + distance);
             Log.i("ライン調査", "親 baseX=" + mStartPosX + "\ty=" + mStartPosY);
-            Log.i("ライン調査", "自分 baseX=" + mCenterPosX + "\ty=" + mCenterPosY);
+            Log.i("ライン調査", "自分 baseX=" + mSelfPosX + "\ty=" + mSelfPosY);
 
             //必要な回転角度を取得
             double radian = getRotaionRadian();
@@ -955,12 +950,14 @@ public class ChildNode extends BaseNode {
             float rotationY = baseX * (float) Math.sin(radian);// + 0 * (float) Math.cos(radian);
 
             //自分の座標を基準に直角点座標を算出
-            rotationX += mCenterPosX;
-            rotationY = mCenterPosY - rotationY;
+            rotationX += mSelfPosX;
+            rotationY = mSelfPosY - rotationY;
 
             //親ノードとノードの中間点（直角点から垂線を引いた時の交点座標）
-            float middleX = (mParentNode.getCenterPosX() + mCenterPosX) / 2;
-            float middleY = (mParentNode.getCenterPosY() + mCenterPosY) / 2;
+            float middleX = (mStartPosX + mSelfPosX) / 2;
+            float middleY = (mStartPosY + mSelfPosY) / 2;
+
+            Log.i("距離参考", "distance=" + distance);
 
             //制御点座標（垂線上の指定割合位置をその座標とする）
             float controlX = (middleX + rotationX) * CONTROL_POINT_POS_RATIO;

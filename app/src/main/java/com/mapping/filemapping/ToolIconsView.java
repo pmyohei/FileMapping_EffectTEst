@@ -423,10 +423,12 @@ public class ToolIconsView extends ConstraintLayout {
                         MapCommonData mapCommonData = (MapCommonData) mMapActivity.getApplication();
                         mapCommonData.setDeleteNodes(mBaseNode.getNode().getPid());
 
+                        Context context = getContext();
+
                         //削除確認ダイアログを表示
-                        new AlertDialog.Builder(getContext())
-                                .setTitle("ノード削除確認")
-                                .setMessage("配下のノードも全て削除されます。\nなお、端末上から写真は削除されません。")
+                        new AlertDialog.Builder( context )
+                                .setTitle( context.getString(R.string.alert_deleteNode_title) )
+                                .setMessage( context.getString(R.string.alert_deleteNode_message) )
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {

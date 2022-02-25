@@ -66,8 +66,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
         mNodePid = intent.getIntExtra(MapActivity.INTENT_NODE_PID, 0);
         if (mNodePid == 0) {
             //ノード取得エラーはこのまま本画面を終了する
-            //★
-            Toast.makeText(this, "エラー", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_error), Toast.LENGTH_SHORT).show();
             finish();
         }
 
@@ -85,7 +84,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
         //ツールバー設定
         Toolbar toolbar = findViewById(R.id.toolbar_gallery);
-        toolbar.setTitle("ギャラリー");
+        toolbar.setTitle(getString(R.string.toolbar_gallery_title));
         setSupportActionBar(toolbar);
 
         //ギャラリー情報を取得し画面上に表示
@@ -248,7 +247,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
                         vp2_gallery.setAdapter(new GalleryPageAdapter(layoutIdList, galleries));
 
                         //インジケータの設定
-                        TabLayout tabLayout = findViewById(R.id.tab_layout);
+                        TabLayout tabLayout = findViewById(R.id.tab_pictureNode);
                         new TabLayoutMediator(tabLayout, vp2_gallery,
                                 new TabLayoutMediator.TabConfigurationStrategy() {
                                     @Override
@@ -398,8 +397,8 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
         //削除確認ダイアログを表示
         new AlertDialog.Builder(this)
-                .setTitle("写真の削除")
-                .setMessage("選択した写真をノードから削除します。\n※端末上から写真は削除されません。")
+                .setTitle( getString(R.string.alert_deletePicture_title) )
+                .setMessage( getString(R.string.alert_deletePicture_message) )
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -471,7 +470,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
             //ツールバー
             toolbar.setBackgroundColor(Color.BLACK);
             toolbar.setTitleTextColor(Color.WHITE);
-            toolbar.setTitle("複数選択");
+            toolbar.setTitle( getString(R.string.toolbar_gallery_multi) );
 
         } else {
             if (!menu.hasVisibleItems()) {
@@ -485,7 +484,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
             //ツールバー
             toolbar.setBackgroundColor(Color.WHITE);
             toolbar.setTitleTextColor(Color.BLACK);
-            toolbar.setTitle("ギャラリー");
+            toolbar.setTitle( getString(R.string.toolbar_gallery_title) );
         }
     }
 
@@ -539,7 +538,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
     public void removeGallery(PictureArrayList<PictureTable> selectedPictures, boolean isThumbnail) {
 
         Toast.makeText(this,
-                "写真を削除しました。",
+                getString(R.string.toast_deletePicture),
                 Toast.LENGTH_LONG)
                 .show();
 
@@ -562,11 +561,6 @@ public class PictureGalleryActivity extends AppCompatActivity {
      *   para1：移動された写真リスト
      */
     public void updateGallery(PictureArrayList<PictureTable> selectedPictures, int toPicutureNodePid, boolean isThumbnail) {
-
-        Toast.makeText(this,
-                "写真を移動しました。\n移動先をギャリーで確認したい場合は、一度マップ画面に戻ってから再度ギャラリーを開いてください",
-                Toast.LENGTH_LONG)
-                .show();
 
         //--
         //for( PictureTable tmp: selectedPictures ){
@@ -607,7 +601,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
         int page = vp2_gallery.getCurrentItem();
 
         //表示中のタブアイコン
-        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        TabLayout tabLayout = findViewById(R.id.tab_pictureNode);
         TabLayout.Tab tab = tabLayout.getTabAt(page);
         ImageView iv_picture = tab.getCustomView().findViewById(R.id.iv_picture);
 

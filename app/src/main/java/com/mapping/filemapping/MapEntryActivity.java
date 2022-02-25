@@ -80,7 +80,6 @@ public class MapEntryActivity extends AppCompatActivity {
         //ノードデザイン設定レイアウト
         List<Integer> layoutIdList = new ArrayList<>();
         layoutIdList.add(R.layout.page_map_create_0);
-        //layoutIdList.add(R.layout.page_map_create_1_old);
         layoutIdList.add(R.layout.page_map_create_1);
         layoutIdList.add(R.layout.page_map_create_2);
 
@@ -93,14 +92,13 @@ public class MapEntryActivity extends AppCompatActivity {
         vp.setAdapter(adapter);
 
         String[] titles = new String[]{
-                "マップ名",
-                "2Colors",
-                "3Colors"
+                getString(R.string.map_create_tab1),
+                getString(R.string.map_create_tab2),
+                getString(R.string.map_create_tab3),
         };
 
         //インジケータの設定
-        //★フォントの適用
-        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        TabLayout tabLayout = findViewById(R.id.tab_createMap);
         new TabLayoutMediator(tabLayout, vp,
                 (tab, position) -> tab.setText(titles[position])
         ).attach();
@@ -177,9 +175,7 @@ public class MapEntryActivity extends AppCompatActivity {
             String mapName = sampleMapView.getMapName();
             if( (mapName == null) || (mapName.isEmpty()) ){
                 //空なら、メッセージ出力して終了
-                //★
-                Toast.makeText(view.getContext(), "マップ名を入力してください", Toast.LENGTH_SHORT).show();
-
+                Toast.makeText(view.getContext(), getString(R.string.toast_errorMapName), Toast.LENGTH_SHORT).show();
                 return true;
             }
 

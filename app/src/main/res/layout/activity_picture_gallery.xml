@@ -20,9 +20,10 @@
 
     <!-- インジケータ -->
     <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tab_layout"
+        android:id="@+id/tab_pictureNode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:tabTextAppearance="@style/tab_font_serif"
         app:tabIndicatorColor="@color/black"
         app:tabMinWidth="0dp"
         app:tabRippleColor="@null"

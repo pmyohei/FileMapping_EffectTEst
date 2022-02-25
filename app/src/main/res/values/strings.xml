@@ -9,9 +9,42 @@
 
     <!--  ノード  -->
     <string name="default_rootNode">ルート\nノード</string>
-
     <string name="node_createButtom">作成</string>
     <string name="node_cancelButtom">キャンセル</string>a
+
+    <!--  ダイアログ  -->
+    <string name="alert_map_delete_title">マップ削除確認</string>
+    <string name="alert_map_delete_message">マップを削除します。\nなお、マップ内の写真は端末上からは削除されません。</string>
+    <string name="alert_changeParent_title">親ノード変更確認</string>
+    <string name="alert_changeParent_message">選択したノードを親ノードにします。</string>
+    <string name="alert_deletePicture_title">写真の削除</string>
+    <string name="alert_deletePicture_message">選択した写真をノードから削除します。\n※端末上から写真は削除されません。</string>
+    <string name="alert_movePicture_title">格納先の確認</string>
+    <string name="alert_movePicture_message">選択されたノードに写真を移動しますか？</string>
+    <string name="alert_deleteNode_title">ノード削除確認</string>
+    <string name="alert_deleteNode_message">配下のノードも全て削除されます。\nなお、端末上から写真は削除されません。</string>
+
+    <!-- トースト -->
+    <string name="toast_error">エラーが発生しました</string>
+    <string name="toast_deletePicture">写真を削除しました</string>
+    <string name="toast_errorChangeParent">親ノードにできないノードです</string>
+    <string name="toast_nowParent">現在の親ノードです</string>
+    <string name="toast_errorMapName">マップ名を入力してください</string>
+    <string name="toast_samePicture">既に同じ写真があります</string>
+    <string name="toast_errorGetPath">失敗しました</string>
+
+    <!--  マップ生成画面  -->
+    <string name="map_create_tab1">マップ名</string>
+    <string name="map_create_tab2">2Colors</string>
+    <string name="map_create_tab3">3Colors</string>
+
+    <!--  マップ画面  -->
+    <string name="toolbar_map_changeParant">親ノード変更</string>
+    <!--  トリミング画面  -->
+    <string name="toolbar_trimming_title">ピクチャノードのサムネイル</string>
+    <!--  ギャラリー画面  -->
+    <string name="toolbar_gallery_title">ギャラリー</string>
+    <string name="toolbar_gallery_multi">複数選択</string>
 
     <!-- ノードデザインタブ -->
     <string name="tab_node_name">ノード名</string>

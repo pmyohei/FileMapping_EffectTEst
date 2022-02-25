@@ -4,6 +4,7 @@ import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.res.Resources;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -130,29 +131,30 @@ public class DesignBottomSheet extends CoordinatorLayout {
     private ViewPager2 setupNodeDesignLayout(View v_node) {
         //ノードデザイン設定レイアウト
         List<Integer> layoutIdList = new ArrayList<>();
-        layoutIdList.add(R.layout.page_node_name);
-        layoutIdList.add(R.layout.page_node_font);
-        layoutIdList.add(R.layout.page_node_size);
-        layoutIdList.add(R.layout.page_node_shape);
-        layoutIdList.add(R.layout.page_node_text_color);
-        layoutIdList.add(R.layout.page_node_color);
-        layoutIdList.add(R.layout.page_node_border_color);
-        layoutIdList.add(R.layout.page_node_shadow);
+        layoutIdList.add( R.layout.page_node_name);
+        layoutIdList.add( R.layout.page_node_font);
+        layoutIdList.add( R.layout.page_node_size);
+        layoutIdList.add( R.layout.page_node_shape);
+        layoutIdList.add( R.layout.page_node_text_color);
+        layoutIdList.add( R.layout.page_node_color);
+        layoutIdList.add( R.layout.page_node_border_color);
+        layoutIdList.add( R.layout.page_node_shadow);
         //ルートノード以外は、ライン用ページを追加
         if (((BaseNode) v_node).getNode().getKind() != NodeTable.NODE_KIND_ROOT) {
             layoutIdList.add(R.layout.page_node_line_color);
         }
 
         //タブインジケータの文字列
+        Resources resources = getResources();
         List<String> tabs = new ArrayList<>();
-        tabs.add(getResources().getString(R.string.tab_node_name));
-        tabs.add(getResources().getString(R.string.tab_font));
-        tabs.add(getResources().getString(R.string.tab_size));
-        tabs.add(getResources().getString(R.string.tab_shape));
-        tabs.add(getResources().getString(R.string.tab_text_color));
-        tabs.add(getResources().getString(R.string.tab_node_color));
-        tabs.add(getResources().getString(R.string.tab_border_color));
-        tabs.add(getResources().getString(R.string.tab_shadow));
+        tabs.add( resources.getString(R.string.tab_node_name));
+        tabs.add( resources.getString(R.string.tab_font));
+        tabs.add( resources.getString(R.string.tab_size));
+        tabs.add( resources.getString(R.string.tab_shape));
+        tabs.add( resources.getString(R.string.tab_text_color));
+        tabs.add( resources.getString(R.string.tab_node_color));
+        tabs.add( resources.getString(R.string.tab_border_color));
+        tabs.add( resources.getString(R.string.tab_shadow));
         if (((BaseNode) v_node).getNode().getKind() != NodeTable.NODE_KIND_ROOT) {
             //ルートノード以外
             tabs.add(getResources().getString(R.string.tab_line_color));
@@ -164,7 +166,7 @@ public class DesignBottomSheet extends CoordinatorLayout {
         vp2.setAdapter(adapter);
 
         //インジケータの設定
-        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        TabLayout tabLayout = findViewById(R.id.tab_bottomDesign);
         new TabLayoutMediator(tabLayout, vp2,
                 (tab, position) -> tab.setText(tabs.get(position))
         ).attach();
@@ -179,21 +181,22 @@ public class DesignBottomSheet extends CoordinatorLayout {
     private ViewPager2 setupPictureNodeDesignLayout(View v_node) {
         //ノードデザイン設定レイアウト
         List<Integer> layoutIdList = new ArrayList<>();
-        layoutIdList.add(R.layout.page_set_thumbnail);
-        layoutIdList.add(R.layout.page_node_size);
-        layoutIdList.add(R.layout.page_node_shape);
-        layoutIdList.add(R.layout.page_node_border_color);
-        layoutIdList.add(R.layout.page_node_shadow);
-        layoutIdList.add(R.layout.page_node_line_color);
+        layoutIdList.add( R.layout.page_set_thumbnail);
+        layoutIdList.add( R.layout.page_node_size);
+        layoutIdList.add( R.layout.page_node_shape);
+        layoutIdList.add( R.layout.page_node_border_color);
+        layoutIdList.add( R.layout.page_node_shadow);
+        layoutIdList.add( R.layout.page_node_line_color);
 
         //タブインジケータの文字列
+        Resources resources = getResources();
         List<String> tabs = new ArrayList<>();
-        tabs.add(getResources().getString(R.string.tab_thumnbnail));
-        tabs.add(getResources().getString(R.string.tab_size));
-        tabs.add(getResources().getString(R.string.tab_shape));
-        tabs.add(getResources().getString(R.string.tab_border_color));
-        tabs.add(getResources().getString(R.string.tab_shadow));
-        tabs.add(getResources().getString(R.string.tab_line_color));
+        tabs.add( resources.getString(R.string.tab_thumnbnail));
+        tabs.add( resources.getString(R.string.tab_size));
+        tabs.add( resources.getString(R.string.tab_shape));
+        tabs.add( resources.getString(R.string.tab_border_color));
+        tabs.add( resources.getString(R.string.tab_shadow));
+        tabs.add( resources.getString(R.string.tab_line_color));
 
         //ViewPager2を生成
         ViewPager2 vp2 = findViewById(R.id.vp2_design);
@@ -201,7 +204,7 @@ public class DesignBottomSheet extends CoordinatorLayout {
         vp2.setAdapter(adapter);
 
         //インジケータの設定
-        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        TabLayout tabLayout = findViewById(R.id.tab_bottomDesign);
         new TabLayoutMediator(tabLayout, vp2,
                 (tab, position) -> tab.setText(tabs.get(position))
         ).attach();
@@ -215,27 +218,28 @@ public class DesignBottomSheet extends CoordinatorLayout {
     private ViewPager2 setupMapDesignLayout(View v_map) {
         //ノードデザイン設定レイアウト
         List<Integer> layoutIdList = new ArrayList<>();
-        layoutIdList.add(R.layout.page_map_design);
-        layoutIdList.add(R.layout.page_node_font);
-        layoutIdList.add(R.layout.page_node_size);
-        layoutIdList.add(R.layout.page_node_shape);
-        layoutIdList.add(R.layout.page_node_text_color);
-        layoutIdList.add(R.layout.page_node_color);
-        layoutIdList.add(R.layout.page_node_border_color);
-        layoutIdList.add(R.layout.page_node_shadow);
-        layoutIdList.add(R.layout.page_node_line_color);
+        layoutIdList.add( R.layout.page_map_design);
+        layoutIdList.add( R.layout.page_node_font);
+        layoutIdList.add( R.layout.page_node_size);
+        layoutIdList.add( R.layout.page_node_shape);
+        layoutIdList.add( R.layout.page_node_text_color);
+        layoutIdList.add( R.layout.page_node_color);
+        layoutIdList.add( R.layout.page_node_border_color);
+        layoutIdList.add( R.layout.page_node_shadow);
+        layoutIdList.add( R.layout.page_node_line_color);
 
         //タブインジケータの文字列
+        Resources resources = getResources();
         List<String> tabs = new ArrayList<>();
-        tabs.add(getResources().getString(R.string.tab_map_color));
-        tabs.add(getResources().getString(R.string.tab_font));
-        tabs.add(getResources().getString(R.string.tab_size));
-        tabs.add(getResources().getString(R.string.tab_shape));
-        tabs.add(getResources().getString(R.string.tab_text_color));
-        tabs.add(getResources().getString(R.string.tab_node_color));
-        tabs.add(getResources().getString(R.string.tab_border_color));
-        tabs.add(getResources().getString(R.string.tab_shadow));
-        tabs.add(getResources().getString(R.string.tab_line_color));
+        tabs.add( resources.getString(R.string.tab_map_color));
+        tabs.add( resources.getString(R.string.tab_font));
+        tabs.add( resources.getString(R.string.tab_size));
+        tabs.add( resources.getString(R.string.tab_shape));
+        tabs.add( resources.getString(R.string.tab_text_color));
+        tabs.add( resources.getString(R.string.tab_node_color));
+        tabs.add( resources.getString(R.string.tab_border_color));
+        tabs.add( resources.getString(R.string.tab_shadow));
+        tabs.add( resources.getString(R.string.tab_line_color));
 
         //ページアダプタを設定
         ViewPager2 vp2 = findViewById(R.id.vp2_design);
@@ -243,7 +247,7 @@ public class DesignBottomSheet extends CoordinatorLayout {
         vp2.setAdapter(adapter);
 
         //インジケータの設定
-        TabLayout tabLayout = findViewById(R.id.tab_layout);
+        TabLayout tabLayout = findViewById(R.id.tab_bottomDesign);
         new TabLayoutMediator(tabLayout, vp2,
                 (tab, position) -> tab.setText(tabs.get(position))
         ).attach();

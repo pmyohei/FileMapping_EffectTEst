@@ -115,6 +115,10 @@ public class MapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        //遷移元からのデータ
+        Intent intent = getIntent();
+        mMap = (MapTable) intent.getSerializableExtra(MapListActivity.KEY_MAP);
+
         //ツールバー設定
         initToolBar();
 
@@ -177,12 +181,7 @@ public class MapActivity extends AppCompatActivity {
         dl_map.setDrawerLockMode(DrawerLayout.LOCK_MODE_LOCKED_CLOSED);
 
         //DBからデータを取得
-        Intent intent = getIntent();
-        //int     mapPid = intent.getIntExtra(ResourceManager.KEY_MAPID, 0);
-        //boolean isNew  = intent.getBooleanExtra(ResourceManager.KEY_NEW_MAP, false);
-        mMap = (MapTable) intent.getSerializableExtra(MapListActivity.KEY_MAP);
-        int mapPid = mMap.getPid();
-        AsyncReadNodes db = new AsyncReadNodes(this, mapPid, new AsyncReadNodes.OnReadListener() {
+        AsyncReadNodes db = new AsyncReadNodes(this, mMap.getPid(), new AsyncReadNodes.OnReadListener() {
 
             //DB読み取り完了
             @Override
@@ -251,7 +250,7 @@ public class MapActivity extends AppCompatActivity {
     private void initToolBar() {
         //ツールバー設定
         Toolbar toolbar = findViewById(R.id.toolbar_map);
-        toolbar.setTitle("(仮)マップ名を入れる");
+        toolbar.setTitle( mMap.getMapName() );
         setSupportActionBar(toolbar);
 
         /*-- アニメーションにするならこの方法 --*/
@@ -394,7 +393,7 @@ public class MapActivity extends AppCompatActivity {
 
         //変更先が自分自身の場合、ピクチャノードの場合は、変更不可
         if ((mChangeParentNodePid == parentNode.getPid()) || (parentNode.getKind() == NodeTable.NODE_KIND_PICTURE)) {
-            Toast.makeText(this, "親ノードにできません", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_errorChangeParent), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -405,14 +404,14 @@ public class MapActivity extends AppCompatActivity {
 
         //現状の親ノードの場合、変更不可
         if ( changeNode.getPidParentNode() == parentNode.getPid() ) {
-            Toast.makeText(this, "現在の親ノードです", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, getString(R.string.toast_nowParent), Toast.LENGTH_SHORT).show();
             return;
         }
 
         //移動確認ダイアログを表示
         new AlertDialog.Builder(this)
-            .setTitle("親ノード変更確認")
-            .setMessage("選択したノードを親ノードにします。")
+            .setTitle( getString(R.string.alert_changeParent_title) )
+            .setMessage( getString(R.string.alert_changeParent_message) )
             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
@@ -729,14 +728,14 @@ public class MapActivity extends AppCompatActivity {
             inflater.inflate(R.menu.toolbar_close, menu);
 
             toolbar.setBackgroundColor(Color.WHITE);
-            toolbar.setTitle("親ノード変更");
+            toolbar.setTitle( getString(R.string.toolbar_map_changeParant) );
         } else {
             //通常モード
             inflater.inflate(R.menu.toolbar_map, menu);
 
             toolbar.setBackgroundColor(Color.TRANSPARENT);
             //toolbar.setTitleTextColor(Color.BLACK);
-            toolbar.setTitle("マップタイトルを入れる");
+            toolbar.setTitle( mMap.getMapName() );
         }
     }
 

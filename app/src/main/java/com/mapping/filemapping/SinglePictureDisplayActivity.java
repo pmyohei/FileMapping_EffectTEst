@@ -299,8 +299,8 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
 
         //削除確認ダイアログを表示
         new AlertDialog.Builder(this)
-                .setTitle("写真の削除")
-                .setMessage("ノードから写真を削除します。\n※端末上から写真は削除されません。")
+                .setTitle( getString(R.string.alert_deletePicture_title) )
+                .setMessage(  getString(R.string.alert_deletePicture_message) )
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -354,7 +354,7 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
     public void updatePictureAdapter() {
 
         //トースト表示
-        Toast.makeText(this, "写真を削除しました", Toast.LENGTH_SHORT).show();
+        Toast.makeText(this, getString(R.string.toast_deletePicture), Toast.LENGTH_SHORT).show();
 
         //表示中の写真をリストから削除
         ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
