@@ -12,14 +12,14 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/top_nodeName"
-        android:textColor="@color/black"
+        android:textColor="@color/transparent_70_black"
         android:textSize="18sp" />
 
     <TextView
         android:id="@+id/tv_node"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/black"
+        android:textColor="@color/transparent_70_black"
         android:textSize="18sp" />
 
 </LinearLayout>

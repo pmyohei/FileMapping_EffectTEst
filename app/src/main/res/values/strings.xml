@@ -54,6 +54,7 @@
     <!-- フォルダツリー -->
     <string name="tree_title">ノード一覧\n（クリックで画面中央へ移動）</string>
     <string name="no_nodeName">（ノード名なし）</string>
+    <string name="no_nodeNamePictureNode">〇ピクチャノード</string>
     <string name="top_nodeName">・</string>
 
     <!-- ガイド -->

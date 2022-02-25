@@ -1184,7 +1184,10 @@ public class MapActivity extends AppCompatActivity {
             String nodeName = node.getNodeName();
             if( nodeName.isEmpty() ){
                 //ノード名未入力なら、名称ない旨の文言を設定
-                nodeName = getResources().getString(R.string.no_nodeName);
+                //ピクチャノードとそれ以外で文言を変える
+                nodeName = ( (node.getKind() == NodeTable.NODE_KIND_PICTURE)
+                        ? getResources().getString(R.string.no_nodeNamePictureNode)
+                        : getResources().getString(R.string.no_nodeName) );
 
             } else {
                 //ノード名がある場合、改行をなくす
