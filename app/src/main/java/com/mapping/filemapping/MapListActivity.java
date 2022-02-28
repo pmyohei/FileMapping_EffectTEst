@@ -9,8 +9,11 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
@@ -29,8 +32,6 @@ public class MapListActivity extends AppCompatActivity {
     public static String KEY_ISCREATE = "isCreate";
     public static String KEY_MAP = "map";               //マップ
 
-
-    private int mMapPid;
     private ArrayList<MapTable> mMaps;
     private MapListAdapter mMapListAdapter;
 
@@ -112,6 +113,9 @@ public class MapListActivity extends AppCompatActivity {
             }
         });
 
+        //ヘルプダイアログの表示
+        showFirstLaunchDialog();
+
 
 /*        //疑似-動作確認用----------------------------------------------------------------
         //仮；画面遷移
@@ -157,8 +161,37 @@ public class MapListActivity extends AppCompatActivity {
 
     }
 
+    /*
+     * 初回起動時のヘルプダイアログを表示
+     */
+    private void showFirstLaunchDialog(){
 
+        final String key = ResourceManager.SHARED_KEY_HELP_ON_MAPLIST;
 
+        //表示の有無を取得
+        SharedPreferences spData = getSharedPreferences(ResourceManager.SHARED_DATA_NAME, MODE_PRIVATE);
+        boolean isShow = spData.getBoolean(key, ResourceManager.INVALID_SHOW_HELP);
+
+        if( !isShow ){
+            //表示なしが選択されていれば何もしない
+            return;
+        }
+
+        //ガイドダイアログを表示
+        new AlertDialog.Builder(this)
+                .setTitle( getString(R.string.alert_launch_mapList_title) )
+                .setMessage( getString(R.string.alert_launch_mapList_message) )
+                .setPositiveButton(getString(R.string.do_not_show_this_message), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SharedPreferences.Editor editor = spData.edit();
+                        editor.putBoolean( key, false );
+                        editor.apply();
+                    }
+                })
+                //.setNegativeButton("Cancel", null)
+                .show();
+    }
 
     /*
      * 画面遷移からの戻りのコールバック通知ーマップ新規生成

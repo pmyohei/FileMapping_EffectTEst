@@ -10,11 +10,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.ContentResolver;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.RectF;
 import android.net.Uri;
 import android.os.Bundle;
@@ -34,6 +36,8 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 import com.google.android.material.card.MaterialCardView;
 import com.isseiaoki.simplecropview.CropImageView;
+import com.squareup.picasso.Callback;
+import com.squareup.picasso.Picasso;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -55,12 +59,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         setContentView(R.layout.activity_picture_trimming);
 
         //ツールバー設定
-        Toolbar toolbar = findViewById(R.id.toolbar_trimming);
-        toolbar.setTitle( getString(R.string.toolbar_trimming_title) );
-        setSupportActionBar(toolbar);
-        //戻るボタン
-        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
-        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        setToolBar();
 
         //Admobロード
         AdView adView = findViewById(R.id.adView);
@@ -124,19 +123,28 @@ public class PictureTrimmingActivity extends AppCompatActivity {
     }
 
     /*
+     * ツールバーの設定
+     */
+    private void setToolBar() {
+        Toolbar toolbar = findViewById(R.id.toolbar_trimming);
+        toolbar.setTitle( getString(R.string.toolbar_trimming_title) );
+        setSupportActionBar(toolbar);
+        //戻るボタン
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+
+        //システムバー
+        getWindow().setStatusBarColor( Color.BLACK );
+    }
+
+    /*
      *　写真ギャラリーの表示
      */
     private void openPictureGallery() {
         //写真を一覧で表示
         Intent pictureIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-        //Intent pictureIntent = new Intent(Intent.ACTION_OPEN_DOCUMENT_TREE);
         pictureIntent.addCategory(Intent.CATEGORY_OPENABLE);
-        //pictureIntent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);     //画像の複数選択を可能にする
         pictureIntent.setType("image/*");
-
-        //試ししたが、落ちる
-        //pictureIntent.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-        //pictureIntent.addCategory(Intent.ACTION_OPEN_DOCUMENT_TREE );
 
         //遷移
         mPictureSelectLauncher.launch(pictureIntent);
@@ -146,7 +154,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
     /*
      *　トリミング画像の設定
      */
-    private void setTrimmingPicture(Bitmap bmp) {
+    private void setTrimmingPicture(Uri contentUri) {
 
         //トリミング結果の画像
         final ImageView iv_cropped = findViewById(R.id.iv_cropped);
@@ -168,21 +176,42 @@ public class PictureTrimmingActivity extends AppCompatActivity {
                 }
         );
 
+        //Bitmapを取得
+        Bitmap bmp = getBitmapFromUri(contentUri);
+        if( bmp == null ){
+            //取得エラー
+            Log.i("URI", "Bitmap生成エラー");
+            return;
+        }
+
         //トリミング対象の画像
-        final CropImageView iv_cropTarget = findViewById(R.id.iv_cropTarget);
-        iv_cropTarget.setImageBitmap(bmp);
+        final CropImageView iv_cropSource = findViewById(R.id.iv_cropSource);
+/*        Picasso.get()
+                .load( contentUri )
+                .fit().centerInside()
+                .error(R.drawable.baseline_picture_read_error_24)
+                .into( iv_cropSource, new Callback() {
+                    @Override
+                    public void onSuccess() {
+                        iv_cropped.setImageBitmap( iv_cropSource.getCroppedBitmap() );
+                    }
+                    @Override
+                    public void onError(Exception e) {
+                    }
+                });*/
+        iv_cropSource.setImageBitmap(bmp);
 
         //レイアウト確定待ち
-        observer = iv_cropTarget.getViewTreeObserver();
+        observer = iv_cropSource.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
                         //初期位置のトリミング範囲を「トリミング結果の画像」に適用
-                        iv_cropped.setImageBitmap(iv_cropTarget.getCroppedBitmap());
+                        iv_cropped.setImageBitmap( iv_cropSource.getCroppedBitmap() );
 
                         //レイアウト確定後は、不要なので本リスナー削除
-                        iv_cropTarget.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                        iv_cropSource.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
                 }
         );
@@ -191,6 +220,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
     /*
      *　本画面のレイアウト設定
      */
+    @SuppressLint("ClickableViewAccessibility")
     private void setCropLayout(Uri contentUri) {
 
         //Bitmapを取得
@@ -202,24 +232,24 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         }
 
         //トリミング画像の設定
-        setTrimmingPicture(bmp);
+        setTrimmingPicture(contentUri);
 
         if (mIsLayout) {
             //レイアウト設定済みならここで終了
             return;
         }
 
-        //トリミング結果
-        final ImageView iv_cropped = findViewById(R.id.iv_cropped);
         //トリミング対象
-        final CropImageView iv_cropTarget = findViewById(R.id.iv_cropTarget);
+        final CropImageView iv_cropSource = findViewById(R.id.iv_cropSource);
 
         //トリミング範囲が変更されたとき、その時点のトリミング範囲を設定
-        iv_cropTarget.setOnTouchListener(new View.OnTouchListener() {
+        iv_cropSource.setOnTouchListener(new View.OnTouchListener() {
             @Override
             public boolean onTouch(View view, MotionEvent motionEvent) {
+                //トリミング結果
+                final ImageView iv_cropped = findViewById(R.id.iv_cropped);
                 //フレームに合わせてトリミング
-                iv_cropped.setImageBitmap(iv_cropTarget.getCroppedBitmap());
+                iv_cropped.setImageBitmap(iv_cropSource.getCroppedBitmap());
                 //イベント処理完了
                 return false;
             }
@@ -294,8 +324,8 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         newNode.setColorPattern( colors );
 
         //トリミング情報
-        final CropImageView iv_cropTarget = findViewById(R.id.iv_cropTarget);
-        RectF rectInfo = iv_cropTarget.getActualCropRect();
+        final CropImageView iv_cropSource = findViewById(R.id.iv_cropSource);
+        RectF rectInfo = iv_cropSource.getActualCropRect();
 
         //ピクチャ情報を生成
         //※本ノード自体のpidはこの時点では確定していないため、DB処理完了後に設定
@@ -393,7 +423,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         }
 
         //トリミング情報
-        final CropImageView iv_cropTarget = findViewById(R.id.iv_cropTarget);
+        final CropImageView iv_cropTarget = findViewById(R.id.iv_cropSource);
         RectF rectInfo = iv_cropTarget.getActualCropRect();
 
         //ピクチャ情報を生成

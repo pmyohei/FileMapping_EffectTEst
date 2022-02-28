@@ -29,9 +29,12 @@ import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /*
  * 指定配下ノードの写真を一覧表示する
@@ -61,6 +64,9 @@ public class PictureGalleryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_picture_gallery);
 
+        //ツールバー設定
+        setToolBar();
+
         //選択ノードを取得
         Intent intent = getIntent();
         mNodePid = intent.getIntExtra(MapActivity.INTENT_NODE_PID, 0);
@@ -89,6 +95,23 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
         //ギャラリー情報を取得し画面上に表示
         readGallery();
+    }
+
+    /*
+     * ツールバーの設定
+     */
+    private void setToolBar() {
+/*
+        Toolbar toolbar = findViewById(R.id.toolbar_trimming);
+        toolbar.setTitle( getString(R.string.toolbar_trimming_title) );
+        setSupportActionBar(toolbar);
+        //戻るボタン
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+*/
+
+        //システムバー
+        getWindow().setStatusBarColor( Color.BLACK );
     }
 
     /*
@@ -189,6 +212,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
                 //サムネイルのBitmapリスト
                 List<Bitmap> thumbnailBitmaps = new ArrayList<>();
+                List<PictureTable> thumbnails = new ArrayList<>();
 
                 //ViewPagerのページレイアウトリスト
                 List<Integer> layoutIdList = new ArrayList<>();
@@ -202,14 +226,15 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
                     //サムネイルのビットマップ
                     //※nullの場合は、なし用画像が設定される
-                    PictureTable thumbnail = dbThumbnails.get(i);
-                    thumbnailBitmaps.add(PictureNodeView.createThumbnail(getResources(), thumbnail));
+                    //PictureTable thumbnail = dbThumbnails.get(i);
+                    //thumbnailBitmaps.add( PictureNodeView.createThumbnail(getResources(), thumbnail) );a
+                    thumbnails.add( dbThumbnails.get(i) );
 
                     i++;
                 }
 
                 //ViewPagerの設定
-                setGalleryViewPager(galleries, thumbnailBitmaps, layoutIdList);
+                setGalleryViewPager(galleries, thumbnails, layoutIdList);
 
                 //ギャラリーリストを保持
                 mGalleries = galleries;
@@ -227,7 +252,8 @@ public class PictureGalleryActivity extends AppCompatActivity {
      *   para3：タブ内のレイアウトIDリスト
      */
     private void setGalleryViewPager(List<PictureArrayList<PictureTable>> galleries,
-                                     List<Bitmap> thumbnailBitmaps,
+                                     //List<Bitmap> thumbnailBitmaps,
+                                     List<PictureTable> thumbnails,
                                      List<Integer> layoutIdList) {
 
         ViewPager2 vp2_gallery = findViewById(R.id.vp2_gallery);
@@ -262,10 +288,17 @@ public class PictureGalleryActivity extends AppCompatActivity {
                                             tab.setCustomView(R.layout.item_gallery_tab);
 
                                             //サムネイルのbitmap
-
+                                            PictureTable thumbnail = thumbnails.get(position - 1);
+                                            String path = ( (thumbnail == null) ? "": thumbnail.getPath() );
                                             //アイコンとして設定
                                             ImageView iv_picture = tab.getCustomView().findViewById(R.id.iv_picture);
-                                            iv_picture.setImageBitmap(thumbnailBitmaps.get(position - 1));
+                                            Picasso.get()
+                                                    .load( new File( path ) )
+                                                    .transform( new ThumbnailTransformation( thumbnail ) )
+                                                    .error( R.drawable.baseline_no_thumbnail_24 )
+                                                    .into( iv_picture );
+
+                                            //iv_picture.setImageBitmap(thumbnailBitmaps.get(position - 1));
                                         }
                                     }
                                 }

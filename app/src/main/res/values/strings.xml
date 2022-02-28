@@ -6,6 +6,7 @@
     <string name="cancel">Cancel</string>
     <string name="waiting">処理中</string>
     <string name="updating">更新</string>
+    <string name="do_not_show_this_message">今後、このメッセージを表示しない</string>
 
     <!--  ノード  -->
     <string name="default_rootNode">ルート\nノード</string>
@@ -23,12 +24,18 @@
     <string name="alert_movePicture_message">選択されたノードに写真を移動しますか？</string>
     <string name="alert_deleteNode_title">ノード削除確認</string>
     <string name="alert_deleteNode_message">配下のノードも全て削除されます。\nなお、端末上から写真は削除されません。</string>
+    <string name="alert_launch_mapList_title">初めに</string>
+    <string name="alert_launch_mapList_message">まずは、画面下の「New Map」を押してマップを作成しましょう。</string>
+    <string name="alert_launch_mapEntry_title">マップの生成</string>
+    <string name="alert_launch_mapEntry_message">マップ名を入力して、好きな色を選んで下さい。\n（色はマップ作成後でも追加可能です）</string>
+
 
     <!-- トースト -->
     <string name="toast_error">エラーが発生しました</string>
     <string name="toast_deletePicture">写真を削除しました</string>
     <string name="toast_errorChangeParent">親ノードにできないノードです</string>
     <string name="toast_nowParent">現在の親ノードです</string>
+    <string name="toast_childNode">子ノードを親ノードにはできません</string>
     <string name="toast_errorMapName">マップ名を入力してください</string>
     <string name="toast_samePicture">既に同じ写真があります</string>
     <string name="toast_errorGetPath">失敗しました</string>
@@ -125,7 +132,7 @@
     <string name="help_map_title_limitations">制限事項</string>
 
     <string name="help_map_basic_details1">まずはノードをタッチしてみましょう！\nタッチすると操作アイコンが表示されます。\nアイコンをタッチすることで、新しいノードの作成や写真の紐づけをすることができます！</string>
-    <string name="help_map_basic_details1_note">※アイコンの詳細は、「？」アイコンでご確認下さい\n</string>
+    <string name="help_map_basic_details1_note">※アイコンの詳細は、タッチした時に現れる「？」アイコンでご確認下さい\n</string>
     <string name="help_map_basic_sample1">操作例のご紹介①</string>
     <string name="help_map_basic_sample1_title">～新しくノードを作成したい～</string>
     <string name="help_map_basic_sample1_details1">①作成したいノードをタッチ</string>

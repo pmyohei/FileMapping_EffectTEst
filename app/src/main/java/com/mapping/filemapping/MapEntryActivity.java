@@ -1,7 +1,11 @@
 package com.mapping.filemapping;
 
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -10,6 +14,7 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
@@ -17,6 +22,7 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 /*
  * マップ情報入力画面（新規作成／編集）
@@ -38,6 +44,9 @@ public class MapEntryActivity extends AppCompatActivity {
 
         //マップ入力ページレイアウト
         setupCreateMapPage();
+
+        //ツールバー設定
+        setToolBar();
 
         //遷移元からの情報
         Intent intent = getIntent();
@@ -70,7 +79,59 @@ public class MapEntryActivity extends AppCompatActivity {
             }
         });
 
+        //ヘルプダイアログの表示
+        showFirstLaunchDialog();
+    }
 
+    /*
+     * ツールバーの初期設定
+     */
+    private void setToolBar() {
+/*        //ツールバー設定
+        Toolbar toolbar = findViewById(R.id.toolbar_map);
+        toolbar.setTitle( mMap.getMapName() );
+        setSupportActionBar(toolbar);
+
+        //戻るボタンを有効化
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
+
+        //システムバー
+        getWindow().setStatusBarColor( Color.BLACK );
+    }
+
+    /*
+     * 初回起動時のヘルプダイアログを表示
+     */
+    private void showFirstLaunchDialog(){
+
+        final String key = ResourceManager.SHARED_KEY_HELP_ON_MAPENTRY;
+
+        //表示の有無を取得
+        SharedPreferences spData = getSharedPreferences(ResourceManager.SHARED_DATA_NAME, MODE_PRIVATE);
+        boolean isShow = spData.getBoolean( key, ResourceManager.INVALID_SHOW_HELP);
+
+        if( !isShow ){
+            //表示なしが選択されていれば何もしない
+            return;
+        }
+
+        //ガイドダイアログを表示
+        new AlertDialog.Builder(this)
+            .setTitle( getString(R.string.alert_launch_mapEntry_title) )
+            .setMessage( getString(R.string.alert_launch_mapEntry_message) )
+            .setPositiveButton(getString(R.string.do_not_show_this_message), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    SharedPreferences.Editor editor = spData.edit();
+                    editor.putBoolean( key, false );
+                    editor.apply();
+
+                    Log.i("ヘルプ", "操作後=" + spData.getBoolean( key, ResourceManager.INVALID_SHOW_HELP));
+                }
+            })
+            //.setNegativeButton("Cancel", null)
+            .show();
     }
 
     /*

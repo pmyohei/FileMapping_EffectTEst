@@ -34,6 +34,16 @@ public class ResourceManager {
     public static final String URI_SPLIT = "image%";
     //URI 例)content://com.android.providers.downloads.documents/document/12
 
+    //SharedPreferences
+    public static final String SHARED_DATA_NAME = "UIData";         //SharedPreferences保存名
+    public static final String SHARED_KEY_HELP_ON_MAP = "showHelpOnMap";
+    public static final String SHARED_KEY_HELP_ON_MAPLIST = "showHelpOnMapList";
+    public static final String SHARED_KEY_HELP_ON_MAPENTRY = "showHelpOnMapEntry";
+
+    //ヘルプ表示の有無（初期値 or 取得エラー時)
+    //※「今後表示しない」が選択された時、falseに設定
+    public static final boolean INVALID_SHOW_HELP = true;
+
     /* 画面遷移-キー */
     public static final String KEY_MAPID = "MapID";
     public static final String KEY_NEW_MAP = "IsNewMap";

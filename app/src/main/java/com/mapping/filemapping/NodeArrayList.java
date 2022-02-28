@@ -46,7 +46,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
         for (int i = 0; i < size; i++) {
 
             if (pid == get(i).getPid()) {
-                //指定親ノードのPIDと一致するノードを返す
+                //指定ノードPIDと一致するノードを返す
                 return get(i);
             }
         }
@@ -169,9 +169,6 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
 
         return nodes;
     }
-
-
-
 
     /*
      *　指定ノードをリストから削除

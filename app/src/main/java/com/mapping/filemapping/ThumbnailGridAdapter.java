@@ -94,7 +94,14 @@ public class ThumbnailGridAdapter extends BaseAdapter {
 
         //サムネイル情報
         ImageView iv_picture = convertView.findViewById( R.id.iv_picture );
-        iv_picture.setImageBitmap( PictureNodeView.createThumbnail(mContext.getResources(), pictureNodeInfo.getThumbnail()) );
+        //画像割り当て
+        PictureTable thumbnail = pictureNodeInfo.getThumbnail();
+        Picasso.get()
+                .load( new File( thumbnail.getPath() ) )
+                .transform( new ThumbnailTransformation( thumbnail ) )
+                .error(R.drawable.baseline_no_thumbnail_24)
+                .into( iv_picture );
+        //iv_picture.setImageBitmap( PictureNodeView.createThumbnail(mContext.getResources(), pictureNodeInfo.getThumbnail()) );
         
         //親ノード名
         TextView tv_parentNode = convertView.findViewById(R.id.tv_parentNode);

@@ -9,6 +9,10 @@ import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.widget.ImageView;
 
+import com.squareup.picasso.Picasso;
+import com.squareup.picasso.Transformation;
+
+import java.io.File;
 import java.io.Serializable;
 
 public class PictureNodeView extends ChildNode implements Serializable  /*implements View.OnTouchListener*/ {
@@ -66,64 +70,26 @@ public class PictureNodeView extends ChildNode implements Serializable  /*implem
         //画像ビュー
         ImageView iv_node = findViewById(R.id.iv_node);
 
-/*        //サムネイルなし
-        if (thumbnail == null) {
-            //なし用のアイコンを設定
-            iv_node.setBackgroundResource(R.drawable.baseline_no_thumbnail_24);
-            return;
-        }*/
+        //path
+        String path = ( (thumbnail == null) ? "": thumbnail.getPath() );
 
-        //サムネイルのBitmapを生成
-        Bitmap bitmap = createThumbnail( getResources(), thumbnail );
-
-
-
-        /*        if( bitmap == null ){
-            //ビットマップ化に失敗した場合、なし用のアイコンを設定
-            iv_node.setBackgroundResource(R.drawable.baseline_no_thumbnail_24);
-            return;
-        }*/
-
-        //サムネイルを設定
-        iv_node.setImageBitmap(bitmap);
-
-/*        if( thumbnail != null ){
-            //サムネイルのBitmapを生成
-            Bitmap bitmap = createThumbnail( thumbnail );
-            if( bitmap != null ){
-                //Bitmapが生成できれば、その画像を設定
-                iv_node.setImageBitmap(bitmap);
-                return;
-            }
-        }*/
-
-        //サムネイルなしか、ビットマップ化に失敗した場合、なし用のアイコンを設定
-        //iv_node.setBackgroundResource( R.drawable.bmp_sample_cafe );
-
-/*        if( thumbnail == null ){
-            //サムネイル情報がなければ、なし用アイコンを設定
-            iv_node.setBackgroundResource( R.drawable.bmp_sample_cafe );
-
-        } else {
-            //サムネイルのBitmapを生成
-            Bitmap bitmap = createThumbnail( thumbnail );
-            //設定
-            iv_node.setImageBitmap(bitmap);
-        }*/
-
-
-/*
-        String path = thumbnail.getPath();
-        if (path == null) {
-            //フェールセーフ
-            Log.i("URI", "setBitmap() pathなし");
-            return;
+        Log.i("Picassoでトリミング", "setBitmap path=" + path);
+        if( path.equals( "/storage/emulated/0/DCIM/Camera/PXL_20211120_080210517.jpg" ) ){
+            Log.i("Picassoでトリミング", "最後の画像だけやめる");
+            //return;
         }
 
-        //トリミング範囲で切り取り
-        Bitmap bitmap = BitmapFactory.decodeFile(path);
-        bitmap = Bitmap.createBitmap(bitmap, thumbnail.getTrgLeft(), thumbnail.getTrgTop(), thumbnail.getTrgWidth(), thumbnail.getTrgHeight());
-*/
+        //画像割り当て
+        Picasso.get()
+                .load( new File( path ) )
+                .transform( new ThumbnailTransformation(  thumbnail ) )
+                .error(R.drawable.baseline_no_thumbnail_24)
+                .into( iv_node );
+
+        //サムネイルのBitmapを生成
+        //Bitmap bitmap = createThumbnail( getResources(), thumbnail );
+        //サムネイルを設定
+        //iv_node.setImageBitmap(bitmap);
     }
 
     /*
@@ -149,71 +115,71 @@ public class PictureNodeView extends ChildNode implements Serializable  /*implem
     }
 
     /*
-     * ノードに画像を設定
+     * サムネイルとなるBitmapを生成
+     */
+    public static Bitmap createThumbnail_old(Resources resources, PictureTable thumbnail)  {
+
+        if (thumbnail == null) {
+            Log.i("URI", "createThumbnail() 指定サムネイル=null");
+            return BitmapFactory.decodeResource( resources, R.drawable.baseline_no_thumbnail_24);
+        }
+
+        String path = thumbnail.getPath();
+        if (path == null) {
+            //フェールセーフ
+            Log.i("URI", "createThumbnail() pathなし");
+            return BitmapFactory.decodeResource( resources, R.drawable.baseline_no_thumbnail_24);
+        }
+
+        //トリミング範囲で切り取り
+        Bitmap bitmap = BitmapFactory.decodeFile(path);
+        return Bitmap.createBitmap(bitmap, thumbnail.getTrgLeft(), thumbnail.getTrgTop(), thumbnail.getTrgWidth(), thumbnail.getTrgHeight());
+    }
+
+
+    /*
+     * サムネイル情報切り取り
      */
 /*
-    public void setNodeBitmap(PictureTable thumbnail) {
+    public static class ThumbnailTransformation_old implements Transformation {
 
-        //仮ガード-----
-        String path = mNode.getPath();
-        if( path == null ){
-            return;
+        //サムネイル情報
+        PictureTable mThumbnail;
+
+        public ThumbnailTransformation_old(PictureTable thumbnail ){
+            mThumbnail = thumbnail;
         }
-        //-----
 
-        //ノードの中身の表示を変更
-        findViewById(R.id.tv_node).setVisibility( GONE );
-        findViewById(R.id.iv_node).setVisibility( VISIBLE );
+        @Override
+        public Bitmap transform(Bitmap source) {
 
-        //ContentResolver:コンテンツモデルへのアクセスを提供
-        ContentResolver contentResolver = getContext().getContentResolver();
-
-        //URI下のデータにアクセスする
-        ParcelFileDescriptor pfDescriptor = null;
-        try {
-
-            //Fike → InputStream → Bitmap
-            File file = new File(path);
-            Uri uri = Uri.fromFile(file);
-
-            //URI作成
-            //Uri uri = Uri.parse( ResourceManager.URI_PATH + mNode.getPath() );
-
-            Log.i("setNodeBitmap", "uri=" + uri);
-
-            //Descriptor取得
-            pfDescriptor = contentResolver.openFileDescriptor(uri, "r");
-            if(pfDescriptor != null) {
-
-                //実際のFileDescriptorを取得
-                FileDescriptor fileDescriptor = pfDescriptor.getFileDescriptor();
-                Bitmap bmp = BitmapFactory.decodeFileDescriptor(fileDescriptor);
-                pfDescriptor.close();
-
-                Log.i("setNodeBitmap", "bmp.getHeight()=" + bmp.getHeight() + " bmp.width()=" + bmp.getWidth());
-
-                //トリミング情報を反映
-                //RectF rectF = thumbnail.getTrimmingInfo();
-                //Log.i("setNodeBitmap", "rectF.getHeight()=" + rectF.height() + " rectF.width()=" + rectF.width());
-                //bmp = Bitmap.createBitmap( bmp, (int)rectF.left, (int)rectF.top, (int)rectF.width(), (int)rectF.height() );
-                bmp = Bitmap.createBitmap( bmp, thumbnail.getTrgLeft(), thumbnail.getTrgTop(), thumbnail.getTrgWidth(), thumbnail.getTrgHeight() );
-
-                //画像を設定
-                ImageView iv_node = findViewById(R.id.iv_node);
-                iv_node.setImageBitmap( bmp );
+*/
+/*            if (mThumbnail == null) {
+                Log.i("URI", "createThumbnail() 指定サムネイル=null");
+                return BitmapFactory.decodeResource( resources, R.drawable.baseline_no_thumbnail_24);
             }
 
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try{
-                if(pfDescriptor != null){
-                    pfDescriptor.close();
-                }
-            }catch (Exception e){
-                e.printStackTrace();
+            String path = mThumbnail.getPath();
+            if (path == null) {
+                //フェールセーフ
+                Log.i("URI", "createThumbnail() pathなし");
+                return BitmapFactory.decodeResource( resources, R.drawable.baseline_no_thumbnail_24);
+            }*//*
+
+
+            //トリミング範囲で切り取り
+            Bitmap result = Bitmap.createBitmap(source, mThumbnail.getTrgLeft(), mThumbnail.getTrgTop(), mThumbnail.getTrgWidth(), mThumbnail.getTrgHeight());
+
+            //Bitmap result = Bitmap.createBitmap(source, x, y, size, size);
+            if (result != source) {
+                source.recycle();
             }
+
+            return result;
         }
+
+        @Override
+        public String key() { return "square()"; }
     }
 */
 

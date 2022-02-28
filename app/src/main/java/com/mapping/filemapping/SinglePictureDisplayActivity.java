@@ -12,6 +12,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -58,8 +59,11 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
         //格納先更新フラグ（削除か格納先の移動が発生したとき、フラグを更新する）
         mIsUpdate = false;
 
-        //
+        //写真ピンチ操作有無
         mIsImagePinchUp = false;
+
+        //ツールバー設定
+        setToolBar();
 
         //ピクチャノード情報リストを生成
         createPictureNodeInfos();
@@ -247,6 +251,23 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
                 showMoveDestination();
             }
         });
+    }
+
+    /*
+     * ツールバーの初期設定
+     */
+    private void setToolBar() {
+/*        //ツールバー設定
+        Toolbar toolbar = findViewById(R.id.toolbar_map);
+        toolbar.setTitle( mMap.getMapName() );
+        setSupportActionBar(toolbar);
+
+        //戻るボタンを有効化
+        Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
+
+        //システムバー
+        getWindow().setStatusBarColor( Color.BLACK );
     }
 
     /*

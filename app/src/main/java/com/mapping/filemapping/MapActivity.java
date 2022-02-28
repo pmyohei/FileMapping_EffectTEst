@@ -20,6 +20,7 @@ import android.content.ClipData;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -49,9 +50,6 @@ public class MapActivity extends AppCompatActivity {
     public static final int RESULT_PICTURE_NODE = 200;
     public static final int RESULT_UPDATE_TUHMBNAIL = 201;
     public static final int RESULT_ADD_PICTURE = 202;
-
-    /* 画面遷移-キー-種別（遷移先での遷移理由識別用） */
-    public static final String INTENT_KIND_CREATE = "Create";
 
     /* 画面遷移-キー */
     public static String INTENT_MAP_PID = "MapPid";
@@ -235,10 +233,6 @@ public class MapActivity extends AppCompatActivity {
 
                         //レイアウト側は確定したため、フラグ更新
                         mEnableDrawNode = true;
-
-                        //ノードを円形にする
-                        //CardView cv_node = v_rootnode.findViewById(R.id.cv_node);
-                        //makeNodeCircle(cv_node);
                     }
                 }
         );
@@ -309,7 +303,6 @@ public class MapActivity extends AppCompatActivity {
         getWindow().setStatusBarColor(value);
     }
 
-
     /*
      * マップのデフォルトカラーを取得
      */
@@ -333,7 +326,7 @@ public class MapActivity extends AppCompatActivity {
     }
 
     /*
-     * ノードクリック
+     * ノードクリックリスナー処理
      */
     private void nodeClickListener(View node) {
 
@@ -390,9 +383,10 @@ public class MapActivity extends AppCompatActivity {
     private void confirmChangeParentNode(BaseNode baseNode) {
 
         NodeTable parentNode = baseNode.getNode();
+        int parentPid = parentNode.getPid();
 
         //変更先が自分自身の場合、ピクチャノードの場合は、変更不可
-        if ((mChangeParentNodePid == parentNode.getPid()) || (parentNode.getKind() == NodeTable.NODE_KIND_PICTURE)) {
+        if ((mChangeParentNodePid == parentPid) || (parentNode.getKind() == NodeTable.NODE_KIND_PICTURE)) {
             Toast.makeText(this, getString(R.string.toast_errorChangeParent), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -403,8 +397,15 @@ public class MapActivity extends AppCompatActivity {
         NodeTable changeNode = nodes.getNode( mChangeParentNodePid );
 
         //現状の親ノードの場合、変更不可
-        if ( changeNode.getPidParentNode() == parentNode.getPid() ) {
+        if ( changeNode.getPidParentNode() == parentPid ) {
             Toast.makeText(this, getString(R.string.toast_nowParent), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //変更ノードの配下のノードの場合、変更不可
+        NodeArrayList<NodeTable> childNodes = nodes.getUnderNodes( mChangeParentNodePid, true );
+        if( childNodes.getNode(parentPid) != null ){
+            Toast.makeText(this, getString(R.string.toast_childNode), Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -436,8 +437,50 @@ public class MapActivity extends AppCompatActivity {
      * マップ内の全てのノード・ラインを生成
      */
     private void createMap() {
-        //ノードの生成
+
+        //初回起動ダイアログを表示
+        showFirstLaunchDialog();
+
+        //ノードの描画
         drawAllNodes();
+    }
+
+    /*
+     * 初回起動時のヘルプダイアログを表示
+     */
+    private void showFirstLaunchDialog(){
+
+        final String key = ResourceManager.SHARED_KEY_HELP_ON_MAP;
+
+        //表示の有無を取得
+        SharedPreferences spData = getSharedPreferences(ResourceManager.SHARED_DATA_NAME, MODE_PRIVATE);
+        boolean isShow = spData.getBoolean( key, ResourceManager.INVALID_SHOW_HELP);
+
+        Log.i("ヘルプ", "操作前=" + isShow);
+
+        if( !isShow ){
+            //表示なしが選択されていれば何もしない
+            return;
+        }
+
+        //ヘルプダイアログを表示
+        showHelpDialog();
+
+        //一度表示した後は表示しない
+        @SuppressLint("CommitPrefEdits") SharedPreferences.Editor editor = spData.edit();
+        editor.putBoolean( key, false );
+        editor.apply();
+
+        Log.i("ヘルプ", "操作後=" + spData.getBoolean( key, ResourceManager.INVALID_SHOW_HELP));
+    }
+
+    /*
+     * ヘルプダイアログを表示
+     */
+    private void showHelpDialog() {
+        //マップヘルプの表示
+        DialogFragment helpDialog = new HelpDialog( HelpDialog.HELP_KIND_MAP );
+        helpDialog.show( getSupportFragmentManager(), "");
     }
 
     /*
@@ -805,17 +848,13 @@ public class MapActivity extends AppCompatActivity {
 
             case R.id.action_help:
                 //マップヘルプの表示
-                DialogFragment helpDialog = new HelpDialog( HelpDialog.HELP_KIND_MAP );
-                helpDialog.show( getSupportFragmentManager(), "");
-
+                showHelpDialog();
                 return true;
 
             case R.id.action_palette:
                 //マップ全体デザイン変更
                 openDesignBottomSheet(DesignBottomSheet.MAP, findViewById(R.id.fl_screenMap));
-
                 return true;
-
 
             case R.id.action_folder_tree:
                 //フォルダーツリー表示

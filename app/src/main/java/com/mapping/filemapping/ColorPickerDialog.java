@@ -19,14 +19,12 @@ import com.jaredrummler.android.colorpicker.ColorPickerView;
 
 public class ColorPickerDialog extends ColorDialog {
 
-
     /*
      * コンストラクタ
      */
     public ColorPickerDialog( String color ) {
         super(color);
     }
-
 
     public ColorPickerDialog() {
         super("test");

@@ -18,7 +18,6 @@ import androidx.fragment.app.DialogFragment;
 
 public class ColorCodeDialog extends ColorDialog implements TextWatcher {
 
-
     /*
      * コンストラクタ
      */

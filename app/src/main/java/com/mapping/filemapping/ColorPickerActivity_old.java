@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.jaredrummler.android.colorpicker.ColorPickerView;
 
-public class ColorPickerActivity extends AppCompatActivity {
+public class ColorPickerActivity_old extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,10 +49,5 @@ public class ColorPickerActivity extends AppCompatActivity {
                 finish();
             }
         });
-
-
-
-
-
     }
 }

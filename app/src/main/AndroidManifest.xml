@@ -30,7 +30,7 @@
             android:name=".PictureNodeSelectActivity_old"
             android:exported="true" />
         <activity
-            android:name=".ColorPickerActivity"
+            android:name=".ColorPickerActivity_old"
             android:exported="true" /> <!-- Applicationの使用 -->
         <activity
             android:name=".MapEntryActivity"
