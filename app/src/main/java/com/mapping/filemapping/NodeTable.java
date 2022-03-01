@@ -106,6 +106,7 @@ public class NodeTable implements Serializable {
     @ColumnInfo(name = "line_color")
     private String lineColor;
 
+
     /*-- 定数 --*/
     //ノード種別
     public static final int NODE_KIND_ROOT = 0;

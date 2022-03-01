@@ -141,6 +141,7 @@ public class ResourceManager {
         return path;
     }
 
+
     /*
      *　スクリーン横幅を取得
      */

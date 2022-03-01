@@ -2,6 +2,7 @@ package com.mapping.filemapping;
 
 import android.content.Context;
 import android.content.res.Configuration;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -92,20 +93,27 @@ public class ThumbnailGridAdapter extends BaseAdapter {
         //ピクチャノード情報
         PictureNodesBottomSheetDialog.PictureNodeInfo pictureNodeInfo = mData.get(position);
 
-        //サムネイル情報
+        //ピクチャノードサイズ
+        int viewSize = (int)mContext.getResources().getDimension(R.dimen.gallery_tab_size);
+
         ImageView iv_picture = convertView.findViewById( R.id.iv_picture );
-        //画像割り当て
+
+        //サムネイルを割り当て
+        //※画質を担保するため、resize()である程度画像の大きさを確保してからtransform()に渡す
         PictureTable thumbnail = pictureNodeInfo.getThumbnail();
         Picasso.get()
                 .load( new File( thumbnail.getPath() ) )
-                .transform( new ThumbnailTransformation( thumbnail ) )
+                .resize( ThumbnailTransformation.RESIZE, ThumbnailTransformation.RESIZE )
+                .transform( new ThumbnailTransformation( thumbnail, viewSize ) )
                 .error(R.drawable.baseline_no_thumbnail_24)
                 .into( iv_picture );
-        //iv_picture.setImageBitmap( PictureNodeView.createThumbnail(mContext.getResources(), pictureNodeInfo.getThumbnail()) );
-        
-        //親ノード名
+
+        //親ノード名を取得。なければ、なし用の文言を設定
+        String parentNodeName = pictureNodeInfo.getParentNodeName();
+        String setName = (parentNodeName.isEmpty()) ? mContext.getString(R.string.no_nodeName): parentNodeName ;
+
         TextView tv_parentNode = convertView.findViewById(R.id.tv_parentNode);
-        tv_parentNode.setText( pictureNodeInfo.getParentNodeName() );
+        tv_parentNode.setText( setName );
 
         //設定したビューを返す
         return convertView;

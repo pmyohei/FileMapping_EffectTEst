@@ -12,17 +12,21 @@ import java.util.concurrent.Executors;
  * DB非同期処理
  *   read用
  */
-public class AsyncReadThumbnail {
+public class AsyncReadThumbnail extends AsyncShowProgress {
 
-    private final AppDatabase                       mDB;
-    private final OnFinishListener                  mOnFinishListener;
-    private final int                               mMapPid;
-    private       PictureArrayList<PictureTable>    mThumbnailList;
+    private final AppDatabase mDB;
+    private final OnFinishListener mOnFinishListener;
+    private final int mMapPid;
+
+    //処理結果
+    private PictureArrayList<PictureTable> mThumbnailList;
 
     /*
      * コンストラクタ
      */
-    public AsyncReadThumbnail(Context context,int mapPid, OnFinishListener listener) {
+    public AsyncReadThumbnail(Context context, int mapPid, OnFinishListener listener) {
+        super(context);
+
         mDB = AppDatabaseManager.getInstance(context);
         mOnFinishListener = listener;
         mMapPid = mapPid;
@@ -74,8 +78,9 @@ public class AsyncReadThumbnail {
     /*
      * バックグラウンド前処理
      */
+    @Override
     void onPreExecute() {
-        //
+        super.onPreExecute();
     }
 
     /*
@@ -95,7 +100,9 @@ public class AsyncReadThumbnail {
     /*
      * バックグランド処理終了後の処理
      */
+    @Override
     void onPostExecute() {
+        super.onPostExecute();
 
         //読み取り完了
         mOnFinishListener.onFinish( mThumbnailList );
@@ -107,6 +114,5 @@ public class AsyncReadThumbnail {
     public interface OnFinishListener {
         void onFinish(PictureArrayList<PictureTable> thumbnailList );
     }
-
 
 }

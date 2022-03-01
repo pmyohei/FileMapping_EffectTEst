@@ -93,7 +93,7 @@ public class AsyncUpdateThumbnail {
 
             } else {
                 //あれば、サムネイル化して更新
-                picture.setEnableThumbnail( mPicture.getTrimmingInfo() );
+                picture.setEnableThumbnail( mPicture.getTrimmingInfo(), mPicture.getSourceImageWidth(), mPicture.getSourceImageHeight()  );
                 dao.update( picture );
 
                 //新しいサムネイルとして保持
@@ -120,7 +120,7 @@ public class AsyncUpdateThumbnail {
             //変更対象の画像と同じ画像が選択された場合
             if (currentThumbnail.getPath().equals( mPicture.getPath()) ) {
                 //トリミング情報だけ更新
-                currentThumbnail.setTrimmingInfo(mPicture.getTrimmingInfo());
+                currentThumbnail.setTrimmingInfo(mPicture.getTrimmingInfo(), mPicture.getSourceImageWidth(), mPicture.getSourceImageHeight()  );
 
                 //サムネイルに選択された画像が同じ
                 isSamePicture = true;

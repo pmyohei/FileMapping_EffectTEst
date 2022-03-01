@@ -162,7 +162,8 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
             //指定ノードを親ノードとするノード
             if (pid == node.getPidParentNode()) {
                 //このノードの配下ノードを取得
-                NodeArrayList<NodeTable> tmp = getUnderNodes(node.getPid(), isMyself);
+                //※ここでのgetUnderNodes()は再帰処理になるため、true指定となる（trueにしないと、このルートに入ったノードが追加されない）
+                NodeArrayList<NodeTable> tmp = getUnderNodes(node.getPid(), true);
                 nodes.addAll(tmp);
             }
         }
@@ -516,7 +517,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
                 break;
 
             case NodeTable.NODE_KIND_NODE:
-                pisd = getPictureNodesUnderNode(node.getPid() );
+                pisd = getPictureNodesUnderNode(pid);
                 break;
 
             case NodeTable.NODE_KIND_PICTURE:

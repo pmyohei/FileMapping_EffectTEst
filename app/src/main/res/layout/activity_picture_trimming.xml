@@ -24,13 +24,14 @@
             app:menu="@menu/toolbar_trimming"/>
 
         <com.google.android.material.card.MaterialCardView
-            android:id="@+id/mcv"
+            android:id="@+id/mcv_cropped"
             android:theme="@style/Theme.MaterialComponents.Light"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="2"
             android:layout_margin="12dp"
             android:layout_gravity="center"
+            android:scaleType="centerCrop"
             app:cardCornerRadius="@dimen/tmp_cardCornerRadius"
             app:strokeWidth="1dp"
             app:strokeColor="@color/black">
@@ -42,7 +43,6 @@
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:adjustViewBounds="true"
-                android:scaleType="centerCrop"
                 android:src="@drawable/bmp_sample_cafe" />
 
         </com.google.android.material.card.MaterialCardView>
@@ -59,12 +59,14 @@
 
         <!--  選択した写真  -->
         <com.isseiaoki.simplecropview.CropImageView
+            xmlns:custom="http://schemas.android.com/apk/res-auto"
             android:id="@+id/iv_cropSource"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
             android:layout_weight="3"
-            android:padding="12dp"
-            android:layout_marginTop="4dp" />
+            android:padding="8dp"
+            android:adjustViewBounds="true"
+            />
 
         <!-- 生成完了ボタン -->
         <Button

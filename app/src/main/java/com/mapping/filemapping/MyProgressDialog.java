@@ -23,10 +23,10 @@ public class MyProgressDialog extends DialogFragment {
         Dialog dialog = new Dialog(getActivity());
         dialog.setContentView(R.layout.progress_dialog);
 
-        //キャンセル不可
-        dialog.setCancelable(false);
         //画面外タッチ時のクローズ不可
         dialog.setCanceledOnTouchOutside(false);
+
+        /*-- キャンセル不可（setCancelable(false)）は、このタイミングで設定しても反映されないため注意 --*/
 
         //タイトル
         String title = getResources().getString(R.string.updating);

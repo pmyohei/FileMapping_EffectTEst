@@ -19,7 +19,7 @@ import java.util.concurrent.Executors;
  */
 public class AsyncShowProgress {
 
-    private final Context               mContext;
+    private final Context mContext;
     private DialogFragment mProgressDialog;
 
     /*
@@ -47,6 +47,7 @@ public class AsyncShowProgress {
 
         //処理中ダイアログを開く
         mProgressDialog = MyProgressDialog.newInstance();
+        mProgressDialog.setCancelable(false);   //キャンセル不可
         mProgressDialog.show( ((FragmentActivity)mContext).getSupportFragmentManager(), "TEST" );
     }
 

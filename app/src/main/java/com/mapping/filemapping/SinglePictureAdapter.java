@@ -54,10 +54,6 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
             //　これをしないと画像の初期サイズが安定しない状態になる
             iv_singlePicture.resetMatrixData();
 
-            //
-            //iv_singlePicture.page = Test;
-            //
-
             //画像割り当て
             Picasso.get()
                     .load( new File( picture.getPath() ) )

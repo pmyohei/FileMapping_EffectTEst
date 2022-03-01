@@ -264,7 +264,7 @@ public class DesignBottomSheet extends CoordinatorLayout {
         layoutIdList.add(R.layout.page_node_shape);
 
         ViewPager2 vp = findViewById(R.id.vp2_design);
-        NodeShapeAdapter adapter = new NodeShapeAdapter(layoutIdList, v_node, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp);
+        NodeShapeAdapter adapter = new NodeShapeAdapter(layoutIdList, v_node);
         vp.setAdapter(adapter);
 
         return vp;

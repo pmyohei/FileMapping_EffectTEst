@@ -53,38 +53,44 @@ public class PictureTable implements Serializable {
     @ColumnInfo(name = "trg_height")
     private int trgHeight = INIT_TRIMMING;
 
+    //画像横サイズ
+    @ColumnInfo(name = "source_image_width")
+    private int sourceImageWidth = INIT_TRIMMING;
+
+    //画像横サイズ
+    @ColumnInfo(name = "source_image_height")
+    private int sourceImageHeight = INIT_TRIMMING;
+
     //ピクチャノードの写真かどうか
     @ColumnInfo(name = "is_thumbnail")
     private boolean isThumbnail;
+
+    //-------------------------------
 
     //トリミング情報初期値
     public static final int INIT_TRIMMING = -1;
     //所属ピクチャノード未定
     public static final int UNKNOWN = -1;
 
+
     public PictureTable() {
     }
 
-    public PictureTable(int mapPid, int parentNodePid, String path, boolean isThumbnail) {
+    public PictureTable(int mapPid, int parentNodePid, String path) {
         this.pidMap = mapPid;
         this.pidParentNode = parentNodePid;
         this.path = path;
-        this.isThumbnail = isThumbnail;
 
-        this.setTrimmingInfo( null );
-    }
-
-    public PictureTable(int mapPid, int parentNodePid, String path, boolean isThumbnail, RectF rect) {
-        this( mapPid, parentNodePid, path, isThumbnail );
-
-        this.setTrimmingInfo( rect );
+        //サムネイル情報なし
+        this.isThumbnail = false;
+        this.setTrimmingInfo( null, 0, 0 );
     }
 
     /*
      * サムネイル化
      */
-    public void setEnableThumbnail( RectF rect ) {
-        setTrimmingInfo(rect);
+    public void setEnableThumbnail( RectF rect, int width, int height ) {
+        setTrimmingInfo(rect, width, height);
         this.isThumbnail = true;
     }
 
@@ -96,26 +102,36 @@ public class PictureTable implements Serializable {
         this.trgTop = INIT_TRIMMING;
         this.trgWidth = INIT_TRIMMING;
         this.trgHeight = INIT_TRIMMING;
+        this.sourceImageWidth = INIT_TRIMMING;
+        this.sourceImageHeight = INIT_TRIMMING;
+
         this.isThumbnail = false;
     }
 
     /*
      * トリミング情報設定
      */
-    public void setTrimmingInfo(RectF rect) {
+    public void setTrimmingInfo(RectF rect, int width, int height) {
 
         if( rect == null ){
+            this.isThumbnail = false;
+
             this.trgLeft   = INIT_TRIMMING;
             this.trgTop    = INIT_TRIMMING;
             this.trgWidth  = INIT_TRIMMING;
             this.trgHeight = INIT_TRIMMING;
+            this.sourceImageWidth = INIT_TRIMMING;
+            this.sourceImageHeight = INIT_TRIMMING;
             return;
         }
 
+        this.isThumbnail = true;
         this.trgLeft   = (int)rect.left;
         this.trgTop    = (int)rect.top;
         this.trgWidth  = (int)rect.width();
         this.trgHeight = (int)rect.height();
+        this.sourceImageWidth  = width;
+        this.sourceImageHeight = height;
     }
 
     /*
@@ -179,10 +195,12 @@ public class PictureTable implements Serializable {
         this.trgHeight = trgHeight;
     }
 
-    public boolean isThumbnail() {
-        return isThumbnail;
-    }
-    public void setThumbnail(boolean isThumbnail) {
-        this.isThumbnail = isThumbnail;
-    }
+    public int getSourceImageWidth() {return sourceImageWidth; }
+    public void setSourceImageWidth(int sourceImageWidth) { this.sourceImageWidth = sourceImageWidth; }
+
+    public int getSourceImageHeight() { return sourceImageHeight;}
+    public void setSourceImageHeight(int sourceImageHeight) { this.sourceImageHeight = sourceImageHeight; }
+
+    public boolean isThumbnail() { return isThumbnail; }
+    public void setThumbnail(boolean isThumbnail) { this.isThumbnail = isThumbnail; }
 }

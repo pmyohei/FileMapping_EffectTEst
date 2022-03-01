@@ -6,24 +6,21 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
 
+/*
+ * ノードの形状のみ
+ */
 public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.GuideViewHolder> {
 
     //フィールド変数
-    private final List<Integer>     mData;
+    private final List<Integer> mData;
     //サンプルノード用
-    private View                    mView;
-    //FragmentManager
-    private final FragmentManager   mFragmentManager;
-    //ViewPager2
-    private final ViewPager2        mvp2;
+    private final View mView;
 
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
@@ -32,10 +29,6 @@ public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.Guid
 
         //サンプルノード用
         private final View mView;
-        //FragmentManager
-        private final FragmentManager mFragmentManager;
-        //ViewPager2
-        private final ViewPager2      mvp2;
 
         //ノードの形状
         private ImageView iv_circle;
@@ -45,12 +38,10 @@ public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.Guid
         /*
          * コンストラクタ
          */
-        public GuideViewHolder(View itemView, int position, View view, FragmentManager fragmentManager, ViewPager2 vp2) {
+        public GuideViewHolder(View itemView, int position, View view ) {
             super(itemView);
 
             mView = view;
-            mFragmentManager = fragmentManager;
-            mvp2 = vp2;
 
             if (position == 0) {
                 //サイズ
@@ -123,11 +114,9 @@ public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.Guid
     /*
      * コンストラクタ
      */
-    public NodeShapeAdapter(List<Integer> layoutIdList, View view, FragmentManager fragmentManager, ViewPager2 vp2) {
+    public NodeShapeAdapter(List<Integer> layoutIdList, View view) {
         mData            = layoutIdList;
         mView            = view;
-        mFragmentManager = fragmentManager;
-        mvp2             = vp2;
     }
 
     /*
@@ -151,7 +140,7 @@ public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.Guid
         LayoutInflater inflater = LayoutInflater.from( viewGroup.getContext() );
         View view = inflater.inflate(mData.get(position), viewGroup, false);
 
-        return new GuideViewHolder(view, position, mView, mFragmentManager, mvp2);
+        return new GuideViewHolder(view, position, mView);
     }
 
     /*

@@ -81,6 +81,7 @@ public class PictureArrayList<E> extends ArrayList<PictureTable> implements Seri
         return false;
     }
 
+
     /*
      * 指定されたピクチャ情報を更新する
      */

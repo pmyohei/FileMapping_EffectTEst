@@ -1348,7 +1348,7 @@ public class MapActivity extends AppCompatActivity {
 
                     //ピクチャデータをリストに追加
                     pictures.add(
-                            new PictureTable(mapPid, nodePid, path, false)
+                            new PictureTable(mapPid, nodePid, path)
                     );
 
                 } else{
@@ -1368,7 +1368,7 @@ public class MapActivity extends AppCompatActivity {
 
                         //ピクチャデータをリストに追加
                         pictures.add(
-                                new PictureTable(mapPid, nodePid, path, false)
+                                new PictureTable(mapPid, nodePid, path)
                         );
 
                         Log.i("ギャラリーに追加", "path=" + path);

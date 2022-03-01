@@ -23,6 +23,7 @@
         android:id="@+id/tab_pictureNode"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
         app:tabTextAppearance="@style/tab_font_serif"
         app:tabIndicatorColor="@color/black"
         app:tabMinWidth="0dp"

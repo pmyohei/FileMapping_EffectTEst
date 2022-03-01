@@ -211,7 +211,6 @@ public class PictureGalleryActivity extends AppCompatActivity {
             public void onFinish(List<PictureArrayList<PictureTable>> galleries, List<PictureTable> dbThumbnails) {
 
                 //サムネイルのBitmapリスト
-                List<Bitmap> thumbnailBitmaps = new ArrayList<>();
                 List<PictureTable> thumbnails = new ArrayList<>();
 
                 //ViewPagerのページレイアウトリスト
@@ -225,9 +224,6 @@ public class PictureGalleryActivity extends AppCompatActivity {
                     layoutIdList.add(R.layout.page_grid_gallery);
 
                     //サムネイルのビットマップ
-                    //※nullの場合は、なし用画像が設定される
-                    //PictureTable thumbnail = dbThumbnails.get(i);
-                    //thumbnailBitmaps.add( PictureNodeView.createThumbnail(getResources(), thumbnail) );a
                     thumbnails.add( dbThumbnails.get(i) );
 
                     i++;
@@ -260,53 +256,47 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
         //レイアウト確定後、アダプタの設定を行う
         //※表示する写真サイズを確実に設定するため
-        ViewTreeObserver observer = vp2_gallery.getViewTreeObserver();
-        observer.addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
+        vp2_gallery.post(()-> {
+            //アダプタの設定
+            vp2_gallery.setAdapter(new GalleryPageAdapter(layoutIdList, galleries));
 
-                        //レイアウト確定後は、不要なので本リスナー削除
-                        vp2_gallery.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            //タブの設定
+            TabLayout tabLayout = findViewById(R.id.tab_pictureNode);
+            new TabLayoutMediator(tabLayout, vp2_gallery,
+                    new TabLayoutMediator.TabConfigurationStrategy() {
+                        @Override
+                        public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                            //タブの設定
+                            if (position == 0) {
+                                //先頭のタブはすべての写真を表示する
+                                tab.setText( getString(R.string.tab_all) );
 
-                        //アダプタの設定
-                        vp2_gallery.setAdapter(new GalleryPageAdapter(layoutIdList, galleries));
+                            } else {
+                                //先頭より後はピクチャノードのサムネイルを設定
+                                tab.setCustomView(R.layout.item_gallery_tab);
 
-                        //インジケータの設定
-                        TabLayout tabLayout = findViewById(R.id.tab_pictureNode);
-                        new TabLayoutMediator(tabLayout, vp2_gallery,
-                                new TabLayoutMediator.TabConfigurationStrategy() {
-                                    @Override
-                                    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                                        //タブの設定
-                                        if (position == 0) {
-                                            //★string
-                                            //先頭のタブはすべての写真を表示する
-                                            tab.setText("すべて");
-                                        } else {
-                                            //先頭より後はピクチャノードのサムネイルを設定
-                                            tab.setCustomView(R.layout.item_gallery_tab);
+                                //タブに表示するピクチャノードサイズ
+                                int viewSize = (int)getResources().getDimension(R.dimen.gallery_tab_size);
 
-                                            //サムネイルのbitmap
-                                            PictureTable thumbnail = thumbnails.get(position - 1);
-                                            String path = ( (thumbnail == null) ? "": thumbnail.getPath() );
-                                            //アイコンとして設定
-                                            ImageView iv_picture = tab.getCustomView().findViewById(R.id.iv_picture);
-                                            Picasso.get()
-                                                    .load( new File( path ) )
-                                                    .transform( new ThumbnailTransformation( thumbnail ) )
-                                                    .error( R.drawable.baseline_no_thumbnail_24 )
-                                                    .into( iv_picture );
+                                //サムネイルのbitmap
+                                PictureTable thumbnail = thumbnails.get(position - 1);
+                                String path = ( (thumbnail == null) ? "": thumbnail.getPath() );
 
-                                            //iv_picture.setImageBitmap(thumbnailBitmaps.get(position - 1));
-                                        }
-                                    }
-                                }
-                        ).attach();
-
+                                //アイコンとして設定
+                                //※画質を担保するため、resize()である程度画像の大きさを確保してからtransform()に渡す
+                                ImageView iv_picture = tab.getCustomView().findViewById(R.id.iv_picture);
+                                Picasso.get()
+                                        .load( new File( path ) )
+                                        .resize( ThumbnailTransformation.RESIZE, ThumbnailTransformation.RESIZE )
+                                        .transform( new ThumbnailTransformation( thumbnail, viewSize ) )
+                                        .error( R.drawable.baseline_no_thumbnail_24 )
+                                        .into( iv_picture );
+                            }
+                        }
                     }
-                }
-        );
+            ).attach();
+
+        });
     }
 
     /*

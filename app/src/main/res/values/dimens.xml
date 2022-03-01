@@ -34,6 +34,14 @@
     <dimen name="color_pattern_circle_size">40dp</dimen>
     <dimen name="color_pattern_circle_half_size">20dp</dimen>
 
+    <!--  ギャラリー画面のタブのサムネイルサークル  -->
+    <dimen name="gallery_tab_size">40dp</dimen>
+    <dimen name="gallery_tab_half_size">20dp</dimen>
+    <!--  写真移動先ボトムシートのサムネイルサークル  -->
+    <dimen name="move_picture_info_size">40dp</dimen>
+    <dimen name="move_picture_info_half_size">20dp</dimen>
+
+
     <!--  tmp  -->
     <dimen name="tmp_cardCornerRadius">12dp</dimen>
 
