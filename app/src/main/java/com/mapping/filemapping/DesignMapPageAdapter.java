@@ -26,7 +26,7 @@ import java.util.List;
 public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdapter.PageViewHolder> {
 
     //フィールド変数
-    private final List<Integer>   mData;
+    private final List<Integer> mData;
     //マップ
     private final View mv_map;
 
@@ -36,11 +36,9 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
     static class PageViewHolder extends RecyclerView.ViewHolder {
 
         //マップ
-        private final View            mv_map;
-
+        private final View mv_map;
         //マップデザイン
         private ColorSelectionView csv_map;
-
         //ノードデザイン
         private ColorSelectionView csv_background;
         private ColorSelectionView csv_text;
@@ -49,13 +47,12 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         private ImageView iv_circle;
         private ImageView iv_square;
         private ColorSelectionView csv_border;
-        private SeekbarView  sbv_borderSize;
-        private SeekbarView  sbv_nodeSize;
+        private SeekbarView sbv_borderSize;
+        private SeekbarView sbv_nodeSize;
         private TextView tv_titel_nodeSize;
         private ColorSelectionView csv_shadow;
         @SuppressLint("UseSwitchCompatOrMaterialCode")
         private Switch sw_shadow;
-
         //ラインデザイン
         private ColorSelectionView csv_line;
         private SeekbarView  sbv_lineSize;
@@ -309,8 +306,8 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
      * コンストラクタ
      */
     public DesignMapPageAdapter(List<Integer> layoutIdList, View v_map) {
-        mData            = layoutIdList;
-        mv_map           = v_map;
+        mData = layoutIdList;
+        mv_map = v_map;
     }
 
     /*

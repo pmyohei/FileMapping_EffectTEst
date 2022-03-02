@@ -42,14 +42,13 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
     class GuideViewHolder extends RecyclerView.ViewHolder implements TextWatcher {
 
         //設定対象ノードビュー
-        private final BaseNode        mv_node;
+        private final BaseNode mv_node;
 
         /*--- ノードテキスト ---*/
         private EditText et_nodeName;
         private ColorSelectionView csv_text;
         private RecyclerView rv_fontAlphabet;
         private RecyclerView rv_fontjapanese;
-
         /*--- ノードデザイン ---*/
         private ColorSelectionView csv_background;
         private ImageView iv_circle;
@@ -60,7 +59,6 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
         private ColorSelectionView csv_shadow;
         @SuppressLint("UseSwitchCompatOrMaterialCode")
         private Switch sw_shadow;
-
         /*--- ライン ---*/
         private ColorSelectionView csv_line;
         private TextView tv_titel_lineSize;
