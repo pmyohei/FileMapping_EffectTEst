@@ -1,6 +1,7 @@
 package com.mapping.filemapping;
 
 import android.graphics.Typeface;
+import android.util.Log;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
@@ -332,12 +333,6 @@ public class NodeTable implements Serializable {
      */
     public void setColorPattern(String[] colors) {
 
-        //カラーパターンなし
-        if (colors[0] == null) {
-            return;
-        }
-
-        //カラーパターンあり
         if (colors[2] == null) {
             //2色
             //ノード名

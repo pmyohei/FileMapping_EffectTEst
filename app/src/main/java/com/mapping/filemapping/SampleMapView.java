@@ -19,9 +19,10 @@ public class SampleMapView extends FrameLayout {
     private NodeArrayList<NodeTable> mTmpNodes;
     //マップ名
     private String mMapName;
-    //カラーパターン
-    private String[] mColors;
-    private String[] mCurrentColors = {null, null, null};        //設定中の色パターン
+    //選択中のカラーパターン
+    private String[] mSelectedColors;
+    //設定中のカラーパターン
+    private String[] mCurrentColors = {null, null, null};
     //カラー配置変更回数
     private int mColorSwitchCount = 0;
 
@@ -87,6 +88,8 @@ public class SampleMapView extends FrameLayout {
                         drawAllNodes();
                         //影なしに設定
                         setDisableShadowInMap();
+                        //初期の配色パターンを設定
+                        initColorPattern();
                     }
                 }
         );
@@ -119,61 +122,29 @@ public class SampleMapView extends FrameLayout {
         //ノード生成
         NodeTable nodeR = new NodeTable();
         NodeTable nodeA = new NodeTable();
-        NodeTable nodeB = new NodeTable();
-        NodeTable nodeC = new NodeTable();
-        NodeTable nodeD = new NodeTable();
-        NodeTable nodeE = new NodeTable();
         //ノード名（仮）
         nodeR.setNodeName("Sample");
         nodeA.setNodeName("A");
-        nodeB.setNodeName("B");
-        nodeC.setNodeName("C");
-        nodeD.setNodeName("D");
-        nodeE.setNodeName("E");
         //マップID（仮）
         nodeR.setPidMap(1);
         nodeA.setPidMap(1);
-        nodeB.setPidMap(1);
-        nodeC.setPidMap(1);
-        nodeD.setPidMap(1);
-        nodeE.setPidMap(1);
         //ノード種別（仮）
         nodeR.setKind(NodeTable.NODE_KIND_ROOT);
         nodeA.setKind(NodeTable.NODE_KIND_NODE);
-        nodeB.setKind(NodeTable.NODE_KIND_NODE);
-        nodeC.setKind(NodeTable.NODE_KIND_NODE);
-        nodeD.setKind(NodeTable.NODE_KIND_NODE);
-        nodeE.setKind(NodeTable.NODE_KIND_NODE);
         //位置
         //※中心に対するoffsetを指定
         //nodeA.setPos(100, -300);
         nodeA.setPos(200, -150);
-        nodeB.setPos(-400, -300);
-        nodeC.setPos(100, 100);
-        nodeD.setPos(-400, 100);
-        nodeE.setPos(10, -300);
         //PID（仮）
         nodeR.setPid(1);
         nodeA.setPid(2);
-        nodeB.setPid(3);
-        nodeC.setPid(4);
-        nodeD.setPid(5);
-        nodeE.setPid(6);
         //親ノード
         nodeR.setPidParentNode(NodeTable.NO_PARENT);
         nodeA.setPidParentNode(1);
-        nodeB.setPidParentNode(1);
-        nodeC.setPidParentNode(1);
-        nodeD.setPidParentNode(1);
-        nodeE.setPidParentNode(1);
 
         //リストに追加
         mTmpNodes.add(nodeR);
         mTmpNodes.add(nodeA);
-        //mTmpNodes.add(nodeB);
-        //mTmpNodes.add(nodeC);
-        //mTmpNodes.add(nodeD);
-        //mTmpNodes.add(nodeE);
     }
 
     /*
@@ -255,6 +226,28 @@ public class SampleMapView extends FrameLayout {
     }
 
     /*
+     * カラーパターン初期設定
+     */
+    public void initColorPattern() {
+
+        BaseNode rootNode = findViewById(R.id.v_rootNode);
+        String[] colors = {
+                rootNode.getNodeTextColor(),
+                rootNode.getNodeBackgroundColor(),
+        };
+
+        //配置回数初期化
+        //※初期状態では既に設定されているため、カウント１からスタート
+        mColorSwitchCount = 1;
+        //選択中カラーパターン（初期色）
+        mSelectedColors = colors;
+
+        //現在の色を保持
+        mCurrentColors[0] = mSelectedColors[0];
+        mCurrentColors[1] = mSelectedColors[1];
+    }
+
+    /*
      * カラーパターンの設定
      */
     public void setColorPattern(String[] colors) {
@@ -262,7 +255,7 @@ public class SampleMapView extends FrameLayout {
         //配置回数初期化
         mColorSwitchCount = 0;
         //カラーパターン
-        mColors = colors;
+        mSelectedColors = colors;
 
         //色の配置
         changeColorPlacement();
@@ -273,15 +266,10 @@ public class SampleMapView extends FrameLayout {
      */
     private void changeColorPlacement() {
 
-        if (mColors == null) {
-            //カラーパターン未設定なら処理なし
-            return;
-        }
-
         //切り替え最大値
         int switchMaxNum = 0;
 
-        if (mColors.length == 2) {
+        if (mSelectedColors.length == 2) {
             //指定indexを取得
             int first = m2ColorTree[mColorSwitchCount][0];
             int second = m2ColorTree[mColorSwitchCount][1];
@@ -293,7 +281,7 @@ public class SampleMapView extends FrameLayout {
 
             switchMaxNum = COLOR2_SWITCH_MAX;
 
-        } else if (mColors.length == 3) {
+        } else if (mSelectedColors.length == 3) {
             //指定indexを取得
             int first = m3ColorTree[mColorSwitchCount][0];
             int second = m3ColorTree[mColorSwitchCount][1];
@@ -320,18 +308,18 @@ public class SampleMapView extends FrameLayout {
     private void set2ColorToMap(int first, int second) {
 
         //マップ、テキスト名
-        findViewById(R.id.fl_map).setBackgroundColor(Color.parseColor(mColors[first]));
-        mTmpNodes.setAllNodeTxColor(mColors[first]);
+        findViewById(R.id.fl_map).setBackgroundColor(Color.parseColor(mSelectedColors[first]));
+        mTmpNodes.setAllNodeTxColor(mSelectedColors[first]);
 
         //ノード枠線、ライン、ノード背景色、影色
-        mTmpNodes.setAllNodeBorderColor(mColors[second]);
-        mTmpNodes.setAllNodeLineColor(mColors[second]);
-        mTmpNodes.setAllNodeBgColor(mColors[second]);
-        mTmpNodes.setAllNodeShadowColor(mColors[second]);
+        mTmpNodes.setAllNodeBorderColor(mSelectedColors[second]);
+        mTmpNodes.setAllNodeLineColor(mSelectedColors[second]);
+        mTmpNodes.setAllNodeBgColor(mSelectedColors[second]);
+        mTmpNodes.setAllNodeShadowColor(mSelectedColors[second]);
 
         //現在の色を保持
-        mCurrentColors[0] = mColors[first];
-        mCurrentColors[1] = mColors[second];
+        mCurrentColors[0] = mSelectedColors[first];
+        mCurrentColors[1] = mSelectedColors[second];
         mCurrentColors[2] = null;
     }
 
@@ -341,21 +329,21 @@ public class SampleMapView extends FrameLayout {
     private void set3ColorToMap(int first, int second, int third) {
 
         //マップ
-        findViewById(R.id.fl_map).setBackgroundColor(Color.parseColor(mColors[first]));
+        findViewById(R.id.fl_map).setBackgroundColor(Color.parseColor(mSelectedColors[first]));
 
         //ノード枠線、ライン、テキスト名
-        mTmpNodes.setAllNodeBorderColor(mColors[second]);
-        mTmpNodes.setAllNodeLineColor(mColors[second]);
-        mTmpNodes.setAllNodeTxColor(mColors[second]);
+        mTmpNodes.setAllNodeBorderColor(mSelectedColors[second]);
+        mTmpNodes.setAllNodeLineColor(mSelectedColors[second]);
+        mTmpNodes.setAllNodeTxColor(mSelectedColors[second]);
 
         //ノード背景色、影色
-        mTmpNodes.setAllNodeBgColor(mColors[third]);
-        mTmpNodes.setAllNodeShadowColor(mColors[third]);
+        mTmpNodes.setAllNodeBgColor(mSelectedColors[third]);
+        mTmpNodes.setAllNodeShadowColor(mSelectedColors[third]);
 
         //現在の色を保持
-        mCurrentColors[0] = mColors[first];
-        mCurrentColors[1] = mColors[second];
-        mCurrentColors[2] = mColors[third];
+        mCurrentColors[0] = mSelectedColors[first];
+        mCurrentColors[1] = mSelectedColors[second];
+        mCurrentColors[2] = mSelectedColors[third];
     }
 
     /*
@@ -380,6 +368,13 @@ public class SampleMapView extends FrameLayout {
         return mCurrentColors;
     }
 
+    /*
+     * 現在設定中の影の有無を取得
+     */
+    public boolean isMapShadow() {
+        RootNodeView rootNodeView = findViewById(R.id.v_rootNode);
+        return rootNodeView.isShadow();
+    }
 
     public String getMapName() {
         return mMapName;

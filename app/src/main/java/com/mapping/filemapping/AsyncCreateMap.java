@@ -18,7 +18,6 @@ public class AsyncCreateMap {
     private final AppDatabase       mDB;
     private final MapTable          mMap;
     private       int               mMapPid;
-    private       String            mRootNodeName;
     private final OnFinishListener  mOnFinishListener;
 
 
@@ -31,18 +30,6 @@ public class AsyncCreateMap {
         mOnFinishListener = listener;
         mMap              = map;
     }
-
-    /*
-     * コンストラクタ
-     */
-    public AsyncCreateMap(Context context, MapTable map, String rootNodeName, OnFinishListener listener) {
-        mContext          = context;
-        mDB               = AppDatabaseManager.getInstance(context);
-        mOnFinishListener = listener;
-        mMap              = map;
-        mRootNodeName     = rootNodeName;
-    }
-
 
     /*
      * 非同期処理
@@ -93,6 +80,8 @@ public class AsyncCreateMap {
             //カラーパターン設定
             String[] colors = mMap.getDefaultColors();
             rootNode.setColorPattern( colors );
+            //影の有無を設定
+            rootNode.setShadow( mMap.isShadow() );
 
             //新規挿入
             nodeDao.insert( rootNode );

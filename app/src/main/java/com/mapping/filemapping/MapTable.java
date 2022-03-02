@@ -98,7 +98,7 @@ public class MapTable implements Serializable {
     public String getMapColor() { return mapColor; }
     public void setMapColor(String mapColor) { this.mapColor = mapColor; }
 
-    public boolean getIsShadow() { return isShadow; }
+    public boolean isShadow() { return isShadow; }
     public void setIsShadow(boolean isShadow) { this.isShadow = isShadow;}
 
     /*

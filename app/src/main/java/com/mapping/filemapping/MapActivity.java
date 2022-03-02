@@ -209,10 +209,11 @@ public class MapActivity extends AppCompatActivity {
         db.execute();
 
         //マップ色を設定
-        String firstColor = mMap.getFirstColor();
+        setMapColor();
+/*        String firstColor = mMap.getFirstColor();
         if (firstColor != null) {
             setMapColor(firstColor);
-        }
+        }*/
 
         //ルートノード
         RootNodeView v_rootnode = findViewById(R.id.v_rootnode);
@@ -293,8 +294,16 @@ public class MapActivity extends AppCompatActivity {
     /*
      * マップ背景色の設定
      */
-    public void setMapColor(String color) {
+    private void setMapColor() {
+        //マップ色の設定
+        String color = mMap.getMapColor();
+        setMapColor( color );
+    }
 
+    /*
+     * マップ背景色の設定
+     */
+    public void setMapColor(String color) {
         int value = Color.parseColor(color);
 
         //マップ全体
@@ -308,6 +317,13 @@ public class MapActivity extends AppCompatActivity {
      */
     public String[] getMapDefaultColors() {
         return mMap.getDefaultColors();
+    }
+
+    /*
+     * マップの影の有無を取得
+     */
+    public boolean isMapShadow() {
+        return mMap.isShadow();
     }
 
     /*
@@ -491,21 +507,11 @@ public class MapActivity extends AppCompatActivity {
         //マップレイアウト（ノード追加先）
         FrameLayout fl_map = findViewById(R.id.fl_map);
 
-        //ライン描画種別
-        //int lineDrawKind = NodeGlobalLayoutListener.LINE_NONE;
-
         //全ノード数ループ
         int nodeNum = mNodes.size();
         for (int i = 0; i < nodeNum; i++) {
-
             //対象ノード
             NodeTable node = mNodes.get(i);
-
-            //最後のノードなら、全てのラインを描画
-            //if (i == (nodeNum - 1)) {
-            //    lineDrawKind = NodeGlobalLayoutListener.LINE_ALL;
-            //}
-
             //ノードを描画
             drawNode(fl_map, node);
         }
@@ -530,7 +536,6 @@ public class MapActivity extends AppCompatActivity {
             nodeView.addOnNodeGlobalLayoutListener();
 
         } else {
-
             //ビュー生成
             nodeView = ( (node.getKind() == NodeTable.NODE_KIND_NODE)
                             ? new NodeView(this, node)

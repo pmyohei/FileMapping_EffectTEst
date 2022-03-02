@@ -311,6 +311,8 @@ public class ToolIconsView extends ConstraintLayout {
                         //カラーパターン設定
                         String[] colors = mMapActivity.getMapDefaultColors();
                         newNode.setColorPattern( colors );
+                        //影の有無を設定
+                        newNode.setShadow( mMapActivity.isMapShadow() );
 
                         //ノードをマップに追加
                         BaseNode v_node = mMapActivity.drawNode( mMapActivity.findViewById(R.id.fl_map), newNode );

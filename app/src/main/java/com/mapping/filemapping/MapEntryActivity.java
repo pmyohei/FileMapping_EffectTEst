@@ -204,10 +204,16 @@ public class MapEntryActivity extends AppCompatActivity {
                 SampleMapView smv = findViewById(R.id.fl_map);
                 String[] colors = smv.getCurrentColors();
 
+                //マップ色
+                mMap.setMapColor( colors[0] );
+
                 //デフォルトカラー
                 mMap.setFirstColor( colors[0] );
                 mMap.setSecondColor( colors[1] );
                 mMap.setThirdColor( colors[2] );
+
+                //影の有無
+                mMap.setIsShadow( smv.isMapShadow() );
             }
 
             //入力マップ名を設定

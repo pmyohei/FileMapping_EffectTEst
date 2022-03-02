@@ -64,10 +64,24 @@ public class NodeOutsideView extends LinearLayout {
         }
 
         if( isShadow ){
-            //影の設定
-            int width = findViewById(R.id.cv_node).getWidth();
-            mPaint.setShadowLayer((width / 8f), 0, 0, mShadowColor);
+            //影の最小・最大値
+            final float MIN_RADIUS = 22f;
+            final float MAX_RADIUS = 48f;
 
+            float nodeRadius = findViewById(R.id.cv_node).getWidth() / 8f;
+
+            //最大最小チェック
+            //※最小限のサイズと最大サイズを設定
+            if( nodeRadius < MIN_RADIUS ){
+                nodeRadius = MIN_RADIUS;
+            } else if( nodeRadius > MAX_RADIUS ){
+                nodeRadius = MAX_RADIUS;
+            }
+
+            //影の設定
+            mPaint.setShadowLayer(nodeRadius, 0, 0, mShadowColor);
+
+            //Log.i("影範囲", "設定値=" + nodeRadius);
         } else {
             //影を削除
             mPaint.clearShadowLayer();

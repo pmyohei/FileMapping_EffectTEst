@@ -534,7 +534,6 @@ public class ChildNode extends BaseNode {
                         if (mLineView == null) {
 
                             //親の中心座標を取得
-                            //float parentCenterX = parentNode.getCenterPosX();
                             float parentCenterY = parentNode.getCenterPosY();
                             if (parentCenterY == INIT_CENTER_POS) {
                                 //親ノードのレイアウトが未確定なら、次のコールバックを待つ
@@ -544,8 +543,6 @@ public class ChildNode extends BaseNode {
 
                             //ライン未生成なら、生成
                             LineView line = createLine(parentNode.getNodeView());
-
-                            Log.i("OnGlobalLayoutListener", "通過チェック");
 
                             //マップ上にラインを追加
                             ViewGroup vg = (ViewGroup) getRootView();
@@ -557,12 +554,15 @@ public class ChildNode extends BaseNode {
                             mLineView.reDraw();
                         }
 
+                        //影色
+                        //※影の設定はレイアウト確定後に反映（ノードサイズからぼかし半径を設定しているため）
+                        setShadowColor(mNode.getShadowColor(), mNode.getKind());
+
                         //レイアウト確定後は、不要なので本リスナー削除
                         getViewTreeObserver().removeOnGlobalLayoutListener(this);
                     }
                 }
         );
-
     }
 
 

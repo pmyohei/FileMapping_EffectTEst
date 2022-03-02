@@ -46,20 +46,7 @@ public class NodeView extends ChildNode implements Serializable {
      * 初期化処理
      */
     private void initNode() {
-
         Log.i("NodeView", "init");
-
-        //ツールアイコン設定
-        setNodeToolIcon();
-    }
-
-    /*
-     * ツールアイコン設定
-     */
-    public void setNodeToolIcon() {
-
-        //ノードの別マップ化
-
     }
 
 }
