@@ -308,11 +308,14 @@ public class ToolIconsView extends ConstraintLayout {
                                 posY
                         );
 
+                        MapCommonData mapCommonData = (MapCommonData) mMapActivity.getApplication();
+                        MapTable map = mapCommonData.getMap();
+
                         //カラーパターン設定
-                        String[] colors = mMapActivity.getMapDefaultColors();
+                        String[] colors = map.getDefaultColors();
                         newNode.setColorPattern( colors );
                         //影の有無を設定
-                        newNode.setShadow( mMapActivity.isMapShadow() );
+                        newNode.setShadow( map.isShadow() );
 
                         //ノードをマップに追加
                         BaseNode v_node = mMapActivity.drawNode( mMapActivity.findViewById(R.id.fl_map), newNode );
@@ -362,7 +365,7 @@ public class ToolIconsView extends ConstraintLayout {
                         Intent intent = new Intent(context, PictureTrimmingActivity.class);
                         intent.putExtra(MapActivity.INTENT_MAP_PID, node.getPidMap());
                         intent.putExtra(MapActivity.INTENT_NODE_PID, node.getPid());
-                        intent.putExtra(MapActivity.INTENT_COLORS, mMapActivity.getMapDefaultColors());
+                        //intent.putExtra(MapActivity.INTENT_COLORS, mMapActivity.getMapDefaultColors());
 
                         //開始
                         mMapActivity.getTrimmingLauncher().launch(intent);
@@ -466,7 +469,6 @@ public class ToolIconsView extends ConstraintLayout {
                 break;
 
             case TooliconData.CHANGE_PARENT:
-
                 listener = new OnClickListener() {
                     @Override
                     public void onClick(View view) {
@@ -500,7 +502,6 @@ public class ToolIconsView extends ConstraintLayout {
                 listener = new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.i("アイコン", "クリックされました ADD_PICTURE");
 
                         //写真を一覧で表示
                         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);

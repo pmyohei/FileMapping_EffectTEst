@@ -73,7 +73,7 @@ public class PictureArrayList<E> extends ArrayList<PictureTable> implements Seri
 
         for (PictureTable picture : this) {
             //同じ絶対パスがあれば、true
-            if (path.equals(picture.getPath())) {
+            if (path.equals( picture.getPath() )) {
                 return true;
             }
         }

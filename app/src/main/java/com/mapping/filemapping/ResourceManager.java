@@ -6,6 +6,7 @@ import android.app.Activity;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
+import android.database.DatabaseUtils;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
@@ -18,6 +19,8 @@ import android.view.WindowMetrics;
 
 import androidx.core.content.res.ResourcesCompat;
 
+import java.io.File;
+import java.io.FileFilter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -109,36 +112,83 @@ public class ResourceManager {
      */
     public static String getPathFromUri(Context context, Uri uri) {
 
-        String path = null;
+        Log.i("URI変換", "対象のuri=" + uri);
 
         ContentResolver contentResolver = context.getContentResolver();
+
+        //String mimeType = contentResolver.getType(uri);
+        //Log.i("URI変換", "mimeType=" + mimeType);
 
         //対象フィールド
         String[] columns = {
                 MediaStore.Images.Media.DATA
         };
 
+        //DocumentId 文字列を取得
+        //例）「image:26」（画像フォルダ配下の場合）
+        String wholeId = DocumentsContract.getDocumentId(uri);
+        String[] wholeIdSplit = wholeId.split(":");
+        if( wholeIdSplit.length <= 1 ){
+            //「:」がなければMediaではないURIとみなす
+            Log.i("URI変換", "wholeId=" + wholeId);
+            return null;
+        }
+
         //検索条件
         String where = MediaStore.Images.Media._ID + "=?";
-        String wholeId = DocumentsContract.getDocumentId(uri);
-        String id = wholeId.split(":")[1];
+        //idを取得
+        //例）「image:26」から「26」を取得
+        String id = wholeIdSplit[1];
 
         //クエリ発行
         Cursor cursor = contentResolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, where, new String[]{id}, null);
 
-        //Log.i("URI", "dump cursor:" + DatabaseUtils.dumpCursorToString(cursor));
+        Log.i("URI変換", "dump cursor:" + DatabaseUtils.dumpCursorToString(cursor));
+
+        String path = null;
+        if (cursor.moveToFirst()) {
+            //絶対パスを取得
+            path = cursor.getString(cursor.getColumnIndexOrThrow(columns[0]));
+
+            File file = new File( path );
+            if( !file.isFile() ){
+                //念のためファイルとして生成できるパスか確認
+                //File認定されなければ、変換エラーとする
+                return null;
+            }
+        }
+
+        cursor.close();
+        return path;
+
+
+/*        //検索条件
+        String where = MediaStore.Images.Media._ID + "=?";
+        String wholeId = DocumentsContract.getDocumentId(uri);
+        Log.i("URI変換", "wholeId=" + wholeId);
+        String[] wholeIdSplit = wholeId.split(":");
+        if( wholeIdSplit.length <= 1 ){
+            return null;
+        }
+        String id = wholeIdSplit[1];
+
+        //クエリ発行
+        Cursor cursor = contentResolver.query(
+                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, where, new String[]{id}, null);
+
+        Log.i("URI変換", "dump cursor:" + DatabaseUtils.dumpCursorToString(cursor));
 
         if (cursor.moveToFirst()) {
             //絶対パスを取得
             path = cursor.getString(cursor.getColumnIndexOrThrow(columns[0]));
 
-            Log.i("URI", "path=" + path);
+            Log.i("URI変換", "path=" + path);
         }
 
         cursor.close();
 
-        return path;
+        return path;*/
     }
 
 

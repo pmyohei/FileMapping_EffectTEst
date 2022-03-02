@@ -113,19 +113,20 @@ public class MapActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
 
+        //マップ共通データ初期化
+        MapCommonData mapCommonData = (MapCommonData) getApplication();
+        mapCommonData.init();
+
         //遷移元からのデータ
         Intent intent = getIntent();
         mMap = (MapTable) intent.getSerializableExtra(MapListActivity.KEY_MAP);
+        mapCommonData.setMap( mMap );
 
         //ツールバー設定
         initToolBar();
 
         //フリング用スクロール生成
         mFlingScroller = new Scroller(this, new DecelerateInterpolator());
-
-        //マップ共通データ初期化
-        MapCommonData mapCommonData = (MapCommonData) getApplication();
-        mapCommonData.init();
 
         //ピンチ比率取得
         pinchDistanceRatioX = mapCommonData.getPinchDistanceRatioX();
@@ -210,10 +211,6 @@ public class MapActivity extends AppCompatActivity {
 
         //マップ色を設定
         setMapColor();
-/*        String firstColor = mMap.getFirstColor();
-        if (firstColor != null) {
-            setMapColor(firstColor);
-        }*/
 
         //ルートノード
         RootNodeView v_rootnode = findViewById(R.id.v_rootnode);
@@ -262,6 +259,7 @@ public class MapActivity extends AppCompatActivity {
             }
         });
         */
+        /*--  --*/
 
         //クリックリスナー
         toolbar.setOnClickListener(new View.OnClickListener() {
@@ -313,20 +311,6 @@ public class MapActivity extends AppCompatActivity {
     }
 
     /*
-     * マップのデフォルトカラーを取得
-     */
-    public String[] getMapDefaultColors() {
-        return mMap.getDefaultColors();
-    }
-
-    /*
-     * マップの影の有無を取得
-     */
-    public boolean isMapShadow() {
-        return mMap.isShadow();
-    }
-
-    /*
      * 画面遷移用ランチャー（トリミング画面）を取得
      */
     public ActivityResultLauncher<Intent> getTrimmingLauncher() {
@@ -337,7 +321,6 @@ public class MapActivity extends AppCompatActivity {
      * 画面遷移用ランチャー（画像ギャラリー）を取得
      */
     public ActivityResultLauncher<Intent> getGalleryLauncher() {
-
         return mGalleryLauncher;
     }
 
@@ -380,17 +363,6 @@ public class MapActivity extends AppCompatActivity {
                 new ToolIconsView(this, (BaseNode) node, MapActivity.this),
                 new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
     }
-
-    /*
-     * デザインボトムシートのオープン状態をチェック
-     */
-/*    private boolean isOpenDesignBottomSheet() {
-
-        //BottomSheet
-        DesignBottomSheet l_bottomSheet = findViewById(R.id.dbs_design);
-
-        return ;
-    }*/
 
     /*
      * 親ノード変更の確認
@@ -568,70 +540,6 @@ public class MapActivity extends AppCompatActivity {
 
         //ノードビューを保持
         node.setNodeView(nodeView);
-
-/*        //ルートノード
-        if (node.getKind() == NodeTable.NODE_KIND_ROOT) {
-            //元々レイアウト上にあるルートノード名を変更し、中心座標を保持
-            RootNodeView rootNodeView = findViewById(R.id.v_rootnode);
-
-            Log.i("アイコン", "ルートノードの位置 左=" + rootNodeView.getLeft() + " 上=" + rootNodeView.getTop());
-
-            //ビューにノード情報を設定
-            rootNodeView.setNode(node);
-            //中心座標を設定
-            rootNodeView.addOnNodeGlobalLayoutListener();
-            //NodeTable側でノードビューを保持
-            node.setNodeView(rootNodeView);
-            //ノードクリックリスナー
-            rootNodeView.setOnNodeClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View view) {
-                        nodeClickListener( view );
-                    }
-                }
-            );
-
-            return rootNodeView;
-        }
-
-        //ノード生成
-        ChildNode nodeView;
-        if (node.getKind() == NodeTable.NODE_KIND_NODE) {
-            //ノード
-            nodeView = new NodeView(this, node);
-        } else {
-            //ピクチャノード
-            nodeView = new PictureNodeView(this, node);
-        }
-
-        //ノードをマップに追加
-        fl_map.addView(nodeView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
-
-        //位置設定
-        //※レイアウト追加後に行うこと（MarginLayoutParamsがnullになってしまうため）
-        int left = node.getPosX();
-        int top  = node.getPosY();
-
-        ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) nodeView.getLayoutParams();
-        mlp.setMargins(left, top, mlp.rightMargin, mlp.bottomMargin);
-
-        Log.i("createNode", "setMargins left=" + left + " top=" + top + " mlp.rightMargin=" + mlp.rightMargin + " mlp.bottomMargin=" + mlp.bottomMargin);
-        Log.i("createNode", "getWidth=" + nodeView.getWidth() + " getHeight=" + nodeView.getHeight());
-
-        //レイアウト確定後の処理を設定
-        ((ChildNode) nodeView).addOnNodeGlobalLayoutListener();
-
-        //ノードクリックリスナー
-        nodeView.setOnNodeClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    nodeClickListener( view );
-                }
-            }
-        );
-
-        //ノードビューを保持
-        node.setNodeView(nodeView);*/
 
         return nodeView;
     }
@@ -1343,6 +1251,9 @@ public class MapActivity extends AppCompatActivity {
                 //絶対pathリスト
                 PictureArrayList<PictureTable> pictures = new PictureArrayList<>();
 
+                //パスエラーが発生したかどうか
+                boolean isPathError = false;
+
                 ClipData clipData = intent.getClipData();
                 if( clipData == null ){
                     //選択枚数1枚
@@ -1350,11 +1261,15 @@ public class MapActivity extends AppCompatActivity {
                     //絶対パスを取得
                     Uri contentUri = intent.getData();
                     String path = ResourceManager.getPathFromUri(mContext, contentUri);
-
-                    //ピクチャデータをリストに追加
-                    pictures.add(
-                            new PictureTable(mapPid, nodePid, path)
-                    );
+                    if (path == null ) {
+                        //絶対パスの取得に失敗した場合
+                        isPathError = true;
+                    } else {
+                        //ピクチャデータをリストに追加
+                        pictures.add(
+                                new PictureTable(mapPid, nodePid, path)
+                        );
+                    }
 
                 } else{
                     //選択写真数
@@ -1367,7 +1282,7 @@ public class MapActivity extends AppCompatActivity {
                         String path = ResourceManager.getPathFromUri(mContext, contentUri);
                         if (path == null ) {
                             //絶対パスの取得に失敗した場合
-                            Log.i("URI", "絶対パス取得エラー");
+                            isPathError = true;
                             continue;
                         }
 
@@ -1375,15 +1290,20 @@ public class MapActivity extends AppCompatActivity {
                         pictures.add(
                                 new PictureTable(mapPid, nodePid, path)
                         );
-
-                        Log.i("ギャラリーに追加", "path=" + path);
                     }
                 }
 
+                //追加写真がなければ終了
                 if( pictures.size() == 0 ){
-                    //追加写真がなければ終了
+                    if( isPathError ){
+                        //格納失敗のメッセージを表示
+                        Toast.makeText(mContext, mContext.getString(R.string.toast_storeError), Toast.LENGTH_LONG).show();
+                    }
                     return;
                 }
+
+                //格納した旨のメッセージを表示
+                Toast.makeText(mContext, mContext.getString(R.string.toast_storePicture), Toast.LENGTH_LONG).show();
 
                 //DBにピクチャデータとして保存
                 //DB保存処理

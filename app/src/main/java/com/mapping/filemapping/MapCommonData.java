@@ -19,6 +19,8 @@ public class MapCommonData extends Application {
     private float pinchDistanceRatioY = 1.0f;
 
     //マップ内のノードリスト
+    private MapTable mMap;
+    //マップ内のノードリスト
     private NodeArrayList<NodeTable> mNodes;
     //マップ内のサムネイルリスト
     //★不要な見込み
@@ -49,13 +51,14 @@ public class MapCommonData extends Application {
         mColorHistory = new ArrayList<>();
     }
 
-    /**
+    /*
      * アプリケーション終了時に呼び出される
      */
     @Override
     public void onTerminate() {
         super.onTerminate();
 
+        mMap = null;
         mNodes = null;
         mUpdateNodeQue = null;
         mThumbnails = null;
@@ -82,6 +85,12 @@ public class MapCommonData extends Application {
         pinchDistanceRatioY = 1.0f;
     }
 
+    public void setMap( MapTable map ){
+        mMap = map;
+    }
+    public MapTable getMap(){
+        return mMap;
+    }
 
     /*
      * マップPidを取得

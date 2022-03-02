@@ -16,13 +16,11 @@ import androidx.core.content.ContextCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -48,9 +46,7 @@ import com.google.android.gms.ads.AdView;
 import com.google.android.material.card.MaterialCardView;
 import com.isseiaoki.simplecropview.CropImageView;
 import com.squareup.picasso.Callback;
-import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
 
 import java.io.FileDescriptor;
 import java.io.IOException;
@@ -64,8 +60,9 @@ public class PictureTrimmingActivity extends AppCompatActivity {
     private boolean mIsLayout;
     //画像回転有無
     private boolean mIsRotate;
-    //選択画像のURI
+    //選択画像のURI／Path
     private Uri mUri;
+    private String mPath;
     //サムネイルリスト
     private PictureArrayList<PictureTable> mThumbnails;
 
@@ -102,8 +99,8 @@ public class PictureTrimmingActivity extends AppCompatActivity {
                 mThumbnails = thumbnails;
             }
         });
-
         db.execute();
+
 
         Context context = this;
 
@@ -123,24 +120,21 @@ public class PictureTrimmingActivity extends AppCompatActivity {
                         if (intent != null) {
                             //コンテンツURIを取得
                             mUri = intent.getData();
+                            mPath = ResourceManager.getPathFromUri( context, mUri );
+
+                            //パス生成エラーの場合、
+                            if( mPath == null ){
+                                //端末の画像フォルダから選択する旨を表示
+                                //※画像フォルダからアクセスしていないとみなす
+                                showDisableDirectoryAlertDialog();
+                                return;
+                            }
 
                             //同じ画像がサムネイルとして既にあるなら、もう一度ギャラリーを表示
-                            boolean hasThumnbnail = hasThumbnail(mUri);
+                            boolean hasThumnbnail = hasThumbnail();
                             if( hasThumnbnail ){
-                                //既にサムネイルとして使用している旨を表示
-                                new AlertDialog.Builder(context)
-                                    .setTitle( getString(R.string.alert_trimming_sameThumbnail_title) )
-                                    .setMessage( getString(R.string.alert_trimming_sameThumbnail_message) )
-                                    .setPositiveButton(getString(R.string.alert_trimming_sameThumbnail_ok), new DialogInterface.OnClickListener() {
-                                        @Override
-                                        public void onClick(DialogInterface dialog, int which) {
-                                            //端末ギャラリーを開く
-                                            openPictureGallery();
-                                        }
-                                    })
-                                    .setCancelable(false)   //キャンセル不可（ボタン押下しない限り閉じない）
-                                    .show();
-
+                                //同じ画像が既に設定されている旨を表示
+                                showSameThumbnailAlertDialog();
                                 return;
                             }
 
@@ -209,19 +203,58 @@ public class PictureTrimmingActivity extends AppCompatActivity {
     }
 
     /*
+     *　画像フォルダ以外のフォルダの画像が選択された時のアラートダイアログを表示
+     */
+    private void showDisableDirectoryAlertDialog() {
+
+        //既にサムネイルとして使用している旨を表示
+        new AlertDialog.Builder(this)
+            .setTitle( getString(R.string.alert_trimming_disableDirectory_title) )
+            .setMessage( getString(R.string.alert_trimming_disableDirectory_message) )
+            .setPositiveButton(getString(R.string.alert_trimming_anotherPicture_ok), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //端末ギャラリーを開く
+                    openPictureGallery();
+                }
+            })
+            .setCancelable(false)   //キャンセル不可（ボタン押下しない限り閉じない）
+            .show();
+    }
+
+    /*
+     *　既にあるサムネイル写真選択時のアラートダイアログを表示
+     */
+    private void showSameThumbnailAlertDialog() {
+
+        //既にサムネイルとして使用している旨を表示
+        new AlertDialog.Builder(this)
+            .setTitle( getString(R.string.alert_trimming_sameThumbnail_title) )
+            .setMessage( getString(R.string.alert_trimming_sameThumbnail_message) )
+            .setPositiveButton(getString(R.string.alert_trimming_anotherPicture_ok), new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //端末ギャラリーを開く
+                    openPictureGallery();
+                }
+            })
+            .setCancelable(false)   //キャンセル不可（ボタン押下しない限り閉じない）
+            .show();
+    }
+
+
+    /*
      *　サムネイルが既にあるかどうか
      *    ただし、設定中の画像であれば、なしとする（トリミング範囲の変更であるため）
      */
-    private boolean hasThumbnail( Uri uri ) {
-        //パス
-        String path = ResourceManager.getPathFromUri(this, uri);
+    private boolean hasThumbnail() {
 
         //遷移元からの情報
         Intent intent = getIntent();
         boolean isEdit = intent.getBooleanExtra(MapActivity.INTENT_EDIT, false);
 
         //マップ上に同じ画像があるかどうか
-        boolean has = mThumbnails.hasPicture( path );
+        boolean has = mThumbnails.hasPicture( mPath );
 
         if( !isEdit ){
             //新規作成なら、有無の結果をそのまま返す
@@ -233,9 +266,9 @@ public class PictureTrimmingActivity extends AppCompatActivity {
             return false;
         }
 
-        //ある場合でも、変更対象のノードに割りあたっている画像なら選択可能（なし扱い）とする
+        //ある場合でも、変更対象のノードに現在割りあたっている画像なら選択可能（なし扱い）とする
         int selectedNodePid = intent.getIntExtra(MapActivity.INTENT_NODE_PID, 0);
-        if( mThumbnails.getPicture( selectedNodePid, path ) != null ){
+        if( mThumbnails.getPicture( selectedNodePid, mPath ) != null ){
             return false;
         }
 
@@ -317,14 +350,10 @@ public class PictureTrimmingActivity extends AppCompatActivity {
             return;
         }
 
-        //向きを取得
-        String path = ResourceManager.getPathFromUri(this, mUri);
-
         //画面の向きを取得
         int orientation = ORIENTATION_NORMAL;
         try {
-            //向き情報を取得
-            ExifInterface exifInterface = new ExifInterface(path);
+            ExifInterface exifInterface = new ExifInterface( mPath );
             orientation = Integer.parseInt(exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION));
 
         } catch (Exception e) {
@@ -332,7 +361,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         }
 
         //トリミング対象の画像
-        //※画像の割り当て完了後、画像の向きに合わせた回転が行われる
+        //※画像の割り当て完了後、画像の向きに合わせた回転を行う
         final CropImageView iv_cropSource = findViewById(R.id.iv_cropSource);
         Picasso.get()
                 .load(mUri)
@@ -430,26 +459,21 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         //遷移元からの情報
         Intent intent = getIntent();
         int selectedNodePid = intent.getIntExtra(MapActivity.INTENT_NODE_PID, 0);
-        String[] colors = (String[]) intent.getSerializableExtra( MapActivity.INTENT_COLORS );
 
         //マップ共通データ
         MapCommonData mapCommonData = (MapCommonData) getApplication();
+        MapTable map = mapCommonData.getMap();
+
+        //String[] colors = (String[]) intent.getSerializableExtra( MapActivity.INTENT_COLORS );
+        String[] colors = map.getDefaultColors();
 
         //ノード初期位置を親ノードの中心位置から一定の距離離した位置にする
         NodeTable parentNode = mapCommonData.getNodeInMap(selectedNodePid);
         int posX = (int) parentNode.getCenterPosX() + ResourceManager.POS_NODE_INIT_OFFSET;
         int posY = (int) parentNode.getCenterPosY();
 
-        //絶対パスを取得
-        String path = ResourceManager.getPathFromUri(this, mUri);
-        if ( path == null ) {
-            //絶対パスの取得に失敗した場合
-            Toast.makeText(this, getString(R.string.toast_error), Toast.LENGTH_SHORT).show();
-            return;
-        }
-
         //マップPID
-        int mapPid = parentNode.getPidMap();
+        int mapPid = map.getPid();
 
         //ピクチャノードを生成
         NodeTable newNode = new NodeTable(
@@ -464,6 +488,8 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         newNode.setColorPattern( colors );
         //形状の設定
         newNode.setNodeShape( getNodeShape() );
+        //影の有無を設定
+        newNode.setShadow( map.isShadow() );
 
         //トリミング情報
         final CropImageView iv_cropSource = findViewById(R.id.iv_cropSource);
@@ -486,7 +512,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         PictureTable picture = new PictureTable(
                 mapPid,
                 PictureTable.UNKNOWN,   //ピクチャノードのpidも未確定
-                path);
+                mPath);
         //トリミング情報を設定
         picture.setTrimmingInfo( rectInfo, width, height );
 
@@ -579,14 +605,6 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         int mapPid = intent.getIntExtra(MapActivity.INTENT_MAP_PID, 0);
         int pictureNodePid = intent.getIntExtra(MapActivity.INTENT_NODE_PID, 0);
 
-        //絶対パスを取得
-        String path = ResourceManager.getPathFromUri(this, mUri);
-        if (path == null ) {
-            //絶対パスの取得に失敗した場合
-            Toast.makeText(this, getString(R.string.toast_error), Toast.LENGTH_SHORT).show();
-            finish();
-        }
-
         //トリミング情報
         final CropImageView iv_cropTarget = findViewById(R.id.iv_cropSource);
         RectF rectInfo = iv_cropTarget.getActualCropRect();
@@ -601,7 +619,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         PictureTable picture = new PictureTable(
                 mapPid,
                 pictureNodePid,
-                path);
+                mPath);
         //トリミング情報を設定
         picture.setTrimmingInfo( rectInfo, width, height );
 

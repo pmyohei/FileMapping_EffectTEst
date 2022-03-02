@@ -33,17 +33,21 @@
     <string name="alert_trimming_ui_message">この画像では、切り取り範囲は切り取り線から指を離したタイミングで反映されます。</string>
     <string name="alert_trimming_sameThumbnail_title">別の画像選択</string>
     <string name="alert_trimming_sameThumbnail_message">同じ画像をサムネイルとして既に使用しています。</string>
-    <string name="alert_trimming_sameThumbnail_ok">別の画像を選択</string>
+    <string name="alert_trimming_disableDirectory_title">もう一度選択してください</string>
+    <string name="alert_trimming_disableDirectory_message">「画像」フォルダから写真を選択してください。</string>
+    <string name="alert_trimming_anotherPicture_ok">別の画像を選択</string>
 
     <!-- トースト -->
     <string name="toast_error">エラーが発生しました</string>
-    <string name="toast_deletePicture">写真を削除しました</string>
+    <string name="toast_deletePicture">画像を削除しました</string>
     <string name="toast_errorChangeParent">親ノードにできないノードです</string>
     <string name="toast_nowParent">現在の親ノードです</string>
     <string name="toast_childNode">子ノードを親ノードにはできません</string>
     <string name="toast_errorMapName">マップ名を入力してください</string>
-    <string name="toast_samePicture">既に同じ写真があります</string>
+    <string name="toast_samePicture">既に同じ画像があります</string>
     <string name="toast_errorGetPath">失敗しました</string>
+    <string name="toast_storePicture">画像を格納しました\n（同じ画像は格納されません）</string>
+    <string name="toast_storeError">エラー：画像フォルダから選択して下さい</string>
 
     <!--  マップ生成画面  -->
     <string name="map_create_tab1">マップ名</string>
@@ -101,7 +105,7 @@
     <!-- フォルダツリー -->
     <string name="tree_title">ノード一覧\n（クリックで画面中央へ移動）</string>
     <string name="no_nodeName">（ノード名なし）</string>
-    <string name="no_nodeNamePictureNode">〇ピクチャノード</string>
+    <string name="no_nodeNamePictureNode">ピクチャ</string>
     <string name="top_nodeName">・</string>
 
     <!-- ガイド -->
