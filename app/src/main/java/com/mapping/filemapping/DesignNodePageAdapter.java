@@ -1,5 +1,6 @@
 package com.mapping.filemapping;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Typeface;
 import android.text.Editable;
@@ -9,11 +10,13 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -55,6 +58,8 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
         private ColorSelectionView csv_border;
         private SeekbarView  sbv_borderSize;
         private ColorSelectionView csv_shadow;
+        @SuppressLint("UseSwitchCompatOrMaterialCode")
+        private Switch sw_shadow;
 
         /*--- ライン ---*/
         private ColorSelectionView csv_line;
@@ -115,6 +120,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
 
                 case 7:
                     //影色
+                    sw_shadow = itemView.findViewById(R.id.sw_shadow);
                     csv_shadow = itemView.findViewById(R.id.csv_shadow);
                     break;
 
@@ -261,7 +267,16 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
             csv_shadow.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_SHADOW, mv_node );
 
             //影のon/off
+            sw_shadow.setChecked( mv_node.isShadow() );
+            sw_shadow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    //影の状態を反転
+                    mv_node.switchShadow();
+                }
+            });
         }
+
         /*
          * ページ設定（８）
          */

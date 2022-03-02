@@ -1,5 +1,6 @@
 package com.mapping.filemapping;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Typeface;
@@ -7,9 +8,11 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -50,6 +53,8 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         private SeekbarView  sbv_nodeSize;
         private TextView tv_titel_nodeSize;
         private ColorSelectionView csv_shadow;
+        @SuppressLint("UseSwitchCompatOrMaterialCode")
+        private Switch sw_shadow;
 
         //ラインデザイン
         private ColorSelectionView csv_line;
@@ -107,7 +112,8 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
                     break;
 
                 case 7:
-                    //影色
+                    //影
+                    sw_shadow = itemView.findViewById(R.id.sw_shadow);
                     csv_shadow = itemView.findViewById(R.id.csv_shadow);
                     break;
 
@@ -246,6 +252,20 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         private void setPage7() {
             //影色
             csv_shadow.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_SHADOW, mv_map );
+
+            //マップ共通データ
+            MapCommonData commonData = (MapCommonData)((Activity)mv_map.getContext()).getApplication();
+            MapTable map = commonData.getMap();
+
+            //影のon/off
+            sw_shadow.setChecked( map.isShadow() );
+            sw_shadow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    //全ノードの影の状態を反転
+                    commonData.getNodes().setAllNodeShadow( b );
+                }
+            });
         }
 
         /*

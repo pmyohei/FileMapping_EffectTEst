@@ -412,7 +412,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
 
         //リストの内のノードすべて
         for( NodeTable node: this ){
-            node.getNodeView().setShadowOnOff( isShadow, node.getKind()  );
+            node.getNodeView().setShadowOnOff( isShadow  );
         }
     }
 
@@ -423,7 +423,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
 
         //リストの内のノードすべて
         for( NodeTable node: this ){
-            node.getNodeView().switchShadow( node.getKind() );
+            node.getNodeView().switchShadow();
         }
     }
 

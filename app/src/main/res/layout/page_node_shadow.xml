@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -16,6 +17,35 @@
             android:layout_height="wrap_content"
             android:paddingTop="@dimen/design_bottom_sheet_top_padding"
             android:orientation="vertical">
+
+            <Switch
+                android:id="@+id/sw_shadow"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:showText="false"
+                android:checked="true"
+                android:theme="@style/toggle"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_gravity="center"
+                android:text="@string/shadow_on_off"
+                android:textSize="18sp"
+                android:textColor="@color/black" />
+
+            <!--  仕切り線  -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:background="@color/transparent_50_black"/>
 
             <com.mapping.filemapping.ColorSelectionView
                 android:id="@+id/csv_shadow"

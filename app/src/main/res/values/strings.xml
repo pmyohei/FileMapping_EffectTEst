@@ -95,12 +95,14 @@
     <string name="font_sample_alphabet">A</string>
     <string name="font_sample_japanese">あ</string>
 
-    <string name="color_rgb">RGB</string>
-    <string name="color_graphic">Graphic</string>
+    <string name="color_rgb">コード</string>
+    <string name="color_graphic">パレット</string>
 
     <string name="size_node">ノードサイズ</string>
     <string name="size_border">枠の太さ</string>
     <string name="size_line">ラインの太さ</string>
+
+    <string name="shadow_on_off">on／off</string>
 
     <!-- フォルダツリー -->
     <string name="tree_title">ノード一覧\n（クリックで画面中央へ移動）</string>
