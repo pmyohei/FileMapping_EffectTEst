@@ -9,6 +9,10 @@
     <dimen name="picture_node_default_size">100dp</dimen>
     <dimen name="node_shape_sample_size">40dp</dimen>
 
+    <!--  サンプルマップ  -->
+    <dimen name="change_color_pattern_icon">36dp</dimen>
+    <dimen name="switch_shadow_icon">36dp</dimen>
+
     <!--  ノードアイコンマージン（初期値）  -->
     <dimen name="node_icon_default_radius">100dp</dimen>
     <dimen name="node_icon_parent_padding">24dp</dimen>
@@ -40,6 +44,10 @@
     <!--  写真移動先ボトムシートのサムネイルサークル  -->
     <dimen name="move_picture_info_size">40dp</dimen>
     <dimen name="move_picture_info_half_size">20dp</dimen>
+
+    <!--  ヘルプ  -->
+    <dimen name="help_icon_size">40dp</dimen>
+    <dimen name="help_title_size">18sp</dimen>
 
 
     <!--  tmp  -->

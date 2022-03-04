@@ -56,11 +56,7 @@ public class ChildNode extends BaseNode {
 
         //タッチリスナー
         setOnTouchListener(new NodeTouchListener());
-
-        //ツールアイコン設定
-        //setChildToolIcon();
     }
-
 
     /*
      * ノードテーブルの情報をノードビューに反映する
@@ -135,6 +131,13 @@ public class ChildNode extends BaseNode {
         if( mLineView != null ){
             mLineView.reDraw();
         }
+    }
+
+    /*
+     * タッチリスナーを削除
+     */
+    public void removeTouchListener() {
+        setOnTouchListener( null );
     }
 
     /*
@@ -575,7 +578,7 @@ public class ChildNode extends BaseNode {
         //方向ビット
         final int BIT_X = 0x01;    //自ノードが親ノードより右にいる場合
         final int BIT_Y = 0x10;    //自ノードが親ノードより上にいる場合
-        final int OFF  = 0x00;    //オフ
+        final int OFF  = 0x00;     //オフ
 
         //クリックリスナーに制御を渡すかどうかを判定するMove回数
         //この回数よりも多くMoveを検出したとき、本Touchリスナーで制御を終了する

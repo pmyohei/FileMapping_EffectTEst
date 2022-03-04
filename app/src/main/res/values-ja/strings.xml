@@ -1,0 +1,199 @@
+<resources>
+    <string name="app_name">Maps</string>
+
+    <!--  共通  -->
+    <string name="bt_create">Create</string>
+    <string name="cancel">Cancel</string>
+    <string name="waiting">処理中</string>
+    <string name="updating">更新中</string>
+    <string name="do_not_show_this_message">今後、このメッセージを表示しない</string>
+    <string name="tab_all">すべて</string>
+
+    <!--  ノード  -->
+    <string name="default_rootNode">中心\nノード</string>
+    <string name="node_createButtom">作成</string>
+    <string name="node_cancelButtom">キャンセル</string>a
+
+    <!--  ダイアログ  -->
+    <string name="alert_map_delete_title">マップ削除確認</string>
+    <string name="alert_map_delete_message">マップを削除します。\n※マップ内の写真は端末上からは削除されません。</string>
+    <string name="alert_changeParent_title">親ノード変更確認</string>
+    <string name="alert_changeParent_message">選択したノードを親ノードにします。</string>
+    <string name="alert_deletePicture_title">写真の削除</string>
+    <string name="alert_deletePicture_message">選択した写真をノードから削除します。\n※端末上から写真は削除されません。</string>
+    <string name="alert_movePicture_title">移動の確認</string>
+    <string name="alert_movePicture_message">選択したノードに写真を移動しますか？</string>
+    <string name="alert_deleteNode_title">ノード削除確認</string>
+    <string name="alert_deleteNode_message">配下のノードも全て削除されます。\nなお、端末上から写真は削除されません。</string>
+    <string name="alert_launch_mapList_title">初めに</string>
+    <string name="alert_launch_mapList_message">まずは、画面下の「New Map」を押してマップを作成しましょう。</string>
+    <string name="alert_launch_mapEntry_title">マップの生成</string>
+    <string name="alert_launch_mapEntry_message">マップ名を入力して、好きな色を選んで下さい。\n（色はマップ作成後でも追加可能です）</string>
+    <string name="alert_trimming_ui_title">切り取り範囲の反映</string>
+    <string name="alert_trimming_ui_message">この画像では、切り取り範囲は切り取り線から指を離したタイミングで反映されます。</string>
+    <string name="alert_trimming_sameThumbnail_title">選択不可</string>
+    <string name="alert_trimming_sameThumbnail_message">同じ画像が既に使用されています。</string>
+    <string name="alert_trimming_disableDirectory_title">もう一度選択してください</string>
+    <string name="alert_trimming_disableDirectory_message">「画像」フォルダから写真を選択してください。</string>
+    <string name="alert_trimming_anotherPicture_ok">別の画像を選択</string>
+
+    <!-- トースト -->
+    <string name="toast_error">エラーが発生しました</string>
+    <string name="toast_deletePicture">画像を削除しました</string>
+    <string name="toast_errorChangeParent">親ノードにできないノードです</string>
+    <string name="toast_nowParent">現在の親ノードです</string>
+    <string name="toast_childNode">子ノードを親ノードにはできません</string>
+    <string name="toast_errorMapName">マップ名を入力してください</string>
+    <string name="toast_samePicture">既に同じ画像があります</string>
+    <string name="toast_errorGetPath">失敗しました</string>
+    <string name="toast_storePicture">画像を格納しました\n（同じ画像は格納されません）</string>
+    <string name="toast_storeError">エラー：「画像」フォルダから選択して下さい</string>
+
+    <!--  マップ生成画面  -->
+    <string name="map_create_tab1">マップ名</string>
+    <string name="map_create_tab2">2Colors</string>
+    <string name="map_create_tab3">3Colors</string>
+
+    <!--  マップ画面  -->
+    <string name="toolbar_map_changeParant">親ノード変更</string>
+    <!--  トリミング画面  -->
+    <string name="toolbar_trimming_title">ピクチャノードのサムネイル</string>
+    <!--  ギャラリー画面  -->
+    <string name="toolbar_gallery_title">ギャラリー</string>
+    <string name="toolbar_gallery_multi">複数選択</string>
+    <!--  移動先ノードダイアログ  -->
+    <string name="move_picture_title">移動先のノードを選択してください</string>
+
+    <!-- ノードデザインタブ -->
+    <string name="tab_node_name">ノード名</string>
+    <string name="tab_thumnbnail">サムネイル</string>
+    <string name="tab_map_color">マップ色</string>
+    <string name="tab_font">フォント</string>
+    <string name="tab_text_color">テキスト色</string>
+    <string name="tab_size">サイズ</string>
+    <string name="tab_node_color">ノード色</string>
+    <string name="tab_border_color">枠色</string>
+    <string name="tab_line_color">ライン色</string>
+    <string name="tab_shadow">影</string>
+    <string name="tab_shape">ノードの形</string>
+
+    <!-- ノードデザイン -->
+    <string name="coloeCodeHint">123456</string>
+    <string name="node_nameHint">最大16文字</string>
+    <string name="title_nodeName">ノード名</string>
+    <string name="title_nodeSize">ノードサイズ</string>
+    <string name="title_nodeShape">ノードの形</string>
+    <string name="title_nodeBackgroundColor">ノードの背景色</string>
+    <string name="title_nodeTextColor">ノードの文字色</string>
+    <string name="title_lineShape">ラインの形</string>
+    <string name="title_lineThickness">ラインの太さ</string>
+    <string name="title_lineColor">ラインの色</string>
+
+    <string name="title_mapDesign">マップデザイン</string>
+    <string name="title_mapBackgroundColor">マップの色</string>
+
+    <string name="font_sample_alphabet">A</string>
+    <string name="font_sample_japanese">あ</string>
+
+    <string name="color_rgb">コード</string>
+    <string name="color_graphic">パレット</string>
+
+    <string name="size_node">ノードサイズ</string>
+    <string name="size_border">枠の太さ</string>
+    <string name="size_line">ラインの太さ</string>
+
+    <string name="shadow_on_off">ON／OFF</string>
+
+    <!-- フォルダツリー -->
+    <string name="tree_title">ノード一覧\n（クリックで画面中央へ移動）</string>
+    <string name="no_nodeName">（ノード名なし）</string>
+    <string name="no_nodeNamePictureNode">ピクチャ</string>
+    <string name="top_nodeName">・</string>
+
+    <!-- ガイド -->
+    <!-- ツールアイコンのヘルプ -->
+    <string name="help_icon_title">アイコンの説明</string>
+    <string name="help_icon_add_name">ノード生成</string>
+    <string name="help_icon_add">新しいノードを追加します</string>
+    <string name="help_icon_add_note">※１つのノードに作成できるノードは「５つ」まで</string>
+    <string name="help_icon_add_picture_node_name">ピクチャノード生成</string>
+    <string name="help_icon_add_picture_node">写真格納用のノードを作成します\n写真を格納したい場合は、このアイコンを選択して、ピクチャノードを作成しましょう</string>
+    <string name="help_icon_add_picture_node_note">※１つのノードに作成できるピクチャノードは「２つ」まで</string>
+    <string name="help_icon_edit_name">ノード編集</string>
+    <string name="help_icon_edit">ノードを編集します\nデザインやノード名を変えたい場合は、このアイコンを選択してください</string>
+    <string name="help_icon_edit_note">※マップ上のすべてのノードデザインを統一したいときは、マップ画面上部の以下のアイコンを選択してください</string>
+    <string name="help_icon_delete_name">ノード削除</string>
+    <string name="help_icon_delete">ノードとその配下のノードをマップ上から削除します</string>
+    <string name="help_icon_delete_note">※削除対象のノードに紐づけた写真は、端末上からは削除されません</string>
+    <string name="help_icon_photo_library_name">ギャラリー表示</string>
+    <string name="help_icon_photo_library">このノードに紐づけた写真をギャラリーで確認ことができます</string>
+    <string name="help_icon_change_parent_name">親ノードの変更</string>
+    <string name="help_icon_change_parent">親ノードを変更します\nこのアイコンを選択した後、親にしたいノードをタッチすると、そのノードを親に変更できます</string>
+    <string name="help_icon_change_parent_note">※「ピクチャノード」は親ノードにできません</string>
+    <string name="help_icon_new_map_name">新規マップ化</string>
+    <string name="help_icon_new_map">このノードを中心ノードとして、新しいマップを作成します</string>
+    <string name="help_icon_add_photo_library_name">写真の格納（紐づけ）</string>
+    <string name="help_icon_add_photo_library">写真を格納します\n関連する写真を選択してギャラリーを作成しましょう</string>
+    <string name="help_icon_close_name">アイコンクローズ</string>
+    <string name="help_icon_close">アイコンを閉じます</string>
+
+    <!-- マップ画面のヘルプ -->
+    <string name="help_map_title">マップ画面の操作方法</string>
+    <string name="help_map_title_word">用語</string>
+    <string name="help_map_title_basic_ope">基本操作</string>
+    <string name="help_map_title_toolbar">マップ上部アイコン</string>
+    <string name="help_map_title_picture">画像の扱いについて</string>
+    <string name="help_map_title_limitations">制限事項</string>
+
+    <string name="help_map_word_node_1">・ノード</string>
+    <string name="help_map_word_node_2">マップ上の円形のものを指します。\nタッチすると操作アイコンが表示されます。</string>
+    <string name="help_map_word_picture_1">・ピクチャノード</string>
+    <string name="help_map_word_picture_2">マップ上に画像を表示できるノードです。\nこのノードに、関連する画像を格納できます。</string>
+
+    <string name="help_map_basic_details1">まずはノードをタッチしてみましょう！\n操作アイコンが表示されます。\n各種アイコンから、新しいノードの作成や写真の紐づけをすることができます。</string>
+    <string name="help_map_basic_details1_note">※アイコンの詳細は、タッチした時に現れる「？」アイコンでご確認下さい\n</string>
+    <string name="help_map_basic_sample1">操作例のご紹介①</string>
+    <string name="help_map_basic_sample1_title">～新しくノードを作成したい～</string>
+    <string name="help_map_basic_sample1_details1">①ノードをタッチ</string>
+    <string name="help_map_basic_sample1_details2">②ノード作成アイコンを選択</string>
+
+    <string name="help_map_basic_sample2">操作例のご紹介②</string>
+    <string name="help_map_basic_sample2_title">～ピクチャノードに写真を格納したい～</string>
+    <string name="help_map_basic_sample2_details1">①ノードをタッチ</string>
+    <string name="help_map_basic_sample2_details2">②ピクチャノード作成アイコンを選択</string>
+    <string name="help_map_basic_sample2_details3">③好きな写真を選択</string>
+    <string name="help_map_basic_sample2_details4">④作成されたピクチャノードをタッチ</string>
+    <string name="help_map_basic_sample2_details5">⑤写真追加アイコンを選択</string>
+    <string name="help_map_basic_sample2_details6">⑥好きな写真を選択</string>
+    <string name="help_map_basic_sample2_details7">ギャラリーアイコンを選択すると、ノードに格納された写真を確認することができます</string>
+
+    <string name="help_map_toolbar_details1">本画面上部のアイコンについて</string>
+    <string name="help_map_toolbar_palette1">全体的なマップデザイン変更</string>
+    <string name="help_map_toolbar_palette2">マップの背景色やマップ上のすべてのノードのデザインを変更できます</string>
+    <string name="help_map_toolbar_tree1">ノードのツリー表示</string>
+    <string name="help_map_toolbar_tree2">マップ上にあるすべてのノードをツリー形式で確認できます</string>
+    <string name="help_map_toolbar_disable1">～アイコンが見えなくなったとき～</string>
+    <string name="help_map_toolbar_disable2">アイコンが見えにくくなったときは、ツールバーをタッチすると見えやすくなります</string>
+
+    <string name="help_map_picture_details1">本アプリでは、お使いの端末に保存された写真や画像をマップ上のノードに紐づけて管理しています。</string>
+    <string name="help_map_picture_details2">・端末内の画像が削除されたり保存場所が変更されると、マップからも削除されますのでご注意下さい</string>
+    <string name="help_map_picture_details3">・本アプリでは、端末内の画像を削除する機能はありません。マップからノードや写真を削除した場合でも、端末からその画像が削除されることはありません。</string>
+
+    <string name="help_map_limitaions_details1">・１つのノードに作れるノードは５つまで</string>
+    <string name="help_map_limitaions_details2">・１つのノードに作れるピクチャノード（写真を格納するためのノード）は２つまで</string>
+    <string name="help_map_limitaions_details3">・ノードの階層は５段目まで</string>
+
+    <!--  レイアウト確認用（実際にユーザーに表示されることはない） -->
+    <string name="sample">Sample</string>
+
+    <!-- Admod（アプリID） -->
+    <string name="admob_app_id">ca-app-pub-8046295810838892~5800939677</string>
+
+    <!-- リリース時とテスト時で切り替える -->
+    <!--  テストID（バナー広告）  -->
+        <string name="admob_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <!-- リリース用 -->
+    <!--<string name="admob_unit_id">ca-app-pub-8046295810838892/1596264495</string>
+    -->
+
+</resources>

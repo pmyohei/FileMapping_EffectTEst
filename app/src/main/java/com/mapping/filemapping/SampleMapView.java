@@ -197,8 +197,6 @@ public class SampleMapView extends FrameLayout {
         int centerX = rootNode.getLeft() + (rootNode.getWidth() / 2);
         int centerY = rootNode.getTop() + (rootNode.getHeight() / 2);
 
-        Log.i("createNode", "centerX=" + centerX + " centerY=" + centerY + " getLeft=" + rootNode.getLeft() + " getTop=" + rootNode.getTop());
-
         //位置設定
         //※レイアウト追加後に行うこと（MarginLayoutParamsがnullになってしまうため）
         int left = centerX + node.getPosX();
@@ -207,14 +205,14 @@ public class SampleMapView extends FrameLayout {
         ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) nodeView.getLayoutParams();
         mlp.setMargins(left, top, mlp.rightMargin, mlp.bottomMargin);
 
-        Log.i("createNode", "setMargins left=" + left + " top=" + top + " mlp.rightMargin=" + mlp.rightMargin + " mlp.bottomMargin=" + mlp.bottomMargin);
-        Log.i("createNode", "getWidth=" + nodeView.getWidth() + " getHeight=" + nodeView.getHeight());
-
         //レイアウト確定後の処理を設定
         ((ChildNode) nodeView).addOnNodeGlobalLayoutListener(rootNode.getNode());
 
         //ノードビューを保持
         node.setNodeView(nodeView);
+
+        //タッチリスナーを削除（サンプルマップでは不要のため）
+        nodeView.removeTouchListener();
     }
 
 

@@ -30,7 +30,7 @@
                 android:layout_marginTop="8dp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="24sp"
+                android:textSize="@dimen/help_title_size"
                 android:text="@string/help_icon_title" />
 
             <LinearLayout
@@ -43,8 +43,8 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/help_icon_size"
+                    android:layout_height="@dimen/help_icon_size"
                     android:layout_marginTop="12dp"
                     app:srcCompat="@drawable/baseline_add_24" />
 
@@ -73,6 +73,13 @@
                     android:textSize="16sp"
                     android:text="@string/help_icon_add_note" />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/help_icon_add_node" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -93,8 +100,8 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/help_icon_size"
+                    android:layout_height="@dimen/help_icon_size"
                     android:layout_marginTop="12dp"
                     app:srcCompat="@drawable/baseline_add_picture_node_24" />
 
@@ -122,6 +129,13 @@
                     android:textSize="16sp"
                     android:text="@string/help_icon_add_picture_node_note" />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/help_icon_add_picture_node" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -141,8 +155,8 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/help_icon_size"
+                    android:layout_height="@dimen/help_icon_size"
                     android:layout_marginTop="12dp"
                     app:srcCompat="@drawable/baseline_edit_24" />
 
@@ -162,6 +176,13 @@
                     android:textSize="16sp"
                     android:text="@string/help_icon_edit" />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/help_icon_edit" />
+
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -171,8 +192,8 @@
                     android:text="@string/help_icon_edit_note" />
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/help_icon_size"
+                    android:layout_height="@dimen/help_icon_size"
                     android:layout_marginTop="12dp"
                     app:srcCompat="@drawable/baseline_palette_20" />
 
@@ -204,8 +225,8 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/help_icon_size"
+                    android:layout_height="@dimen/help_icon_size"
                     android:layout_marginTop="12dp"
                     app:srcCompat="@drawable/baseline_delete_24" />
 
@@ -233,6 +254,13 @@
                     android:textSize="16sp"
                     android:text="@string/help_icon_delete_note" />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/help_icon_delete" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -252,8 +280,8 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/help_icon_size"
+                    android:layout_height="@dimen/help_icon_size"
                     android:layout_marginTop="12dp"
                     app:srcCompat="@drawable/baseline_photo_library_24" />
 
@@ -272,6 +300,13 @@
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:text="@string/help_icon_photo_library" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/help_icon_gallery" />
 
                 <View
                     android:layout_width="match_parent"
@@ -292,8 +327,8 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/help_icon_size"
+                    android:layout_height="@dimen/help_icon_size"
                     android:layout_marginTop="12dp"
                     app:srcCompat="@drawable/baseline_change_parent_24" />
 
@@ -321,6 +356,13 @@
                     android:textSize="16sp"
                     android:text="@string/help_icon_change_parent_note" />
 
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/help_icon_change_parent" />
+
                 <View
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
@@ -341,8 +383,8 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/help_icon_size"
+                    android:layout_height="@dimen/help_icon_size"
                     android:layout_marginTop="12dp"
                     app:srcCompat="@drawable/baseline_new_map_24" />
 
@@ -381,8 +423,8 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/help_icon_size"
+                    android:layout_height="@dimen/help_icon_size"
                     android:layout_marginTop="12dp"
                     app:srcCompat="@drawable/baseline_add_photo_library_24" />
 
@@ -401,6 +443,13 @@
                     android:textColor="@color/black"
                     android:textSize="16sp"
                     android:text="@string/help_icon_add_photo_library" />
+
+                <ImageView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="12dp"
+                    android:layout_gravity="center"
+                    app:srcCompat="@drawable/help_icon_add_photo_library" />
 
                 <View
                     android:layout_width="match_parent"
@@ -422,8 +471,8 @@
                 android:orientation="vertical">
 
                 <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="@dimen/help_icon_size"
+                    android:layout_height="@dimen/help_icon_size"
                     android:layout_marginTop="12dp"
                     app:srcCompat="@drawable/baseline_close_24" />
 

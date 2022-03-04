@@ -30,7 +30,7 @@
                 android:layout_marginTop="8dp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="24sp"
+                android:textSize="@dimen/help_title_size"
                 android:text="@string/help_map_title_toolbar" />
 
             <TextView
@@ -42,9 +42,9 @@
                 android:text="@string/help_map_toolbar_details1" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_width="@dimen/help_icon_size"
+                android:layout_height="@dimen/help_icon_size"
+                android:layout_marginTop="@dimen/help_icon_size"
                 app:srcCompat="@drawable/baseline_palette_20" />
 
             <TextView
@@ -72,9 +72,9 @@
                 android:background="@color/transparent_50_black" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="40dp"
+                android:layout_width="@dimen/help_icon_size"
+                android:layout_height="@dimen/help_icon_size"
+                android:layout_marginTop="@dimen/help_icon_size"
                 app:srcCompat="@drawable/baseline_folder_tree_24" />
 
             <TextView

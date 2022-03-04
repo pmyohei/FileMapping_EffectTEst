@@ -30,7 +30,7 @@
                 android:layout_marginTop="8dp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="24sp"
+                android:textSize="@dimen/help_title_size"
                 android:text="@string/help_map_title_basic_ope" />
 
             <TextView
@@ -87,8 +87,8 @@
                 android:text="@string/help_map_basic_sample1_details2" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/help_icon_size"
+                android:layout_height="@dimen/help_icon_size"
                 android:layout_marginTop="20dp"
                 app:srcCompat="@drawable/baseline_add_24" />
 
@@ -130,8 +130,8 @@
                 android:text="@string/help_map_basic_sample2_details2" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/help_icon_size"
+                android:layout_height="@dimen/help_icon_size"
                 android:layout_marginTop="20dp"
                 app:srcCompat="@drawable/baseline_add_picture_node_24" />
 
@@ -163,8 +163,8 @@
                 android:text="@string/help_map_basic_sample2_details5" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/help_icon_size"
+                android:layout_height="@dimen/help_icon_size"
                 android:layout_marginTop="20dp"
                 app:srcCompat="@drawable/baseline_add_photo_library_24" />
 
@@ -187,8 +187,8 @@
                 android:text="@string/help_map_basic_sample2_details7" />
 
             <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="@dimen/help_icon_size"
+                android:layout_height="@dimen/help_icon_size"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 app:srcCompat="@drawable/baseline_photo_library_24" />

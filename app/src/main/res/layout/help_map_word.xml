@@ -31,7 +31,16 @@
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/help_title_size"
-                android:text="@string/help_map_title_picture" />
+                android:text="@string/help_map_title_word" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:text="@string/help_map_word_node_1" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -39,7 +48,23 @@
                 android:layout_marginTop="20dp"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:text="@string/help_map_picture_details1" />
+                android:text="@string/help_map_word_node_2" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/help_node" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:layout_gravity="center"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:text="@string/help_map_word_picture_1" />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -47,16 +72,14 @@
                 android:layout_marginTop="20dp"
                 android:textColor="@color/black"
                 android:textSize="16sp"
-                android:text="@string/help_map_picture_details2" />
+                android:text="@string/help_map_word_picture_2" />
 
-            <TextView
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:text="@string/help_map_picture_details3" />
+                android:layout_marginTop="24dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/help_picture_node" />
 
         </LinearLayout>
     </ScrollView>

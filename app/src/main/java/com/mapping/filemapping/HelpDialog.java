@@ -129,6 +129,8 @@ public class HelpDialog extends DialogFragment {
 
         //ヘルプページリスト
         List<Integer> layoutIdList = new ArrayList<>();
+        //用語
+        layoutIdList.add(R.layout.help_map_word);
         //基本操作
         layoutIdList.add(R.layout.help_map_basic_dialog);
         //マップ画面上部のアイコンについて

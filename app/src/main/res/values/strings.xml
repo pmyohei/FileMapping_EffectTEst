@@ -1,182 +1,187 @@
 <resources>
-    <string name="app_name">FileMapping</string>
+    <string name="app_name">Maps</string>
 
     <!--  共通  -->
     <string name="bt_create">Create</string>
     <string name="cancel">Cancel</string>
-    <string name="waiting">処理中</string>
-    <string name="updating">更新</string>
-    <string name="do_not_show_this_message">今後、このメッセージを表示しない</string>
-    <string name="tab_all">すべて</string>
+    <string name="waiting">processing</string>
+    <string name="updating">Updating</string>
+    <string name="do_not_show_this_message">Do not display this message in the future.</string>
+    <string name="tab_all">All</string>
 
     <!--  ノード  -->
-    <string name="default_rootNode">ルート\nノード</string>
-    <string name="node_createButtom">作成</string>
-    <string name="node_cancelButtom">キャンセル</string>a
+    <string name="default_rootNode">Central\nnode</string>
+    <string name="node_createButtom">Create</string>
+    <string name="node_cancelButtom">Cancel</string>a
 
     <!--  ダイアログ  -->
-    <string name="alert_map_delete_title">マップ削除確認</string>
-    <string name="alert_map_delete_message">マップを削除します。\nなお、マップ内の写真は端末上からは削除されません。</string>
-    <string name="alert_changeParent_title">親ノード変更確認</string>
-    <string name="alert_changeParent_message">選択したノードを親ノードにします。</string>
-    <string name="alert_deletePicture_title">写真の削除</string>
-    <string name="alert_deletePicture_message">選択した写真をノードから削除します。\n※端末上から写真は削除されません。</string>
-    <string name="alert_movePicture_title">格納先の確認</string>
-    <string name="alert_movePicture_message">選択されたノードに写真を移動しますか？</string>
-    <string name="alert_deleteNode_title">ノード削除確認</string>
-    <string name="alert_deleteNode_message">配下のノードも全て削除されます。\nなお、端末上から写真は削除されません。</string>
-    <string name="alert_launch_mapList_title">初めに</string>
-    <string name="alert_launch_mapList_message">まずは、画面下の「New Map」を押してマップを作成しましょう。</string>
-    <string name="alert_launch_mapEntry_title">マップの生成</string>
-    <string name="alert_launch_mapEntry_message">マップ名を入力して、好きな色を選んで下さい。\n（色はマップ作成後でも追加可能です）</string>
-    <string name="alert_trimming_ui_title">切り取り範囲の反映</string>
-    <string name="alert_trimming_ui_message">この画像では、切り取り範囲は切り取り線から指を離したタイミングで反映されます。</string>
-    <string name="alert_trimming_sameThumbnail_title">別の画像選択</string>
-    <string name="alert_trimming_sameThumbnail_message">同じ画像をサムネイルとして既に使用しています。</string>
-    <string name="alert_trimming_disableDirectory_title">もう一度選択してください</string>
-    <string name="alert_trimming_disableDirectory_message">「画像」フォルダから写真を選択してください。</string>
-    <string name="alert_trimming_anotherPicture_ok">別の画像を選択</string>
+    <string name="alert_map_delete_title">Remove Map</string>
+    <string name="alert_map_delete_message">The map will be removed.\nThe photos in the map will not be removed from your device.</string>
+    <string name="alert_changeParent_title">Change parent node</string>
+    <string name="alert_changeParent_message">Makes the selected node the parent node.</string>
+    <string name="alert_deletePicture_title">Remove Photo</string>
+    <string name="alert_deletePicture_message">Remove the selected photo from the node.\nThe photo will not be removed from your device.</string>
+    <string name="alert_movePicture_title">Move photos</string>
+    <string name="alert_movePicture_message">Do you want to move the photo to the selection node?</string>
+    <string name="alert_deleteNode_title">Remove node</string>
+    <string name="alert_deleteNode_message">All subordinate nodes will also be removed.\nThe photos in the node will not be removed from your device.</string>
+    <string name="alert_launch_mapList_title">At first</string>
+    <string name="alert_launch_mapList_message">Let\'s create a map. Press "New Map" at the bottom of the screen.</string>
+    <string name="alert_launch_mapEntry_title">Creating a map</string>
+    <string name="alert_launch_mapEntry_message">Enter the map name and choose the color you like.\n(Colors can be added even after the map is created)</string>
+    <string name="alert_trimming_ui_title">Reflection of image cropping range</string>
+    <string name="alert_trimming_ui_message">In this image, the crop area is reflected when you take your finger off the crop line.</string>
+    <string name="alert_trimming_sameThumbnail_title">It can not be selected</string>
+    <string name="alert_trimming_sameThumbnail_message">The same image is already in use on another node.</string>
+    <string name="alert_trimming_disableDirectory_title">Please select again</string>
+    <string name="alert_trimming_disableDirectory_message">Select a photo from the "Images" folder.</string>
+    <string name="alert_trimming_anotherPicture_ok">Select another image</string>
 
     <!-- トースト -->
-    <string name="toast_error">エラーが発生しました</string>
-    <string name="toast_deletePicture">画像を削除しました</string>
-    <string name="toast_errorChangeParent">親ノードにできないノードです</string>
-    <string name="toast_nowParent">現在の親ノードです</string>
-    <string name="toast_childNode">子ノードを親ノードにはできません</string>
-    <string name="toast_errorMapName">マップ名を入力してください</string>
-    <string name="toast_samePicture">既に同じ画像があります</string>
-    <string name="toast_errorGetPath">失敗しました</string>
-    <string name="toast_storePicture">画像を格納しました\n（同じ画像は格納されません）</string>
-    <string name="toast_storeError">エラー：画像フォルダから選択して下さい</string>
+    <string name="toast_error">An error has occurred</string>
+    <string name="toast_deletePicture">Removed the image</string>
+    <string name="toast_errorChangeParent">That node cannot be a parent node</string>
+    <string name="toast_nowParent">The current parent node</string>
+    <string name="toast_childNode">Cannot make its own child node a parent node</string>
+    <string name="toast_errorMapName">Please enter the map name</string>
+    <string name="toast_samePicture">The same images is already stored</string>
+    <string name="toast_errorGetPath">Failure</string>
+    <string name="toast_storePicture">The image was stored in the node\n(Images that are already stored will not be stored)</string>
+    <string name="toast_storeError">Error: Please select from the "Images" folder</string>
 
     <!--  マップ生成画面  -->
-    <string name="map_create_tab1">マップ名</string>
+    <string name="map_create_tab1">Map name</string>
     <string name="map_create_tab2">2Colors</string>
     <string name="map_create_tab3">3Colors</string>
 
     <!--  マップ画面  -->
-    <string name="toolbar_map_changeParant">親ノード変更</string>
+    <string name="toolbar_map_changeParant">Change parent node</string>
     <!--  トリミング画面  -->
-    <string name="toolbar_trimming_title">ピクチャノードのサムネイル</string>
+    <string name="toolbar_trimming_title">Thumbnail of picture node</string>
     <!--  ギャラリー画面  -->
-    <string name="toolbar_gallery_title">ギャラリー</string>
-    <string name="toolbar_gallery_multi">複数選択</string>
+    <string name="toolbar_gallery_title">Gallery</string>
+    <string name="toolbar_gallery_multi">Multiple selection</string>
     <!--  移動先ノードダイアログ  -->
-    <string name="move_picture_title">移動先のノードを選択してください</string>
+    <string name="move_picture_title">Please select the destination node</string>
 
     <!-- ノードデザインタブ -->
-    <string name="tab_node_name">ノード名</string>
-    <string name="tab_thumnbnail">サムネイル</string>
-    <string name="tab_map_color">マップ色</string>
-    <string name="tab_font">フォント</string>
-    <string name="tab_text_color">テキスト色</string>
-    <string name="tab_size">サイズ</string>
-    <string name="tab_node_color">ノード色</string>
-    <string name="tab_border_color">枠色</string>
-    <string name="tab_line_color">ライン色</string>
-    <string name="tab_shadow">影</string>
-    <string name="tab_shape">ノードの形</string>
+    <string name="tab_node_name">Node name</string>
+    <string name="tab_thumnbnail">Thumbnail</string>
+    <string name="tab_map_color">Map color</string>
+    <string name="tab_font">Font</string>
+    <string name="tab_text_color">Text Color</string>
+    <string name="tab_size">Size</string>
+    <string name="tab_node_color">Node Color</string>
+    <string name="tab_border_color">Frame color</string>
+    <string name="tab_line_color">Line color</string>
+    <string name="tab_shadow">Shadow</string>
+    <string name="tab_shape">Shape</string>
 
     <!-- ノードデザイン -->
     <string name="coloeCodeHint">123456</string>
-    <string name="node_nameHint">最大16文字</string>
-    <string name="title_nodeName">ノード名</string>
-    <string name="title_nodeSize">ノードサイズ</string>
-    <string name="title_nodeShape">ノードの形</string>
-    <string name="title_nodeBackgroundColor">ノードの背景色</string>
-    <string name="title_nodeTextColor">ノードの文字色</string>
-    <string name="title_lineShape">ラインの形</string>
-    <string name="title_lineThickness">ラインの太さ</string>
-    <string name="title_lineColor">ラインの色</string>
+    <string name="node_nameHint">Maximum 16 characters</string>
+    <string name="title_nodeName">Node name</string>
+    <string name="title_nodeSize">Node Size</string>
+    <string name="title_nodeShape">Node Shape</string>
+    <string name="title_nodeBackgroundColor">Node background color</string>
+    <string name="title_nodeTextColor">Node text color</string>
+    <string name="title_lineShape">Line shape</string>
+    <string name="title_lineThickness">Line thickness</string>
+    <string name="title_lineColor">Line color</string>
 
-    <string name="title_mapDesign">マップデザイン</string>
-    <string name="title_mapBackgroundColor">マップの色</string>
+    <string name="title_mapDesign">Map Design</string>
+    <string name="title_mapBackgroundColor">Map color</string>
 
     <string name="font_sample_alphabet">A</string>
     <string name="font_sample_japanese">あ</string>
 
-    <string name="color_rgb">コード</string>
-    <string name="color_graphic">パレット</string>
+    <string name="color_rgb">Code</string>
+    <string name="color_graphic">Palette</string>
 
-    <string name="size_node">ノードサイズ</string>
-    <string name="size_border">枠の太さ</string>
-    <string name="size_line">ラインの太さ</string>
+    <string name="size_node">Node Size</string>
+    <string name="size_border">Frame thickness</string>
+    <string name="size_line">Line thickness</string>
 
-    <string name="shadow_on_off">on／off</string>
+    <string name="shadow_on_off">ON／OFF</string>
 
     <!-- フォルダツリー -->
-    <string name="tree_title">ノード一覧\n（クリックで画面中央へ移動）</string>
-    <string name="no_nodeName">（ノード名なし）</string>
-    <string name="no_nodeNamePictureNode">ピクチャ</string>
+    <string name="tree_title">Node list\n(Click a node name to move it to the center of the screen)</string>
+    <string name="no_nodeName">(No Name)</string>
+    <string name="no_nodeNamePictureNode">Picture Node</string>
     <string name="top_nodeName">・</string>
 
     <!-- ガイド -->
     <!-- ツールアイコンのヘルプ -->
-    <string name="help_icon_title">アイコンの説明</string>
-    <string name="help_icon_add_name">ノード生成</string>
-    <string name="help_icon_add">新しいノードを追加します</string>
-    <string name="help_icon_add_note">※１つのノードに作成できるノードは「５つ」まで</string>
-    <string name="help_icon_add_picture_node_name">ピクチャノード生成</string>
-    <string name="help_icon_add_picture_node">写真格納用のノードを作成します\n写真を格納したい場合は、このアイコンを選択して、まずはピクチャノードを作成しましょう</string>
-    <string name="help_icon_add_picture_node_note">※１つのノードに作成できるピクチャノードは「２つ」まで</string>
-    <string name="help_icon_edit_name">ノード編集</string>
-    <string name="help_icon_edit">ノードを編集します\nデザインやノード名を変えたい場合は、このアイコンを選択してください</string>
-    <string name="help_icon_edit_note">※マップ上のすべてのノードデザインを統一したいときは、この画面の上にある以下のアイコンを選択してください</string>
-    <string name="help_icon_delete_name">ノード削除</string>
-    <string name="help_icon_delete">ノードとその下のノードをマップ上から削除します</string>
-    <string name="help_icon_delete_note">※削除ノードに紐づけた写真が、端末上から削除されることはありません</string>
-    <string name="help_icon_photo_library_name">ギャラリー表示</string>
-    <string name="help_icon_photo_library">このノードに紐づけた写真をギャラリーで確認ことができます</string>
-    <string name="help_icon_change_parent_name">親ノードの変更</string>
-    <string name="help_icon_change_parent">親ノードを変更します\n選択した後、親にしたいノードをタッチすると、そのノードを親にすることができます</string>
-    <string name="help_icon_change_parent_note">※「ピクチャノード」を親ノードにすることはできません</string>
-    <string name="help_icon_new_map_name">新規マップ化</string>
-    <string name="help_icon_new_map">このノードを中心ノードとして、新しいマップを作成します</string>
-    <string name="help_icon_add_photo_library_name">写真の格納（紐づけ）</string>
-    <string name="help_icon_add_photo_library">写真を格納します\n関連する写真を選択してギャラリーを作成しましょう</string>
-    <string name="help_icon_close_name">アイコンクローズ</string>
-    <string name="help_icon_close">アイコンを閉じます</string>
+    <string name="help_icon_title">Icon Description</string>
+    <string name="help_icon_add_name">Node generation</string>
+    <string name="help_icon_add">You can add a new node to the touched node.</string>
+    <string name="help_icon_add_note">*Up to "5" nodes can be created in one node.</string>
+    <string name="help_icon_add_picture_node_name">Picture node generation</string>
+    <string name="help_icon_add_picture_node">You can create a node for storing photos.\nIf you want to store your photos, select this icon to create a picture node</string>
+    <string name="help_icon_add_picture_node_note">*Up to "2" picture nodes can be created on one node</string>
+    <string name="help_icon_edit_name">Node editing</string>
+    <string name="help_icon_edit">You can edit the node\nSelect this icon if you want to change the design or node name</string>
+    <string name="help_icon_edit_note">*If you want to unify all node designs, select the icon below at the top of the map screen</string>
+    <string name="help_icon_delete_name">Remove node</string>
+    <string name="help_icon_delete">You can remove nodes and child nodes from the map.</string>
+    <string name="help_icon_delete_note">*The photo associated with the node to be deleted will not be deleted from the terminal.</string>
+    <string name="help_icon_photo_library_name">Show image gallery</string>
+    <string name="help_icon_photo_library">You can see the photos associated with this node in the gallery.</string>
+    <string name="help_icon_change_parent_name">Change parent node</string>
+    <string name="help_icon_change_parent">You can change the parent node.\nAfter selecting this icon, you can change that node to the parent node by touching the node you want to be the parent.</string>
+    <string name="help_icon_change_parent_note">*"Picture node" cannot be a parent node</string>
+    <string name="help_icon_new_map_name">New map</string>
+    <string name="help_icon_new_map">You can create a new map with the touched node as the center node.</string>
+    <string name="help_icon_add_photo_library_name">Photo storage(linking)</string>
+    <string name="help_icon_add_photo_library">You can store photos in the picture node\nLet\'s create a photo gallery of related photos.</string>
+    <string name="help_icon_close_name">Icon close</string>
+    <string name="help_icon_close">You can close the icon.</string>
 
     <!-- マップ画面のヘルプ -->
-    <string name="help_map_title">マップ画面の操作方法</string>
-    <string name="help_map_title_basic_ope">基本操作</string>
-    <string name="help_map_title_toolbar">マップ画面上部のアイコン</string>
-    <string name="help_map_title_picture">画像の扱いについて</string>
-    <string name="help_map_title_limitations">制限事項</string>
+    <string name="help_map_title">How to operate the map screen</string>
+    <string name="help_map_title_word">The term</string>
+    <string name="help_map_title_basic_ope">Basic operation</string>
+    <string name="help_map_title_toolbar">Map top icon</string>
+    <string name="help_map_title_picture">Notes on images in this application</string>
+    <string name="help_map_title_limitations">Limitations</string>
 
-    <string name="help_map_basic_details1">まずはノードをタッチしてみましょう！\nタッチすると操作アイコンが表示されます。\nアイコンをタッチすることで、新しいノードの作成や写真の紐づけをすることができます！</string>
-    <string name="help_map_basic_details1_note">※アイコンの詳細は、タッチした時に現れる「？」アイコンでご確認下さい\n</string>
-    <string name="help_map_basic_sample1">操作例のご紹介①</string>
-    <string name="help_map_basic_sample1_title">～新しくノードを作成したい～</string>
-    <string name="help_map_basic_sample1_details1">①作成したいノードをタッチ</string>
-    <string name="help_map_basic_sample1_details2">②ノード作成アイコンを選択</string>
+    <string name="help_map_word_node_1">-NODE-</string>
+    <string name="help_map_word_node_2">The circular ones on the map are the nodes.\nYou can display the operation icon by touching it.</string>
+    <string name="help_map_word_picture_1">-PICTURE NODE-</string>
+    <string name="help_map_word_picture_2">Nodes that can display images on the map.\nYou can store related images in this node.</string>
 
-    <string name="help_map_basic_sample2">操作例のご紹介②</string>
-    <string name="help_map_basic_sample2_title">～ノードに写真を格納したい～</string>
-    <string name="help_map_basic_sample2_details1">①格納したいノードをタッチ</string>
-    <string name="help_map_basic_sample2_details2">②ピクチャノード作成アイコンを選択</string>
-    <string name="help_map_basic_sample2_details3">③好きな写真を選択して、Create</string>
-    <string name="help_map_basic_sample2_details4">④作成されたピクチャノードをタッチ</string>
-    <string name="help_map_basic_sample2_details5">⑤写真追加アイコンを選択</string>
-    <string name="help_map_basic_sample2_details6">⑥好きな写真を選択</string>
-    <string name="help_map_basic_sample2_details7">ギャラリーアイコンを選択すると、ノードに格納された写真を確認することができます</string>
+    <string name="help_map_basic_details1">First, let\'s touch the node!\nYou can display the operation icon.\nBy selecting the icon, you can create a node or link a photo.</string>
+    <string name="help_map_basic_details1_note">*If you select the "? Icon", you can check the contents of each icon.</string>
+    <string name="help_map_basic_sample1">Introduction of operation method 1</string>
+    <string name="help_map_basic_sample1_title">～You want to create a new node～</string>
+    <string name="help_map_basic_sample1_details1">1.Touch the node</string>
+    <string name="help_map_basic_sample1_details2">2.Select "node creation icon"</string>
 
-    <string name="help_map_toolbar_details1">本画面上部のアイコンについて</string>
-    <string name="help_map_toolbar_palette1">マップ全体デザイン変更</string>
-    <string name="help_map_toolbar_palette2">マップの背景色やマップ上のすべてのノードのデザインを変更できます</string>
-    <string name="help_map_toolbar_tree1">ノードのツリー表示</string>
-    <string name="help_map_toolbar_tree2">マップ上にあるすべてのノードをツリー形式で確認できます</string>
-    <string name="help_map_toolbar_disable1">～アイコンが見えなくなったとき～</string>
-    <string name="help_map_toolbar_disable2">マップの色が暗くアイコンが見えにくくなったときは、ツールバーをタッチすると見えやすくなります</string>
+    <string name="help_map_basic_sample2">Introduction of operation method 2</string>
+    <string name="help_map_basic_sample2_title">～You want to store a photo in a picture node～</string>
+    <string name="help_map_basic_sample2_details1">1.Touch the node</string>
+    <string name="help_map_basic_sample2_details2">2.Select "Picture node creation icon"</string>
+    <string name="help_map_basic_sample2_details3">3.Select your favorite photo</string>
+    <string name="help_map_basic_sample2_details4">4.Touch the created image node</string>
+    <string name="help_map_basic_sample2_details5">5.Select "Photo storage icon"</string>
+    <string name="help_map_basic_sample2_details6">6.Feel free to choose your photo</string>
+    <string name="help_map_basic_sample2_details7">If you want to see the photos stored in the node, select "Gallery Icon"</string>
 
-    <string name="help_map_picture_details1">本アプリでは、お使いの端末に保存された写真や画像をマップ上のノードに紐づけて管理しています。</string>
-    <string name="help_map_picture_details2">・端末内の画像が削除されたり保存場所が変更されると、マップからも削除されますのでご注意下さい</string>
-    <string name="help_map_picture_details3">・本アプリでは、端末内の画像を削除する機能はありません。マップからノードや写真を削除した場合でも、端末から画像が削除されることはないため、安心してご利用下さい。</string>
+    <string name="help_map_toolbar_details1">About the icon at the top of the map screen.</string>
+    <string name="help_map_toolbar_palette1">Overall map design changes</string>
+    <string name="help_map_toolbar_palette2">You can change the color of the map and the design of all the nodes.</string>
+    <string name="help_map_toolbar_tree1">View nodes in tree format</string>
+    <string name="help_map_toolbar_tree2">You can see all the nodes on the map in a tree format.</string>
+    <string name="help_map_toolbar_disable1">～If the icon disappears～</string>
+    <string name="help_map_toolbar_disable2">If the icon becomes difficult to see, touch the toolbar to make it easier to see.</string>
 
-    <string name="help_map_limitaions_details1">・１つのノードに作成できるノードは５つまでです。</string>
-    <string name="help_map_limitaions_details2">・１つのノードに作成できるピクチャノード（写真を格納するためのノード）は、２つまでです。</string>
-    <string name="help_map_limitaions_details3">・ノードの階層は５つまでです。</string>
+    <string name="help_map_picture_details1">In this application, the image saved in your terminal is managed by associating it with the node on the map.</string>
+    <string name="help_map_picture_details2">・If the image on the device is deleted or the storage location is changed, it will also be deleted from the map. Be careful.</string>
+    <string name="help_map_picture_details3">・This application does not have the ability to delete images in the device.\nRemoving a node or photo from the map does not remove the image from the device.</string>
 
+    <string name="help_map_limitaions_details1">-Up to 5 nodes can be created in one node</string>
+    <string name="help_map_limitaions_details2">-Up to 2 picture nodes (nodes for storing photos) can be created in one node</string>
+    <string name="help_map_limitaions_details3">-Node hierarchy can be up to 5 levels</string>
 
     <!--  レイアウト確認用（実際にユーザーに表示されることはない） -->
     <string name="sample">Sample</string>

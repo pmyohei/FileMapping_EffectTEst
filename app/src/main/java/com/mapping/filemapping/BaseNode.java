@@ -117,6 +117,12 @@ public class BaseNode extends FrameLayout {
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                if( mClickListener == null ){
+                    //未設定なら、処理なし
+                    return;
+                }
+
                 mClickListener.onClick( view );
             }
         });

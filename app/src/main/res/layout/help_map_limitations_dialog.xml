@@ -31,7 +31,7 @@
                 android:layout_gravity="center_horizontal"
                 android:textStyle="bold"
                 android:textColor="@color/black"
-                android:textSize="24sp"
+                android:textSize="@dimen/help_title_size"
                 android:text="@string/help_map_title_limitations" />
 
             <TextView
@@ -42,22 +42,43 @@
                 android:textSize="16sp"
                 android:text="@string/help_map_limitaions_details1" />
 
-            <TextView
+            <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:textColor="@color/black"
-                android:textSize="16sp"
-                android:text="@string/help_map_limitaions_details2" />
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/help_limit_node_num" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:text="@string/help_map_limitaions_details2" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:layout_marginBottom="20dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/help_limit_picture_node_num" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="40dp"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:text="@string/help_map_limitaions_details3" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:layout_gravity="center"
+                app:srcCompat="@drawable/help_limit_hierarchy" />
 
         </LinearLayout>
     </ScrollView>
