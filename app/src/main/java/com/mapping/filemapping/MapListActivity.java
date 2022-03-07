@@ -6,20 +6,26 @@ import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.Manifest;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Toast;
 
 import com.google.android.gms.ads.MobileAds;
 import com.google.android.gms.ads.initialization.InitializationStatus;
@@ -35,6 +41,9 @@ public class MapListActivity extends AppCompatActivity {
     /* 画面遷移-レスポンスコード */
     public static final int RESULT_CREATED = 100;
     public static final int RESULT_EDITED = 101;
+    //許可リクエストコード
+    public static final int REQUEST_EXTERNAL_STORAGE = 1;
+
 
     private ArrayList<MapTable> mMaps;
     private MapListAdapter mMapListAdapter;
@@ -128,9 +137,15 @@ public class MapListActivity extends AppCompatActivity {
             }
         });
 
-        //ヘルプダイアログの表示
-        showFirstLaunchDialog();
-
+        //権限の確認
+        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        if( permission != PackageManager.PERMISSION_GRANTED ){
+            //権限付与
+            permissionsStorage();
+        } else{
+            //権限ありなら、即ヘルプダイアログの表示
+            showFirstLaunchDialog();
+        }
 
 /*        //疑似-動作確認用----------------------------------------------------------------
         //仮；画面遷移
@@ -225,10 +240,57 @@ public class MapListActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
+    /*
+     * 権限付与
+     */
+    private void permissionsStorage() {
 
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            //API23未満なら、許可ダイアログは不要
+            return;
+        }
 
+        //許可ダイアログは必須
+        String[] PERMISSIONS_STORAGE = {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+        };
+        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    this,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
+    }
 
+    /*
+     * 権限許可ダイアログの処理結果コールバック
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permission, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permission, grantResults);
 
+        if (grantResults.length <= 0) {
+            return;
+        }
+
+        switch (requestCode) {
+            //ピクチャノード生成時のリクエストコード
+            case REQUEST_EXTERNAL_STORAGE: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //do nothing
+                } else {
+                    //マップ上に画像を表示したい場合、許可に変更し
+                    Toast.makeText(this, getString(R.string.toast_qeuestPermissionFirst), Toast.LENGTH_LONG).show();
+                }
+                break;
+            }
+        }
+
+        //ダイアログを表示
+        showFirstLaunchDialog();
+    }
 
     /*
      * 画面遷移からの戻りのコールバック通知ーマップ新規生成

@@ -137,7 +137,7 @@ public class MapActivity extends AppCompatActivity {
         );
         mGalleryLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                new AddPictureResultCallback(this, mToolIconNode)
+                new AddPictureResultCallback(this)
         );
 
         //画面上部の中心位置
@@ -697,6 +697,46 @@ public class MapActivity extends AppCompatActivity {
         }
     }
 
+
+    /*
+     * 画面遷移-トリミング画面
+     */
+    public void transitionTrimming(NodeTable node) {
+        //ピクチャトリミング画面へ遷移
+        Intent intent = new Intent(this, PictureTrimmingActivity.class);
+        intent.putExtra(MapActivity.INTENT_MAP_PID, node.getPidMap());
+        intent.putExtra(MapActivity.INTENT_NODE_PID, node.getPid());
+
+        //開始
+        mNodeOperationLauncher.launch(intent);
+    }
+
+    /*
+     * 画面遷移-ギャラリー画面
+     */
+    public void transitionGallery(NodeTable node) {
+        //ギャラリー画面へ遷移
+        Intent intent = new Intent( this, PictureGalleryActivity.class );
+        intent.putExtra(MapActivity.INTENT_NODE_PID, node.getPid());
+
+        //開始
+        startActivity(intent);
+    }
+
+    /*
+     * 画面遷移-端末mediaストレージ
+     */
+    public void transitionMediaStorage() {
+        //外部ストレージ(media)を一覧で表示
+        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+        intent.addCategory(Intent.CATEGORY_OPENABLE);
+        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
+        intent.setType("image/*");
+
+        //開始
+        mGalleryLauncher.launch(intent);
+    }
+
     /*
      * onStop()
      */
@@ -799,26 +839,52 @@ public class MapActivity extends AppCompatActivity {
             return;
         }
 
+        boolean retPermission = true;
+
         switch (requestCode) {
-            //外部ストレージ
-            case ToolIconsView.REQUEST_EXTERNAL_STORAGE: {
+            //ピクチャノード生成時のリクエストコード
+            case ToolIconsView.REQUEST_EXTERNAL_STORAGE_FOR_PICTURE_NODE: {
                 if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //トリミング画面へ遷移
+                    transitionTrimming( mToolIconNode );
+                } else {
+                    retPermission = false;
+                }
 
-                    //ピクチャトリミング画面へ遷移
-                    Intent intent = new Intent(this, PictureTrimmingActivity.class);
-                    intent.putExtra(MapActivity.INTENT_MAP_PID, mToolIconNode.getPidMap());
-                    intent.putExtra(MapActivity.INTENT_NODE_PID, mToolIconNode.getPid());
+                break;
+            }
 
-                    //開始
-                    mNodeOperationLauncher.launch(intent);
+            //ピクチャノード内の画像表示時のリクエストコード
+            case ToolIconsView.REQUEST_EXTERNAL_STORAGE_FOR_GALLERY: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //ギャラリー画面へ遷移
+                    transitionGallery( mToolIconNode );
+                } else {
+                    retPermission = false;
+                }
+
+                break;
+            }
+
+            //外部ストレージ(media)表示時のリクエストコード
+            case ToolIconsView.REQUEST_EXTERNAL_STORAGE_FOR_ADD_PICTURE: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //外部ストレージ(media)を一覧で表示
+                    transitionMediaStorage();
 
                 } else {
-                    //許可が取れなかった場合
-                    Toast.makeText(this,
-                            getString(R.string.toast_qeuestPermission), Toast.LENGTH_SHORT).show();
+                    retPermission = false;
                 }
+
+                break;
             }
         }
+
+        //許可が取れなかった場合
+        if( !retPermission ){
+            Toast.makeText(this, getString(R.string.toast_qeuestPermission), Toast.LENGTH_SHORT).show();
+        }
+
     }
 
     /*
@@ -1254,12 +1320,9 @@ public class MapActivity extends AppCompatActivity {
     private static class AddPictureResultCallback implements ActivityResultCallback<ActivityResult> {
 
         private final Context mContext;
-        //選択されたピクチャノード
-        private final NodeTable mPictureNode;
 
-        public AddPictureResultCallback( Context context, NodeTable node ) {
+        public AddPictureResultCallback( Context context ) {
             mContext = context;
-            mPictureNode = node;
         }
 
         @Override
@@ -1273,8 +1336,12 @@ public class MapActivity extends AppCompatActivity {
                 }
 
                 //選択されているピクチャノード情報
-                int mapPid = mPictureNode.getPidMap();
-                int nodePid = mPictureNode.getPid();
+                MapCommonData mapCommonData = (MapCommonData) ((ComponentActivity)mContext).getApplication();
+                NodeArrayList<NodeTable> nodes =  mapCommonData.getNodes();
+                NodeTable pictureNode = nodes.getShowingIconNode().getNode();
+
+                int mapPid = pictureNode.getPidMap();
+                int nodePid = pictureNode.getPid();
 
                 //絶対pathリスト
                 PictureArrayList<PictureTable> pictures = new PictureArrayList<>();

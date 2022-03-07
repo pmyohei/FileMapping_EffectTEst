@@ -64,7 +64,9 @@ public class ToolIconsView extends ConstraintLayout {
     }
 
     //許可リクエストコード
-    public static final int REQUEST_EXTERNAL_STORAGE = 1;
+    public static final int REQUEST_EXTERNAL_STORAGE_FOR_PICTURE_NODE = 1;
+    public static final int REQUEST_EXTERNAL_STORAGE_FOR_GALLERY = 2;
+    public static final int REQUEST_EXTERNAL_STORAGE_FOR_ADD_PICTURE = 3;
 
     //対象ノード
     private BaseNode mBaseNode;
@@ -362,29 +364,22 @@ public class ToolIconsView extends ConstraintLayout {
                     @Override
                     public void onClick(View view) {
 
-                        //操作対象のノードを設定
-                        mMapActivity.setToolIconNode( mBaseNode.getNode() );
-
-                        //ノードに持たせていた自分をクローズ
-                        mBaseNode.closeIconView();
-
                         //権限の確認
                         int permission = ContextCompat.checkSelfPermission(mMapActivity, Manifest.permission.READ_EXTERNAL_STORAGE);
                         if( permission != PackageManager.PERMISSION_GRANTED ){
+                            //操作対象のノードを設定
+                            mMapActivity.setToolIconNode( mBaseNode.getNode() );
+
                             //権限付与
-                            permissionsStorage();
+                            permissionsStorage( REQUEST_EXTERNAL_STORAGE_FOR_PICTURE_NODE );
                         } else {
                             //既に権限があれば、画面遷移
                             NodeTable node = mBaseNode.getNode();
-
-                            //ピクチャトリミング画面へ遷移
-                            Intent intent = new Intent(getContext(), PictureTrimmingActivity.class);
-                            intent.putExtra(MapActivity.INTENT_MAP_PID, node.getPidMap());
-                            intent.putExtra(MapActivity.INTENT_NODE_PID, node.getPid());
-
-                            //開始
-                            mMapActivity.getTrimmingLauncher().launch(intent);
+                            mMapActivity.transitionTrimming( node );
                         }
+
+                        //ノードに持たせていた自分をクローズ
+                        mBaseNode.closeIconView();
                     }
                 };
 
@@ -422,10 +417,17 @@ public class ToolIconsView extends ConstraintLayout {
                     public void onClick(View view) {
                         //Log.i("アイコン", "クリックされました");
 
-                        Intent intent = new Intent( mMapActivity, PictureGalleryActivity.class );
-                        intent.putExtra(MapActivity.INTENT_NODE_PID, mBaseNode.getNode().getPid());
+                        //権限の確認
+                        int permission = ContextCompat.checkSelfPermission(mMapActivity, Manifest.permission.READ_EXTERNAL_STORAGE);
+                        if( permission != PackageManager.PERMISSION_GRANTED ){
 
-                        mMapActivity.startActivity(intent);
+                            mMapActivity.setToolIconNode( mBaseNode.getNode() );
+                            //権限付与
+                            permissionsStorage( REQUEST_EXTERNAL_STORAGE_FOR_GALLERY );
+                        } else{
+                            //権限があれば、ギャラリー画面へ
+                            mMapActivity.transitionGallery( mBaseNode.getNode() );
+                        }
 
                         //ノードに持たせていた自分をクローズ
                         mBaseNode.closeIconView();
@@ -519,20 +521,17 @@ public class ToolIconsView extends ConstraintLayout {
                     @Override
                     public void onClick(View view) {
 
-                        //操作対象のノードを設定
-                        mMapActivity.setToolIconNode( mBaseNode.getNode() );
+                        //権限の確認
+                        int permission = ContextCompat.checkSelfPermission(mMapActivity, Manifest.permission.READ_EXTERNAL_STORAGE);
+                        if( permission != PackageManager.PERMISSION_GRANTED ){
+                            //権限付与
+                            permissionsStorage( REQUEST_EXTERNAL_STORAGE_FOR_ADD_PICTURE );
+                        } else{
+                            mMapActivity.transitionMediaStorage();
+                        }
 
-                        //写真を一覧で表示
-                        Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                        intent.addCategory(Intent.CATEGORY_OPENABLE);
-                        intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true);
-                        intent.setType("image/*");
-
-                        //開始
-                        mMapActivity.getGalleryLauncher().launch(intent);
-
-                        //ノードに持たせていた自分をクローズ
-                        mBaseNode.closeIconView();
+                        /*-- 自分のクローズ処理は行わない仕様とする --*/
+                        /*-- 外部ストレージから戻ってきたとき、マップ画面側でどのピクチャノードがタッチされたのかを判別するため --*/
                     }
                 };
                 break;
@@ -613,7 +612,7 @@ public class ToolIconsView extends ConstraintLayout {
     /*
      * 権限付与
      */
-    private void permissionsStorage() {
+    private void permissionsStorage( int requestCode ) {
 
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             //API23未満なら、許可ダイアログは不要
@@ -629,7 +628,7 @@ public class ToolIconsView extends ConstraintLayout {
             ActivityCompat.requestPermissions(
                     mMapActivity,
                     PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
+                    requestCode
             );
         }
     }

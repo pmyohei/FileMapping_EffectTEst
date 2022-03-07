@@ -49,6 +49,7 @@
     <string name="toast_storePicture">The image was stored in the node\n(Images that are already stored will not be stored)</string>
     <string name="toast_storeError">Error: Please select from the "Images" folder</string>
     <string name="toast_qeuestPermission">Please allow access to the media</string>
+    <string name="toast_qeuestPermissionFirst">If you want to display the image on the map,\nplease change to permission</string>
 
     <!--  マップ生成画面  -->
     <string name="map_create_tab1">Map name</string>
