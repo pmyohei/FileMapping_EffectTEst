@@ -21,6 +21,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -49,12 +50,10 @@ public class MapActivity extends AppCompatActivity {
     /* 画面遷移-レスポンスコード */
     public static final int RESULT_PICTURE_NODE = 200;
     public static final int RESULT_UPDATE_TUHMBNAIL = 201;
-    public static final int RESULT_ADD_PICTURE = 202;
 
     /* 画面遷移-キー */
     public static String INTENT_MAP_PID = "MapPid";
     public static String INTENT_NODE_PID = "NodePid";
-    public static String INTENT_COLORS = "colors";
     public static String INTENT_EDIT = "edit";
 
     //ノードフォーカス処理
@@ -87,11 +86,11 @@ public class MapActivity extends AppCompatActivity {
     private boolean mDrawerIsOpen = false;
 
     //マップテーブル
-    MapTable mMap;
-
+    private MapTable mMap;
     //マップ内ノードリスト
     private NodeArrayList<NodeTable> mNodes;
-    //private PictureArrayList<PictureTable> mThumbnails;
+    //ツールアイコン操作されたノード
+    private NodeTable mToolIconNode;
 
     /* 制御 */
     //ノード生成ができる状態か
@@ -138,7 +137,7 @@ public class MapActivity extends AppCompatActivity {
         );
         mGalleryLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                new AddPictureResultCallback(this)
+                new AddPictureResultCallback(this, mToolIconNode)
         );
 
         //画面上部の中心位置
@@ -663,6 +662,13 @@ public class MapActivity extends AppCompatActivity {
     }
 
     /*
+     * ツールアイコンが表示されているノードの設定
+     */
+    public void setToolIconNode( NodeTable node ) {
+        mToolIconNode = node;
+    }
+
+    /*
      * メニュー設定
      */
     public void setToolbarOptionMenu(boolean isChangeParent) {
@@ -782,6 +788,38 @@ public class MapActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     * 権限許可ダイアログの処理結果コールバック
+     */
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permission, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permission, grantResults);
+
+        if (grantResults.length <= 0) {
+            return;
+        }
+
+        switch (requestCode) {
+            //外部ストレージ
+            case ToolIconsView.REQUEST_EXTERNAL_STORAGE: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    //ピクチャトリミング画面へ遷移
+                    Intent intent = new Intent(this, PictureTrimmingActivity.class);
+                    intent.putExtra(MapActivity.INTENT_MAP_PID, mToolIconNode.getPidMap());
+                    intent.putExtra(MapActivity.INTENT_NODE_PID, mToolIconNode.getPid());
+
+                    //開始
+                    mNodeOperationLauncher.launch(intent);
+
+                } else {
+                    //許可が取れなかった場合
+                    Toast.makeText(this,
+                            getString(R.string.toast_qeuestPermission), Toast.LENGTH_SHORT).show();
+                }
+            }
+        }
+    }
 
     /*
      * タッチイベント
@@ -1216,16 +1254,16 @@ public class MapActivity extends AppCompatActivity {
     private static class AddPictureResultCallback implements ActivityResultCallback<ActivityResult> {
 
         private final Context mContext;
+        //選択されたピクチャノード
+        private final NodeTable mPictureNode;
 
-        public AddPictureResultCallback( Context context ) {
+        public AddPictureResultCallback( Context context, NodeTable node ) {
             mContext = context;
+            mPictureNode = node;
         }
 
         @Override
         public void onActivityResult(ActivityResult result) {
-
-            //リザルトコード
-            //int resultCode = result.getResultCode();
 
             if (result.getResultCode() == RESULT_OK) {
 
@@ -1235,12 +1273,8 @@ public class MapActivity extends AppCompatActivity {
                 }
 
                 //選択されているピクチャノード情報
-                MapCommonData mapCommonData = (MapCommonData) ((ComponentActivity)mContext).getApplication();
-                NodeArrayList<NodeTable> nodes =  mapCommonData.getNodes();
-                NodeTable pictureNode = nodes.getShowingIconNode().getNode();
-
-                int mapPid = pictureNode.getPidMap();
-                int nodePid = pictureNode.getPid();
+                int mapPid = mPictureNode.getPidMap();
+                int nodePid = mPictureNode.getPid();
 
                 //絶対pathリスト
                 PictureArrayList<PictureTable> pictures = new PictureArrayList<>();

@@ -48,6 +48,7 @@
     <string name="toast_errorGetPath">失敗しました</string>
     <string name="toast_storePicture">画像を格納しました\n（同じ画像は格納されません）</string>
     <string name="toast_storeError">エラー：「画像」フォルダから選択して下さい</string>
+    <string name="toast_qeuestPermission">メディアへのアクセスを許可してください</string>
 
     <!--  マップ生成画面  -->
     <string name="map_create_tab1">マップ名</string>

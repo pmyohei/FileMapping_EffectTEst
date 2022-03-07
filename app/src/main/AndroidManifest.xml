@@ -1,9 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.mapping.filemapping">
     <!-- MediaStore.Images.Media.EXTERNAL_CONTENT_URI -->
     <!-- ※コード上でも「ActivityCompat.requestPermissions()」の処理が必要 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission
+        android:name="android.permission.READ_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
 
     <!-- Admodのために追加 -->
     <uses-permission android:name="android.permission.INTERNET"/>

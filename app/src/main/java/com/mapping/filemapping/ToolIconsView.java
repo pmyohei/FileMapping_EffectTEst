@@ -2,10 +2,13 @@ package com.mapping.filemapping;
 
 import static com.mapping.filemapping.MapActivity.MOVE_UPPER;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.PackageManager;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -17,6 +20,8 @@ import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 import androidx.fragment.app.FragmentActivity;
 
@@ -57,6 +62,9 @@ public class ToolIconsView extends ConstraintLayout {
             return ibIcon;
         }
     }
+
+    //許可リクエストコード
+    public static final int REQUEST_EXTERNAL_STORAGE = 1;
 
     //対象ノード
     private BaseNode mBaseNode;
@@ -354,21 +362,29 @@ public class ToolIconsView extends ConstraintLayout {
                     @Override
                     public void onClick(View view) {
 
+                        //操作対象のノードを設定
+                        mMapActivity.setToolIconNode( mBaseNode.getNode() );
+
                         //ノードに持たせていた自分をクローズ
                         mBaseNode.closeIconView();
 
-                        //ノード
-                        NodeTable node = mBaseNode.getNode();
+                        //権限の確認
+                        int permission = ContextCompat.checkSelfPermission(mMapActivity, Manifest.permission.READ_EXTERNAL_STORAGE);
+                        if( permission != PackageManager.PERMISSION_GRANTED ){
+                            //権限付与
+                            permissionsStorage();
+                        } else {
+                            //既に権限があれば、画面遷移
+                            NodeTable node = mBaseNode.getNode();
 
-                        //ピクチャトリミング画面へ遷移
-                        Context context = getContext();
-                        Intent intent = new Intent(context, PictureTrimmingActivity.class);
-                        intent.putExtra(MapActivity.INTENT_MAP_PID, node.getPidMap());
-                        intent.putExtra(MapActivity.INTENT_NODE_PID, node.getPid());
-                        //intent.putExtra(MapActivity.INTENT_COLORS, mMapActivity.getMapDefaultColors());
+                            //ピクチャトリミング画面へ遷移
+                            Intent intent = new Intent(getContext(), PictureTrimmingActivity.class);
+                            intent.putExtra(MapActivity.INTENT_MAP_PID, node.getPidMap());
+                            intent.putExtra(MapActivity.INTENT_NODE_PID, node.getPid());
 
-                        //開始
-                        mMapActivity.getTrimmingLauncher().launch(intent);
+                            //開始
+                            mMapActivity.getTrimmingLauncher().launch(intent);
+                        }
                     }
                 };
 
@@ -503,6 +519,9 @@ public class ToolIconsView extends ConstraintLayout {
                     @Override
                     public void onClick(View view) {
 
+                        //操作対象のノードを設定
+                        mMapActivity.setToolIconNode( mBaseNode.getNode() );
+
                         //写真を一覧で表示
                         Intent intent = new Intent(Intent.ACTION_OPEN_DOCUMENT);
                         intent.addCategory(Intent.CATEGORY_OPENABLE);
@@ -512,8 +531,8 @@ public class ToolIconsView extends ConstraintLayout {
                         //開始
                         mMapActivity.getGalleryLauncher().launch(intent);
 
-                        /*-- 自分のクローズ処理は行わない仕様とする --*/
-                        /*-- ギャラリーから戻ってきたとき、マップ画面側でどのピクチャノードがタッチされたのかを判別するため --*/
+                        //ノードに持たせていた自分をクローズ
+                        mBaseNode.closeIconView();
                     }
                 };
                 break;
@@ -589,6 +608,30 @@ public class ToolIconsView extends ConstraintLayout {
     private void showHelpIconDialog() {
         DialogFragment helpDialog = new HelpDialog( HelpDialog.HELP_KIND_ICON, mBaseNode.getNode().getKind() );
         helpDialog.show( ((FragmentActivity)mMapActivity).getSupportFragmentManager(), "");
+    }
+
+    /*
+     * 権限付与
+     */
+    private void permissionsStorage() {
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            //API23未満なら、許可ダイアログは不要
+            return;
+        }
+
+        //許可ダイアログは必須
+        String[] PERMISSIONS_STORAGE = {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+        };
+        int permission = ContextCompat.checkSelfPermission(mMapActivity, Manifest.permission.READ_EXTERNAL_STORAGE);
+        if (permission != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(
+                    mMapActivity,
+                    PERMISSIONS_STORAGE,
+                    REQUEST_EXTERNAL_STORAGE
+            );
+        }
     }
 }
 

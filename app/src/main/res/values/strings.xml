@@ -6,7 +6,7 @@
     <string name="cancel">Cancel</string>
     <string name="waiting">processing</string>
     <string name="updating">Updating</string>
-    <string name="do_not_show_this_message">Do not display this message in the future.</string>
+    <string name="do_not_show_this_message">Don\'t show again</string>
     <string name="tab_all">All</string>
 
     <!--  ノード  -->
@@ -48,6 +48,7 @@
     <string name="toast_errorGetPath">Failure</string>
     <string name="toast_storePicture">The image was stored in the node\n(Images that are already stored will not be stored)</string>
     <string name="toast_storeError">Error: Please select from the "Images" folder</string>
+    <string name="toast_qeuestPermission">Please allow access to the media</string>
 
     <!--  マップ生成画面  -->
     <string name="map_create_tab1">Map name</string>

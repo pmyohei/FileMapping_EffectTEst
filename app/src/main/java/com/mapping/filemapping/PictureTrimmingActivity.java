@@ -9,6 +9,7 @@ import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
@@ -28,6 +29,7 @@ import android.graphics.Color;
 import android.graphics.RectF;
 import android.media.ExifInterface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.ParcelFileDescriptor;
 import android.util.Log;
@@ -53,6 +55,9 @@ import java.io.IOException;
 import java.util.Objects;
 
 public class PictureTrimmingActivity extends AppCompatActivity {
+
+    //許可リクエストコード
+    private final int REQUEST_EXTERNAL_STORAGE = 1;
 
     //写真ギャラリー用ランチャー
     private ActivityResultLauncher<Intent> mPictureSelectLauncher;
@@ -80,7 +85,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         adView.loadAd(adRequest);
 
         //権限付与
-        permissionsStorage();
+        //permissionsStorage();
 
         //画像未回転
         mIsRotate = false;
@@ -172,14 +177,19 @@ public class PictureTrimmingActivity extends AppCompatActivity {
     /*
      * 権限付与
      */
+/*
     private void permissionsStorage() {
-        //※query()を発行するとき、権限エラーになるためここでも指定が必要
-        final int REQUEST_EXTERNAL_STORAGE = 1;
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            //API23未満なら、許可ダイアログは不要
+            return;
+        }
+
+        //許可ダイアログは必須
         String[] PERMISSIONS_STORAGE = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
-                Manifest.permission.WRITE_EXTERNAL_STORAGE
         };
-        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE);
+        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
         if (permission != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(
                     this,
@@ -188,6 +198,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
             );
         }
     }
+*/
 
     /*
      *　写真ギャラリーの表示
@@ -641,6 +652,32 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         //非同期処理開始
         db.execute();
     }
+
+/*
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permission, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permission, grantResults);
+
+        if (grantResults.length <= 0) {
+            return;
+        }
+
+        switch (requestCode) {
+            case REQUEST_EXTERNAL_STORAGE: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //許可が取れた場合
+                    Toast.makeText(this,
+                            "許可OK", Toast.LENGTH_LONG).show();
+                } else {
+                    /// 許可が取れなかった場合・・・
+                    Toast.makeText(this,
+                            "アプリを起動できません....", Toast.LENGTH_LONG).show();
+                    finish();
+                }
+            }
+        }
+    }
+*/
 
     /*
      * ツールバーオプションメニュー生成

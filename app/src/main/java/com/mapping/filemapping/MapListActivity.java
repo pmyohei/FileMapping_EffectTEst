@@ -90,7 +90,7 @@ public class MapListActivity extends AppCompatActivity {
                     @Override
                     public void onOpenMap(MapTable map) {
                         //指定マップを開く
-                        openMap( map );
+                        openMap( map, false );
                     }
                 });
 
@@ -211,7 +211,7 @@ public class MapListActivity extends AppCompatActivity {
     /*
      * マップ画面へ遷移
      */
-    private void openMap( MapTable map ){
+    private void openMap( MapTable map, boolean isNew ){
 
         MapCommonData commonData = (MapCommonData)getApplication();
         //初期化
@@ -221,6 +221,7 @@ public class MapListActivity extends AppCompatActivity {
 
         //マップ画面へ遷移
         Intent intent = new Intent(MapListActivity.this, MapActivity.class);
+        intent.putExtra(ResourceManager.KEY_NEW_MAP, isNew);
         startActivity(intent);
     }
 
@@ -250,21 +251,13 @@ public class MapListActivity extends AppCompatActivity {
 
                 //マップ入力画面からデータを受け取る
                 MapTable map = (MapTable) intent.getSerializableExtra(MapEntryActivity.KEY_MAP);
-                Log.i("MapListActivity", "新規生成 map=" + map.getMapName());
 
                 //マップリストアダプタに追加通知
                 mMaps.add( map );
                 mMapListAdapter.notifyItemInserted( mMaps.size() - 1 );
 
-                //マップ画面へ遷移
-                intent = new Intent(MapListActivity.this, MapActivity.class);
-                //intent.putExtra(ResourceManager.KEY_MAPID, map.getPid());
-                intent.putExtra(KEY_MAP, map );
-                intent.putExtra(ResourceManager.KEY_NEW_MAP, true);
-
-                Log.i("Map", "マップ生成完了。マップ画面へ");
-
-                startActivity(intent);
+                //マップ画面を開く
+                openMap( map, true );
             }
         }
     }
