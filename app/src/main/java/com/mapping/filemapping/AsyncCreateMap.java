@@ -73,7 +73,7 @@ public class AsyncCreateMap {
             //ルートノードを生成
             NodeTable rootNode = new NodeTable();
             rootNode.setPidMap( mMapPid );
-            rootNode.setNodeName( mContext.getString( R.string.default_rootNode ) );
+            rootNode.setNodeName( mMap.getMapName() );
             rootNode.setPidParentNode( NodeTable.NO_PARENT );
             rootNode.setKind( NodeTable.NODE_KIND_ROOT );
 

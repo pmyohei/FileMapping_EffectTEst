@@ -21,10 +21,12 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Rect;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.ads.MobileAds;
@@ -208,7 +210,7 @@ public class MapListActivity extends AppCompatActivity {
         }
 
         //ガイドダイアログを表示
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.alert_launch_mapList_title))
                 .setMessage(getString(R.string.alert_launch_mapList_message))
                 .setPositiveButton(getString(R.string.do_not_show_this_message), new DialogInterface.OnClickListener() {
@@ -221,6 +223,9 @@ public class MapListActivity extends AppCompatActivity {
                 })
                 //.setNegativeButton("Cancel", null)
                 .show();
+
+        //メッセージ文は、Styleのフォントが適用されないため個別に設定
+        ((TextView)dialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
     }
 
     /*

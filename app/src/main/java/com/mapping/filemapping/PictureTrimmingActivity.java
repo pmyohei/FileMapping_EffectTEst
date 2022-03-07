@@ -23,6 +23,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.RectF;
+import android.graphics.Typeface;
 import android.media.ExifInterface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -36,6 +37,7 @@ import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
@@ -181,7 +183,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
     private void showDisableDirectoryAlertDialog() {
 
         //既にサムネイルとして使用している旨を表示
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.alert_trimming_disableDirectory_title))
                 .setMessage(getString(R.string.alert_trimming_disableDirectory_message))
                 .setPositiveButton(getString(R.string.alert_trimming_anotherPicture_ok), new DialogInterface.OnClickListener() {
@@ -193,6 +195,9 @@ public class PictureTrimmingActivity extends AppCompatActivity {
                 })
                 .setCancelable(false)   //キャンセル不可（ボタン押下しない限り閉じない）
                 .show();
+
+        //メッセージ文は、Styleのフォントが適用されないため個別に設定
+        ((TextView)dialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
     }
 
     /*
@@ -201,7 +206,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
     private void showSameThumbnailAlertDialog() {
 
         //既にサムネイルとして使用している旨を表示
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.alert_trimming_sameThumbnail_title))
                 .setMessage(getString(R.string.alert_trimming_sameThumbnail_message))
                 .setPositiveButton(getString(R.string.alert_trimming_anotherPicture_ok), new DialogInterface.OnClickListener() {
@@ -213,6 +218,9 @@ public class PictureTrimmingActivity extends AppCompatActivity {
                 })
                 .setCancelable(false)   //キャンセル不可（ボタン押下しない限り閉じない）
                 .show();
+
+        //メッセージ文は、Styleのフォントが適用されないため個別に設定
+        ((TextView)dialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
     }
 
 
@@ -262,33 +270,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         /*-- Picassoは使わない --*/
         /*-- ・Bitmapがキャッシュに格納されてしまうため、同じ画像だとTrancelate()がコールされない --*/
         /*-- ・キャッシュを無効化しても、反映が遅い --*/
-        /*
-        Picasso.get()
-            .load( mUri )
-            .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
-            .transform(new Transformation() {
-                @Override
-                public Bitmap transform(Bitmap source) {
-
-                    RectF rectInfo = iv_cropSource.getActualCropRect();
-                    Log.i("回転調査", "setCroppedPicture left=" + rectInfo.left);
-                    Bitmap result = Bitmap.createBitmap(source, (int)rectInfo.left, (int)rectInfo.top, (int)rectInfo.width(), (int)rectInfo.height());
-                    if (result != source) {
-                        source.recycle();
-                        Log.i("回転調査", "setCroppedPicture recycle");
-                    }
-                    return result;
-                }
-
-                @Override
-                public String key() {
-                    return "cropped()";
-                }
-            })
-            .error(R.drawable.baseline_picture_read_error_24)
-            .into( iv_cropped );*/
     }
-
 
     /*
      *　トリミング画像の設定
@@ -469,12 +451,12 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         RectF rectInfo = iv_cropSource.getActualCropRect();
 
         Bitmap bmp = getBitmapFromUri(mUri);
-        Log.i("トリミング問題", "生成　bmp.getWidth=" + bmp.getWidth());
-        Log.i("トリミング問題", "生成　bmp.getHeight=" + bmp.getHeight());
-        Log.i("トリミング問題", "生成　rectInfo.left=" + rectInfo.left);
-        Log.i("トリミング問題", "生成　rectInfo.top=" + rectInfo.top);
-        Log.i("トリミング問題", "生成　rectInfo.width()=" + rectInfo.width());
-        Log.i("トリミング問題", "生成　rectInfo.height()=" + rectInfo.height());
+        //Log.i("トリミング問題", "生成　bmp.getWidth=" + bmp.getWidth());
+        //Log.i("トリミング問題", "生成　bmp.getHeight=" + bmp.getHeight());
+        //Log.i("トリミング問題", "生成　rectInfo.left=" + rectInfo.left);
+        //Log.i("トリミング問題", "生成　rectInfo.top=" + rectInfo.top);
+        //Log.i("トリミング問題", "生成　rectInfo.width()=" + rectInfo.width());
+        //Log.i("トリミング問題", "生成　rectInfo.height()=" + rectInfo.height());
 
         //画像が回転している場合は、縦横のサイズは反対になる
         int width = ((mIsRotate) ? bmp.getHeight() : bmp.getWidth());
@@ -718,11 +700,14 @@ public class PictureTrimmingActivity extends AppCompatActivity {
             setCroppedPicture();
 
             //トリミング範囲が反映されるタイミングが変わることをダイアログで表示
-            new AlertDialog.Builder(iv_cropSource.getContext())
+            AlertDialog dialog = new AlertDialog.Builder(iv_cropSource.getContext())
                     .setTitle( getString(R.string.alert_trimming_ui_title) )
                     .setMessage( getString(R.string.alert_trimming_ui_message) )
                     .setPositiveButton( getString(android.R.string.ok), null)
                     .show();
+
+            //メッセージ文は、Styleのフォントが適用されないため個別に設定
+            ((TextView)dialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
         }
 
     }

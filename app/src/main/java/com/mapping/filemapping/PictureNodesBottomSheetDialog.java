@@ -4,11 +4,13 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
@@ -194,7 +196,7 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
      */
     private void confirmDialog(int toPicutureNodePid) {
 
-        new AlertDialog.Builder(getActivity())
+        AlertDialog dialog = new AlertDialog.Builder(getActivity())
                 .setTitle( getActivity().getString(R.string.alert_movePicture_title) )
                 .setMessage( getActivity().getString(R.string.alert_movePicture_message) )
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -213,6 +215,9 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
+
+        //メッセージ文は、Styleのフォントが適用されないため個別に設定
+        ((TextView)dialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
     }
 
     /*

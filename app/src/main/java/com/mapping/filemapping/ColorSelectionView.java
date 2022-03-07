@@ -234,6 +234,7 @@ public class ColorSelectionView extends LinearLayout {
                 dialog = new ColorCodeDialog(settingColor);
             } else {
                 dialog = new ColorPickerDialog(settingColor);
+                dialog.setCancelable( false );  //画面外のキャンセル不可
             }
 
             //OKボタンリスナー

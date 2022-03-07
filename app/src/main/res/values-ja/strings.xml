@@ -10,7 +10,6 @@
     <string name="tab_all">すべて</string>
 
     <!--  ノード  -->
-    <string name="default_rootNode">中心\nノード</string>
     <string name="node_createButtom">作成</string>
     <string name="node_cancelButtom">キャンセル</string>a
 

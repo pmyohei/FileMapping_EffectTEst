@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Typeface;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -18,6 +19,7 @@ import android.view.ViewTreeObserver;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
@@ -449,7 +451,7 @@ public class ToolIconsView extends ConstraintLayout {
                         Context context = getContext();
 
                         //削除確認ダイアログを表示
-                        new AlertDialog.Builder( context )
+                        AlertDialog dialog = new AlertDialog.Builder( context )
                                 .setTitle( context.getString(R.string.alert_deleteNode_title) )
                                 .setMessage( context.getString(R.string.alert_deleteNode_message) )
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -478,6 +480,9 @@ public class ToolIconsView extends ConstraintLayout {
                                 })
                                 .setNegativeButton("Cancel", null)
                                 .show();
+
+                        //メッセージ文は、Styleのフォントが適用されないため個別に設定
+                        ((TextView)dialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
 
                         //ノードに持たせていた自分をクローズ
                         mBaseNode.closeIconView();

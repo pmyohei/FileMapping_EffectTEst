@@ -6,11 +6,13 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -115,7 +117,7 @@ public class MapEntryActivity extends AppCompatActivity {
         }
 
         //ガイドダイアログを表示
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
             .setTitle( getString(R.string.alert_launch_mapEntry_title) )
             .setMessage( getString(R.string.alert_launch_mapEntry_message) )
             .setPositiveButton(getString(R.string.do_not_show_this_message), new DialogInterface.OnClickListener() {
@@ -124,12 +126,13 @@ public class MapEntryActivity extends AppCompatActivity {
                     SharedPreferences.Editor editor = spData.edit();
                     editor.putBoolean( key, false );
                     editor.apply();
-
-                    Log.i("ヘルプ", "操作後=" + spData.getBoolean( key, ResourceManager.INVALID_SHOW_HELP));
                 }
             })
             //.setNegativeButton("Cancel", null)
             .show();
+
+        //メッセージ文は、Styleのフォントが適用されないため個別に設定
+        ((TextView)dialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
     }
 
     /*

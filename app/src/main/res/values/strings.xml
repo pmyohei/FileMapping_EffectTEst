@@ -10,7 +10,6 @@
     <string name="tab_all">All</string>
 
     <!--  ノード  -->
-    <string name="default_rootNode">Central\nnode</string>
     <string name="node_createButtom">Create</string>
     <string name="node_cancelButtom">Cancel</string>a
 

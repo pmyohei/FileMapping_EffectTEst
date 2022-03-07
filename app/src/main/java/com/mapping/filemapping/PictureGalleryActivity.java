@@ -17,6 +17,7 @@ import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
@@ -25,6 +26,7 @@ import android.view.MenuItem;
 import android.view.ViewTreeObserver;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.material.tabs.TabLayout;
@@ -419,7 +421,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
     private void confirmDeletePicture() {
 
         //削除確認ダイアログを表示
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle( getString(R.string.alert_deletePicture_title) )
                 .setMessage( getString(R.string.alert_deletePicture_message) )
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -433,6 +435,8 @@ public class PictureGalleryActivity extends AppCompatActivity {
                 .setNegativeButton("Cancel", null)
                 .show();
 
+        //メッセージ文は、Styleのフォントが適用されないため個別に設定
+        ((TextView)dialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
     }
 
 

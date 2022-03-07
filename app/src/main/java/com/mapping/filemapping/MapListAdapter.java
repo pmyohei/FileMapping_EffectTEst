@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -98,7 +99,7 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
                     Context context = view.getContext();
 
                     //削除確認ダイアログを表示
-                    new AlertDialog.Builder(context)
+                    AlertDialog dialog = new AlertDialog.Builder(context)
                             .setTitle( context.getString(R.string.alert_map_delete_title) )
                             .setMessage( context.getString(R.string.alert_map_delete_message) )
                             .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -120,6 +121,9 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
                             })
                             .setNegativeButton("Cancel", null)
                             .show();
+
+                    //メッセージ文は、Styleのフォントが適用されないため個別に設定
+                    ((TextView)dialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
                 }
             });
 

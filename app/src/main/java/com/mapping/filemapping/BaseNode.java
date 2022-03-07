@@ -173,7 +173,6 @@ public class BaseNode extends FrameLayout {
 
         //ノードの基本属性のデザインを設定
         setAsBaseNodeInfo();
-
         //親ノード属性のデザインを設定
         setAsParentNodeInfo();
 

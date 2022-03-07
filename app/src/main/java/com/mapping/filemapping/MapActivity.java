@@ -23,6 +23,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -393,7 +394,7 @@ public class MapActivity extends AppCompatActivity {
         }
 
         //移動確認ダイアログを表示
-        new AlertDialog.Builder(this)
+        AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle(getString(R.string.alert_changeParent_title))
                 .setMessage(getString(R.string.alert_changeParent_message))
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
@@ -414,6 +415,10 @@ public class MapActivity extends AppCompatActivity {
                 })
                 .setNegativeButton("Cancel", null)
                 .show();
+
+
+        //メッセージ文は、Styleのフォントが適用されないため個別に設定
+        ((TextView)dialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
     }
 
     /*
