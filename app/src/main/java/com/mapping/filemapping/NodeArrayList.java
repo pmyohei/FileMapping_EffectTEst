@@ -15,6 +15,8 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
 
     /* 定数 */
     public static final int NO_DATA = -1;   //データなし
+    //全ノード変更の有無
+    private boolean mIsAllChanged = false;
 
     /*
      * コンストラクタ
@@ -35,6 +37,13 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
         }
 
         return size - 1;
+    }
+
+    /*
+     * ノード全体のデザイン変更があったかどうか
+     */
+    public boolean isAllChanged() {
+        return mIsAllChanged;
     }
 
     /*
@@ -327,6 +336,9 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
             node.setNodeColor( color );
             node.getNodeView().setNodeBackgroundColor( color );
         }
+
+        //全体デザイン変更あり
+        mIsAllChanged = true;
     }
 
     /*
@@ -336,10 +348,11 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
 
         //リストの内のノードすべて
         for( NodeTable node: this ){
-            //★テーブルにも反映必要
-            //node.
             node.getNodeView().setNodeTextColor( color );
         }
+
+        //全体デザイン変更あり
+        mIsAllChanged = true;
     }
 
     /*
@@ -349,10 +362,11 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
 
         //リストの内のノードすべて
         for( NodeTable node: this ){
-            //★テーブルにも反映必要
-            //node.
             node.getNodeView().setNodeFont( font );
         }
+
+        //全体デザイン変更あり
+        mIsAllChanged = true;
     }
 
     /*
@@ -362,10 +376,11 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
 
         //リストの内のノードすべて
         for( NodeTable node: this ){
-            //★テーブルにも反映必要
-            //node.
             node.getNodeView().setNodeShape( shapeKind );
         }
+
+        //全体デザイン変更あり
+        mIsAllChanged = true;
     }
 
     /*
@@ -375,10 +390,11 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
 
         //リストの内のノードすべて
         for( NodeTable node: this ){
-            //★テーブルにも反映必要
-            //node.
             node.getNodeView().setBorderColor( color );
         }
+
+        //全体デザイン変更あり
+        mIsAllChanged = true;
     }
 
     /*
@@ -388,10 +404,11 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
 
         //リストの内のノードすべて
         for( NodeTable node: this ){
-            //★テーブルにも反映必要
-            //node.
             node.getNodeView().setBorderSize( thick );
         }
+
+        //全体デザイン変更あり
+        mIsAllChanged = true;
     }
 
     /*
@@ -403,6 +420,9 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
         for( NodeTable node: this ){
             node.getNodeView().setShadowColor( color, node.getKind() );
         }
+
+        //全体デザイン変更あり
+        mIsAllChanged = true;
     }
 
     /*
@@ -414,6 +434,9 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
         for( NodeTable node: this ){
             node.getNodeView().setShadowOnOff( isShadow  );
         }
+
+        //全体デザイン変更あり
+        mIsAllChanged = true;
     }
 
     /*
@@ -425,6 +448,9 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
         for( NodeTable node: this ){
             node.getNodeView().switchShadow();
         }
+
+        //全体デザイン変更あり
+        mIsAllChanged = true;
     }
 
     /*
@@ -443,6 +469,9 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
             ChildNode childNode = (ChildNode)node.getNodeView();
             childNode.setLineColor( color );
         }
+
+        //全体デザイン変更あり
+        mIsAllChanged = true;
     }
 
     /*
@@ -461,6 +490,9 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
             ChildNode childNode = (ChildNode)node.getNodeView();
             childNode.setLineSize( thick );
         }
+
+        //全体デザイン変更あり
+        mIsAllChanged = true;
     }
 
     /*
@@ -584,25 +616,4 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
         return pids;
     }
 
-    /*
-     *　指定一般ノードのすべてのピクチャノードを取得
-     */
-/*    public ArrayList<ThumbnailGridAdapter.PictureNodeInfo> getPictureNodeInfos() {
-
-        ArrayList<ThumbnailGridAdapter.PictureNodeInfo> infos = new ArrayList<>();
-
-        for( NodeTable node: this ){
-
-            if( node.getKind() == NodeTable.NODE_KIND_PICTURE ){
-
-
-
-                ThumbnailGridAdapter.PictureNodeInfo pictureNodeInfo = new ThumbnailGridAdapter.PictureNodeInfo();
-            }
-
-        }
-
-
-        return infos;
-    }*/
 }

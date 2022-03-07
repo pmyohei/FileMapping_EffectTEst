@@ -381,18 +381,17 @@ public class BaseNode extends FrameLayout {
     public void setShadowOnOff(boolean isShadow ) {
         //影色を設定
         ((NodeOutsideView)findViewById( R.id.l_nodeBody )).setShadowOnOff( isShadow, mNode.getKind()  );
+
+        mNode.setShadow( isShadow );
     }
 
     /*
      * ノード影の有無を切替
      */
     public void switchShadow() {
-
         //OnOff反転
         boolean isShadow = !mNode.isShadow();
         this.setShadowOnOff( isShadow );
-
-        mNode.setShadow( isShadow );
     }
 
     /*

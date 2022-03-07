@@ -14,7 +14,6 @@ import android.widget.FrameLayout;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.tabs.TabLayout;
@@ -22,7 +21,6 @@ import com.google.android.material.tabs.TabLayoutMediator;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 /*
  * マップ情報入力画面（新規作成／編集）
@@ -213,7 +211,7 @@ public class MapEntryActivity extends AppCompatActivity {
                 mMap.setThirdColor( colors[2] );
 
                 //影の有無
-                mMap.setIsShadow( smv.isMapShadow() );
+                mMap.setShadow( smv.isMapShadow() );
             }
 
             //入力マップ名を設定

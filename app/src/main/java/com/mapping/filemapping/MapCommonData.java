@@ -26,7 +26,6 @@ public class MapCommonData extends Application {
     //★不要な見込み
     private PictureArrayList<PictureTable> mThumbnails;
     //位置変更ノードキュー
-    //★更新したらこのキューに保存するため、名前を変更する
     private NodeArrayList<NodeTable> mUpdateNodeQue;
     //削除対象ノード
     private NodeArrayList<NodeTable> mDeleteNodes;
@@ -36,6 +35,8 @@ public class MapCommonData extends Application {
     private NodeTable mEditNode = null;
     //色履歴
     private ArrayList<String> mColorHistory;
+    //全ノードエンキュー有無
+    private boolean mIsAllNodeEnque;
 
     /*
      * アプリケーションの起動時に呼び出される
@@ -62,7 +63,6 @@ public class MapCommonData extends Application {
         mNodes = null;
         mUpdateNodeQue = null;
         mThumbnails = null;
-        //mToolOpeningNode = null;
         mEditNode = null;
         mDeleteNodes = null;
         mColorHistory = null;
@@ -79,6 +79,9 @@ public class MapCommonData extends Application {
         mUpdateNodeQue.clear();
         mDeleteNodes.clear();
         mColorHistory.clear();
+
+        //状態リセット
+        mIsAllNodeEnque = false;
 
         //ピンチ比率
         pinchDistanceRatioX = 1.0f;
@@ -244,6 +247,9 @@ public class MapCommonData extends Application {
     }
     public void clearUpdateNodeQue() {
         this.mUpdateNodeQue.clear();
+
+        //キュークリアされたので、リセット
+        mIsAllNodeEnque = false;
     }
 
     /*
@@ -259,6 +265,29 @@ public class MapCommonData extends Application {
 
         //エンキュー
         this.mUpdateNodeQue.add(node);
+    }
+
+    /*
+     * 更新対象ノードキューへエンキュー（全ノード対象）
+     * 　※既に追加済みの場合は、エンキューしない
+     */
+    public void enqueAllNodeWithUnique() {
+
+        if( mIsAllNodeEnque ){
+            //一度でも本処理をしていれば、2度目移行は不要
+            return;
+        }
+
+        //ノード全変更されたか
+        if( mNodes.isAllChanged() ){
+            //マップ上のすべてのノードを更新対象にする
+            this.mUpdateNodeQue.clear();
+            this.mUpdateNodeQue.addAll( mNodes );
+
+            //一度でも本処理をしていれば、2度目移行は不要
+            //※新規ノードは、生成時に更新キューに格納されるため
+            mIsAllNodeEnque = true;
+        }
     }
 
     /*

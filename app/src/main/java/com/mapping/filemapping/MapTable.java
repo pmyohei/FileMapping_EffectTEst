@@ -99,7 +99,7 @@ public class MapTable implements Serializable {
     public void setMapColor(String mapColor) { this.mapColor = mapColor; }
 
     public boolean isShadow() { return isShadow; }
-    public void setIsShadow(boolean isShadow) { this.isShadow = isShadow;}
+    public void setShadow(boolean isShadow) { this.isShadow = isShadow;}
 
     /*
      * デフォルトカラーを取得

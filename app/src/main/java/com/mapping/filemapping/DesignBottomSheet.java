@@ -13,6 +13,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 
+import androidx.annotation.NonNull;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.FragmentActivity;
 import androidx.viewpager2.widget.ViewPager2;
@@ -29,8 +30,11 @@ public class DesignBottomSheet extends CoordinatorLayout {
     //デザインレイアウト種別
     public static final int MAP = 0;
     public static final int NODE = 1;
-    public static final int PICTURE_NODE = 2;
-    public static final int SHAPE_ONLY = 3;
+    public static final int SHAPE_ONLY = 2;
+
+    //デザイン種別
+    private int mIsKind;
+
 
     /*
      * コンストラクタ
@@ -46,16 +50,65 @@ public class DesignBottomSheet extends CoordinatorLayout {
     public DesignBottomSheet(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
 
+        //初期化
+        init();
+    }
+
+    /*
+     * 初期化
+     */
+    private void init() {
+
         //レイアウト生成
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.design_bottom_sheet, this, true);
+
+        //ボトムシートリスナーの設定
+        BottomSheetBehavior<View> behavior = BottomSheetBehavior.from(findViewById(R.id.ll_bottomSheet));
+        behavior.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+
+            @Override
+            public void onStateChanged(@NonNull View bottomSheet, int newState) {
+
+                //Log.i("ボトム状態チェック", "newState=" + newState);
+                checkAllNodeSave( newState );
+            }
+
+            @Override
+            public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+
+            }
+        });
+
     }
+
+    /*
+     * 全ノードの保存処理が必要かチェック
+     */
+    private void checkAllNodeSave(int state) {
+
+        if( mIsKind != MAP ){
+            //マップ操作以外なら何もしない
+            return;
+        }
+
+        if( state != STATE_COLLAPSED ){
+            //完全に閉じていない状態なら何もしない
+            return;
+        }
+
+        //全ノード更新キューへエンキュー処理
+        MapCommonData mapCommonData = (MapCommonData) ((Activity) getContext()).getApplication();
+        mapCommonData.enqueAllNodeWithUnique();
+    }
+
 
     /*
      * 高さ設定
      *   画面の縦サイズに対して、指定された割合のサイズをBottomSheetの高さに設定
      */
-    public void setBottomSheetHeight(Context context, float ratio) {
+    private void setBottomSheetHeight(Context context, float ratio) {
 
         //BottomSheet
         LinearLayout bs_design = findViewById(R.id.ll_bottomSheet);
@@ -89,30 +142,32 @@ public class DesignBottomSheet extends CoordinatorLayout {
 
         float heightRatio;
 
+        //種別を保持
+        mIsKind = kind;
+
         //レイアウト構築
-        ViewPager2 vp;
         if (kind == NODE) {
 
             //ノード種別で切り分け
             if (((BaseNode) view).getNode().getKind() == NodeTable.NODE_KIND_PICTURE) {
                 //ノードピクチャデザイン指定
-                vp = setupPictureNodeDesignLayout(view);
+                setupPictureNodeDesignLayout(view);
             } else {
                 //ノードデザイン指定
-                vp = setupNodeDesignLayout(view);
+                setupNodeDesignLayout(view);
             }
 
             heightRatio = HALF;
 
         } else if (kind == MAP) {
             //マップデザイン指定
-            vp = setupMapDesignLayout(view);
+            setupMapDesignLayout(view);
 
             heightRatio = HALF;
 
         } else {
             //ノード形のみの指定
-            vp = setupNodeSizeLayout(view);
+            setupNodeSizeLayout(view);
 
             heightRatio = ONE_THIRD;
         }
@@ -128,7 +183,7 @@ public class DesignBottomSheet extends CoordinatorLayout {
     /*
      * ノードデザイン用のレイアウトを設定
      */
-    private ViewPager2 setupNodeDesignLayout(View v_node) {
+    private void setupNodeDesignLayout(View v_node) {
         //ノードデザイン設定レイアウト
         List<Integer> layoutIdList = new ArrayList<>();
         layoutIdList.add( R.layout.page_node_name);
@@ -171,14 +226,13 @@ public class DesignBottomSheet extends CoordinatorLayout {
                 (tab, position) -> tab.setText(tabs.get(position))
         ).attach();
 
-        return vp2;
     }
 
 
     /*
      * ピクチャノードデザイン用のレイアウトを設定
      */
-    private ViewPager2 setupPictureNodeDesignLayout(View v_node) {
+    private void setupPictureNodeDesignLayout(View v_node) {
         //ノードデザイン設定レイアウト
         List<Integer> layoutIdList = new ArrayList<>();
         layoutIdList.add( R.layout.page_set_thumbnail);
@@ -209,13 +263,12 @@ public class DesignBottomSheet extends CoordinatorLayout {
                 (tab, position) -> tab.setText(tabs.get(position))
         ).attach();
 
-        return vp2;
     }
 
     /*
      * マップデザイン用のレイアウトを設定
      */
-    private ViewPager2 setupMapDesignLayout(View v_map) {
+    private void setupMapDesignLayout(View v_map) {
         //ノードデザイン設定レイアウト
         List<Integer> layoutIdList = new ArrayList<>();
         layoutIdList.add( R.layout.page_map_design);
@@ -252,13 +305,12 @@ public class DesignBottomSheet extends CoordinatorLayout {
                 (tab, position) -> tab.setText(tabs.get(position))
         ).attach();
 
-        return vp2;
     }
 
     /*
      * ノードサイズ限定のレイアウトを設定
      */
-    private ViewPager2 setupNodeSizeLayout(View v_node) {
+    private void setupNodeSizeLayout(View v_node) {
         //ノードデザイン設定レイアウト
         List<Integer> layoutIdList = new ArrayList<>();
         layoutIdList.add(R.layout.page_node_shape);
@@ -267,7 +319,6 @@ public class DesignBottomSheet extends CoordinatorLayout {
         NodeShapeAdapter adapter = new NodeShapeAdapter(layoutIdList, v_node);
         vp.setAdapter(adapter);
 
-        return vp;
     }
 
     /*

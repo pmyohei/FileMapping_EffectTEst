@@ -5,7 +5,7 @@
 
     <!--  ノード  -->
     <dimen name="node_elevation">4dp</dimen>
-    <dimen name="node_toolIcon_elevation">1dp</dimen>   <!-- 影は1とする -->
+    <dimen name="node_toolIcon_elevation">1dp</dimen>   <!-- 影は1とする（マップ色が同じ色でもアイコンを見えやすくするため） -->
     <dimen name="picture_node_default_size">100dp</dimen>
     <dimen name="node_shape_sample_size">40dp</dimen>
 

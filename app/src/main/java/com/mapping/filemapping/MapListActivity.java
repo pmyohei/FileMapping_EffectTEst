@@ -9,6 +9,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -31,6 +32,9 @@ public class MapListActivity extends AppCompatActivity {
     /* 画面遷移-キー */
     public static String KEY_ISCREATE = "isCreate";
     public static String KEY_MAP = "map";               //マップ
+    /* 画面遷移-レスポンスコード */
+    public static final int RESULT_CREATED = 100;
+    public static final int RESULT_EDITED = 101;
 
     private ArrayList<MapTable> mMaps;
     private MapListAdapter mMapListAdapter;
@@ -41,18 +45,18 @@ public class MapListActivity extends AppCompatActivity {
         setContentView(R.layout.activity_map_list);
 
         //システムバーの色を設定
-        getWindow().setStatusBarColor( Color.BLACK );
+        getWindow().setStatusBarColor(Color.BLACK);
 
         //画面遷移ランチャー（マップ新規生成用）
         ActivityResultLauncher<Intent> createMapLauncher =
                 registerForActivityResult(
-                    new ActivityResultContracts.StartActivityForResult(),
-                    new CreateMapResultCallback());
+                        new ActivityResultContracts.StartActivityForResult(),
+                        new CreateMapResultCallback());
         //画面遷移ランチャー（マップ編集用）
         ActivityResultLauncher<Intent> editMapLauncher =
                 registerForActivityResult(
-                    new ActivityResultContracts.StartActivityForResult(),
-                    new EditMapResultCallback());
+                        new ActivityResultContracts.StartActivityForResult(),
+                        new EditMapResultCallback());
 
 
         //AdMob初期化
@@ -81,6 +85,17 @@ public class MapListActivity extends AppCompatActivity {
                 rv_mapList.setAdapter(mMapListAdapter);
                 rv_mapList.setLayoutManager(new LinearLayoutManager(context));
 
+                //リスナー設定：マップオープン
+                mMapListAdapter.setOpenMapListener(new MapListAdapter.openMapListener() {
+                    @Override
+                    public void onOpenMap(MapTable map) {
+                        //指定マップを開く
+                        openMap( map );
+                    }
+                });
+
+
+
                 //リサイクラービューの上下にスペースを設定
                 rv_mapList.addItemDecoration(new RecyclerView.ItemDecoration() {
                     @Override
@@ -107,9 +122,9 @@ public class MapListActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(MapListActivity.this, MapEntryActivity.class);
-                intent.putExtra(KEY_ISCREATE, true );
+                intent.putExtra(KEY_ISCREATE, true);
 
-                createMapLauncher.launch( intent );
+                createMapLauncher.launch(intent);
             }
         });
 
@@ -164,7 +179,7 @@ public class MapListActivity extends AppCompatActivity {
     /*
      * 初回起動時のヘルプダイアログを表示
      */
-    private void showFirstLaunchDialog(){
+    private void showFirstLaunchDialog() {
 
         final String key = ResourceManager.SHARED_KEY_HELP_ON_MAPLIST;
 
@@ -172,26 +187,47 @@ public class MapListActivity extends AppCompatActivity {
         SharedPreferences spData = getSharedPreferences(ResourceManager.SHARED_DATA_NAME, MODE_PRIVATE);
         boolean isShow = spData.getBoolean(key, ResourceManager.INVALID_SHOW_HELP);
 
-        if( !isShow ){
+        if (!isShow) {
             //表示なしが選択されていれば何もしない
             return;
         }
 
         //ガイドダイアログを表示
         new AlertDialog.Builder(this)
-                .setTitle( getString(R.string.alert_launch_mapList_title) )
-                .setMessage( getString(R.string.alert_launch_mapList_message) )
+                .setTitle(getString(R.string.alert_launch_mapList_title))
+                .setMessage(getString(R.string.alert_launch_mapList_message))
                 .setPositiveButton(getString(R.string.do_not_show_this_message), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
                         SharedPreferences.Editor editor = spData.edit();
-                        editor.putBoolean( key, false );
+                        editor.putBoolean(key, false);
                         editor.apply();
                     }
                 })
                 //.setNegativeButton("Cancel", null)
                 .show();
     }
+
+    /*
+     * マップ画面へ遷移
+     */
+    private void openMap( MapTable map ){
+
+        MapCommonData commonData = (MapCommonData)getApplication();
+        //初期化
+        commonData.init();
+        //マップ情報
+        commonData.setMap( map );
+
+        //マップ画面へ遷移
+        Intent intent = new Intent(MapListActivity.this, MapActivity.class);
+        startActivity(intent);
+    }
+
+
+
+
+
 
     /*
      * 画面遷移からの戻りのコールバック通知ーマップ新規生成
@@ -210,7 +246,7 @@ public class MapListActivity extends AppCompatActivity {
             int resultCode = result.getResultCode();
 
             //マップ新規作成結果
-            if(resultCode == MapEntryActivity.RESULT_CREATED) {
+            if(resultCode == RESULT_CREATED) {
 
                 //マップ入力画面からデータを受け取る
                 MapTable map = (MapTable) intent.getSerializableExtra(MapEntryActivity.KEY_MAP);
@@ -249,8 +285,19 @@ public class MapListActivity extends AppCompatActivity {
             //リザルトコード
             int resultCode = result.getResultCode();
 
+            //マップ
+            if( resultCode == RESULT_EDITED) {
+                //
+
+            }
+
+
+
+
+
+
             //マップ編集結果
-            if( resultCode == MapEntryActivity.RESULT_EDITED) {
+            if( resultCode == RESULT_EDITED) {
 
                 //マップ入力画面からデータを受け取る
                 MapTable map = (MapTable) intent.getSerializableExtra(MapEntryActivity.KEY_MAP);

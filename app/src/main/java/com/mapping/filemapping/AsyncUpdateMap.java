@@ -9,7 +9,7 @@ import java.util.concurrent.Executors;
 
 /*
  * DB非同期処理
- *   マップcreate用
+ *   マップ更新用
  */
 public class AsyncUpdateMap {
 
@@ -42,7 +42,7 @@ public class AsyncUpdateMap {
         public void run() {
 
             //メイン処理
-            insertDB();
+            operationDB();
 
             //後処理
             handler.post(new Runnable() {
@@ -56,11 +56,9 @@ public class AsyncUpdateMap {
         /*
          * DBへ保存
          */
-        private void insertDB(){
-
+        private void operationDB(){
             //MapDap
             MapTableDao mapDao = mDB.daoMapTable();
-
             //マップを更新
             mapDao.update( mMap );
         }

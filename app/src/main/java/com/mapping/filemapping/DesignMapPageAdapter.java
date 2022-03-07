@@ -261,6 +261,8 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
                 public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                     //全ノードの影の状態を反転
                     commonData.getNodes().setAllNodeShadow( b );
+                    //状態反転
+                    map.setShadow( b );
                 }
             });
         }

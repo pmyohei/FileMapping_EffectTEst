@@ -1,10 +1,10 @@
 package com.mapping.filemapping;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,7 +26,9 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
     private final ArrayList<MapTable> mData;
 
     //編集画面遷移ランチャー
-    ActivityResultLauncher<Intent> mEditMapLauncher;
+    private ActivityResultLauncher<Intent> mEditMapLauncher;
+
+    private openMapListener mOpenMapListener;
 
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
@@ -66,18 +68,12 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
             //マップ名
             tv_mapName.setText( map.getMapName() );
 
-            //マップオープンボタンリスナー
+            //マップオープンリスナー
             mcv_map.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    Context context = view.getContext();
-
-                    //マップ画面へ遷移
-                    Intent intent = new Intent(context, MapActivity.class);
-                    intent.putExtra(MapListActivity.KEY_MAP, map);
-
-                    context.startActivity(intent);
+                    //マップオープン
+                    mOpenMapListener.onOpenMap( map );
                 }
             });
 
@@ -89,8 +85,6 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
                     Intent intent = new Intent(view.getContext(), MapEntryActivity.class);
                     intent.putExtra(MapListActivity.KEY_ISCREATE, false );
                     intent.putExtra(MapListActivity.KEY_MAP, map );
-
-                    Log.i("MapItemView", "map=" + map.getMapName());
 
                     mEditMapLauncher.launch( intent );
                 }
@@ -130,6 +124,7 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
             });
 
         }
+
     }
 
     /*
@@ -215,6 +210,17 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
 
         //自身に削除通知を送る
         notifyItemRemoved(i);
+    }
+
+    public void setOpenMapListener(openMapListener listener){
+        mOpenMapListener = listener;
+    }
+
+    /*
+     * マップ表示リスナー
+     */
+    public interface openMapListener {
+        void onOpenMap(MapTable map );
     }
 
 }
