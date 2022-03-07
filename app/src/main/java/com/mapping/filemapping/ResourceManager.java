@@ -81,12 +81,12 @@ public class ResourceManager {
         List<Typeface> fonts = new ArrayList<>();
         fonts.add(ResourcesCompat.getFont(context, R.font.luxurious_roman_regular));
         fonts.add(ResourcesCompat.getFont(context, R.font.roboto_regular));
-        fonts.add(ResourcesCompat.getFont(context, R.font.the_nautigal_regular));
-        fonts.add(ResourcesCompat.getFont(context, R.font.dongle_regular));
+        fonts.add(ResourcesCompat.getFont(context, R.font.the_nautigal_bold));
+        fonts.add(ResourcesCompat.getFont(context, R.font.dancing_script_medium));
         fonts.add(ResourcesCompat.getFont(context, R.font.oswald_variable_font_wght));
-        fonts.add(ResourcesCompat.getFont(context, R.font.mochiy_pop_p_one_regular));
+        fonts.add(ResourcesCompat.getFont(context, R.font.caveat_medium));
         fonts.add(ResourcesCompat.getFont(context, R.font.moon_dance_regular));
-        fonts.add(ResourcesCompat.getFont(context, R.font.josefin_sans_variable_font_wght));
+        fonts.add(ResourcesCompat.getFont(context, R.font.josefin_sans_semibold));
 
         return fonts;
     }

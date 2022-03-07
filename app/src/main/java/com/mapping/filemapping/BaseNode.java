@@ -287,9 +287,25 @@ public class BaseNode extends FrameLayout {
         TextView tv_node = findViewById(R.id.tv_node);
         tv_node.setTypeface( font );
 
+        //ノードの形状を整える
+        ViewTreeObserver observer = getViewTreeObserver();
+        observer.addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        //レイアウト確定後は、不要なので本リスナー削除
+                        getViewTreeObserver().removeOnGlobalLayoutListener(this);
+
+                        //ノードの形状を設定
+                        //※フォントによってサイズが変わるため
+                        setNodeShape( mNode.getNodeShape() );
+                    }
+                }
+        );
+
         //Log.i("フォントサイズ", "size=" + ObjectSizeCalculator.sizeOf( font ) );
-        Log.i("フォントサイズ", "文字列=" + font.toString() );
-        Log.i("フォントサイズ", "size=" + font.toString().length() );
+        //Log.i("フォントサイズ", "文字列=" + font.toString() );
+        //Log.i("フォントサイズ", "size=" + font.toString().length() );
 
         //★保存はファイル名で行う
         //mNode
