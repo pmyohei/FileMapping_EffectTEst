@@ -115,8 +115,8 @@ public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.Guid
      * コンストラクタ
      */
     public NodeShapeAdapter(List<Integer> layoutIdList, View view) {
-        mData            = layoutIdList;
-        mView            = view;
+        mData = layoutIdList;
+        mView = view;
     }
 
     /*
