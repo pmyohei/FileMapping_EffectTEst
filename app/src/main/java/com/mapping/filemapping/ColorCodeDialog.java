@@ -69,7 +69,7 @@ public class ColorCodeDialog extends ColorDialog implements TextWatcher {
 
                 //無効な文字列チェック
                 EditText et_colorCode = getDialog().findViewById(R.id.et_colorCode);
-                if( et_colorCode.getText().toString().matches( ".*[^a-fA-F0-9].*" ) ){
+                if( !et_colorCode.getText().toString().matches( "^[a-fA-F0-9]*" ) ){
                     Toast.makeText(et_colorCode.getContext(), getString(R.string.toast_errorRgb), Toast.LENGTH_SHORT).show();
                     return;
                 }
@@ -101,7 +101,8 @@ public class ColorCodeDialog extends ColorDialog implements TextWatcher {
         }
 
         //無効な文字列チェック
-        if( rgb.matches( ".*[^a-fA-F0-9].*" ) ){
+        //先頭から想定する文字が続いていない場合
+        if( !rgb.matches( "^[a-fA-F0-9]*" ) ){
             return;
         }
 

@@ -178,30 +178,28 @@ public class MapCommonData extends Application {
         ColorDrawable colorDrawable = (ColorDrawable) v_map.getBackground();
         int colorInt = colorDrawable.getColor();
         String mapColor = "#" + Integer.toHexString(colorInt);
-        //大文字変換
-        mapColor = mapColor.toUpperCase(Locale.ROOT);
-
-        //透明度の情報があれば、除外する
-        final String TRANCEPARENT = "#FF";
-        if( ( mapColor.length() == 9 ) && ( mapColor.contains(TRANCEPARENT)) ){
-            //#FF001122→#001122 にする
-            mapColor = mapColor.replace(TRANCEPARENT, "#");
-        }
-
         //一時リストに追加
         tmpColors.add( mapColor );
 
         //マップ中のノードに設定されている色を取得
         tmpColors.addAll( mNodes.getAllNodeColors() );
 
-        //色情報をすべて大文字にしてリストを再作成
+        //「色情報を大文字＋透過情報を削除」してリストを再作成
         //※重複を排除するとき、大文字と小文字で別の色と判定されるのを回避するため
         ArrayList<String> tmpUpperColors = new ArrayList<>();
+        final String TRANCEPARENT = "#FF";
         for( String color: tmpColors ){
-            tmpUpperColors.add( color.toUpperCase(Locale.ROOT) );
+            //大文字
+            String upper = color.toUpperCase(Locale.ROOT);
+            //透明度の情報があれば除外
+            if( ( upper.length() == 9 ) && ( upper.contains(TRANCEPARENT)) ){
+                //#FF001122→#001122 にする
+                upper = upper.replace(TRANCEPARENT, "#");
+            }
+            tmpUpperColors.add( upper );
         }
-
-        //重複なしで設定
+        
+        //重複なしでリストに追加
         mColorHistory.addAll( new ArrayList<>(new LinkedHashSet<>(tmpUpperColors)) );
     }
 

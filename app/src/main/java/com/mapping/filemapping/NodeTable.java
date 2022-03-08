@@ -132,7 +132,6 @@ public class NodeTable implements Serializable {
     //デフォルトカラー
     public static final String DEFAULT_COLOR_WHITE = "#FFFFFF";
     public static final String DEFAULT_COLOR_BLACK = "#000000";
-    public static final String DEFAULT_COLOR_GRAY  = "#1A000000";
 
     //サイズ
     public static final float DEFAULT_THICK_LINE = 2f;
@@ -167,7 +166,7 @@ public class NodeTable implements Serializable {
         this.nodeShape = CIRCLE;
         //色
         this.nodeColor   = DEFAULT_COLOR_BLACK;
-        this.shadowColor = DEFAULT_COLOR_GRAY;
+        this.shadowColor = DEFAULT_COLOR_BLACK;
         this.textColor   = DEFAULT_COLOR_WHITE;
         this.borderColor = DEFAULT_COLOR_BLACK;
         this.lineColor   = DEFAULT_COLOR_BLACK;
