@@ -38,6 +38,7 @@
 
     <!-- トースト -->
     <string name="toast_error">An error has occurred</string>
+    <string name="toast_errorRgb">Please enter 0~9/A~F(a~f)</string>
     <string name="toast_deletePicture">Removed the image</string>
     <string name="toast_errorChangeParent">That node cannot be a parent node</string>
     <string name="toast_nowParent">The current parent node</string>

@@ -38,6 +38,7 @@
 
     <!-- トースト -->
     <string name="toast_error">エラーが発生しました</string>
+    <string name="toast_errorRgb">0~9/A~F(a~f)を入力して下さい</string>
     <string name="toast_deletePicture">画像を削除しました</string>
     <string name="toast_errorChangeParent">親ノードにできないノードです</string>
     <string name="toast_nowParent">現在の親ノードです</string>

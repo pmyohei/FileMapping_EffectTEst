@@ -26,6 +26,7 @@
             android:textSize="32sp"
             android:textColor="@color/black" />
 
+        <!-- 日本語入力不可にしたいため、textEmailAddressを指定 -->
         <EditText
             android:id="@+id/et_colorCode"
             android:layout_width="wrap_content"
@@ -34,10 +35,9 @@
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:hint="@string/coloeCodeHint"
-            android:inputType="number"
-            android:digits="0123456789ABCDEFabcdef"
+            android:inputType="textEmailAddress"
             android:maxLength="6"
-            android:textSize="32sp" />
+            android:textSize="28sp" />
 
     </LinearLayout>
 
@@ -87,7 +87,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:text="@android:string/cancel"
+            android:text="@string/cancel"
             android:textSize="18sp"
             android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"

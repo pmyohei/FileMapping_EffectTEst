@@ -161,34 +161,6 @@ public class ResourceManager {
 
         cursor.close();
         return path;
-
-
-/*        //検索条件
-        String where = MediaStore.Images.Media._ID + "=?";
-        String wholeId = DocumentsContract.getDocumentId(uri);
-        Log.i("URI変換", "wholeId=" + wholeId);
-        String[] wholeIdSplit = wholeId.split(":");
-        if( wholeIdSplit.length <= 1 ){
-            return null;
-        }
-        String id = wholeIdSplit[1];
-
-        //クエリ発行
-        Cursor cursor = contentResolver.query(
-                MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, where, new String[]{id}, null);
-
-        Log.i("URI変換", "dump cursor:" + DatabaseUtils.dumpCursorToString(cursor));
-
-        if (cursor.moveToFirst()) {
-            //絶対パスを取得
-            path = cursor.getString(cursor.getColumnIndexOrThrow(columns[0]));
-
-            Log.i("URI変換", "path=" + path);
-        }
-
-        cursor.close();
-
-        return path;*/
     }
 
 
