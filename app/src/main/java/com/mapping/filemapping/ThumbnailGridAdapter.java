@@ -101,8 +101,10 @@ public class ThumbnailGridAdapter extends BaseAdapter {
         //サムネイルを割り当て
         //※画質を担保するため、resize()である程度画像の大きさを確保してからtransform()に渡す
         PictureTable thumbnail = pictureNodeInfo.getThumbnail();
+        //path
+        String path = ( (thumbnail == null) ? "": thumbnail.getPath() );
         Picasso.get()
-                .load( new File( thumbnail.getPath() ) )
+                .load( new File( path ) )
                 .resize( ThumbnailTransformation.RESIZE, ThumbnailTransformation.RESIZE )
                 .transform( new ThumbnailTransformation( thumbnail, viewSize ) )
                 .error(R.drawable.baseline_no_thumbnail_24)

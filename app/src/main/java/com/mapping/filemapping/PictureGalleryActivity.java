@@ -90,11 +90,6 @@ public class PictureGalleryActivity extends AppCompatActivity {
         //写真の単体表示画面ランチャー
         setupSinglePictureLauncher();
 
-        //ツールバー設定
-        Toolbar toolbar = findViewById(R.id.toolbar_gallery);
-        toolbar.setTitle(getString(R.string.toolbar_gallery_title));
-        setSupportActionBar(toolbar);
-
         //ギャラリー情報を取得し画面上に表示
         readGallery();
     }
@@ -103,14 +98,14 @@ public class PictureGalleryActivity extends AppCompatActivity {
      * ツールバーの設定
      */
     private void setToolBar() {
-/*
-        Toolbar toolbar = findViewById(R.id.toolbar_trimming);
-        toolbar.setTitle( getString(R.string.toolbar_trimming_title) );
+        //ツールバー設定
+        Toolbar toolbar = findViewById(R.id.toolbar_gallery);
+        toolbar.setTitle(getString(R.string.toolbar_gallery_title));
         setSupportActionBar(toolbar);
+
         //戻るボタン
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-*/
 
         //システムバー
         getWindow().setStatusBarColor( Color.BLACK );
@@ -364,6 +359,17 @@ public class PictureGalleryActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
 
         }
+    }
+
+    /*
+     * ツールバー 戻るボタン押下処理
+     */
+    @Override
+    public boolean onSupportNavigateUp() {
+        //アクティビティ終了
+        finish();
+
+        return super.onSupportNavigateUp();
     }
 
     /*
