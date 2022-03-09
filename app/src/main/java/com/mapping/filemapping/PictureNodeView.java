@@ -17,17 +17,21 @@ import com.squareup.picasso.Transformation;
 import java.io.File;
 import java.io.Serializable;
 
-public class PictureNodeView extends ChildNode implements Serializable  /*implements View.OnTouchListener*/ {
+public class PictureNodeView extends ChildNode implements Serializable {
+
+    //サムネイル
+    private PictureTable mThumbnail;
 
     /*
      * コンストラクタ
      */
     @SuppressLint("ClickableViewAccessibility")
-    public PictureNodeView(Context context, NodeTable node) {
+    public PictureNodeView(Context context, NodeTable node, PictureTable thumbnail) {
         super(context, node, R.layout.picture_node);
 
-        Log.i("PictureNodeView", "3");
-
+        //サムネイル写真
+        mThumbnail = thumbnail;
+        //初期化
         initNode();
     }
 
@@ -35,33 +39,23 @@ public class PictureNodeView extends ChildNode implements Serializable  /*implem
      * 初期化処理
      */
     private void initNode() {
-
-        Log.i("PictureNodeView", "init");
-
         //ノードの中身の表示を変更
         findViewById(R.id.tv_node).setVisibility(GONE);
         findViewById(R.id.iv_node).setVisibility(VISIBLE);
 
-
+        //ノードに画像を設定
         findViewById(R.id.iv_node).post(()-> {
-            Log.i("サイズ確定", "post ノードサイズ=" + findViewById(R.id.iv_node).getWidth());
-            //ノードに画像を設定
+            //Log.i("サイズ確定", "post ノードサイズ=" + findViewById(R.id.iv_node).getWidth());
             setThumbnail();
         });
-
-        //ノードに画像を設定
-        //setThumbnail();
     }
 
     /*
      * ノードに画像を設定
      */
     private void setThumbnail() {
-        //本ノードのサムネイルを取得
-        MapCommonData mapCommonData = (MapCommonData) ((Activity) getContext()).getApplication();
-        PictureTable thumbnail = mapCommonData.getThumbnails().getThumbnail(mNode.getPid());
-
-        setBitmap(thumbnail);
+        //ビットマップ設定
+        setBitmap(mThumbnail);
     }
 
     /*
@@ -69,6 +63,7 @@ public class PictureNodeView extends ChildNode implements Serializable  /*implem
      */
     public void updateThumbnail(PictureTable thumbnail) {
         //ノードに画像を設定
+        mThumbnail = thumbnail;
         setBitmap(thumbnail);
     }
 

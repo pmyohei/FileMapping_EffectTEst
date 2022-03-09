@@ -3,13 +3,15 @@ package com.mapping.filemapping;
 import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
+import android.util.Log;
 
+import java.util.ArrayList;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 /*
  * DB非同期処理
- *   指定ピクチャノード内に指定した写真があるかどうかを確認
+ *   画像が所属するピクチャノードの変更
  */
 public class AsyncUpdateBelongsPicture {
 
@@ -27,7 +29,8 @@ public class AsyncUpdateBelongsPicture {
 
     //処理結果：更新写真にサムネイルがあったかどうか
     private boolean mIsThumbnail;
-
+    //処理結果（複数のみ）：移動した写真（移動先に同じ写真のなかった写真）
+    private PictureArrayList<PictureTable> mMovedPictures;
 
     /*
      * コンストラクタ（単体写真）
@@ -124,20 +127,20 @@ public class AsyncUpdateBelongsPicture {
             //PictureTableDao
             PictureTableDao dao = mDB.daoPictureTable();
 
+            //移動なし写真リスト
+            mMovedPictures = new PictureArrayList<>();
             //サムネイルなし
             mIsThumbnail = false;
 
             for( PictureTable picture: mPictures ){
 
-                //移動先にも同じ写真がある場合、テーブルから削除
+                //移動先にも同じ写真がある場合、何もしない（格納先の変更対象外）
                 if( dao.hasPictureInPictureNode( mPicutureNodePid, picture.getPath() ) != null){
-                    //テーブルから削除
-                    dao.delete( picture );
-
+                    //Log.i("複数選択改修", "同じ写真ありの判定");
                     continue;
                 }
 
-                //格納先ノードを更新
+                //格納先ピクチャノードを変更
                 picture.setPidParentNode( mPicutureNodePid );
 
                 //対象写真がサムネイル写真の場合
@@ -150,6 +153,8 @@ public class AsyncUpdateBelongsPicture {
 
                 //更新
                 dao.update( picture );
+                //移動写真リストに追加
+                mMovedPictures.add( picture );
             }
         }
 
@@ -181,17 +186,21 @@ public class AsyncUpdateBelongsPicture {
      */
     void onPostExecute() {
         //処理完了
-        mOnFinishListener.onFinish(mIsThumbnail);
+        if( mIsSingle ){
+            mOnFinishListener.onFinish(mIsThumbnail);
+        }else{
+            mOnFinishListener.onFinish(mIsThumbnail, mMovedPictures);
+        }
     }
 
     /*
      * データ作成完了リスナー
      */
     public interface OnFinishListener {
-        /*
-         * 処理完了時、コールされる
-         */
+        //単体写真
         void onFinish( boolean isThumbnail );
+        //複数写真
+        void onFinish( boolean isThumbnail, PictureArrayList<PictureTable> movedPictures );
     }
 
 

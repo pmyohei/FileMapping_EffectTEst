@@ -155,7 +155,6 @@ public class PictureTrimmingActivity extends AppCompatActivity {
     private void setToolBar() {
         Toolbar toolbar = findViewById(R.id.toolbar_trimming);
         toolbar.setTitle("");           //タイトルは非表示（フォントが適用されていないため）
-        //toolbar.setTitle(getString(R.string.toolbar_titleTrimming));
         setSupportActionBar(toolbar);
         //戻るボタン
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);
@@ -590,7 +589,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
                 //変わったノードとサムネ情報を返す
                 Intent retIntent = getIntent();
                 retIntent.putExtra(ResourceManager.KEY_NEW_THUMBNAIL, newPicture);
-                retIntent.putExtra(ResourceManager.KEY_OLD_THUMBNAIL, oldPicture);
+                //retIntent.putExtra(ResourceManager.KEY_OLD_THUMBNAIL, oldPicture);
                 setResult(MapActivity.RESULT_UPDATE_TUHMBNAIL, retIntent);
 
                 //元の画面へ戻る

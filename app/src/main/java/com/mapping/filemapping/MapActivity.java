@@ -92,6 +92,9 @@ public class MapActivity extends AppCompatActivity {
     private NodeArrayList<NodeTable> mNodes;
     //ツールアイコン操作されたノード
     private NodeTable mToolIconNode;
+    //マップオープン時、ピクチャノードに割りあたっていたサムネイルリスト
+    //※初期設定以降で、本リストの更新は行わない
+    private PictureArrayList<PictureTable> mInitThumbnails;
 
     /* 制御 */
     //ノード生成ができる状態か
@@ -184,12 +187,12 @@ public class MapActivity extends AppCompatActivity {
                 //マップ共通データ
                 MapCommonData mapCommonData = (MapCommonData) getApplication();
                 mapCommonData.setNodes(nodeList);
-                mapCommonData.setThumbnails(thumbnailList);
                 mapCommonData.createColorHistory(mMap, findViewById(R.id.fl_screenMap));
 
                 //フィールド変数として保持
                 mNodes = nodeList;
-                //mThumbnails = thumbnailList;
+                //マップオープン時のサムネイルリスト
+                mInitThumbnails = thumbnailList;
 
                 if (mEnableDrawNode) {
                     //ノード生成可能なら、マップ上にノードを生成
@@ -242,7 +245,7 @@ public class MapActivity extends AppCompatActivity {
 
         //マップ名を設定
         TextView tv_mapName = findViewById(R.id.tv_mapName);
-        tv_mapName.setText( mMap.getMapName() );
+        tv_mapName.setText(mMap.getMapName());
 
         /*-- アニメーションにするならこの方法 --*/
         /*
@@ -379,10 +382,8 @@ public class MapActivity extends AppCompatActivity {
             return;
         }
 
-        //共通データ
-        MapCommonData mapCommonData = (MapCommonData) getApplication();
-        NodeArrayList<NodeTable> nodes = mapCommonData.getNodes();
-        NodeTable changeNode = nodes.getNode(mChangeParentNodePid);
+        //変更対象ノード
+        NodeTable changeNode = mNodes.getNode(mChangeParentNodePid);
 
         //現状の親ノードの場合、変更不可
         if (changeNode.getPidParentNode() == parentPid) {
@@ -391,7 +392,7 @@ public class MapActivity extends AppCompatActivity {
         }
 
         //変更ノードの配下のノードの場合、変更不可
-        NodeArrayList<NodeTable> childNodes = nodes.getAllChildNodes(mChangeParentNodePid, true);
+        NodeArrayList<NodeTable> childNodes = mNodes.getAllChildNodes(mChangeParentNodePid, true);
         if (childNodes.getNode(parentPid) != null) {
             Toast.makeText(this, getString(R.string.toast_childNode), Toast.LENGTH_SHORT).show();
             return;
@@ -399,17 +400,17 @@ public class MapActivity extends AppCompatActivity {
 
         //変更対象がノードの場合、階層チェック
         int nodeKind = changeNode.getKind();
-        if( nodeKind == NodeTable.NODE_KIND_NODE ){
+        if (nodeKind == NodeTable.NODE_KIND_NODE) {
             //階層の上限に達する場合、変更不可
-            if( nodes.isUpperLimitHierarchy(parentNode, changeNode) ){
+            if (mNodes.isUpperLimitHierarchy(parentNode, changeNode)) {
                 Toast.makeText(this, getString(R.string.toast_reachUpperLimitHierarchy), Toast.LENGTH_SHORT).show();
                 return;
             }
         }
 
         //ノード数の上限に達している場合、変更不可
-        if( nodes.isUpperLimitNum(parentPid, nodeKind ) ){
-            String message = ( nodeKind == NodeTable.NODE_KIND_NODE ?
+        if (mNodes.isUpperLimitNum(parentPid, nodeKind)) {
+            String message = (nodeKind == NodeTable.NODE_KIND_NODE ?
                     getString(R.string.toast_reachUpperLimitNode) :
                     getString(R.string.toast_reachUpperLimitPictureNode));
 
@@ -431,6 +432,7 @@ public class MapActivity extends AppCompatActivity {
                         ((ChildNode) changeNode.getNodeView()).getLineView().reDrawParent(baseNode);
 
                         //更新対象キューに追加
+                        MapCommonData mapCommonData = (MapCommonData) getApplication();
                         mapCommonData.enqueUpdateNodeWithUnique(changeNode);
 
                         //親ノード選択状態を解除
@@ -441,7 +443,7 @@ public class MapActivity extends AppCompatActivity {
                 .show();
 
         //メッセージ文は、Styleのフォントが適用されないため個別に設定
-        ((TextView)dialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
+        ((TextView) dialog.findViewById(android.R.id.message)).setTypeface(Typeface.SERIF);
     }
 
     /*
@@ -497,58 +499,82 @@ public class MapActivity extends AppCompatActivity {
      */
     private void drawAllNodes() {
 
-        //マップレイアウト（ノード追加先）
-        FrameLayout fl_map = findViewById(R.id.fl_map);
-
         //全ノード数ループ
         int nodeNum = mNodes.size();
         for (int i = 0; i < nodeNum; i++) {
             //対象ノード
             NodeTable node = mNodes.get(i);
-            //ノードを描画
-            drawNode(fl_map, node);
+
+            //ノード種別で切り分け
+            switch ( node.getKind() ){
+                case NodeTable.NODE_KIND_ROOT:
+                    drawRootNode( node );
+                    break;
+
+                case NodeTable.NODE_KIND_NODE:
+                    drawNode( node );
+                    break;
+
+                case NodeTable.NODE_KIND_PICTURE:
+                    //サムネイルを取得
+                    PictureTable thumbnail = mInitThumbnails.getThumbnail(node.getPid());
+                    drawPictureNode( node, thumbnail );
+                    break;
+            }
         }
     }
 
     /*
-     * ノード（単体）の描画
+     * ルートノードの描画
      */
-    public BaseNode drawNode(FrameLayout fl_map, NodeTable node) {
+    private void drawRootNode(NodeTable nodeTable) {
+        //ビューにノード情報を設定
+        BaseNode nodeView = findViewById(R.id.v_rootnode);
+        nodeView.setNode(nodeTable);
 
-        //ノードビュー
-        BaseNode nodeView;
+        //全ノード共通設定
+        initAllNodeCommon(nodeView, nodeTable);
+    }
 
-        //ルートノード
-        if (node.getKind() == NodeTable.NODE_KIND_ROOT) {
-            //元々レイアウト上にあるルートノード名を変更し、中心座標を保持
-            nodeView = findViewById(R.id.v_rootnode);
+    /*
+     * ノードの描画
+     */
+    public BaseNode drawNode(NodeTable nodeTable) {
 
-            //ビューにノード情報を設定
-            nodeView.setNode(node);
-            //中心座標を設定
-            nodeView.addOnNodeGlobalLayoutListener();
+        BaseNode nodeView = new NodeView(this, nodeTable);
 
-        } else {
-            //ビュー生成
-            nodeView = ((node.getKind() == NodeTable.NODE_KIND_NODE)
-                    ? new NodeView(this, node)
-                    : new PictureNodeView(this, node));
+        //子ノード共通初期化処理
+        initChildNodeCommon( nodeView, nodeTable );
+        //全ノード共通設定
+        initAllNodeCommon(nodeView, nodeTable);
 
-            //ノードをマップに追加
-            fl_map.addView(nodeView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
-                    ViewGroup.LayoutParams.WRAP_CONTENT));
+        return nodeView;
+    }
 
-            //位置設定
-            //※レイアウト追加後に行うこと（MarginLayoutParamsがnullになってしまうため）
-            int left = node.getPosX();
-            int top = node.getPosY();
+    /*
+     * ピクチャノードの描画
+     */
+    private void drawPictureNode(NodeTable nodeTable, PictureTable thumbnail) {
 
-            ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) nodeView.getLayoutParams();
-            mlp.setMargins(left, top, mlp.rightMargin, mlp.bottomMargin);
+        //サムネイル
+        //※渡されていなければ、初期リストから取得
+        thumbnail = (thumbnail == null ? mInitThumbnails.getThumbnail(nodeTable.getPid()) : thumbnail);
+        BaseNode nodeView = new PictureNodeView(this, nodeTable, thumbnail);
 
-            //レイアウト確定後の処理を設定
-            ((ChildNode) nodeView).addOnNodeGlobalLayoutListener();
-        }
+        //子ノード共通初期化処理
+        initChildNodeCommon( nodeView, nodeTable );
+        //全ノード共通設定
+        initAllNodeCommon(nodeView, nodeTable);
+    }
+
+    /*
+     * 全ノード共通初期化処理
+     *   ※ノード種別に関係なく必要な初期設定
+     */
+    private void initAllNodeCommon(BaseNode nodeView, NodeTable nodeTable) {
+
+        //レイアウト確定後の処理を設定
+        nodeView.addOnNodeGlobalLayoutListener();
 
         //ノードクリックリスナー
         nodeView.setOnNodeClickListener(new View.OnClickListener() {
@@ -560,9 +586,29 @@ public class MapActivity extends AppCompatActivity {
         );
 
         //ノードビューを保持
-        node.setNodeView(nodeView);
+        nodeTable.setNodeView(nodeView);
+    }
 
-        return nodeView;
+    /*
+     * 子ノード共通初期化処理
+     *   ※子ノード（動的に生成されるノード）に共通して必要な設定
+     */
+    private void initChildNodeCommon(BaseNode nodeView, NodeTable nodeTable){
+
+        //マップレイアウト（ノード追加先）
+        FrameLayout fl_map = findViewById(R.id.fl_map);
+
+        //ノードをマップに追加
+        fl_map.addView(nodeView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT));
+
+        //位置設定
+        // ※レイアウト追加後に行っている（MarginLayoutParamsがnullになってしまうため）
+        int left = nodeTable.getPosX();
+        int top  = nodeTable.getPosY();
+
+        ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) nodeView.getLayoutParams();
+        mlp.setMargins(left, top, mlp.rightMargin, mlp.bottomMargin);
     }
 
     /*
@@ -1215,12 +1261,8 @@ public class MapActivity extends AppCompatActivity {
          */
         private void setNodeHierarchy() {
 
-            //共通データ
-            MapCommonData commonData = (MapCommonData) getApplication();
-            NodeArrayList<NodeTable> nodes = commonData.getNodes();
             //階層化ノードを取得
-            NodeArrayList<NodeTable> hierarchyNodes = nodes.getHierarchyList();
-
+            NodeArrayList<NodeTable> hierarchyNodes = mNodes.getHierarchyList();
             LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             //追加先
@@ -1295,8 +1337,6 @@ public class MapActivity extends AppCompatActivity {
         @Override
         public void onActivityResult(ActivityResult result) {
 
-            Log.i("NodeOpeResultCallback", "ルートチェック");
-
             //インテント
             Intent intent = result.getData();
             //リザルトコード
@@ -1310,32 +1350,19 @@ public class MapActivity extends AppCompatActivity {
                 //リストに追加
                 MapCommonData mapCommonData = (MapCommonData) getApplication();
                 mapCommonData.addNodes(pictureNode);
-                //★サムネリストは廃止予定
-                mapCommonData.addThumbnail(thumbnail);
 
-                //ノードを描画
-                drawNode(findViewById(R.id.fl_map), pictureNode);
+                //ピクチャノード生成
+                drawPictureNode(pictureNode, thumbnail);
 
             } else if( resultCode == RESULT_UPDATE_TUHMBNAIL) {
                 //サムネイル変更
-
-                //新たなサムネイル画像と元々設定されていたサムネイル画像を取得(nullの場合あり)
+                //新しいサムネイル
                 PictureTable newThumbnail = (PictureTable)intent.getSerializableExtra(ResourceManager.KEY_NEW_THUMBNAIL);
-                PictureTable oldThumbnail = (PictureTable)intent.getSerializableExtra(ResourceManager.KEY_OLD_THUMBNAIL);
 
-                //サムネイルリストを更新
-                MapCommonData mapCommonData = (MapCommonData) getApplication();
-                PictureTable currentThumbnail = mapCommonData.updateThumbnail(oldThumbnail, newThumbnail);
-
-                if( currentThumbnail == null ){
-                    //ないはずだが、一応フェールセーフ
-                    return;
-                }
-
-                //ピクチャノードの画像を更新
-                int pictureNodePid = currentThumbnail.getPidParentNode();
-                NodeTable node = mapCommonData.getNodes().getNode( pictureNodePid );
-                ((PictureNodeView)node.getNodeView()).updateThumbnail( currentThumbnail );
+                //変更されたピクチャノード
+                int pictureNodePid = newThumbnail.getPidParentNode();
+                //サムネイルを更新
+                ((PictureNodeView)mNodes.getNode( pictureNodePid ).getNodeView()).updateThumbnail( newThumbnail );
             }
 
         }

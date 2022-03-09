@@ -6,7 +6,6 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -52,9 +51,9 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
 
     /*------- 変数 -------*/
     //表示元のアクティビティ
-    private Activity mActivity;
+    private final Activity mActivity;
     //移動先のピクチャノード情報
-    private ArrayList<PictureNodeInfo> mPictureNodeInfos;
+    private final ArrayList<PictureNodeInfo> mPictureNodeInfos;
 
     //-- 単体写真
     //参照中の写真（単体）
@@ -66,8 +65,8 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
     //選択された写真リスト
     private PictureArrayList<PictureTable> mSelectedPictures;
 
-    //単体・複数判別用
-    private boolean mIsSingle;
+    //単体・複数選択判別用
+    private final boolean mIsSingle;
 
 
     /*
@@ -82,7 +81,7 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
     }
 
     /*
-     * 複数選択写真用
+     * 複数選択時用
      */
     public PictureNodesBottomSheetDialog( Activity activity, ArrayList<PictureNodeInfo> info, int tabPictureNodePid, PictureArrayList<PictureTable> selectedPictures) {
         mActivity = activity;
@@ -92,20 +91,6 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
 
         mIsSingle = false;
     }
-
-    /*
-     * インスタンス生成（写真単体選択時）
-     */
-/*    public static PictureNodesBottomSheetDialog newInstance(ArrayList<PictureNodeInfo> info, PictureTable showPicture) {
-        //return new PictureNodesBottomSheetDialog(info, showPicture);
-    }*/
-
-    /*
-     * インスタンス生成（写真複数選択時）
-     */
-/*    public static PictureNodesBottomSheetDialog newInstance(ArrayList<PictureNodeInfo> info, int tabPictureNodePid, PictureArrayList<PictureTable> selectedPictures) {
-        //return new PictureNodesBottomSheetDialog(info, tabPictureNodePid, selectedPictures);
-    }*/
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -123,7 +108,6 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
         gv_thumbnail.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
                 //移動先判定
                 checkHasNode(i);
             }
@@ -167,7 +151,7 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
                 }
 
                 //なければ移動確認のダイアログを表示
-                confirmDialog(toPicutureNodePid);
+                confirmMoveDialog(toPicutureNodePid, mShowPicture.isThumbnail());
             }
         });
 
@@ -187,34 +171,52 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
             return;
         }
 
+        //選択写真の中に、サムネイル写真が含まれているか
+        boolean containThumbnail = false;
+        for( PictureTable picture: mSelectedPictures ){
+            if( picture.isThumbnail() ){
+                //サムネイル写真あれば、終了
+                containThumbnail = true;
+                break;
+            }
+        }
+
         //なければ移動確認のダイアログを表示
-        confirmDialog(toPicutureNodePid);
+        confirmMoveDialog(toPicutureNodePid, containThumbnail );
     }
 
     /*
-     * 移動確認用ダイアログ
+     * 移動確認用ダイアログの表示
      */
-    private void confirmDialog(int toPicutureNodePid) {
+    private void confirmMoveDialog(int toPicutureNodePid, boolean isThumbnail) {
+
+        //表示メッセージ
+        String message = getActivity().getString(R.string.alert_movePicture_message);
+        if( !mIsSingle ){
+            //複数選択時は、注意書きを追加
+            message += getActivity().getString(R.string.alert_movePicture_notMove);
+        }
 
         AlertDialog dialog = new AlertDialog.Builder(getActivity())
-                .setTitle( getActivity().getString(R.string.alert_movePicture_title) )
-                .setMessage( getActivity().getString(R.string.alert_movePicture_message) )
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
+            .setTitle( getActivity().getString(R.string.alert_movePicture_title) )
+            .setMessage( message )
+            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
 
-                        if( mIsSingle ){
-                            moveSinglePicture(toPicutureNodePid);
-                        } else {
-                            moveMultiplePicture(toPicutureNodePid);
-                        }
-
-                        //閉じる
-                        dismiss();
+                    //格納先変更処理
+                    if( mIsSingle ){
+                        moveSinglePicture(toPicutureNodePid);
+                    } else {
+                        moveMultiplePicture(toPicutureNodePid);
                     }
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+
+                    //閉じる
+                    dismiss();
+                }
+            })
+            .setNegativeButton("Cancel", null)
+            .show();
 
         //メッセージ文は、Styleのフォントが適用されないため個別に設定
         ((TextView)dialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
@@ -230,10 +232,13 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
                 new AsyncUpdateBelongsPicture.OnFinishListener() {
                     @Override
                     public void onFinish( boolean isThumbnail ) {
-
                         //移動した写真を単体表示中のアダプタから削除
                         ((SinglePictureDisplayActivity) mActivity).updatePictureAdapter();
+                        //移動写真あり
+                        Toast.makeText(getActivity(), getString(R.string.toast_moved), Toast.LENGTH_SHORT).show();
                     }
+                    @Override
+                    public void onFinish(boolean isThumbnail, PictureArrayList<PictureTable> movedPictures){}
                 });
 
         //非同期処理開始
@@ -247,14 +252,25 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
 
         //ピクチャテーブルの所属を更新
         AsyncUpdateBelongsPicture db = new AsyncUpdateBelongsPicture(getActivity(), toPicutureNodePid, mSelectedPictures,
-                new AsyncUpdateBelongsPicture.OnFinishListener() {
-                    @Override
-                    public void onFinish(boolean isThumbnail) {
+            new AsyncUpdateBelongsPicture.OnFinishListener() {
+                @Override
+                public void onFinish(boolean isThumbnail) {
+                }
+                @Override
+                public void onFinish(boolean isThumbnail, PictureArrayList<PictureTable> movedPictures) {
+                    //移動結果をギャラリーに反映
+                    ((PictureGalleryActivity) mActivity).updateGallery( movedPictures, toPicutureNodePid, isThumbnail );
 
-                        //移動した写真を表示中のタブから削除
-                        ((PictureGalleryActivity) mActivity).updateGallery( mSelectedPictures, toPicutureNodePid, isThumbnail );
+                    //移動完了メッセージを表示
+                    if( movedPictures.size() == 0 ){
+                        //移動写真なし
+                        Toast.makeText(getActivity(), getString(R.string.toast_notMoves), Toast.LENGTH_SHORT).show();
+                    } else{
+                        //移動写真あり
+                        Toast.makeText(getActivity(), getString(R.string.toast_moved), Toast.LENGTH_SHORT).show();
                     }
-                });
+                }
+            });
         //非同期処理開始
         db.execute();
     }

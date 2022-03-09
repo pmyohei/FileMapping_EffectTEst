@@ -27,7 +27,13 @@
     <string name="alert_deletePicture_title">Remove Photo</string>
     <string name="alert_deletePicture_message">Remove the selected photo from the node.\nThe photo will not be removed from your device.</string>
     <string name="alert_movePicture_title">Move photos</string>
-    <string name="alert_movePicture_message">Do you want to move the photo to the selection node?</string>
+    <string name="alert_movePicture_message">
+        <![CDATA[
+            Do you want to move the photo to the selection node?\n
+            *For thumbnail photos, the thumbnail image of the "picture node" is gone.
+        ]]>
+    </string>
+    <string name="alert_movePicture_notMove">\n*If the selected "picture node" has the same photo, that photo will not be moved.</string>
     <string name="alert_deleteNode_title">Remove node</string>
     <string name="alert_deleteNode_message">All subordinate nodes will also be removed.\nThe photos in the node will not be removed from your device.</string>
     <string name="alert_launch_mapList_title">At first</string>
@@ -57,6 +63,8 @@
     <string name="toast_errorGetPath">Failure</string>
     <string name="toast_storePicture">The image was stored in the node\n(Images that are already stored will not be stored)</string>
     <string name="toast_storeError">Error: Please select from the "Images" folder</string>
+    <string name="toast_moved">The photo has been moved.</string>
+    <string name="toast_notMoves">No photos moved.</string>
     <string name="toast_qeuestPermission">Please allow access to the media</string>
     <string name="toast_qeuestPermissionFirst">If you want to display the image on the map,\nplease change to permission</string>
 
@@ -128,7 +136,7 @@
     <string name="help_icon_add">You can add a new node to the touched node.</string>
     <string name="help_icon_add_note">*Up to "5" nodes can be created in one node.</string>
     <string name="help_icon_add_picture_node_name">Picture node generation</string>
-    <string name="help_icon_add_picture_node">You can create a node for storing photos.\nIf you want to store your photos, select this icon to create a picture node</string>
+    <string name="help_icon_add_picture_node">You can create a node for storing photos.\nIf you want to store your photos, select this icon to create a "picture node"</string>
     <string name="help_icon_add_picture_node_note">*Up to "2" picture nodes can be created on one node</string>
     <string name="help_icon_edit_name">Node editing</string>
     <string name="help_icon_edit">You can edit the node\nSelect this icon if you want to change the design or node name</string>
@@ -144,7 +152,7 @@
     <string name="help_icon_new_map_name">New map</string>
     <string name="help_icon_new_map">You can create a new map with the touched node as the center node.</string>
     <string name="help_icon_add_photo_library_name">Photo storage(linking)</string>
-    <string name="help_icon_add_photo_library">You can store photos in the picture node\nLet\'s create a photo gallery of related photos.</string>
+    <string name="help_icon_add_photo_library">You can store photos in the "picture node"\nLet\'s create a photo gallery of related photos.</string>
     <string name="help_icon_close_name">Icon close</string>
     <string name="help_icon_close">You can close the icon.</string>
 
@@ -169,7 +177,7 @@
     <string name="help_map_basic_sample1_details2">2.Select "node creation icon"</string>
 
     <string name="help_map_basic_sample2">Introduction of operation method 2</string>
-    <string name="help_map_basic_sample2_title">～You want to store a photo in a picture node～</string>
+    <string name="help_map_basic_sample2_title">～You want to store a photo in a "picture node"～</string>
     <string name="help_map_basic_sample2_details1">1.Touch the node</string>
     <string name="help_map_basic_sample2_details2">2.Select "Picture node creation icon"</string>
     <string name="help_map_basic_sample2_details3">3.Select your favorite photo</string>

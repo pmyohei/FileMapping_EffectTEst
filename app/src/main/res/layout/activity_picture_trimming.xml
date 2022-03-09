@@ -19,7 +19,7 @@
             android:layout_height="wrap_content"
             android:elevation="4dp"
             android:layout_gravity="top"
-            android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+            android:theme="@style/Toolbar.NoActionBar"
             app:menu="@menu/toolbar_trimming">
 
             <TextView

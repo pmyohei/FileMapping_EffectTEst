@@ -100,7 +100,6 @@ public class PictureGalleryActivity extends AppCompatActivity {
         //ツールバー設定
         Toolbar toolbar = findViewById(R.id.toolbar_gallery);
         toolbar.setTitle("");
-        //toolbar.setTitle(getString(R.string.toolbar_titleGallery));
         setSupportActionBar(toolbar);
 
         //戻るボタン
@@ -517,7 +516,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
             //ツールバー
             toolbar.setBackgroundColor(Color.WHITE);
             toolbar.setTitleTextColor(Color.BLACK);
-            toolbar.setTitle( getString(R.string.toolbar_titleGallery) );
+            toolbar.setTitle("");
         }
     }
 
@@ -576,7 +575,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
                 .show();
 
         //タブで表示しているサムネイルの更新
-        disableTabThumbnail(selectedPictures, isThumbnail);
+        disableTabThumbnail(isThumbnail);
 
         //選択状態を解除
         closeMultipleOptionMenu();
@@ -602,7 +601,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
         //--
 
         //タブで表示しているサムネイルの更新
-        disableTabThumbnail(selectedPictures, isThumbnail);
+        disableTabThumbnail(isThumbnail);
 
         //選択状態を解除
         closeMultipleOptionMenu();
@@ -623,7 +622,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
      *   タブ写真を無効用アイコンに変更する。
      *   para1：移動された写真リスト
      */
-    private void disableTabThumbnail( PictureArrayList<PictureTable> selectedPictures, boolean isThumbnail ) {
+    private void disableTabThumbnail( boolean isThumbnail ) {
 
         //サムネイルがなければ何もしない
         if( !isThumbnail ){

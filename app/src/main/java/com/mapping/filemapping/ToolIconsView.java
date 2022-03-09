@@ -227,7 +227,6 @@ public class ToolIconsView extends ConstraintLayout {
 
         int count = 0;
         for (TooliconData toolIconData : iconViews) {
-
             //アイコンビュー
             ImageButton ib = toolIconData.getIbIcon();
             ib.setVisibility(VISIBLE);
@@ -302,7 +301,6 @@ public class ToolIconsView extends ConstraintLayout {
                 listener = new OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        //Log.i("アイコン", "クリックされました");
 
                         //アイコンが開かれたノードを親ノードとする
                         NodeTable parentNode = mBaseNode.getNode();
@@ -343,7 +341,7 @@ public class ToolIconsView extends ConstraintLayout {
                         newNode.setShadow(map.isShadow());
 
                         //ノードをマップに追加
-                        BaseNode v_node = mMapActivity.drawNode(mMapActivity.findViewById(R.id.fl_map), newNode);
+                        BaseNode v_node = mMapActivity.drawNode(newNode);
 
                         //DB保存処理
                         AsyncCreateNode db = new AsyncCreateNode(mMapActivity, newNode, new AsyncCreateNode.OnFinishListener() {

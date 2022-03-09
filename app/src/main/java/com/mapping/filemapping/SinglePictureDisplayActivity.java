@@ -341,6 +341,9 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
                             public void onFinish(boolean isThumbnail) {
                                 //アダプタから削除
                                 updatePictureAdapter();
+
+                                //削除メッセージ
+                                Toast.makeText(vp2_singlePicture.getContext(), getString(R.string.toast_deletePicture), Toast.LENGTH_SHORT).show();
                             }
                         });
 
@@ -377,9 +380,6 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
      * 単体表示中の写真をアダプタから削除
      */
     public void updatePictureAdapter() {
-
-        //トースト表示
-        Toast.makeText(this, getString(R.string.toast_deletePicture), Toast.LENGTH_SHORT).show();
 
         //表示中の写真をリストから削除
         ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
