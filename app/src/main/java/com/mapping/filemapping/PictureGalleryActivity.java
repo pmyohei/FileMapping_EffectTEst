@@ -14,7 +14,6 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.app.AlertDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -100,7 +99,8 @@ public class PictureGalleryActivity extends AppCompatActivity {
     private void setToolBar() {
         //ツールバー設定
         Toolbar toolbar = findViewById(R.id.toolbar_gallery);
-        toolbar.setTitle(getString(R.string.toolbar_gallery_title));
+        toolbar.setTitle("");
+        //toolbar.setTitle(getString(R.string.toolbar_titleGallery));
         setSupportActionBar(toolbar);
 
         //戻るボタン
@@ -503,7 +503,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
             //ツールバー
             toolbar.setBackgroundColor(Color.BLACK);
             toolbar.setTitleTextColor(Color.WHITE);
-            toolbar.setTitle( getString(R.string.toolbar_gallery_multi) );
+            toolbar.setTitle( getString(R.string.toolbar_titleGalleryMulti) );
 
         } else {
             if (!menu.hasVisibleItems()) {
@@ -517,7 +517,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
             //ツールバー
             toolbar.setBackgroundColor(Color.WHITE);
             toolbar.setTitleTextColor(Color.BLACK);
-            toolbar.setTitle( getString(R.string.toolbar_gallery_title) );
+            toolbar.setTitle( getString(R.string.toolbar_titleGallery) );
         }
     }
 

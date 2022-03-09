@@ -351,7 +351,7 @@ public class MapCommonData extends Application {
         mDeleteNodes.clear();
 
         //指定ノードの配下のノードを取得
-        mDeleteNodes = mNodes.getUnderNodes( pid, true );
+        mDeleteNodes = mNodes.getAllChildNodes( pid, true );
 
         //log
         for( NodeTable node: mDeleteNodes ){

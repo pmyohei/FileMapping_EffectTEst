@@ -1,6 +1,7 @@
 package com.mapping.filemapping;
 
 import android.graphics.Typeface;
+import android.util.Log;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -15,6 +16,16 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
 
     /* 定数 */
     public static final int NO_DATA = -1;   //データなし
+
+    //トップ階層レベル（ルートノードの階層レベルに相当）
+    private final int TOP_HIERARCHY_LEVEL = 1;
+
+    //ノード数上限
+    private final int UPPER_LIMIT_NODE_NUM = 5;           //ノード数上限
+    private final int UPPER_LIMIT_PICTURE_NODE_NUM = 2;   //ピクチャノード数上限
+    //階層上限
+    private final int UPPER_LIMIT_HIERARCHY = 5;
+
     //全ノード変更の有無
     private boolean mIsAllChanged = false;
 
@@ -64,9 +75,9 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
     }
 
     /*
-     *　指定親Pidの子ノードをリストとして取得
+     *　指定親Pidの子ノード（直下のみ）をリストとして取得
      */
-    public NodeArrayList<NodeTable> getChildNodes(int parentPid) {
+    public NodeArrayList<NodeTable> getDirectlyChildNodes(int parentPid) {
 
         //検索結果
         NodeArrayList<NodeTable> result = new NodeArrayList<>();
@@ -87,36 +98,35 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
      *　同一名のノード保持判定
      *   指定ノードの子ノード（直下）の中に、指定ノード名と同じ名前のノードがあるかをチェックする
      */
-    public boolean hasSameNodeNameAtParent(int parentPid, String nodeName) {
+/*    public boolean hasSameNodeNameAtParent(int parentPid, String nodeName) {
 
         //指定ノードの子ノードリスト
-        NodeArrayList<NodeTable> nodes = getChildNodes(parentPid);
-
+        NodeArrayList<NodeTable> nodes = getDirectlyChildNodes(parentPid);
         //実検索
         return doHasSameNodeNameAtParent( nodes, nodeName );
-    }
+    }*/
 
     /*
      *　同一名のノード保持判定
      *   指定ノードの子ノード（直下）の中に、指定ノード名と同じ名前のノードがあるかをチェックする。
      *   ただし、para2で指定したノードは検索対象外とする。
      */
-    public boolean hasSameNodeNameAtParent(int parentPid, int exclusionPid, String nodeName) {
+/*    public boolean hasSameNodeNameAtParent(int parentPid, int exclusionPid, String nodeName) {
 
         //指定ノードの子ノードリスト
-        NodeArrayList<NodeTable> nodes = getChildNodes(parentPid);
+        NodeArrayList<NodeTable> nodes = getDirectlyChildNodes(parentPid);
 
         //検索対象外ノードを、検索対象ノードから除外
         nodes.deleteNode( exclusionPid );
 
         //実検索
         return doHasSameNodeNameAtParent( nodes, nodeName );
-    }
+    }*/
 
     /*
      *　同一名のノードを既に持っているか（実処理）
      */
-    private boolean doHasSameNodeNameAtParent(NodeArrayList<NodeTable> nodes, String nodeName) {
+/*    private boolean doHasSameNodeNameAtParent(NodeArrayList<NodeTable> nodes, String nodeName) {
 
         //ノード数分ループ
         for (NodeTable node : nodes) {
@@ -129,12 +139,12 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
 
         //ノード未保持
         return false;
-    }
+    }*/
 
     /*
      *　指定ノードの直下のノード取得（孫ノードは対象外）
      */
-    public NodeArrayList<NodeTable> getDirectlyBelow(int pid) {
+/*    public NodeArrayList<NodeTable> getDirectlyBelow(int pid) {
 
         NodeArrayList<NodeTable> nodes = new NodeArrayList<>();
 
@@ -148,15 +158,15 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
         }
 
         return nodes;
-    }
+    }*/
 
     /*
-     *　指定ノード配下のノード取得
+     *　指定ノード配下のノード取得(子・孫全て)
      *   param：指定ノードもリストに含めるかどうか
      *          true ：含める
      *          false：含めない
      */
-    public NodeArrayList<NodeTable> getUnderNodes(int pid, boolean isMyself) {
+    public NodeArrayList<NodeTable> getAllChildNodes(int pid, boolean isMyself) {
 
         NodeArrayList<NodeTable> nodes = new NodeArrayList<>();
 
@@ -164,7 +174,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
         for (NodeTable node : this) {
 
             //指定ノードもリストに追加
-            if( isMyself && (pid == node.getPid()) ){
+            if (isMyself && (pid == node.getPid())) {
                 nodes.add(node);
             }
 
@@ -172,12 +182,98 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
             if (pid == node.getPidParentNode()) {
                 //このノードの配下ノードを取得
                 //※ここでのgetUnderNodes()は再帰処理になるため、true指定となる（trueにしないと、このルートに入ったノードが追加されない）
-                NodeArrayList<NodeTable> tmp = getUnderNodes(node.getPid(), true);
+                NodeArrayList<NodeTable> tmp = getAllChildNodes(node.getPid(), true);
                 nodes.addAll(tmp);
             }
         }
 
         return nodes;
+    }
+
+    /*
+     * 上限到達判定（配下ノード数）
+     *   para1:判定対象のノードpid（このノードの子ノードの数がチェック対象となる）
+     *   para2:上限判定対象のノード種別
+     *
+     *   return：true -上限に達している
+     *         ：false-上限未到達（まだ余裕あり）
+     */
+    public boolean isUpperLimitNum(int pid, int nodeKind) {
+
+        //上限値
+        int limit = ( nodeKind == NodeTable.NODE_KIND_NODE ? UPPER_LIMIT_NODE_NUM : UPPER_LIMIT_PICTURE_NODE_NUM );
+        int count = 0;
+
+        //ノード数分ループ
+        for (NodeTable node : this) {
+            //指定ノードを親とするノードで、かつ、指定された種別のノードの場合
+            if ( (pid == node.getPidParentNode()) && (nodeKind == node.getKind()) ) {
+                //カウントアップ
+                count++;
+            }
+        }
+
+        //Log.i("上限チェック", "数=" + count);
+
+        return (count >= limit );
+    }
+
+    /*
+     * 上限到達判定（階層）
+     *   para1：チェック対象のノード
+     */
+    public boolean isUpperLimitHierarchy(NodeTable checkNode) {
+
+        //指定ノードの階層レベル
+        int level = getHierarchyLevel( checkNode );
+
+        Log.i("上限チェック", "階層数=" + level);
+
+        return (level >= UPPER_LIMIT_HIERARCHY );
+    }
+
+    /*
+     * 上限到達判定（階層）
+     *   親ノード変更用
+     *   para1：チェック対象のノード（変更先の親ノード）
+     *   para2：変更対象のノード
+     */
+    public boolean isUpperLimitHierarchy(NodeTable checkNode, NodeTable moveNode) {
+
+        //変更先の親ノードの階層レベル
+        int level = getHierarchyLevel( checkNode );
+        //変更対象ノードの階層レベル
+        int levelMoveNode = getHierarchyLevel( moveNode );
+
+        //一番階層レベルの低い（階層が深い）ノードのレベルを取得
+        int levelDeepest = levelMoveNode;
+        NodeArrayList<NodeTable> allChildNodes = getAllChildNodes( moveNode.getPid() ,false );
+        for( NodeTable childNode: allChildNodes ){
+            if( childNode.getKind() == NodeTable.NODE_KIND_PICTURE ){
+                //ピクチャノードは判定対象外
+                continue;
+            }
+
+            //階層が深ければ更新
+            int levelChild = getHierarchyLevel( childNode );
+            levelDeepest = Math.max( levelChild, levelDeepest );
+        }
+
+        //変更するノードの階層数（※階層レベルではなく階層数）
+        //例）階層レベル2
+        //   階層レベル4
+        //   ⇒階層数3
+        int lovelNum = (levelDeepest - levelMoveNode) + 1;
+
+        //Log.i("上限チェック", "-------------------");
+        //Log.i("上限チェック", "移動先=" + level);
+        //Log.i("上限チェック", "変更ノード=" + levelMoveNode);
+        //Log.i("上限チェック", "変更ノードの最下層ノード=" + levelDeepest);
+        //Log.i("上限チェック", "階層数=" + lovelNum);
+        //Log.i("上限チェック", "最終階層レベル=" + (level + lovelNum));
+
+        //連結した結果、上限を超えるかどうか
+        return ( (level + lovelNum) > UPPER_LIMIT_HIERARCHY );
     }
 
     /*
@@ -241,7 +337,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
         addList.add( node );
 
         //指定ノードの直下ノードを取得
-        NodeArrayList<NodeTable> directlyBelowNodes = getDirectlyBelow( node.getPid() );
+        NodeArrayList<NodeTable> directlyBelowNodes = getDirectlyChildNodes( node.getPid() );
 
         //直下ノード分ループ
         for( NodeTable childNode: directlyBelowNodes ){
@@ -258,17 +354,19 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
      *       　　・ノードa　：３
      *       　・ノードB　　：２
      *       　　・ノードb　：３
+     *
+     *   例）引数に「ノードb」を指定すると、3を返す
      */
     public int getHierarchyLevel( NodeTable targetNode ) {
 
         //ルートノード
         if( targetNode.getKind() == NodeTable.NODE_KIND_ROOT ){
             //1階層を返す
-            return 1;
+            return TOP_HIERARCHY_LEVEL;
         }
 
         //階層レベル
-        int level = 1;
+        int level = TOP_HIERARCHY_LEVEL;
 
         //親の階層レベルを取得
         NodeTable parentNode = getNode( targetNode.getPidParentNode() );
@@ -279,14 +377,14 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
     }
 
     /*
-     *　ノードの階層を取得
+     *　ノードの階層を取得（再帰用）
      */
     private int getHierarchyLevel( NodeTable targetNode, int level ) {
 
         //ルートノード
         if( targetNode.getKind() == NodeTable.NODE_KIND_ROOT ){
             //1階層を返す
-            return 1;
+            return TOP_HIERARCHY_LEVEL;
         }
 
         //親ノード
@@ -534,7 +632,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
     }
 
     /*
-     *　指定ノード配下のピクチャノードのpidを返す
+     *　指定ノード配下のピクチャノードのpidリストを返す
      *   ※指定ノードがピクチャノードの場合は、指定ノードのみが返る
      */
     public List<Integer> getPictureNodes(int pid ) {
@@ -556,7 +654,6 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
                 //指定Pidのみ
                 pisd.add( node.getPid() );
                 break;
-
         }
 
         return pisd;
@@ -580,7 +677,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
     }
 
     /*
-     *　マップ上のすべてのピクチャノードを取得
+     *　リスト内のすべてのピクチャノードを取得
      */
     public NodeArrayList<NodeTable> getAllPictureNodes() {
 
@@ -597,14 +694,14 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
     }
 
     /*
-     *　指定一般ノードのすべてのピクチャノードを取得
+     *　指定一般ノードの配下のすべてのピクチャノードを取得
      */
     private List<Integer> getPictureNodesUnderNode( int pid ) {
 
         List<Integer> pids = new ArrayList<>();
 
         //配下ノードをすべて取得
-        NodeArrayList<NodeTable> childNodes = getUnderNodes( pid, false );
+        NodeArrayList<NodeTable> childNodes = getAllChildNodes( pid, false );
 
         //リストの内の子ノードすべて
         for( NodeTable node: childNodes ){

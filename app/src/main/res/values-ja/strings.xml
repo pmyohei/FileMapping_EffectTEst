@@ -39,6 +39,9 @@
     <!-- トースト -->
     <string name="toast_error">エラーが発生しました</string>
     <string name="toast_errorRgb">0~9/A~F(a~f)を入力して下さい</string>
+    <string name="toast_reachUpperLimitNode">ノード数の上限に達しています</string>
+    <string name="toast_reachUpperLimitPictureNode">ピクチャノード数の上限に達しています</string>
+    <string name="toast_reachUpperLimitHierarchy">階層の上限に達しています</string>
     <string name="toast_deletePicture">画像を削除しました</string>
     <string name="toast_errorChangeParent">親ノードにできないノードです</string>
     <string name="toast_nowParent">現在の親ノードです</string>
@@ -59,10 +62,10 @@
     <!--  マップ画面  -->
     <string name="toolbar_map_changeParant">親ノード変更</string>
     <!--  トリミング画面  -->
-    <string name="toolbar_trimming_title">ピクチャノードのサムネイル</string>
+    <string name="toolbar_titleTrimming">サムネイルの作成</string>
     <!--  ギャラリー画面  -->
-    <string name="toolbar_gallery_title">ギャラリー</string>
-    <string name="toolbar_gallery_multi">複数選択</string>
+    <string name="toolbar_titleGallery">ギャラリー</string>
+    <string name="toolbar_titleGalleryMulti">複数選択</string>
     <!--  移動先ノードダイアログ  -->
     <string name="move_picture_title">移動先のノードを選択してください</string>
 

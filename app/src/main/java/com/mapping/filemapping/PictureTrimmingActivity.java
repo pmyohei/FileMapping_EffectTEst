@@ -154,7 +154,8 @@ public class PictureTrimmingActivity extends AppCompatActivity {
      */
     private void setToolBar() {
         Toolbar toolbar = findViewById(R.id.toolbar_trimming);
-        toolbar.setTitle(getString(R.string.toolbar_trimming_title));
+        toolbar.setTitle("");           //タイトルは非表示（フォントが適用されていないため）
+        //toolbar.setTitle(getString(R.string.toolbar_titleTrimming));
         setSupportActionBar(toolbar);
         //戻るボタン
         Objects.requireNonNull(getSupportActionBar()).setDisplayShowHomeEnabled(true);

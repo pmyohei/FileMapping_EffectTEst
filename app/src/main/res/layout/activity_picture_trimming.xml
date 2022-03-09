@@ -20,8 +20,16 @@
             android:elevation="4dp"
             android:layout_gravity="top"
             android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-            app:titleTextAppearance="@style/Toolbar.TitleText"
-            app:menu="@menu/toolbar_trimming"/>
+            app:menu="@menu/toolbar_trimming">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/toolbar_titleTrimming"
+                android:textSize="18sp"
+                android:textColor="@color/black"/>
+
+        </androidx.appcompat.widget.Toolbar>
 
         <com.google.android.material.card.MaterialCardView
             android:id="@+id/mcv_cropped"

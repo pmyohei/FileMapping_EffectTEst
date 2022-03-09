@@ -6,7 +6,6 @@ import android.Manifest;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Typeface;
 import android.os.Build;
@@ -20,6 +19,7 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.ActivityCompat;
@@ -52,7 +52,7 @@ public class ToolIconsView extends ConstraintLayout {
         private final int iconKind;
         private final ImageButton ibIcon;
 
-        public TooliconData(int kind, ImageButton ib ){
+        public TooliconData(int kind, ImageButton ib) {
             iconKind = kind;
             ibIcon = ib;
         }
@@ -60,6 +60,7 @@ public class ToolIconsView extends ConstraintLayout {
         public int getIconKind() {
             return iconKind;
         }
+
         public ImageButton getIbIcon() {
             return ibIcon;
         }
@@ -167,7 +168,7 @@ public class ToolIconsView extends ConstraintLayout {
         final int ADD_NODE_RADIUS = 80;     //ノード半径に対する延長サイズ
         final int MINIMUN_RADIUS = 220;     //アイコン半径の最低ライン
         int radius = (int) ((mBaseNode.getScaleNodeBodyWidth() / 2f) + ADD_NODE_RADIUS);
-        if ( radius < MINIMUN_RADIUS ){
+        if (radius < MINIMUN_RADIUS) {
             //ノードとアイコンの距離が最低ラインよりも小さければ、最低サイズで設定
             radius = MINIMUN_RADIUS;
         }
@@ -189,7 +190,7 @@ public class ToolIconsView extends ConstraintLayout {
 
             //角度、半径を設定
             layoutParams.circleConstraint = v_center_id;
-            layoutParams.circleAngle  = START_ANGLE * (count + 1);
+            layoutParams.circleAngle = START_ANGLE * (count + 1);
             layoutParams.circleRadius = radius;
 
             //アイコンビュー
@@ -233,7 +234,7 @@ public class ToolIconsView extends ConstraintLayout {
 
             //表示アニメーション
             Animation animation = AnimationUtils.loadAnimation(ib.getContext(), R.anim.show_tool_icon);
-            animation.setStartOffset( ANIM_OFFSET * count );
+            animation.setStartOffset(ANIM_OFFSET * count);
             ib.startAnimation(animation);
 
             count++;
@@ -251,32 +252,32 @@ public class ToolIconsView extends ConstraintLayout {
         int kind = mBaseNode.getNode().getKind();
 
         if (kind == NodeTable.NODE_KIND_ROOT) {
-            iconViews.add( new TooliconData( TooliconData.CREATE_NODE, findViewById( R.id.ib_createNode ) ) );
-            iconViews.add( new TooliconData( TooliconData.CREATE_PICTURE_NODE, findViewById( R.id.ib_createPictureNode ) ) );
-            iconViews.add( new TooliconData( TooliconData.EDIT, findViewById( R.id.ib_edit ) ) );
-            iconViews.add( new TooliconData( TooliconData.DISPLAY_ALL_PICTURE, findViewById( R.id.ib_displayAllPicture ) ) );
-            iconViews.add( new TooliconData( TooliconData.HELP, findViewById( R.id.ib_help ) ) );
-            iconViews.add( new TooliconData( TooliconData.CLOSE, findViewById( R.id.ib_close ) ) );
+            iconViews.add(new TooliconData(TooliconData.CREATE_NODE, findViewById(R.id.ib_createNode)));
+            iconViews.add(new TooliconData(TooliconData.CREATE_PICTURE_NODE, findViewById(R.id.ib_createPictureNode)));
+            iconViews.add(new TooliconData(TooliconData.EDIT, findViewById(R.id.ib_edit)));
+            iconViews.add(new TooliconData(TooliconData.DISPLAY_ALL_PICTURE, findViewById(R.id.ib_displayAllPicture)));
+            iconViews.add(new TooliconData(TooliconData.HELP, findViewById(R.id.ib_help)));
+            iconViews.add(new TooliconData(TooliconData.CLOSE, findViewById(R.id.ib_close)));
 
         } else if (kind == NodeTable.NODE_KIND_NODE) {
-            iconViews.add( new TooliconData( TooliconData.CREATE_NODE, findViewById( R.id.ib_createNode )) );
-            iconViews.add( new TooliconData( TooliconData.CREATE_PICTURE_NODE, findViewById( R.id.ib_createPictureNode )) );
-            iconViews.add( new TooliconData( TooliconData.EDIT, findViewById( R.id.ib_edit )) );
-            iconViews.add( new TooliconData( TooliconData.DISPLAY_ALL_PICTURE, findViewById( R.id.ib_displayAllPicture )) );
-            iconViews.add( new TooliconData( TooliconData.DELETE, findViewById( R.id.ib_delete )) );
-            iconViews.add( new TooliconData( TooliconData.CHANGE_PARENT, findViewById( R.id.ib_changeParent )) );
+            iconViews.add(new TooliconData(TooliconData.CREATE_NODE, findViewById(R.id.ib_createNode)));
+            iconViews.add(new TooliconData(TooliconData.CREATE_PICTURE_NODE, findViewById(R.id.ib_createPictureNode)));
+            iconViews.add(new TooliconData(TooliconData.EDIT, findViewById(R.id.ib_edit)));
+            iconViews.add(new TooliconData(TooliconData.DISPLAY_ALL_PICTURE, findViewById(R.id.ib_displayAllPicture)));
+            iconViews.add(new TooliconData(TooliconData.DELETE, findViewById(R.id.ib_delete)));
+            iconViews.add(new TooliconData(TooliconData.CHANGE_PARENT, findViewById(R.id.ib_changeParent)));
             //iconViews.add( new TooliconData( TooliconData.ICON_NEW_MAP, findViewById( R.id.ib_newMap )) );
-            iconViews.add( new TooliconData( TooliconData.HELP, findViewById( R.id.ib_help ) ) );
-            iconViews.add( new TooliconData( TooliconData.CLOSE, findViewById( R.id.ib_close )) );
+            iconViews.add(new TooliconData(TooliconData.HELP, findViewById(R.id.ib_help)));
+            iconViews.add(new TooliconData(TooliconData.CLOSE, findViewById(R.id.ib_close)));
 
         } else {
-            iconViews.add( new TooliconData( TooliconData.EDIT, findViewById( R.id.ib_edit )) );
-            iconViews.add( new TooliconData( TooliconData.ADD_PICTURE, findViewById( R.id.ib_addPhoto )) );
-            iconViews.add( new TooliconData( TooliconData.DISPLAY_ALL_PICTURE, findViewById( R.id.ib_displayAllPicture )) );
-            iconViews.add( new TooliconData( TooliconData.DELETE, findViewById( R.id.ib_delete )) );
-            iconViews.add( new TooliconData( TooliconData.CHANGE_PARENT, findViewById( R.id.ib_changeParent )) );
-            iconViews.add( new TooliconData( TooliconData.HELP, findViewById( R.id.ib_help ) ) );
-            iconViews.add( new TooliconData( TooliconData.CLOSE, findViewById( R.id.ib_close )) );
+            iconViews.add(new TooliconData(TooliconData.EDIT, findViewById(R.id.ib_edit)));
+            iconViews.add(new TooliconData(TooliconData.ADD_PICTURE, findViewById(R.id.ib_addPhoto)));
+            iconViews.add(new TooliconData(TooliconData.DISPLAY_ALL_PICTURE, findViewById(R.id.ib_displayAllPicture)));
+            iconViews.add(new TooliconData(TooliconData.DELETE, findViewById(R.id.ib_delete)));
+            iconViews.add(new TooliconData(TooliconData.CHANGE_PARENT, findViewById(R.id.ib_changeParent)));
+            iconViews.add(new TooliconData(TooliconData.HELP, findViewById(R.id.ib_help)));
+            iconViews.add(new TooliconData(TooliconData.CLOSE, findViewById(R.id.ib_close)));
         }
 
         return iconViews;
@@ -286,7 +287,7 @@ public class ToolIconsView extends ConstraintLayout {
     /*
      * アイコンのリスナー設定
      */
-    public void setIconListener(TooliconData toolIconData ) {
+    public void setIconListener(TooliconData toolIconData) {
 
         //アイコンビュー
         ImageButton ib = toolIconData.getIbIcon();
@@ -306,9 +307,21 @@ public class ToolIconsView extends ConstraintLayout {
                         //アイコンが開かれたノードを親ノードとする
                         NodeTable parentNode = mBaseNode.getNode();
 
+                        //階層上限に到達していれば、メッセージを出して終了
+                        if( isReachUpperLimitHierarchy( parentNode ) ){
+                            Toast.makeText(mMapActivity, getResources().getString(R.string.toast_reachUpperLimitHierarchy), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
+                        //ノード数上限に到達していれば、メッセージを出して終了
+                        if (isReachUpperLimitNodeNum( parentNode.getPid(), NodeTable.NODE_KIND_NODE )) {
+                            Toast.makeText(mMapActivity, getResources().getString(R.string.toast_reachUpperLimitNode), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
                         //初期生成位置
-                        int posX = (int)parentNode.getCenterPosX() + ResourceManager.POS_NODE_INIT_OFFSET;
-                        int posY = (int)parentNode.getCenterPosY();
+                        int posX = (int) parentNode.getCenterPosX() + ResourceManager.POS_NODE_INIT_OFFSET;
+                        int posY = (int) parentNode.getCenterPosY();
 
                         //ノードを生成
                         NodeTable newNode = new NodeTable(
@@ -325,12 +338,12 @@ public class ToolIconsView extends ConstraintLayout {
 
                         //カラーパターン設定
                         String[] colors = map.getDefaultColors();
-                        newNode.setColorPattern( colors );
+                        newNode.setColorPattern(colors);
                         //影の有無を設定
-                        newNode.setShadow( map.isShadow() );
+                        newNode.setShadow(map.isShadow());
 
                         //ノードをマップに追加
-                        BaseNode v_node = mMapActivity.drawNode( mMapActivity.findViewById(R.id.fl_map), newNode );
+                        BaseNode v_node = mMapActivity.drawNode(mMapActivity.findViewById(R.id.fl_map), newNode);
 
                         //DB保存処理
                         AsyncCreateNode db = new AsyncCreateNode(mMapActivity, newNode, new AsyncCreateNode.OnFinishListener() {
@@ -366,18 +379,25 @@ public class ToolIconsView extends ConstraintLayout {
                     @Override
                     public void onClick(View view) {
 
+                        NodeTable node = mBaseNode.getNode();
+
+                        //ノード数上限に到達していれば、メッセージを出して終了
+                        if (isReachUpperLimitNodeNum( node.getPid(), NodeTable.NODE_KIND_PICTURE )) {
+                            Toast.makeText(mMapActivity, getResources().getString(R.string.toast_reachUpperLimitPictureNode), Toast.LENGTH_SHORT).show();
+                            return;
+                        }
+
                         //権限の確認
                         int permission = ContextCompat.checkSelfPermission(mMapActivity, Manifest.permission.READ_EXTERNAL_STORAGE);
-                        if( permission != PackageManager.PERMISSION_GRANTED ){
+                        if (permission != PackageManager.PERMISSION_GRANTED) {
                             //操作対象のノードを設定
-                            mMapActivity.setToolIconNode( mBaseNode.getNode() );
+                            mMapActivity.setToolIconNode(mBaseNode.getNode());
 
                             //権限付与
-                            permissionsStorage( REQUEST_EXTERNAL_STORAGE_FOR_PICTURE_NODE );
+                            permissionsStorage(REQUEST_EXTERNAL_STORAGE_FOR_PICTURE_NODE);
                         } else {
                             //既に権限があれば、画面遷移
-                            NodeTable node = mBaseNode.getNode();
-                            mMapActivity.transitionTrimming( node );
+                            mMapActivity.transitionTrimming(node);
                         }
 
                         //ノードに持たせていた自分をクローズ
@@ -400,7 +420,7 @@ public class ToolIconsView extends ConstraintLayout {
 
                         //ノード本体のマージンを取得
                         float marginLeft = mBaseNode.getLeft();
-                        float marginTop  = mBaseNode.getTop();
+                        float marginTop = mBaseNode.getTop();
 
                         //BottomSheetを開く（画面移動あり）
                         mMapActivity.openDesignBottomSheet(DesignBottomSheet.NODE, mBaseNode, marginLeft, marginTop, MOVE_UPPER);
@@ -421,14 +441,14 @@ public class ToolIconsView extends ConstraintLayout {
 
                         //権限の確認
                         int permission = ContextCompat.checkSelfPermission(mMapActivity, Manifest.permission.READ_EXTERNAL_STORAGE);
-                        if( permission != PackageManager.PERMISSION_GRANTED ){
+                        if (permission != PackageManager.PERMISSION_GRANTED) {
 
-                            mMapActivity.setToolIconNode( mBaseNode.getNode() );
+                            mMapActivity.setToolIconNode(mBaseNode.getNode());
                             //権限付与
-                            permissionsStorage( REQUEST_EXTERNAL_STORAGE_FOR_GALLERY );
-                        } else{
+                            permissionsStorage(REQUEST_EXTERNAL_STORAGE_FOR_GALLERY);
+                        } else {
                             //権限があれば、ギャラリー画面へ
-                            mMapActivity.transitionGallery( mBaseNode.getNode() );
+                            mMapActivity.transitionGallery(mBaseNode.getNode());
                         }
 
                         //ノードに持たせていた自分をクローズ
@@ -451,9 +471,9 @@ public class ToolIconsView extends ConstraintLayout {
                         Context context = getContext();
 
                         //削除確認ダイアログを表示
-                        AlertDialog dialog = new AlertDialog.Builder( context )
-                                .setTitle( context.getString(R.string.alert_deleteNode_title) )
-                                .setMessage( context.getString(R.string.alert_deleteNode_message) )
+                        AlertDialog dialog = new AlertDialog.Builder(context)
+                                .setTitle(context.getString(R.string.alert_deleteNode_title))
+                                .setMessage(context.getString(R.string.alert_deleteNode_message))
                                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
@@ -482,7 +502,7 @@ public class ToolIconsView extends ConstraintLayout {
                                 .show();
 
                         //メッセージ文は、Styleのフォントが適用されないため個別に設定
-                        ((TextView)dialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
+                        ((TextView) dialog.findViewById(android.R.id.message)).setTypeface(Typeface.SERIF);
 
                         //ノードに持たせていた自分をクローズ
                         mBaseNode.closeIconView();
@@ -498,7 +518,7 @@ public class ToolIconsView extends ConstraintLayout {
                         //Log.i("アイコン", "クリックされました");
 
                         //マップアクティビティを親ノード変更モードにする
-                        mMapActivity.enableChangeParentMode( mBaseNode.getNode().getPid() );
+                        mMapActivity.enableChangeParentMode(mBaseNode.getNode().getPid());
 
                         //ノードに持たせていた自分をクローズ
                         mBaseNode.closeIconView();
@@ -528,10 +548,10 @@ public class ToolIconsView extends ConstraintLayout {
 
                         //権限の確認
                         int permission = ContextCompat.checkSelfPermission(mMapActivity, Manifest.permission.READ_EXTERNAL_STORAGE);
-                        if( permission != PackageManager.PERMISSION_GRANTED ){
+                        if (permission != PackageManager.PERMISSION_GRANTED) {
                             //権限付与
-                            permissionsStorage( REQUEST_EXTERNAL_STORAGE_FOR_ADD_PICTURE );
-                        } else{
+                            permissionsStorage(REQUEST_EXTERNAL_STORAGE_FOR_ADD_PICTURE);
+                        } else {
                             mMapActivity.transitionMediaStorage();
                         }
 
@@ -571,7 +591,32 @@ public class ToolIconsView extends ConstraintLayout {
         }
 
         //リスナーを設定
-        ib.setOnClickListener( listener );
+        ib.setOnClickListener(listener);
+    }
+
+    /*
+     * ノード数上限到達チェック
+     */
+    private boolean isReachUpperLimitNodeNum(int nodePid, int nodeKind ) {
+
+        //ノードリスト
+        MapCommonData mapCommonData = (MapCommonData) mMapActivity.getApplication();
+        NodeArrayList<NodeTable> nodes = mapCommonData.getNodes();
+
+        //上限チェック
+        return nodes.isUpperLimitNum( nodePid, nodeKind);
+    }
+
+    /*
+     * 階層上限到達チェック
+     */
+    private boolean isReachUpperLimitHierarchy(NodeTable node) {
+        //ノードリスト
+        MapCommonData mapCommonData = (MapCommonData) mMapActivity.getApplication();
+        NodeArrayList<NodeTable> nodes = mapCommonData.getNodes();
+
+        //上限チェック
+        return nodes.isUpperLimitHierarchy( node );
     }
 
     /*

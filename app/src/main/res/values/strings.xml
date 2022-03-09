@@ -9,6 +9,12 @@
     <string name="do_not_show_this_message">Don\'t show again</string>
     <string name="tab_all">All</string>
 
+    <!--  ツールバー  -->
+<!--
+    <string name="toolbar_titleTrimming">Creating thumbnail</string>
+    <string name="toolbar_titleGallery">Gallery</string>
+-->
+
     <!--  ノード  -->
     <string name="node_createButtom">Create</string>
     <string name="node_cancelButtom">Cancel</string>a
@@ -39,6 +45,9 @@
     <!-- トースト -->
     <string name="toast_error">An error has occurred</string>
     <string name="toast_errorRgb">Please enter 0~9/A~F(a~f)</string>
+    <string name="toast_reachUpperLimitNode">The maximum number of nodes has been reached</string>
+    <string name="toast_reachUpperLimitPictureNode">The maximum number of picture nodes has been reached</string>
+    <string name="toast_reachUpperLimitHierarchy">The maximum number of picture nodes has been reached</string>
     <string name="toast_deletePicture">Removed the image</string>
     <string name="toast_errorChangeParent">That node cannot be a parent node</string>
     <string name="toast_nowParent">The current parent node</string>
@@ -59,10 +68,10 @@
     <!--  マップ画面  -->
     <string name="toolbar_map_changeParant">Change parent node</string>
     <!--  トリミング画面  -->
-    <string name="toolbar_trimming_title">Thumbnail of picture node</string>
+    <string name="toolbar_titleTrimming">Creating thumbnail</string>
     <!--  ギャラリー画面  -->
-    <string name="toolbar_gallery_title">Gallery</string>
-    <string name="toolbar_gallery_multi">Multiple selection</string>
+    <string name="toolbar_titleGallery">Gallery</string>
+    <string name="toolbar_titleGalleryMulti">Multiple selection</string>
     <!--  移動先ノードダイアログ  -->
     <string name="move_picture_title">Please select the destination node</string>
 

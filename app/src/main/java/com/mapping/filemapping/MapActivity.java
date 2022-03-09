@@ -237,8 +237,12 @@ public class MapActivity extends AppCompatActivity {
     private void initToolBar() {
         //ツールバー設定
         Toolbar toolbar = findViewById(R.id.toolbar_map);
-        toolbar.setTitle(mMap.getMapName());
+        toolbar.setTitle("");           //タイトルは非表示（フォントが適用されていないため）
         setSupportActionBar(toolbar);
+
+        //マップ名を設定
+        TextView tv_mapName = findViewById(R.id.tv_mapName);
+        tv_mapName.setText( mMap.getMapName() );
 
         /*-- アニメーションにするならこの方法 --*/
         /*
@@ -387,9 +391,29 @@ public class MapActivity extends AppCompatActivity {
         }
 
         //変更ノードの配下のノードの場合、変更不可
-        NodeArrayList<NodeTable> childNodes = nodes.getUnderNodes(mChangeParentNodePid, true);
+        NodeArrayList<NodeTable> childNodes = nodes.getAllChildNodes(mChangeParentNodePid, true);
         if (childNodes.getNode(parentPid) != null) {
             Toast.makeText(this, getString(R.string.toast_childNode), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //変更対象がノードの場合、階層チェック
+        int nodeKind = changeNode.getKind();
+        if( nodeKind == NodeTable.NODE_KIND_NODE ){
+            //階層の上限に達する場合、変更不可
+            if( nodes.isUpperLimitHierarchy(parentNode, changeNode) ){
+                Toast.makeText(this, getString(R.string.toast_reachUpperLimitHierarchy), Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+        //ノード数の上限に達している場合、変更不可
+        if( nodes.isUpperLimitNum(parentPid, nodeKind ) ){
+            String message = ( nodeKind == NodeTable.NODE_KIND_NODE ?
+                    getString(R.string.toast_reachUpperLimitNode) :
+                    getString(R.string.toast_reachUpperLimitPictureNode));
+
+            Toast.makeText(this, message, Toast.LENGTH_SHORT).show();
             return;
         }
 
@@ -416,7 +440,6 @@ public class MapActivity extends AppCompatActivity {
                 .setNegativeButton("Cancel", null)
                 .show();
 
-
         //メッセージ文は、Styleのフォントが適用されないため個別に設定
         ((TextView)dialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
     }
@@ -425,10 +448,8 @@ public class MapActivity extends AppCompatActivity {
      * マップ内の全てのノード・ラインを生成
      */
     private void createMap() {
-
         //初回起動ダイアログを表示
         showFirstLaunchDialog();
-
         //ノードの描画
         drawAllNodes();
     }
@@ -689,16 +710,18 @@ public class MapActivity extends AppCompatActivity {
         if (isChangeParent) {
             //親ノード変更モード
             inflater.inflate(R.menu.toolbar_close, menu);
-
             toolbar.setBackgroundColor(Color.WHITE);
-            toolbar.setTitle(getString(R.string.toolbar_map_changeParant));
+            //ツールバータイトルを変更
+            TextView tv_mapName = findViewById(R.id.tv_mapName);
+            tv_mapName.setText( getString(R.string.toolbar_map_changeParant) );
+
         } else {
             //通常モード
             inflater.inflate(R.menu.toolbar_map, menu);
-
             toolbar.setBackgroundColor(Color.TRANSPARENT);
-            //toolbar.setTitleTextColor(Color.BLACK);
-            toolbar.setTitle(mMap.getMapName());
+            //ツールバータイトルを変更
+            TextView tv_mapName = findViewById(R.id.tv_mapName);
+            tv_mapName.setText( mMap.getMapName() );
         }
     }
 

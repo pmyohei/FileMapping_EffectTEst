@@ -190,7 +190,7 @@ public class ChildNode extends BaseNode {
         NodeArrayList<NodeTable> nodes = mapCommonData.getNodes();
 
         //子ノードを検索
-        mChildNodes = nodes.getChildNodes(mNode.getPid());
+        mChildNodes = nodes.getDirectlyChildNodes(mNode.getPid());
 
         //子ノード分ループ
         for (NodeTable childNode : mChildNodes) {

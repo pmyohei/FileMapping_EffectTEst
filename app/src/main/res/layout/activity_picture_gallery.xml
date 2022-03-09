@@ -15,8 +15,16 @@
         android:elevation="4dp"
         android:background="@android:color/white"
         android:theme="@style/Toolbar.NoActionBar"
-        app:titleTextAppearance="@style/Toolbar.TitleText"
-        app:menu="@menu/toolbar_map"/>
+        app:menu="@menu/toolbar_map">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/toolbar_titleGallery"
+            android:textSize="18sp"
+            android:textColor="@color/black"/>
+
+    </androidx.appcompat.widget.Toolbar>
 
     <!-- インジケータ -->
     <com.google.android.material.tabs.TabLayout

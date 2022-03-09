@@ -3,12 +3,9 @@
     <!--  ツールバー  -->
     <!--  アクションバーなしのスタイルをカスタム  -->
     <style name="Toolbar.NoActionBar" parent="Theme.AppCompat.Light.NoActionBar">
-        <!--  アプリ全体にフォントを適用  -->
+        <!--  フォントを適用  -->
+        <!--  ※toolbar配下のテキストに適用させる（ツールバーのタイトルには適用されないため注意） -->
         <item name="android:typeface">serif</item>
-    </style>
-    <!--  ※デフォルトの文字サイズは20dp(abc_text_size_title_material_toolbar)  -->
-    <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
-        <item name="android:textSize">14sp</item>
     </style>
 
     <!--  RGB・カラーピッカー用  -->

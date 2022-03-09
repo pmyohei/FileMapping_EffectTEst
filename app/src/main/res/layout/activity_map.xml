@@ -26,9 +26,16 @@
             android:layout_gravity="top"
             android:background="@android:color/transparent"
             android:theme="@style/Toolbar.NoActionBar"
-            app:titleTextAppearance="@style/Toolbar.TitleText"
-            app:menu="@menu/toolbar_map"
-            />
+            app:menu="@menu/toolbar_map">
+
+            <TextView
+                android:id="@+id/tv_mapName"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="18sp"
+                android:textColor="@color/black"/>
+
+        </androidx.appcompat.widget.Toolbar>
 
         <!--  マップ全体  -->
         <FrameLayout
