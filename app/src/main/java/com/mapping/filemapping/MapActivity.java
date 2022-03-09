@@ -273,7 +273,7 @@ public class MapActivity extends AppCompatActivity {
                 int alpha = toolbar.getBackground().getAlpha();
                 if (alpha == 0) {
                     //ツールバー
-                    toolbar.setBackgroundColor(getResources().getColor(R.color.transparent_20_white));
+                    toolbar.setBackgroundColor(getResources().getColor(R.color.transparent_50_white));
                     //システムバー
                     //getWindow().setStatusBarColor( getResources().getColor(R.color.transparent_20_white) );
                 } else {
@@ -531,7 +531,6 @@ public class MapActivity extends AppCompatActivity {
         //ビューにノード情報を設定
         BaseNode nodeView = findViewById(R.id.v_rootnode);
         nodeView.setNode(nodeTable);
-
         //全ノード共通設定
         initAllNodeCommon(nodeView, nodeTable);
     }
@@ -540,9 +539,8 @@ public class MapActivity extends AppCompatActivity {
      * ノードの描画
      */
     public BaseNode drawNode(NodeTable nodeTable) {
-
+        //生成
         BaseNode nodeView = new NodeView(this, nodeTable);
-
         //子ノード共通初期化処理
         initChildNodeCommon( nodeView, nodeTable );
         //全ノード共通設定
@@ -555,12 +553,8 @@ public class MapActivity extends AppCompatActivity {
      * ピクチャノードの描画
      */
     private void drawPictureNode(NodeTable nodeTable, PictureTable thumbnail) {
-
-        //サムネイル
-        //※渡されていなければ、初期リストから取得
-        thumbnail = (thumbnail == null ? mInitThumbnails.getThumbnail(nodeTable.getPid()) : thumbnail);
+        //生成
         BaseNode nodeView = new PictureNodeView(this, nodeTable, thumbnail);
-
         //子ノード共通初期化処理
         initChildNodeCommon( nodeView, nodeTable );
         //全ノード共通設定
@@ -1181,7 +1175,7 @@ public class MapActivity extends AppCompatActivity {
             //Log.i("onFling", "nowx=" + nowx + " nowy=" + nowy);
 
             //スクローラー
-            final float SCALE = 3f;
+            final float SCALE = 2.5f;
             final int MOVE_DURATION = 5000;
 
             // アニメーションを開始

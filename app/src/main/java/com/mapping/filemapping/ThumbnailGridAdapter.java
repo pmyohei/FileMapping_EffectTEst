@@ -107,7 +107,7 @@ public class ThumbnailGridAdapter extends BaseAdapter {
                 .load( new File( path ) )
                 .resize( ThumbnailTransformation.RESIZE, ThumbnailTransformation.RESIZE )
                 .transform( new ThumbnailTransformation( thumbnail, viewSize ) )
-                .error(R.drawable.baseline_no_thumbnail_24)
+                .error(R.drawable.ic_no_image)
                 .into( iv_picture );
 
         //親ノード名を取得。なければ、なし用の文言を設定

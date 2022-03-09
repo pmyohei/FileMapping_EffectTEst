@@ -28,7 +28,7 @@
             android:layout_gravity="center"
             android:adjustViewBounds="true"
             android:scaleType="centerCrop"
-            android:src="@drawable/bmp_sample_cafe" />
+            android:src="@drawable/ic_no_image" />
 
     </com.google.android.material.card.MaterialCardView>
 

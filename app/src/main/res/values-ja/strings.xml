@@ -62,11 +62,12 @@
     <string name="toast_qeuestPermission">メディアへのアクセス許可が必要です</string>
     <string name="toast_qeuestPermissionFirst">マップ上に画像を表示したい場合、ファイルアクセスを許可して下さい</string>
 
+    <!--  マップリスト画面  -->
+    <string name="bt_new_map">New Map</string>
     <!--  マップ生成画面  -->
     <string name="map_create_tab1">マップ名</string>
     <string name="map_create_tab2">2Colors</string>
     <string name="map_create_tab3">3Colors</string>
-
     <!--  マップ画面  -->
     <string name="toolbar_map_changeParant">親ノード変更</string>
     <!--  トリミング画面  -->
@@ -127,28 +128,28 @@
     <!-- ツールアイコンのヘルプ -->
     <string name="help_icon_title">アイコンの説明</string>
     <string name="help_icon_add_name">ノード生成</string>
-    <string name="help_icon_add">新しいノードを追加します</string>
+    <string name="help_icon_add">新しいノードを追加します。</string>
     <string name="help_icon_add_note">※１つのノードに作成できるノードは「５つ」まで</string>
     <string name="help_icon_add_picture_node_name">ピクチャノード生成</string>
-    <string name="help_icon_add_picture_node">写真格納用のノードを作成します\n写真を格納したい場合は、このアイコンを選択して、ピクチャノードを作成しましょう</string>
+    <string name="help_icon_add_picture_node">写真格納用のノードを作成します。\n写真を格納したい場合は、このアイコンを選択して、ピクチャノードを作成しましょう。</string>
     <string name="help_icon_add_picture_node_note">※１つのノードに作成できるピクチャノードは「２つ」まで</string>
     <string name="help_icon_edit_name">ノード編集</string>
-    <string name="help_icon_edit">ノードを編集します\nデザインやノード名を変えたい場合は、このアイコンを選択してください</string>
+    <string name="help_icon_edit">ノードを編集します。\nデザインやノード名を変えたい場合は、このアイコンを選択してください。</string>
     <string name="help_icon_edit_note">※マップ上のすべてのノードデザインを統一したいときは、マップ画面上部の以下のアイコンを選択してください</string>
     <string name="help_icon_delete_name">ノード削除</string>
-    <string name="help_icon_delete">ノードとその配下のノードをマップ上から削除します</string>
+    <string name="help_icon_delete">ノードとその配下のノードをマップ上から削除します。</string>
     <string name="help_icon_delete_note">※削除対象のノードに紐づけた写真は、端末上からは削除されません</string>
     <string name="help_icon_photo_library_name">ギャラリー表示</string>
-    <string name="help_icon_photo_library">このノードに紐づけた写真をギャラリーで確認ことができます</string>
+    <string name="help_icon_photo_library">このノードに紐づけた写真をギャラリーで確認ことができます。</string>
     <string name="help_icon_change_parent_name">親ノードの変更</string>
-    <string name="help_icon_change_parent">親ノードを変更します\nこのアイコンを選択した後、親にしたいノードをタッチすると、そのノードを親に変更できます</string>
+    <string name="help_icon_change_parent">親ノードを変更します。\nこのアイコンを選択した後、親にしたいノードをタッチすると、そのノードを親に変更できます。</string>
     <string name="help_icon_change_parent_note">※「ピクチャノード」は親ノードにできません</string>
     <string name="help_icon_new_map_name">新規マップ化</string>
-    <string name="help_icon_new_map">このノードを中心ノードとして、新しいマップを作成します</string>
+    <string name="help_icon_new_map">このノードを中心ノードとして、新しいマップを作成します。</string>
     <string name="help_icon_add_photo_library_name">写真の格納（紐づけ）</string>
-    <string name="help_icon_add_photo_library">写真を格納します\n関連する写真を選択してギャラリーを作成しましょう</string>
+    <string name="help_icon_add_photo_library">写真を格納します。\n関連する写真を選択してギャラリーを作成しましょう。</string>
     <string name="help_icon_close_name">アイコンクローズ</string>
-    <string name="help_icon_close">アイコンを閉じます</string>
+    <string name="help_icon_close">アイコンを閉じます。</string>
 
     <!-- マップ画面のヘルプ -->
     <string name="help_map_title">マップ画面の操作方法</string>
@@ -178,19 +179,20 @@
     <string name="help_map_basic_sample2_details4">④作成されたピクチャノードをタッチ</string>
     <string name="help_map_basic_sample2_details5">⑤写真追加アイコンを選択</string>
     <string name="help_map_basic_sample2_details6">⑥好きな写真を選択</string>
-    <string name="help_map_basic_sample2_details7">ギャラリーアイコンを選択すると、ノードに格納された写真を確認することができます</string>
+    <string name="help_map_basic_sample2_details7">ギャラリーアイコンを選択すると、ノードに格納された写真を確認することができます。</string>
 
     <string name="help_map_toolbar_details1">本画面上部のアイコンについて</string>
     <string name="help_map_toolbar_palette1">全体的なマップデザイン変更</string>
-    <string name="help_map_toolbar_palette2">マップの背景色やマップ上のすべてのノードのデザインを変更できます</string>
+    <string name="help_map_toolbar_palette2">マップの背景色やマップ上のすべてのノードのデザインを変更できます。</string>
     <string name="help_map_toolbar_tree1">ノードのツリー表示</string>
     <string name="help_map_toolbar_tree2">マップ上にあるすべてのノードをツリー形式で確認できます</string>
     <string name="help_map_toolbar_disable1">～アイコンが見えなくなったとき～</string>
-    <string name="help_map_toolbar_disable2">アイコンが見えにくくなったときは、ツールバーをタッチすると見えやすくなります</string>
+    <string name="help_map_toolbar_disable2">アイコンが見えにくくなったときは、ツールバーをタッチすると見えやすくなります。</string>
 
-    <string name="help_map_picture_details1">本アプリでは、お使いの端末に保存された写真や画像をマップ上のノードに紐づけて管理しています。</string>
-    <string name="help_map_picture_details2">・端末内の画像が削除されたり保存場所が変更されると、マップからも削除されますのでご注意下さい</string>
-    <string name="help_map_picture_details3">・本アプリでは、端末内の画像を削除する機能はありません。マップからノードや写真を削除した場合でも、端末からその画像が削除されることはありません。</string>
+    <string name="help_map_aboutPicture_1">本アプリでは、お使いの端末に保存された写真や画像をマップ上のノードに紐づけて管理しています。</string>
+    <string name="help_map_aboutPicture_2">・端末内の画像が削除されたり保存場所が変更されると、マップからも削除されますのでご注意下さい</string>
+    <string name="help_map_aboutPicture_3">（紐づけできなくなった画像）</string>
+    <string name="help_map_aboutPicture_4">・本アプリでは、端末内の画像を削除する機能はありません。マップからノードや写真を削除した場合でも、端末からその画像が削除されることはありません。</string>
 
     <string name="help_map_limitaions_details1">・１つのノードに作れるノードは５つまで</string>
     <string name="help_map_limitaions_details2">・１つのノードに作れるピクチャノード（写真を格納するためのノード）は２つまで</string>

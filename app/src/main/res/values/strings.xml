@@ -68,11 +68,12 @@
     <string name="toast_qeuestPermission">Please allow access to the media</string>
     <string name="toast_qeuestPermissionFirst">If you want to display the image on the map,\nplease change to permission</string>
 
+    <!--  マップリスト画面  -->
+    <string name="bt_new_map">New Map</string>
     <!--  マップ生成画面  -->
     <string name="map_create_tab1">Map name</string>
     <string name="map_create_tab2">2Colors</string>
     <string name="map_create_tab3">3Colors</string>
-
     <!--  マップ画面  -->
     <string name="toolbar_map_changeParant">Change parent node</string>
     <!--  トリミング画面  -->
@@ -194,9 +195,10 @@
     <string name="help_map_toolbar_disable1">～If the icon disappears～</string>
     <string name="help_map_toolbar_disable2">If the icon becomes difficult to see, touch the toolbar to make it easier to see.</string>
 
-    <string name="help_map_picture_details1">In this application, the image saved in your terminal is managed by associating it with the node on the map.</string>
-    <string name="help_map_picture_details2">・If the image on the device is deleted or the storage location is changed, it will also be deleted from the map. Be careful.</string>
-    <string name="help_map_picture_details3">・This application does not have the ability to delete images in the device.\nRemoving a node or photo from the map does not remove the image from the device.</string>
+    <string name="help_map_aboutPicture_1">In this application, the image saved in your terminal is managed by associating it with the node on the map.</string>
+    <string name="help_map_aboutPicture_2">・If the image on the device is deleted or the storage location is changed, it will also be deleted from the map. Be careful.</string>
+    <string name="help_map_aboutPicture_3">Images that can no longer be linked</string>
+    <string name="help_map_aboutPicture_4">・This application does not have the ability to delete images in the device.\nRemoving a node or photo from the map does not remove the image from the device.</string>
 
     <string name="help_map_limitaions_details1">-Up to 5 nodes can be created in one node</string>
     <string name="help_map_limitaions_details2">-Up to 2 picture nodes (nodes for storing photos) can be created in one node</string>

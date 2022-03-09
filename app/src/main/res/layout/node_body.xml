@@ -36,7 +36,7 @@
             android:layout_height="80dp"
             android:layout_gravity="center"
             android:visibility="gone"
-            android:src="@drawable/bmp_sample_cafe" />
+            android:src="@drawable/ic_no_image" />
 
     </com.google.android.material.card.MaterialCardView>
 

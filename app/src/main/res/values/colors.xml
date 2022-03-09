@@ -13,7 +13,7 @@
     <color name="white">#FFFFFFFF</color>
     <color name="transparent_80_white">#CCFFFFFF</color>
     <color name="transparent_65_white">#A6FFFFFF</color>
-    <color name="transparent_20_white">#80FFFFFF</color>
+    <color name="transparent_50_white">#80FFFFFF</color>
     <color name="transparent_0_white">#00FFFFFF</color>
     <color name="gray">#FFEAEAEA</color>
     <color name="transparent_50_blue">#800000FF</color>

@@ -42,7 +42,7 @@ public class SingleImageView_old extends androidx.appcompat.widget.AppCompatImag
 
     private void init(Context context) {
 /*
-        setImageResource(R.drawable.bmp_sample_cafe);
+        setImageResource(R.drawable.ic_no_image);
         setScaleType(ScaleType.MATRIX);
 
         float previousScale = getMatrixValue(Matrix.MSCALE_Y);
