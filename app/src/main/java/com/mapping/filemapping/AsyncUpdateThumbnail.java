@@ -18,7 +18,6 @@ public class AsyncUpdateThumbnail {
     private final OnFinishListener mOnFinishListener;
 
     //コール元に返すデータ
-    private PictureTable mOldThumbnail;
     private PictureTable mNewThumbnail;
 
     /*
@@ -30,7 +29,6 @@ public class AsyncUpdateThumbnail {
         mPicture = picture;
 
         //返却データ
-        mOldThumbnail = null;
         mNewThumbnail = null;
     }
 
@@ -78,6 +76,7 @@ public class AsyncUpdateThumbnail {
             boolean isSamePicture = updateCurrentThumbnail(dao, currentThumbnail);
             if( isSamePicture ) {
                 //同じ画像がサムネイルに選択された場合、ここで処理終了
+                mNewThumbnail = currentThumbnail;
                 return;
             }
 
@@ -135,9 +134,6 @@ public class AsyncUpdateThumbnail {
             //現在サムネイルを更新
             dao.update( currentThumbnail );
 
-            //古いサムネイルとして保持
-            mOldThumbnail = currentThumbnail;
-
             return isSamePicture;
         }
 
@@ -156,10 +152,8 @@ public class AsyncUpdateThumbnail {
     void execute() {
         //バックグランド前処理
         onPreExecute();
-
         //シングルスレッド（キューなし）で動作するexecutorを作成
         ExecutorService executorService  = Executors.newSingleThreadExecutor();
-
         //非同期処理を送信
         executorService.submit(new AsyncRunnable());
     }
@@ -169,7 +163,7 @@ public class AsyncUpdateThumbnail {
      */
     void onPostExecute() {
         //生成完了
-        mOnFinishListener.onFinish( mOldThumbnail, mNewThumbnail);
+        mOnFinishListener.onFinish( mNewThumbnail);
     }
 
     /*
@@ -179,7 +173,7 @@ public class AsyncUpdateThumbnail {
         /*
          * 生成完了時、コールされる
          */
-        void onFinish( PictureTable oldPicture, PictureTable newPicture );
+        void onFinish( PictureTable newPicture );
     }
 
 
