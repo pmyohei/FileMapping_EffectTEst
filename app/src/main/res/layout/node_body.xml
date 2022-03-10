@@ -32,8 +32,8 @@
         <!--  ピクチャノード  -->
         <ImageView
             android:id="@+id/iv_node"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="@dimen/thumnbnail_default_size"
+            android:layout_height="@dimen/thumnbnail_default_size"
             android:layout_gravity="center"
             android:visibility="gone"
             android:src="@drawable/ic_no_image" />

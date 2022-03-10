@@ -8,18 +8,18 @@
     <dimen name="node_toolIcon_elevation">1dp</dimen>   <!-- 影は1とする（マップ色が同じ色でもアイコンを見えやすくするため） -->
     <dimen name="picture_node_default_size">100dp</dimen>
     <dimen name="node_shape_sample_size">40dp</dimen>
+    <dimen name="thumnbnail_default_size">100dp</dimen>
 
     <!--  サンプルマップ  -->
     <dimen name="change_color_pattern_icon">36dp</dimen>
     <dimen name="switch_shadow_icon">36dp</dimen>
 
     <!--  ノードアイコンマージン（初期値）  -->
-    <dimen name="node_icon_default_radius">100dp</dimen>
+    <dimen name="node_icon_default_radius">100dp</dimen>    <!-- 実際のサイズはコード上で設定される -->
     <dimen name="node_icon_parent_padding">24dp</dimen>
 
-    <dimen name="node_icon_margin_long">160dp</dimen>
-    <dimen name="node_icon_margin_middle1">80dp</dimen>
-    <dimen name="node_icon_margin_middle2">60dp</dimen>
+    <dimen name="node_icon_add_distance">40dp</dimen>
+    <dimen name="node_icon_minimun_distance">90dp</dimen>
 
     <!--  デザインレイアウト  -->
     <!--  色選択ダイアログの選択色の円  -->
