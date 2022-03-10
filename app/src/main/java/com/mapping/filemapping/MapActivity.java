@@ -44,6 +44,7 @@ import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.List;
 import java.util.Objects;
 
 public class MapActivity extends AppCompatActivity {
@@ -51,6 +52,7 @@ public class MapActivity extends AppCompatActivity {
     /* 画面遷移-レスポンスコード */
     public static final int RESULT_PICTURE_NODE = 200;
     public static final int RESULT_UPDATE_TUHMBNAIL = 201;
+    public static final int RESULT_GALLERY = 202;
 
     /* 画面遷移-キー */
     public static String INTENT_MAP_PID = "MapPid";
@@ -104,8 +106,8 @@ public class MapActivity extends AppCompatActivity {
     private int mChangeParentNodePid = INVALID_PID;
 
     //画面遷移ランチャー
-    ActivityResultLauncher<Intent> mNodeOperationLauncher;
-    ActivityResultLauncher<Intent> mGalleryLauncher;
+    ActivityResultLauncher<Intent> mNodeOperationLauncher;      //ノード操作関連の戻り
+    ActivityResultLauncher<Intent> mExternalStorageLauncher;    //外部ストレージアクセスからの戻り（写真追加）
 
     /*
      * 画面生成
@@ -134,14 +136,14 @@ public class MapActivity extends AppCompatActivity {
         mPinchGestureDetector = new ScaleGestureDetector(this, new PinchListener());
         mScrollGestureDetector = new GestureDetector(this, new ScrollListener());
 
-        //画面遷移ランチャー（ノード操作関連）を作成
+        //画面遷移ランチャー
         mNodeOperationLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 new NodeOperationResultCallback()
         );
-        mGalleryLauncher = registerForActivityResult(
+        mExternalStorageLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
-                new AddPictureResultCallback(this)
+                new ExternalStorageResultCallback(this)
         );
 
         //画面上部の中心位置
@@ -318,13 +320,6 @@ public class MapActivity extends AppCompatActivity {
      */
     public ActivityResultLauncher<Intent> getTrimmingLauncher() {
         return mNodeOperationLauncher;
-    }
-
-    /*
-     * 画面遷移用ランチャー（画像ギャラリー）を取得
-     */
-    public ActivityResultLauncher<Intent> getGalleryLauncher() {
-        return mGalleryLauncher;
     }
 
     /*
@@ -788,7 +783,7 @@ public class MapActivity extends AppCompatActivity {
         intent.putExtra(MapActivity.INTENT_NODE_PID, node.getPid());
 
         //開始
-        startActivity(intent);
+        mNodeOperationLauncher.launch(intent);
     }
 
     /*
@@ -802,7 +797,7 @@ public class MapActivity extends AppCompatActivity {
         intent.setType("image/*");
 
         //開始
-        mGalleryLauncher.launch(intent);
+        mExternalStorageLauncher.launch(intent);
     }
 
     /*
@@ -1321,7 +1316,9 @@ public class MapActivity extends AppCompatActivity {
 
     /*
      * 画面遷移からの戻りのコールバック通知
-     *   ・ノード新規作成（ピクチャ）
+     *   ・トリミング画面：ピクチャノードの作成
+     *   ・トリミング画面：ピクチャノードのサムネイル更新
+     *   ・ギャラリー画面からの戻り
      */
     private class NodeOperationResultCallback implements ActivityResultCallback<ActivityResult> {
 
@@ -1357,6 +1354,27 @@ public class MapActivity extends AppCompatActivity {
                 int pictureNodePid = newThumbnail.getPidParentNode();
                 //サムネイルを更新
                 ((PictureNodeView)mNodes.getNode( pictureNodePid ).getNodeView()).updateThumbnail( newThumbnail );
+
+            } else if( resultCode == RESULT_GALLERY) {
+                //ギャラリー画面からの戻り
+                MapCommonData mapCommonData = (MapCommonData) getApplication();
+                List<Integer> lostThumnbnailPids = mapCommonData.getLostThumnbnailNodePids();
+
+                //サムネイルを失ったピクチャノードのサムネイルを更新
+                for( Integer pid: lostThumnbnailPids ){
+                    //ピクチャノード
+                    NodeTable pictureNode = mNodes.getNode( pid );
+                    if( pictureNode.getKind() != NodeTable.NODE_KIND_PICTURE ){
+                        //念のためガード
+                        continue;
+                    }
+
+                    //サムネイルをイメージなしにする
+                    ((PictureNodeView)pictureNode.getNodeView()).updateThumbnail( null );
+                }
+
+                //リスト初期化
+                lostThumnbnailPids.clear();
             }
 
         }
@@ -1364,13 +1382,13 @@ public class MapActivity extends AppCompatActivity {
 
     /*
      * 画面遷移からの戻りのコールバック通知
-     *   ・写真追加（ギャラリーからの戻り）
+     *   ・写真追加（外部ストレージアクセス）からの戻り
      */
-    private static class AddPictureResultCallback implements ActivityResultCallback<ActivityResult> {
+    private static class ExternalStorageResultCallback implements ActivityResultCallback<ActivityResult> {
 
         private final Context mContext;
 
-        public AddPictureResultCallback( Context context ) {
+        public ExternalStorageResultCallback(Context context ) {
             mContext = context;
         }
 
@@ -1378,89 +1396,97 @@ public class MapActivity extends AppCompatActivity {
         public void onActivityResult(ActivityResult result) {
 
             if (result.getResultCode() == RESULT_OK) {
+                //外部ストレージアクセス
+                exteralStorage(result);
+            }
+        }
 
-                Intent intent = result.getData();
-                if (intent == null) {
-                    return;
+        /*
+         * 外部ストレージ戻り処理
+         */
+        private void exteralStorage(ActivityResult result) {
+
+            Intent intent = result.getData();
+            if (intent == null) {
+                return;
+            }
+
+            //選択されているピクチャノード情報
+            MapCommonData mapCommonData = (MapCommonData) ((ComponentActivity)mContext).getApplication();
+            NodeArrayList<NodeTable> nodes =  mapCommonData.getNodes();
+            NodeTable pictureNode = nodes.getShowingIconNode().getNode();
+
+            int mapPid = pictureNode.getPidMap();
+            int nodePid = pictureNode.getPid();
+
+            //絶対pathリスト
+            PictureArrayList<PictureTable> pictures = new PictureArrayList<>();
+
+            //パスエラーが発生したかどうか
+            boolean isPathError = false;
+
+            ClipData clipData = intent.getClipData();
+            if( clipData == null ){
+                //選択枚数1枚
+
+                //絶対パスを取得
+                Uri contentUri = intent.getData();
+                String path = ResourceManager.getPathFromUri(mContext, contentUri);
+                if (path == null ) {
+                    //絶対パスの取得に失敗した場合
+                    isPathError = true;
+                } else {
+                    //ピクチャデータをリストに追加
+                    pictures.add(
+                            new PictureTable(mapPid, nodePid, path)
+                    );
                 }
 
-                //選択されているピクチャノード情報
-                MapCommonData mapCommonData = (MapCommonData) ((ComponentActivity)mContext).getApplication();
-                NodeArrayList<NodeTable> nodes =  mapCommonData.getNodes();
-                NodeTable pictureNode = nodes.getShowingIconNode().getNode();
-
-                int mapPid = pictureNode.getPidMap();
-                int nodePid = pictureNode.getPid();
-
-                //絶対pathリスト
-                PictureArrayList<PictureTable> pictures = new PictureArrayList<>();
-
-                //パスエラーが発生したかどうか
-                boolean isPathError = false;
-
-                ClipData clipData = intent.getClipData();
-                if( clipData == null ){
-                    //選択枚数1枚
+            } else{
+                //選択写真数
+                int pictureNum = clipData.getItemCount();
+                for( int i = 0; i < pictureNum; i++ ){
+                    //コンテンツURIを取得
+                    Uri contentUri = intent.getClipData().getItemAt(i).getUri();
 
                     //絶対パスを取得
-                    Uri contentUri = intent.getData();
                     String path = ResourceManager.getPathFromUri(mContext, contentUri);
                     if (path == null ) {
                         //絶対パスの取得に失敗した場合
                         isPathError = true;
-                    } else {
-                        //ピクチャデータをリストに追加
-                        pictures.add(
-                                new PictureTable(mapPid, nodePid, path)
-                        );
+                        continue;
                     }
 
-                } else{
-                    //選択写真数
-                    int pictureNum = clipData.getItemCount();
-                    for( int i = 0; i < pictureNum; i++ ){
-                        //コンテンツURIを取得
-                        Uri contentUri = intent.getClipData().getItemAt(i).getUri();
-
-                        //絶対パスを取得
-                        String path = ResourceManager.getPathFromUri(mContext, contentUri);
-                        if (path == null ) {
-                            //絶対パスの取得に失敗した場合
-                            isPathError = true;
-                            continue;
-                        }
-
-                        //ピクチャデータをリストに追加
-                        pictures.add(
-                                new PictureTable(mapPid, nodePid, path)
-                        );
-                    }
+                    //ピクチャデータをリストに追加
+                    pictures.add(
+                            new PictureTable(mapPid, nodePid, path)
+                    );
                 }
-
-                //追加写真がなければ終了
-                if( pictures.size() == 0 ){
-                    if( isPathError ){
-                        //格納失敗のメッセージを表示
-                        Toast.makeText(mContext, mContext.getString(R.string.toast_storeError), Toast.LENGTH_LONG).show();
-                    }
-                    return;
-                }
-
-                //格納した旨のメッセージを表示
-                Toast.makeText(mContext, mContext.getString(R.string.toast_storePicture), Toast.LENGTH_LONG).show();
-
-                //DBにピクチャデータとして保存
-                //DB保存処理
-                AsyncCreateGallery db = new AsyncCreateGallery(mContext, pictures, new AsyncCreateGallery.OnCreateListener() {
-                    @Override
-                    public void onCreate() {
-                    }
-                });
-
-                //非同期処理開始
-                db.execute();
             }
 
+            //追加写真がなければ終了
+            if( pictures.size() == 0 ){
+                if( isPathError ){
+                    //格納失敗のメッセージを表示
+                    Toast.makeText(mContext, mContext.getString(R.string.toast_storeError), Toast.LENGTH_LONG).show();
+                }
+                return;
+            }
+
+            //格納した旨のメッセージを表示
+            Toast.makeText(mContext, mContext.getString(R.string.toast_storePicture), Toast.LENGTH_LONG).show();
+
+            //DBにピクチャデータとして保存
+            //DB保存処理
+            AsyncCreateGallery db = new AsyncCreateGallery(mContext, pictures, new AsyncCreateGallery.OnCreateListener() {
+                @Override
+                public void onCreate() {
+                }
+            });
+
+            //非同期処理開始
+            db.execute();
         }
+
     }
 }

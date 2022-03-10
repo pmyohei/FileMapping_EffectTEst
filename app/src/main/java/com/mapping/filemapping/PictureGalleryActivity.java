@@ -77,6 +77,9 @@ public class PictureGalleryActivity extends AppCompatActivity {
             finish();
         }
 
+        //resultコード設定
+        setResult(MapActivity.RESULT_GALLERY, getIntent());
+
         //アダプタ更新リスト
         mUpdatePages = new ArrayList<>();
 
@@ -371,6 +374,9 @@ public class PictureGalleryActivity extends AppCompatActivity {
         return super.onSupportNavigateUp();
     }
 
+
+
+
     /*
      * 選択中の写真をリストで取得
      *   para：ページindex
@@ -432,7 +438,6 @@ public class PictureGalleryActivity extends AppCompatActivity {
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-
                         //選択中の写真を削除
                         deletePicturesOnDB();
                     }
@@ -460,9 +465,18 @@ public class PictureGalleryActivity extends AppCompatActivity {
         //DBから写真を削除
         AsyncDeletePicture db = new AsyncDeletePicture(this, selectedPictures, new AsyncDeletePicture.OnFinishListener() {
             @Override
-            public void onFinish(boolean isThumbnail) {
+            public void onFinish(boolean isThumbnail, int srcPictureNodePid ) {
                 //アダプタを更新
                 removeGallery(selectedPictures, isThumbnail);
+
+                if( isThumbnail ){
+                    //サムネイルがなくなったピクチャノードのpidを共通データに追加
+                    MapCommonData mapCommonData = (MapCommonData) getApplication();
+                    mapCommonData.addLostThumnbnailNodePid( srcPictureNodePid );
+                }
+
+                //削除メッセージ
+                Toast.makeText(vp2_gallery.getContext(), getString(R.string.toast_deletePicture), Toast.LENGTH_SHORT).show();
             }
         });
 

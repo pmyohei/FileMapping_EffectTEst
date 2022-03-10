@@ -56,7 +56,8 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
         //選択されたギャラリーのリスト
         mGalley = (ArrayList) intent.getSerializableExtra("pictures");
         //表示開始位置
-        int showPosition = intent.getIntExtra("position", 0);;
+        int showPosition = intent.getIntExtra("position", 0);
+        ;
 
         //格納先更新フラグ（削除か格納先の移動が発生したとき、フラグを更新する）
         mIsUpdate = false;
@@ -78,7 +79,7 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
         vp2_singlePicture.setAdapter(adapter);
 
         //表示開始位置を設定
-        vp2_singlePicture.setCurrentItem( showPosition );
+        vp2_singlePicture.setCurrentItem(showPosition);
 
         //ページスクロールリスナー
         vp2_singlePicture.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
@@ -149,10 +150,10 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
                         //Log.i("ページ更新チェック", "更新チェック preCurrent=" + prePage);
                         //Log.i("ページ更新チェック", "更新チェック current=" + nextPage);
 
-                        int pageDiff = Math.abs( prePage - nextPage );
+                        int pageDiff = Math.abs(prePage - nextPage);
 
                         //ページ遷移している場合
-                        if ( pageDiff == 1 ) {
+                        if (pageDiff == 1) {
                             //ページ遷移が１ページだけ
 
                             //Log.i("ページ更新チェック", "★更新発生 preCurrent=" + prePage);
@@ -161,7 +162,7 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
 
                             //参照していた写真が拡大された状態で画面遷移された場合
                             //if (preMatrixImageView != null && preMatrixImageView.isPinchUp()) {
-                            if ( mIsImagePinchUp ) {
+                            if (mIsImagePinchUp) {
                                 Log.i("ページ更新チェック", "★更新発生 通知テスト ピンチフラグ 拡大しているので更新通知を送る→" + prePage);
 
                                 //参照していたページを更新
@@ -181,6 +182,7 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
                 super.onPageSelected(position);
                 Log.i("コール順確認", "onPageSelected ページ=" + position);
             }
+
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
                 Log.i("コール順確認", "onPageScrolled ページ=" + position);
@@ -196,7 +198,7 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //次の写真へ
                 int current = vp2_singlePicture.getCurrentItem();
-                if( current == (vp2_singlePicture.getAdapter().getItemCount() - 1) ){
+                if (current == (vp2_singlePicture.getAdapter().getItemCount() - 1)) {
                     //一応ガード
                     return;
                 }
@@ -204,10 +206,10 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
                 //遷移前のページとして保持
                 mIconTouchPage = current;
                 //ページを変更
-                vp2_singlePicture.setCurrentItem( current + 1 );
+                vp2_singlePicture.setCurrentItem(current + 1);
 
                 //ページ送り後はアイコン非表示
-                view.setVisibility( View.GONE );
+                view.setVisibility(View.GONE);
                 //スクロールでのページ送りをリセット（ページ送り有効化）
                 vp2_singlePicture.setUserInputEnabled(true);
             }
@@ -219,7 +221,7 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
             public void onClick(View view) {
                 //前の写真へ
                 int current = vp2_singlePicture.getCurrentItem();
-                if( current == 0 ){
+                if (current == 0) {
                     //一応ガード
                     return;
                 }
@@ -227,10 +229,10 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
                 //遷移前のページとして保持
                 mIconTouchPage = current;
                 //ページを変更
-                vp2_singlePicture.setCurrentItem( current - 1 );
+                vp2_singlePicture.setCurrentItem(current - 1);
 
                 //ページ送り後は非表示に
-                view.setVisibility( View.GONE );
+                view.setVisibility(View.GONE);
                 //スクロールでのページ送りをリセット（ページ送り有効化）
                 vp2_singlePicture.setUserInputEnabled(true);
             }
@@ -269,7 +271,7 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);*/
 
         //システムバー
-        getWindow().setStatusBarColor( Color.BLACK );
+        getWindow().setStatusBarColor(Color.BLACK);
     }
 
     /*
@@ -322,44 +324,58 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
 
         //削除確認ダイアログを表示
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle( getString(R.string.alert_deletePicture_title) )
-                .setMessage(  getString(R.string.alert_deletePicture_message) )
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                        //表示中の写真のindex
-                        ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
-                        int index = vp2_singlePicture.getCurrentItem();
-
-                        //ノードから削除対象のピクチャ
-                        PictureTable picture = mGalley.get(index);
-
-                        //DBからノード削除
-                        AsyncDeletePicture db = new AsyncDeletePicture( vp2_singlePicture.getContext(), picture, new AsyncDeletePicture.OnFinishListener() {
-                            @Override
-                            public void onFinish(boolean isThumbnail) {
-                                //アダプタから削除
-                                updatePictureAdapter();
-
-                                //削除メッセージ
-                                Toast.makeText(vp2_singlePicture.getContext(), getString(R.string.toast_deletePicture), Toast.LENGTH_SHORT).show();
-                            }
-                        });
-
-                        //写真削除後は、ページ送り有効にする
-                        vp2_singlePicture.setUserInputEnabled(true);
-
-                        //非同期処理開始
-                        db.execute();
-                    }
-                })
-                .setNegativeButton("Cancel", null)
-                .show();
+            .setTitle(getString(R.string.alert_deletePicture_title))
+            .setMessage(getString(R.string.alert_deletePicture_message))
+            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //削除
+                    deletePicturesOnDB();
+                }
+            })
+            .setNegativeButton("Cancel", null)
+            .show();
 
         //メッセージ文は、Styleのフォントが適用されないため個別に設定
-        ((TextView)dialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
+        ((TextView) dialog.findViewById(android.R.id.message)).setTypeface(Typeface.SERIF);
     }
+
+    /*
+     * 写真の削除（格納先から除外）
+     */
+    private void deletePicturesOnDB() {
+        //表示中の写真のindex
+        ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
+        int index = vp2_singlePicture.getCurrentItem();
+
+        //ノードから削除対象のピクチャ
+        PictureTable picture = mGalley.get(index);
+
+        //DBからノード削除
+        AsyncDeletePicture db = new AsyncDeletePicture(vp2_singlePicture.getContext(), picture, new AsyncDeletePicture.OnFinishListener() {
+            @Override
+            public void onFinish(boolean isThumbnail, int srcPictureNodePid) {
+                //アダプタから削除
+                removePictureInAdapter();
+
+                if( isThumbnail ){
+                    //サムネイルがなくなったピクチャノードのpidを共通データに追加
+                    MapCommonData mapCommonData = (MapCommonData) getApplication();
+                    mapCommonData.addLostThumnbnailNodePid( srcPictureNodePid );
+                }
+
+                //削除メッセージ
+                Toast.makeText(vp2_singlePicture.getContext(), getString(R.string.toast_deletePicture), Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        //写真削除後は、ページ送り有効にする
+        vp2_singlePicture.setUserInputEnabled(true);
+
+        //非同期処理開始
+        db.execute();
+    }
+
 
     /*
      * 所属するピクチャノードの変更先をダイアログで表示
@@ -379,7 +395,16 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
     /*
      * 単体表示中の写真をアダプタから削除
      */
-    public void updatePictureAdapter() {
+    public void removePictureInAdapter() {
+
+        //Intentに更新ありの情報を設定
+        setUpdateIntent();
+
+        //最後の写真であれば、本アクティビティ終了
+        if( mGalley.size() == 1 ){
+            finish();
+            return;
+        }
 
         //表示中の写真をリストから削除
         ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
@@ -390,9 +415,6 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
         if( adapter != null ){
             adapter.removeItem( index );
         }
-
-        //Intentに更新ありの情報を設定
-        setUpdateIntent();
     }
 
     /*

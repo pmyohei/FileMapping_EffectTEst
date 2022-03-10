@@ -24,6 +24,8 @@ public class AsyncDeletePicture {
 
     //処理結果：更新写真にサムネイルがあったかどうか
     private boolean mIsThumbnail;
+    //削除された写真を保持していたピクチャノードのpid
+    private int mSrcPictureNodePid;
 
     /*
      * コンストラクタ（単体）
@@ -93,6 +95,8 @@ public class AsyncDeletePicture {
 
             //サムネイルかどうか
             mIsThumbnail = mPicture.isThumbnail();
+            //ピクチャノード
+            mSrcPictureNodePid = mPicture.getPidParentNode();
 
             //テーブルから削除
             PictureTableDao dao = mDB.daoPictureTable();
@@ -115,8 +119,9 @@ public class AsyncDeletePicture {
                 //サムネイルならフラグを更新
                 if( picture.isThumbnail() ){
                     mIsThumbnail = true;
+                    //ピクチャノード
+                    mSrcPictureNodePid = picture.getPidParentNode();
                 }
-
                 dao.delete(picture);
             }
         }
@@ -148,7 +153,7 @@ public class AsyncDeletePicture {
      */
     void onPostExecute() {
         //完了
-        mOnFinishListener.onFinish(mIsThumbnail);
+        mOnFinishListener.onFinish(mIsThumbnail, mSrcPictureNodePid);
     }
 
     /*
@@ -158,7 +163,7 @@ public class AsyncDeletePicture {
         /*
          * 完了時、コールされる
          */
-        void onFinish(boolean isThumbnail);
+        void onFinish(boolean isThumbnail, int srcPictureNodePid);
     }
 
 

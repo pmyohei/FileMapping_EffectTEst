@@ -98,11 +98,6 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
-
-        //Log.i("単体表示", "onBindViewHolder");
-
-        //Test = i;
-
         //ビューの設定
         viewHolder.setViewMatrix( mData.get(i) );
     }

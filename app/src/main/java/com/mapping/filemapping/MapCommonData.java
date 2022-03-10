@@ -7,6 +7,7 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Locale;
 
 /*
@@ -32,6 +33,8 @@ public class MapCommonData extends Application {
     private ArrayList<String> mColorHistory;
     //全ノードエンキュー有無
     private boolean mIsAllNodeEnque;
+    //サムネイルを失ったピクチャノードのpidリスト
+    private List<Integer> mLostThumnbnailNodePids;
 
     /*
      * アプリケーションの起動時に呼び出される
@@ -44,6 +47,7 @@ public class MapCommonData extends Application {
         mUpdateNodeQue = new NodeArrayList<>();
         mDeleteNodes = new NodeArrayList<>();
         mColorHistory = new ArrayList<>();
+        mLostThumnbnailNodePids = new ArrayList<>();
     }
 
     /*
@@ -59,6 +63,7 @@ public class MapCommonData extends Application {
         mEditNode = null;
         mDeleteNodes = null;
         mColorHistory = null;
+        mLostThumnbnailNodePids = null;
     }
 
     /*
@@ -71,6 +76,7 @@ public class MapCommonData extends Application {
         mUpdateNodeQue.clear();
         mDeleteNodes.clear();
         mColorHistory.clear();
+        mLostThumnbnailNodePids.clear();
 
         //状態リセット
         mIsAllNodeEnque = false;
@@ -86,12 +92,11 @@ public class MapCommonData extends Application {
     public MapTable getMap(){
         return mMap;
     }
-
     /*
      * マップPidを取得
      */
     public int getMapPid() {
-        return mNodes.getRootNode().getPidMap();
+        return mMap.getPid();
     }
 
     /*
@@ -348,6 +353,19 @@ public class MapCommonData extends Application {
 
         //削除対象クリア
         mDeleteNodes.clear();
+    }
+
+    /*
+     * サムネイルがなくなったピクチャノードpidリストを取得
+     */
+    public List<Integer> getLostThumnbnailNodePids() {
+        return mLostThumnbnailNodePids;
+    }
+    /*
+     * サムネイルがなくなったピクチャノードpidリストにpidを追加
+     */
+    public void addLostThumnbnailNodePid( int pid ) {
+        mLostThumnbnailNodePids.add(pid);
     }
 
 }
