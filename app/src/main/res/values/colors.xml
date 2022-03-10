@@ -27,19 +27,6 @@
     <!--  ナビゲーションビュー用  -->
     <color name="transparent_navi">#80FFFFFF</color>
 
-    <!--  tmp-カフェ  -->
-    <color name="cafe_1">#4E2613</color>
-    <color name="cafe_2">#D3AE6F</color>
-    <color name="cafe_3">#969734</color>
-    <color name="cafe_4">#F1EDE4</color>
-    <color name="cafe_5">#D36922</color>
-    <color name="cafe_6">#11265F</color>
-
-    <color name="sample_node1">#FF841c45</color>
-    <color name="sample_node2">#FF7bedbd</color>
-    <color name="aaa">#1A000000</color>
-
-
     <!-- 配色パターンリスト（2色） -->
     <string-array name="color_2_pattern_list">
         <item>color_2_pattern_1</item>
@@ -81,7 +68,8 @@
         <item>color_2_pattern_37</item>
         <item>color_2_pattern_38</item>
         <item>color_2_pattern_39</item>
-        <!--<item>color_2_pattern_35</item>-->
+        <item>color_2_pattern_41</item>
+        <item>color_2_pattern_42</item>
     </string-array>
 
 
@@ -280,6 +268,21 @@
         <item>#ffbe0d</item>
     </string-array>
 
+    <string-array name="color_2_pattern_40">
+        <item>#EF9A9A</item>
+        <item>#EFEB9E</item>
+    </string-array>
+
+    <string-array name="color_2_pattern_41">
+        <item>#FFCDD2</item>
+        <item>#F5F5F5</item>
+    </string-array>
+
+    <string-array name="color_2_pattern_42">
+        <item>#B0BEC5</item>
+        <item>#EFEB9E</item>
+    </string-array>
+
     <!-- 配色パターンリスト（3色） -->
     <string-array name="color_3_pattern_list">
         <item>color_3_pattern_1</item>
@@ -314,14 +317,56 @@
         <item>color_3_pattern_30</item>
         <item>color_3_pattern_31</item>
         <item>color_3_pattern_32</item>
+        <item>color_3_pattern_33</item>
+        <item>color_3_pattern_34</item>
+        <item>color_3_pattern_35</item>
+        <item>color_3_pattern_36</item>
+        <item>color_3_pattern_37</item>
+        <item>color_3_pattern_38</item>
+        <item>color_3_pattern_39</item>
+        <item>color_3_pattern_40</item>
+        <item>color_3_pattern_41</item>
+        <item>color_3_pattern_42</item>
+        <item>color_3_pattern_43</item>
+        <item>color_3_pattern_44</item>
+        <item>color_3_pattern_45</item>
+        <item>color_3_pattern_46</item>
+        <item>color_3_pattern_47</item>
+        <item>color_3_pattern_48</item>
+        <item>color_3_pattern_49</item>
+        <item>color_3_pattern_50</item>
+        <item>color_3_pattern_51</item>
+        <item>color_3_pattern_52</item>
+        <item>color_3_pattern_53</item>
+        <item>color_3_pattern_54</item>
+        <item>color_3_pattern_55</item>
+        <item>color_3_pattern_56</item>
+        <item>color_3_pattern_57</item>
+        <item>color_3_pattern_58</item>
+        <item>color_3_pattern_59</item>
+        <item>color_3_pattern_60</item>
+        <item>color_3_pattern_61</item>
+        <item>color_3_pattern_62</item>
+        <item>color_3_pattern_63</item>
+        <item>color_3_pattern_64</item>
+        <item>color_3_pattern_65</item>
+        <item>color_3_pattern_66</item>
+        <item>color_3_pattern_67</item>
+        <item>color_3_pattern_68</item>
+        <item>color_3_pattern_69</item>
+        <item>color_3_pattern_70</item>
+        <item>color_3_pattern_71</item>
+        <item>color_3_pattern_72</item>
+        <item>color_3_pattern_73</item>
+        <item>color_3_pattern_74</item>
     </string-array>
 
     <!--  ※3色の並びは、濃・薄・濃（or 薄・濃・薄）にする  -->
     <!--  ※ただし、よい初期並びがあればそれを優先でよい  -->
     <string-array name="color_3_pattern_1">
-        <item>#4A148C</item>
+        <item>#90CAF9</item>
         <item>#FFCDD2</item>
-        <item>#212121</item>
+        <item>#F5F5F5</item>
     </string-array>
 
     <string-array name="color_3_pattern_2">
@@ -331,15 +376,15 @@
     </string-array>
 
     <string-array name="color_3_pattern_3">
+        <item>#E8EAF6</item>
         <item>#BCAAA4</item>
-        <item>#6200EA</item>
-        <item>#DCEDC8</item>
+        <item>#F5F5F5</item>
     </string-array>
 
     <string-array name="color_3_pattern_4">
-        <item>#3D5AFE</item>
-        <item>#FAFAFA</item>
-        <item>#D50000</item>
+        <item>#90A4AE</item>
+        <item>#BDBDBD</item>
+        <item>#F8BBD0</item>
     </string-array>
 
     <string-array name="color_3_pattern_5">
@@ -380,9 +425,9 @@
 
     <!--  3色だけでP.100  -->
     <string-array name="color_3_pattern_11">
-        <item>#eee2d3</item>
-        <item>#e7b09f</item>
-        <item>#c39c89</item>
+        <item>#FF80AB</item>
+        <item>#F5F5F5</item>
+        <item>#C51162</item>
     </string-array>
 
     <!--  3色だけでP.124  -->
@@ -408,16 +453,16 @@
 
     <!--  3色だけでP.186  -->
     <string-array name="color_3_pattern_15">
-        <item>#aa998a</item>
-        <item>#eadfca</item>
-        <item>#9ec3bc</item>
+        <item>#EFEBE9</item>
+        <item>#A1887F</item>
+        <item>#F5F5F5</item>
     </string-array>
 
     <!--  3色だけでP.168  -->
     <string-array name="color_3_pattern_16">
-        <item>#fffde1</item>
-        <item>#b32425</item>
-        <item>#d6b845</item>
+        <item>#B2DFDB</item>
+        <item>#F5F5F5</item>
+        <item>#795548</item>
     </string-array>
 
     <!--  3色だけでP.164  -->
@@ -436,9 +481,9 @@
 
     <!--  3色だけでP.148  -->
     <string-array name="color_3_pattern_19">
-        <item>#f0831e</item>
-        <item>#feedde</item>
-        <item>#bc6e2e</item>
+        <item>#424242</item>
+        <item>#BCAAA4</item>
+        <item>#F5F5F5</item>
     </string-array>
 
     <!--  3色だけでP.126  -->
@@ -478,9 +523,9 @@
 
     <!--  3色だけでP.80  -->
     <string-array name="color_3_pattern_25">
-        <item>#002a5b</item>
-        <item>#eaf6fd</item>
-        <item>#d7000f</item>
+        <item>#FFEBEE</item>
+        <item>#B388FF</item>
+        <item>#F5F5F5</item>
     </string-array>
 
     <!--  3色だけでP.72  -->
@@ -499,9 +544,9 @@
 
     <!--  3色だけでP.52  -->
     <string-array name="color_3_pattern_28">
-        <item>#cae5d3</item>
-        <item>#9cc9e5</item>
-        <item>#dfe2ea</item>
+        <item>#AED581</item>
+        <item>#FFCDD2</item>
+        <item>#FFF3E0</item>
     </string-array>
 
     <string-array name="color_3_pattern_29">
@@ -517,24 +562,269 @@
     </string-array>
 
     <string-array name="color_3_pattern_31">
-        <item>#EEEEEE</item>
-        <item>#004D40</item>
-        <item>#E57373</item>
+        <item>#F9FBE7</item>
+        <item>#BCAAA4</item>
+        <item>#F5F5F5</item>
     </string-array>
 
     <string-array name="color_3_pattern_32">
+        <item>#90A4AE</item>
+        <item>#F3E5F5</item>
+        <item>#F8BBD0</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_33">
+        <item>#cae5d3</item>
+        <item>#9cc9e5</item>
+        <item>#dfe2ea</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_34">
+        <item>#AED581</item>
+        <item>#FFE082</item>
+        <item>#FFF3E0</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_35">
+        <item>#616161</item>
+        <item>#FF9E80</item>
+        <item>#9FA8DA</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_36">
+        <item>#EFEBE9</item>
+        <item>#651FFF</item>
+        <item>#F5F5F5</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_37">
+        <item>#F06292</item>
+        <item>#FF9E80</item>
+        <item>#80DEEA</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_38">
+        <item>#CE93D8</item>
+        <item>#E0E0E0</item>
+        <item>#F8BBD0</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_39">
+        <item>#EF9A9A</item>
+        <item>#F3E5F5</item>
+        <item>#DCEDC8</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_40">
+        <item>#FFCCBC</item>
+        <item>#F3E5F5</item>
+        <item>#78909C</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_41">
+        <item>#90A4AE</item>
+        <item>#FFE0B2</item>
+        <item>#F8BBD0</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_42">
+        <item>#263238</item>
+        <item>#C51162</item>
+        <item>#F5F5F5</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_43">
+        <item>#F1F8E9</item>
+        <item>#BCAAA4</item>
+        <item>#F5F5F5</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_44">
+        <item>#90A4AE</item>
+        <item>#AD1457</item>
+        <item>#F8BBD0</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_45">
+        <item>#FFFDE7</item>
+        <item>#F8BBD0</item>
+        <item>#EF6C00</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_46">
         <item>#EFEBE9</item>
         <item>#FFB74D</item>
         <item>#FF8F00</item>
     </string-array>
 
-    <!--
-        <string-array name="color_3_pattern_">
-            <item>#</item>
-            <item>#</item>
-            <item>#</item>
-        </string-array>
-    -->
+    <string-array name="color_3_pattern_47">
+        <item>#F8BBD0</item>
+        <item>#424242</item>
+        <item>#D7CCC8</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_48">
+        <item>#F06292</item>
+        <item>#F1F8E9</item>
+        <item>#B3E5FC</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_49">
+        <item>#F1F8E9</item>
+        <item>#F06292</item>
+        <item>#4E342E</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_50">
+        <item>#E8EAF6</item>
+        <item>#C51162</item>
+        <item>#F5F5F5</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_51">
+        <item>#B2DFDB</item>
+        <item>#82B1FF</item>
+        <item>#F5F5F5</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_52">
+        <item>#4A148C</item>
+        <item>#FFCDD2</item>
+        <item>#212121</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_53">
+        <item>#757575</item>
+        <item>#C51162</item>
+        <item>#F5F5F5</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_54">
+        <item>#BCAAA4</item>
+        <item>#6200EA</item>
+        <item>#DCEDC8</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_55">
+        <item>#B2DFDB</item>
+        <item>#C51162</item>
+        <item>#F5F5F5</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_56">
+        <item>#fffde1</item>
+        <item>#b32425</item>
+        <item>#d6b845</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_57">
+        <item>#C8E6C9</item>
+        <item>#BCAAA4</item>
+        <item>#F5F5F5</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_58">
+        <item>#90CAF9</item>
+        <item>#FF9E80</item>
+        <item>#F5F5F5</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_59">
+        <item>#FFE0B2</item>
+        <item>#BCAAA4</item>
+        <item>#F5F5F5</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_60">
+        <item>#3D5AFE</item>
+        <item>#FAFAFA</item>
+        <item>#D50000</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_61">
+        <item>#D7CCC8</item>
+        <item>#C51162</item>
+        <item>#F5F5F5</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_62">
+        <item>#EEEEEE</item>
+        <item>#004D40</item>
+        <item>#E57373</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_63">
+        <item>#F5F5F5</item>
+        <item>#D1C4E9</item>
+        <item>#BCAAA4</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_64">
+        <item>#eee2d3</item>
+        <item>#e7b09f</item>
+        <item>#c39c89</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_65">
+        <item>#FFE57F</item>
+        <item>#BCAAA4</item>
+        <item>#F5F5F5</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_66">
+        <item>#f0831e</item>
+        <item>#feedde</item>
+        <item>#bc6e2e</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_68">
+        <item>#757575</item>
+        <item>#90CAF9</item>
+        <item>#F5F5F5</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_67">
+        <item>#B2DFDB</item>
+        <item>#F5F5F5</item>
+        <item>#BCAAA4</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_69">
+        <item>#FCE4EC</item>
+        <item>#FF9E80</item>
+        <item>#311B92</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_70">
+        <item>#EFEBE9</item>
+        <item>#B388FF</item>
+        <item>#F5F5F5</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_71">
+        <item>#002a5b</item>
+        <item>#eaf6fd</item>
+        <item>#d7000f</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_72">
+        <item>#90CAF9</item>
+        <item>#F5F5F5</item>
+        <item>#78909C</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_73">
+        <item>#aa998a</item>
+        <item>#eadfca</item>
+        <item>#9ec3bc</item>
+    </string-array>
+
+    <string-array name="color_3_pattern_74">
+        <item>#F5F5F5</item>
+        <item>#EFEBE9</item>
+        <item>#EC407A</item>
+    </string-array>
+
 
     <!--  デフォルト  -->
     <color name="purple_200">#FFBB86FC</color>
