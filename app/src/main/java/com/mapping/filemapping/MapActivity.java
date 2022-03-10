@@ -1356,25 +1356,7 @@ public class MapActivity extends AppCompatActivity {
                 ((PictureNodeView)mNodes.getNode( pictureNodePid ).getNodeView()).updateThumbnail( newThumbnail );
 
             } else if( resultCode == RESULT_GALLERY) {
-                //ギャラリー画面からの戻り
-                MapCommonData mapCommonData = (MapCommonData) getApplication();
-                List<Integer> lostThumnbnailPids = mapCommonData.getLostThumnbnailNodePids();
-
-                //サムネイルを失ったピクチャノードのサムネイルを更新
-                for( Integer pid: lostThumnbnailPids ){
-                    //ピクチャノード
-                    NodeTable pictureNode = mNodes.getNode( pid );
-                    if( pictureNode.getKind() != NodeTable.NODE_KIND_PICTURE ){
-                        //念のためガード
-                        continue;
-                    }
-
-                    //サムネイルをイメージなしにする
-                    ((PictureNodeView)pictureNode.getNodeView()).updateThumbnail( null );
-                }
-
-                //リスト初期化
-                lostThumnbnailPids.clear();
+                //do nothing
             }
 
         }

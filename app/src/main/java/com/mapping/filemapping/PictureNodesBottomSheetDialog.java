@@ -235,12 +235,6 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
                         //移動した写真を単体表示中のアダプタから削除
                         ((SinglePictureDisplayActivity) mActivity).removePictureInAdapter();
 
-                        if( isThumbnail ){
-                            //サムネイルがなくなったピクチャノードのpidを共通データに追加
-                            MapCommonData mapCommonData = (MapCommonData) getActivity().getApplication();
-                            mapCommonData.addLostThumnbnailNodePid( mShowPicture.getPidParentNode() );
-                        }
-
                         //移動写真あり
                         Toast.makeText(getActivity(), getString(R.string.toast_moved), Toast.LENGTH_SHORT).show();
                     }
@@ -275,12 +269,6 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
                     } else{
                         //移動写真あり
                         Toast.makeText(getActivity(), getString(R.string.toast_moved), Toast.LENGTH_SHORT).show();
-
-                        if( isThumbnail ){
-                            //サムネイルがなくなったピクチャノードのpidを共通データに追加
-                            MapCommonData mapCommonData = (MapCommonData) getActivity().getApplication();
-                            mapCommonData.addLostThumnbnailNodePid( movedPictures.get(0).getPidParentNode() );
-                        }
                     }
                 }
             });

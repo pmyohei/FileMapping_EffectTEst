@@ -12,6 +12,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.BitmapFactory;
@@ -110,7 +111,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         //システムバー
-        getWindow().setStatusBarColor( Color.BLACK );
+        getWindow().setStatusBarColor(Color.BLACK);
     }
 
     /*
@@ -223,7 +224,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
                     layoutIdList.add(R.layout.page_grid_gallery);
 
                     //サムネイルのビットマップ
-                    thumbnails.add( dbThumbnails.get(i) );
+                    thumbnails.add(dbThumbnails.get(i));
 
                     i++;
                 }
@@ -255,7 +256,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
         //レイアウト確定後、アダプタの設定を行う
         //※表示する写真サイズを確実に設定するため
-        vp2_gallery.post(()-> {
+        vp2_gallery.post(() -> {
             //アダプタの設定
             vp2_gallery.setAdapter(new GalleryPageAdapter(layoutIdList, galleries));
 
@@ -268,28 +269,28 @@ public class PictureGalleryActivity extends AppCompatActivity {
                             //タブの設定
                             if (position == 0) {
                                 //先頭のタブはすべての写真を表示する
-                                tab.setText( getString(R.string.tab_all) );
+                                tab.setText(getString(R.string.tab_all));
 
                             } else {
                                 //先頭より後はピクチャノードのサムネイルを設定
                                 tab.setCustomView(R.layout.item_gallery_tab);
 
                                 //タブに表示するピクチャノードサイズ
-                                int viewSize = (int)getResources().getDimension(R.dimen.gallery_tab_size);
+                                int viewSize = (int) getResources().getDimension(R.dimen.gallery_tab_size);
 
                                 //サムネイルのbitmap
                                 PictureTable thumbnail = thumbnails.get(position - 1);
-                                String path = ( (thumbnail == null) ? "": thumbnail.getPath() );
+                                String path = ((thumbnail == null) ? "" : thumbnail.getPath());
 
                                 //アイコンとして設定
                                 //※画質を担保するため、resize()である程度画像の大きさを確保してからtransform()に渡す
                                 ImageView iv_picture = tab.getCustomView().findViewById(R.id.iv_picture);
                                 Picasso.get()
-                                        .load( new File( path ) )
-                                        .resize( ThumbnailTransformation.RESIZE, ThumbnailTransformation.RESIZE )
-                                        .transform( new ThumbnailTransformation( thumbnail, viewSize ) )
-                                        .error( R.drawable.ic_no_image )
-                                        .into( iv_picture );
+                                        .load(new File(path))
+                                        .resize(ThumbnailTransformation.RESIZE, ThumbnailTransformation.RESIZE)
+                                        .transform(new ThumbnailTransformation(thumbnail, viewSize))
+                                        .error(R.drawable.ic_no_image)
+                                        .into(iv_picture);
                             }
                         }
                     }
@@ -374,20 +375,19 @@ public class PictureGalleryActivity extends AppCompatActivity {
         return super.onSupportNavigateUp();
     }
 
-
-
-
     /*
      * 選択中の写真をリストで取得
-     *   para：ページindex
      */
-    private PictureArrayList<PictureTable> getSelectedPictures(int page) {
+    private PictureArrayList<PictureTable> getSelectedPictures() {
         //選択写真
         PictureArrayList<PictureTable> selectedPictures = new PictureArrayList<>();
 
         //表示中ギャラリーのGridView
         ViewPager2 vp2_gallery = findViewById(R.id.vp2_gallery);
         GridView gv_gallery = vp2_gallery.findViewById(R.id.gv_gallery);
+
+        //参照中タブ
+        int page = vp2_gallery.getCurrentItem();
 
         //表示中ギャラリー
         PictureArrayList<PictureTable> gallery = mGalleries.get(page);
@@ -405,6 +405,21 @@ public class PictureGalleryActivity extends AppCompatActivity {
     }
 
     /*
+     * 指定されたリスト内にサムネイルがある場合、除外する
+     */
+    private void removeThumbnail( PictureArrayList<PictureTable> pictures ) {
+        int i = 0;
+        for( PictureTable picture: pictures ){
+            if( picture.isThumbnail() ){
+                //サムネイルがあれば、リストから除外
+                pictures.remove( i );
+                break;
+            }
+            i++;
+        }
+    }
+
+    /*
      * 格納先ノードの移動処理
      */
     private void showMoveDestination() {
@@ -418,11 +433,20 @@ public class PictureGalleryActivity extends AppCompatActivity {
         int tabPictureNodePid = mPictureNodePids.get(page - 1);
 
         //選択写真
-        PictureArrayList<PictureTable> selectedPictures = getSelectedPictures(page);
+        PictureArrayList<PictureTable> selectedPictures = getSelectedPictures();
+
+        //選択写真がサムネイルしかなければ、移動不可
+        if( (selectedPictures.size() == 1) && (selectedPictures.get(0).isThumbnail()) ){
+            Toast.makeText(this, getString(R.string.toast_cannotThumbnailMove), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //選択写真の中から、サムネイル写真を除外
+        removeThumbnail( selectedPictures );
 
         //マップ上のピクチャノードを移動先候補として表示
-        //PictureNodesBottomSheetDialog bottomSheetDialog = PictureNodesBottomSheetDialog.newInstance(mPictureNodeInfo, tabPictureNodePid, selectedPictures);
-        PictureNodesBottomSheetDialog bottomSheetDialog = new PictureNodesBottomSheetDialog(this, mPictureNodeInfo, tabPictureNodePid, selectedPictures);
+        PictureNodesBottomSheetDialog bottomSheetDialog
+                = new PictureNodesBottomSheetDialog(this, mPictureNodeInfo, tabPictureNodePid, selectedPictures);
         bottomSheetDialog.show(getSupportFragmentManager(), "");
     }
 
@@ -430,6 +454,15 @@ public class PictureGalleryActivity extends AppCompatActivity {
      * 写真の削除（格納先から除外）確認
      */
     private void confirmDeletePicture() {
+
+        //選択写真
+        PictureArrayList<PictureTable> selectedPictures = getSelectedPictures();
+
+        //選択写真がサムネイルしかなければ、削除不可
+        if( (selectedPictures.size() == 1) && (selectedPictures.get(0).isThumbnail()) ){
+            Toast.makeText(this, getString(R.string.toast_cannotThumbnailDelete), Toast.LENGTH_SHORT).show();
+            return;
+        }
 
         //削除確認ダイアログを表示
         AlertDialog dialog = new AlertDialog.Builder(this)
@@ -455,12 +488,11 @@ public class PictureGalleryActivity extends AppCompatActivity {
      */
     private void deletePicturesOnDB() {
 
-        //参照中タブ
-        ViewPager2 vp2_gallery = findViewById(R.id.vp2_gallery);
-        int page = vp2_gallery.getCurrentItem();
-
         //選択写真
-        PictureArrayList<PictureTable> selectedPictures = getSelectedPictures(page);
+        PictureArrayList<PictureTable> selectedPictures = getSelectedPictures();
+
+        //選択写真の中から、サムネイル写真を除外
+        removeThumbnail( selectedPictures );
 
         //DBから写真を削除
         AsyncDeletePicture db = new AsyncDeletePicture(this, selectedPictures, new AsyncDeletePicture.OnFinishListener() {
@@ -468,22 +500,15 @@ public class PictureGalleryActivity extends AppCompatActivity {
             public void onFinish(boolean isThumbnail, int srcPictureNodePid ) {
                 //アダプタを更新
                 removeGallery(selectedPictures, isThumbnail);
-
-                if( isThumbnail ){
-                    //サムネイルがなくなったピクチャノードのpidを共通データに追加
-                    MapCommonData mapCommonData = (MapCommonData) getApplication();
-                    mapCommonData.addLostThumnbnailNodePid( srcPictureNodePid );
-                }
-
                 //削除メッセージ
-                Toast.makeText(vp2_gallery.getContext(), getString(R.string.toast_deletePicture), Toast.LENGTH_SHORT).show();
+                Context context = findViewById(R.id.vp2_gallery).getContext();
+                Toast.makeText(context, getString(R.string.toast_deletePicture), Toast.LENGTH_SHORT).show();
             }
         });
 
         //非同期処理開始
         db.execute();
     }
-
 
     /*
      * 複数選択解除処理
@@ -564,7 +589,6 @@ public class PictureGalleryActivity extends AppCompatActivity {
                 new ViewTreeObserver.OnGlobalLayoutListener() {
                     @Override
                     public void onGlobalLayout() {
-
                         //レイアウト確定後は、不要なので本リスナー削除
                         gv_gallery.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
@@ -582,11 +606,6 @@ public class PictureGalleryActivity extends AppCompatActivity {
      *   para1：削除された写真リスト
      */
     public void removeGallery(PictureArrayList<PictureTable> selectedPictures, boolean isThumbnail) {
-
-        Toast.makeText(this,
-                getString(R.string.toast_deletePicture),
-                Toast.LENGTH_LONG)
-                .show();
 
         //タブで表示しているサムネイルの更新
         disableTabThumbnail(isThumbnail);

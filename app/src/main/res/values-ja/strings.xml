@@ -19,12 +19,18 @@
     <string name="alert_changeParent_title">親ノード変更確認</string>
     <string name="alert_changeParent_message">選択したノードを親ノードにします。</string>
     <string name="alert_deletePicture_title">写真の削除</string>
-    <string name="alert_deletePicture_message">選択した写真をノードから削除します。\n※端末上から写真は削除されません。</string>
+    <string name="alert_deletePicture_message">
+        <![CDATA[
+            選択した写真をノードから削除します。
+            \n※サムネイルは削除されません。
+            \n※端末上から写真は削除されません。
+        ]]>
+    </string>
     <string name="alert_movePicture_title">格納先の変更</string>
     <string name="alert_movePicture_message">
         <![CDATA[
-            選択したノードに写真を移動しますか？\n
-            ※サムネイルの写真の場合、ピクチャノードのサムネイルイメージがなくなります
+            選択したノードに写真を移動しますか？
+            \n※サムネイルは移動されません。
         ]]>
     </string>
     <string name="alert_movePicture_notMove">\n※移動先に同じ写真がある場合、移動されません</string>
@@ -58,7 +64,9 @@
     <string name="toast_storePicture">画像を格納しました\n（同じ画像は格納されません）</string>
     <string name="toast_storeError">エラー：「画像」フォルダから選択して下さい</string>
     <string name="toast_moved">移動しました</string>
-    <string name="toast_notMoves">移動した写真はありません</string>
+    <string name="toast_notMoves">移動した画像はありません</string>
+    <string name="toast_cannotThumbnailMove">サムネイル画像は移動できません</string>
+    <string name="toast_cannotThumbnailDelete">サムネイル画像は削除できません</string>
     <string name="toast_qeuestPermission">メディアへのアクセス許可が必要です</string>
     <string name="toast_qeuestPermissionFirst">マップ上に画像を表示したい場合、ファイルアクセスを許可して下さい</string>
 

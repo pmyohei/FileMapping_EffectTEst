@@ -96,7 +96,6 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         });
         db.execute();
 
-
         Context context = this;
 
         //画面遷移ランチャー（写真ギャラリー）

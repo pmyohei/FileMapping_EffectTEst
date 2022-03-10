@@ -10,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Color;
@@ -242,6 +243,13 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
         findViewById(R.id.iv_trash).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //サムネイル写真は選択不可
+                if (isDisplayedPictureThumbnail()) {
+                    Toast.makeText(view.getContext(), getString(R.string.toast_cannotThumbnailDelete), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 //確認ダイアログを表示
                 confirmDeletePicture();
             }
@@ -251,6 +259,13 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
         findViewById(R.id.iv_changeNode).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+                //サムネイル写真は選択不可
+                if (isDisplayedPictureThumbnail()) {
+                    Toast.makeText(view.getContext(), getString(R.string.toast_cannotThumbnailMove), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
                 //移動先候補を表示
                 showMoveDestination();
             }
@@ -318,9 +333,32 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
     }
 
     /*
+     * 表示中の写真を取得
+     */
+    private PictureTable getDisplayedPicture() {
+        //表示中の写真のindex
+        ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
+        int index = vp2_singlePicture.getCurrentItem();
+
+        //表示中の写真
+        return mGalley.get(index);
+    }
+
+    /*
+     * 表示中写真のサムネイル判定
+     */
+    private boolean isDisplayedPictureThumbnail() {
+        //表示中の写真
+        PictureTable picture = getDisplayedPicture();
+        return picture.isThumbnail();
+    }
+
+    /*
      * 格納ノードからの削除確認
      */
     private void confirmDeletePicture() {
+
+        Context context = this;
 
         //削除確認ダイアログを表示
         AlertDialog dialog = new AlertDialog.Builder(this)
@@ -330,7 +368,7 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     //削除
-                    deletePicturesOnDB();
+                    deletePicturesOnDB(context);
                 }
             })
             .setNegativeButton("Cancel", null)
@@ -343,37 +381,28 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
     /*
      * 写真の削除（格納先から除外）
      */
-    private void deletePicturesOnDB() {
-        //表示中の写真のindex
-        ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
-        int index = vp2_singlePicture.getCurrentItem();
+    private void deletePicturesOnDB(Context context) {
 
         //ノードから削除対象のピクチャ
-        PictureTable picture = mGalley.get(index);
+        PictureTable picture = getDisplayedPicture();
 
         //DBからノード削除
-        AsyncDeletePicture db = new AsyncDeletePicture(vp2_singlePicture.getContext(), picture, new AsyncDeletePicture.OnFinishListener() {
+        AsyncDeletePicture db = new AsyncDeletePicture(context, picture, new AsyncDeletePicture.OnFinishListener() {
             @Override
             public void onFinish(boolean isThumbnail, int srcPictureNodePid) {
                 //アダプタから削除
                 removePictureInAdapter();
 
-                if( isThumbnail ){
-                    //サムネイルがなくなったピクチャノードのpidを共通データに追加
-                    MapCommonData mapCommonData = (MapCommonData) getApplication();
-                    mapCommonData.addLostThumnbnailNodePid( srcPictureNodePid );
-                }
-
                 //削除メッセージ
-                Toast.makeText(vp2_singlePicture.getContext(), getString(R.string.toast_deletePicture), Toast.LENGTH_SHORT).show();
+                Toast.makeText(context, getString(R.string.toast_deletePicture), Toast.LENGTH_SHORT).show();
             }
         });
-
-        //写真削除後は、ページ送り有効にする
-        vp2_singlePicture.setUserInputEnabled(true);
-
         //非同期処理開始
         db.execute();
+
+        //写真削除後は、ページ送り有効にする
+        ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
+        vp2_singlePicture.setUserInputEnabled(true);
     }
 
 
@@ -381,11 +410,8 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
      * 所属するピクチャノードの変更先をダイアログで表示
      */
     private void showMoveDestination() {
-
         //参照中の写真
-        ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
-        int index = vp2_singlePicture.getCurrentItem();
-        PictureTable showPicture = mGalley.get(index);
+        PictureTable showPicture = getDisplayedPicture();
 
         //マップ上のピクチャノードを移動先候補として表示
         PictureNodesBottomSheetDialog bottomSheetDialog = new PictureNodesBottomSheetDialog(this, mPictureNodeInfo, showPicture);
@@ -401,6 +427,7 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
         setUpdateIntent();
 
         //最後の写真であれば、本アクティビティ終了
+        //※サムネイルは対象外のため、すべて削除されることは仕様上ないため、フェールセーフ
         if( mGalley.size() == 1 ){
             finish();
             return;

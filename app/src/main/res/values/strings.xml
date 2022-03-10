@@ -25,12 +25,18 @@
     <string name="alert_changeParent_title">Change parent node</string>
     <string name="alert_changeParent_message">Makes the selected node the parent node.</string>
     <string name="alert_deletePicture_title">Remove Photo</string>
-    <string name="alert_deletePicture_message">Remove the selected photo from the node.\nThe photo will not be removed from your device.</string>
+    <string name="alert_deletePicture_message">
+        <![CDATA[
+            Remove the selected photo from the node.
+            \n*Thumbnails are not deleted.
+            \n*The photo will not be removed from your device.
+        ]]>
+    </string>
     <string name="alert_movePicture_title">Move photos</string>
     <string name="alert_movePicture_message">
         <![CDATA[
-            Do you want to move the photo to the selection node?\n
-            *For thumbnail photos, the thumbnail image of the "picture node" is gone.
+            Do you want to move the photo to the selection node?
+            \n*Thumbnails are not moved.
         ]]>
     </string>
     <string name="alert_movePicture_notMove">\n*If the selected "picture node" has the same photo, that photo will not be moved.</string>
@@ -65,6 +71,8 @@
     <string name="toast_storeError">Error: Please select from the "Images" folder</string>
     <string name="toast_moved">The photo has been moved.</string>
     <string name="toast_notMoves">No photos moved.</string>
+    <string name="toast_cannotThumbnailMove">Thumbnails cannot be moved.</string>
+    <string name="toast_cannotThumbnailDelete">Thumbnails cannot be removed.</string>
     <string name="toast_qeuestPermission">Please allow access to the media</string>
     <string name="toast_qeuestPermissionFirst">If you want to display the image on the map,\nplease change to permission</string>
 
