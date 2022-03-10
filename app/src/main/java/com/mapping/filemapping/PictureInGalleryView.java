@@ -65,7 +65,7 @@ public class PictureInGalleryView extends LinearLayout implements Checkable {
     /**** Checkable ****/
     @Override
     public void setChecked(boolean b) {
-        Log.i("複数選択対応", "コール確認 setChecked() b=" + b);
+        //Log.i("複数選択対応", "コール確認 setChecked() b=" + b);
         mIsChecked = b;
 
         //ビューの状態を更新
@@ -74,7 +74,7 @@ public class PictureInGalleryView extends LinearLayout implements Checkable {
 
     @Override
     public boolean isChecked() {
-        Log.i("複数選択対応", "コール確認 isChecked()");
+        //Log.i("複数選択対応", "コール確認 isChecked()");
         return mIsChecked;
     }
 
@@ -82,7 +82,7 @@ public class PictureInGalleryView extends LinearLayout implements Checkable {
     public void toggle() {
         //状態反転
         setChecked( !mIsChecked );
-        Log.i("複数選択対応", "コール確認 toggle()");
+        //Log.i("複数選択対応", "コール確認 toggle()");
     }
     /**** Checkable ****/
 }

@@ -941,9 +941,9 @@ public class ChildNode extends BaseNode {
             float baseX = (float) Math.cos(ControlPointRadians) * distance;
             //float baseY = (float)Math.sin(ControlPointRadians) * distance;
 
-            Log.i("ライン調査", "distance=" + distance);
-            Log.i("ライン調査", "親 baseX=" + mStartPosX + "\ty=" + mStartPosY);
-            Log.i("ライン調査", "自分 baseX=" + mSelfPosX + "\ty=" + mSelfPosY);
+            //Log.i("ライン調査", "distance=" + distance);
+            //Log.i("ライン調査", "親 baseX=" + mStartPosX + "\ty=" + mStartPosY);
+            //Log.i("ライン調査", "自分 baseX=" + mSelfPosX + "\ty=" + mSelfPosY);
 
             //必要な回転角度を取得
             double radian = getRotaionRadian();
@@ -994,8 +994,8 @@ public class ChildNode extends BaseNode {
             double degrees = Math.toDegrees(radian);
             //double slopeDegrees = degrees;
 
-            Log.i("ライン調査", "傾き=" + slope);
-            Log.i("ライン調査", "傾き（角度）=" + degrees);
+            //Log.i("ライン調査", "傾き=" + slope);
+            //Log.i("ライン調査", "傾き（角度）=" + degrees);
 
             //回転角度
             if (mSelfPosX >= mStartPosX) {
@@ -1009,7 +1009,7 @@ public class ChildNode extends BaseNode {
             //回転角度をラジアン角度に変換
             radian = Math.toRadians(degrees);
 
-            Log.i("ライン調査", "回転角度=" + degrees);
+            //Log.i("ライン調査", "回転角度=" + degrees);
 
             return (float)radian;
         }

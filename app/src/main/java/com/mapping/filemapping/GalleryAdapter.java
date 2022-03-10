@@ -58,8 +58,6 @@ public class GalleryAdapter extends BaseAdapter {
         @SuppressLint("ClickableViewAccessibility")
         public void setView( PictureInGalleryView pictureInGalleryView, int position ) {
 
-            Log.i("Picasso", "パス=" + mData.get(position).getPath());
-
             //Picassoを利用して画像を設定
             Picasso.get()
                     .load( new File( mData.get(position).getPath() ) )

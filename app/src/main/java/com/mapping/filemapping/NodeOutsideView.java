@@ -163,8 +163,6 @@ public class NodeOutsideView extends LinearLayout {
         //ノードの横幅
         int width = findViewById(R.id.cv_node).getWidth();
         canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, (width / 2f), mPaint);
-
-        Log.i("サイズチェック", "onDraw レイアウト確定＝" + width);
     }
 
 }
