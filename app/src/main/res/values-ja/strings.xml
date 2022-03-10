@@ -22,18 +22,18 @@
     <string name="alert_deletePicture_message">
         <![CDATA[
             選択した写真をノードから削除します。
-            \n※サムネイルは削除されません。
             \n※端末上から写真は削除されません。
         ]]>
     </string>
+    <string name="alert_deletePicture_messageAdd">\n※サムネイルは削除されません。</string>
     <string name="alert_movePicture_title">格納先の変更</string>
-    <string name="alert_movePicture_message">
+    <string name="alert_movePicture_message">選択したノードに写真を移動しますか？</string>
+    <string name="alert_movePicture_messageAdd">
         <![CDATA[
-            選択したノードに写真を移動しますか？
+            \n※移動先に同じ写真がある場合、移動されません
             \n※サムネイルは移動されません。
         ]]>
     </string>
-    <string name="alert_movePicture_notMove">\n※移動先に同じ写真がある場合、移動されません</string>
     <string name="alert_deleteNode_title">ノードの削除</string>
     <string name="alert_deleteNode_message">配下のノードも全て削除されます。\nなお、端末上から写真は削除されません。</string>
     <string name="alert_launch_mapList_title">初めに</string>

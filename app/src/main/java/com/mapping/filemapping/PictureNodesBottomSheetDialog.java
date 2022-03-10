@@ -194,7 +194,7 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
         String message = getActivity().getString(R.string.alert_movePicture_message);
         if( !mIsSingle ){
             //複数選択時は、注意書きを追加
-            message += getActivity().getString(R.string.alert_movePicture_notMove);
+            message += getActivity().getString(R.string.alert_movePicture_messageAdd);
         }
 
         AlertDialog dialog = new AlertDialog.Builder(getActivity())

@@ -28,18 +28,18 @@
     <string name="alert_deletePicture_message">
         <![CDATA[
             Remove the selected photo from the node.
-            \n*Thumbnails are not deleted.
             \n*The photo will not be removed from your device.
         ]]>
     </string>
+    <string name="alert_deletePicture_messageAdd">\n*Thumbnails are not deleted.</string>
     <string name="alert_movePicture_title">Move photos</string>
-    <string name="alert_movePicture_message">
+    <string name="alert_movePicture_message">Do you want to move the photo to the selection node?</string>
+    <string name="alert_movePicture_messageAdd">
         <![CDATA[
-            Do you want to move the photo to the selection node?
+            \n*If the selected "picture node" has the same photo, that photo will not be moved.
             \n*Thumbnails are not moved.
         ]]>
     </string>
-    <string name="alert_movePicture_notMove">\n*If the selected "picture node" has the same photo, that photo will not be moved.</string>
     <string name="alert_deleteNode_title">Remove node</string>
     <string name="alert_deleteNode_message">All subordinate nodes will also be removed.\nThe photos in the node will not be removed from your device.</string>
     <string name="alert_launch_mapList_title">At first</string>

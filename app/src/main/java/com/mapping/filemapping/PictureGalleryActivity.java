@@ -464,10 +464,13 @@ public class PictureGalleryActivity extends AppCompatActivity {
             return;
         }
 
+        //メッセージ（複数選択用）
+        String message = getString(R.string.alert_deletePicture_message) + getString(R.string.alert_deletePicture_messageAdd);
+
         //削除確認ダイアログを表示
         AlertDialog dialog = new AlertDialog.Builder(this)
                 .setTitle( getString(R.string.alert_deletePicture_title) )
-                .setMessage( getString(R.string.alert_deletePicture_message) )
+                .setMessage( message )
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
