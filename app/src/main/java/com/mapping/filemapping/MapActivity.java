@@ -121,6 +121,9 @@ public class MapActivity extends AppCompatActivity {
         //本マップ情報を保持
         MapCommonData mapCommonData = (MapCommonData) getApplication();
         mMap = mapCommonData.getMap();
+        //マップ内情報初期化
+        //※画面の向きを変えた時など、再度onCreate()されるときがあるため、このタイミングで必ず初期化すること
+        mapCommonData.initInMap();
 
         //ツールバー設定
         initToolBar();

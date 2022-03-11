@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.Manifest;
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
@@ -234,8 +233,6 @@ public class MapListActivity extends AppCompatActivity {
     private void openMap( MapTable map, boolean isNew ){
 
         MapCommonData commonData = (MapCommonData)getApplication();
-        //初期化
-        commonData.init();
         //マップ情報
         commonData.setMap( map );
 

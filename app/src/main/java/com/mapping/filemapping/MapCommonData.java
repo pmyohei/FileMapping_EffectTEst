@@ -63,9 +63,9 @@ public class MapCommonData extends Application {
     }
 
     /*
-     * 共通データ初期化
+     * マップ内の共通データ初期化
      */
-    public void init() {
+    public void initInMap() {
 
         //リストクリア
         mNodes.clear();
