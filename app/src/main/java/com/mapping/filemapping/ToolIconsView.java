@@ -319,9 +319,13 @@ public class ToolIconsView extends ConstraintLayout {
                             return;
                         }
 
+                        //初期生成位置オフセット
+                        int initRelativePos = (int)getResources().getDimension(R.dimen.init_relative_pos);
+                        //スケールを考慮したノード半径
+                        int radius = (int)(parentNode.getNodeView().getScaleWidth() / 2f);
                         //初期生成位置
-                        int posX = (int) parentNode.getCenterPosX() + ResourceManager.POS_NODE_INIT_OFFSET;
-                        int posY = (int) parentNode.getCenterPosY();
+                        int posX = (int) parentNode.getPosX() + radius + initRelativePos;
+                        int posY = (int) parentNode.getPosY();
 
                         //ノードを生成
                         NodeTable newNode = new NodeTable(
@@ -363,8 +367,13 @@ public class ToolIconsView extends ConstraintLayout {
 
                         db.execute();
 
+                        //フォーカスさせる座標
+                        //※新ノードが生成される絶対位置
+                        int moveToX = (int) parentNode.getNodeView().getLeft() + radius + initRelativePos;
+                        int moveToY = (int) parentNode.getNodeView().getTop();
+
                         //BottomSheetを開く（画面移動あり）
-                        mMapActivity.openDesignBottomSheet(DesignBottomSheet.NODE, v_node, posX, posY, MOVE_UPPER);
+                        mMapActivity.openDesignBottomSheet(DesignBottomSheet.NODE, v_node, moveToX, moveToY, MOVE_UPPER);
 
                         //ノードに持たせていた自分をクローズ
                         mBaseNode.closeIconView();
@@ -420,7 +429,7 @@ public class ToolIconsView extends ConstraintLayout {
 
                         //ノード本体のマージンを取得
                         float marginLeft = mBaseNode.getLeft();
-                        float marginTop = mBaseNode.getTop();
+                        float marginTop  = mBaseNode.getTop();
 
                         //BottomSheetを開く（画面移動あり）
                         mMapActivity.openDesignBottomSheet(DesignBottomSheet.NODE, mBaseNode, marginLeft, marginTop, MOVE_UPPER);

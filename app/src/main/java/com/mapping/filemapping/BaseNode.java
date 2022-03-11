@@ -466,25 +466,6 @@ public class BaseNode extends FrameLayout {
     }
 
     /*
-     * ノード本体の左マージンを取得
-     *  ※本メソッドはツールアイコンオープン時にノード本体のマージンを取得したい場合に
-     *    使用される想定
-     */
-    //★不要
-    public int getNodeLeft() {
-        return (int)(mCenterPosX - (findViewById(R.id.cv_node).getWidth() / 2f));
-    }
-    /*
-     * ノード本体の上マージンを取得
-     *  ※本メソッドはツールアイコンオープン時にノード本体のマージンを取得したい場合に
-     *    使用される想定
-     */
-    //★不要
-    public int getNodeTop() {
-        return (int)(mCenterPosY - (findViewById(R.id.cv_node).getHeight() / 2f));
-    }
-
-    /*
      * ノードの形を円形にする
      */
     private void setShapeCircle() {

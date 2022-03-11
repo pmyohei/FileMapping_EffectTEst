@@ -398,13 +398,17 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         //マップ共通データ
         MapCommonData mapCommonData = (MapCommonData) getApplication();
         MapTable map = mapCommonData.getMap();
-
+        //色パターン
         String[] colors = map.getDefaultColors();
 
-        //ノード初期位置を親ノードの中心位置から一定の距離離した位置にする
         NodeTable parentNode = mapCommonData.getNodeInMap(selectedNodePid);
-        int posX = (int) parentNode.getCenterPosX() + ResourceManager.POS_NODE_INIT_OFFSET;
-        int posY = (int) parentNode.getCenterPosY();
+        //初期生成位置オフセット
+        int initRelativePos = (int)getResources().getDimension(R.dimen.init_relative_pos);
+        //スケールを考慮したノード半径
+        int radius = (int)(parentNode.getNodeView().getScaleWidth() / 2f);
+        //ノード初期位置を親ノードから一定の距離離した位置にする
+        int posX = (int) parentNode.getPosX() + radius + initRelativePos;
+        int posY = (int) parentNode.getPosY();
 
         //マップPID
         int mapPid = map.getPid();

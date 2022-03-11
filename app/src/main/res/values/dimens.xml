@@ -9,6 +9,7 @@
     <dimen name="picture_node_default_size">100dp</dimen>
     <dimen name="node_shape_sample_size">40dp</dimen>
     <dimen name="thumnbnail_default_size">100dp</dimen>
+    <dimen name="init_relative_pos">110dp</dimen>
 
     <!--  サンプルマップ  -->
     <dimen name="change_color_pattern_icon">36dp</dimen>

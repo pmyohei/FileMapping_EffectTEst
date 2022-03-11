@@ -179,7 +179,6 @@ public class NodeTable implements Serializable {
 
 
     /*-- getter setter --*/
-
     public int getPid() {
         return pid;
     }
@@ -307,22 +306,9 @@ public class NodeTable implements Serializable {
     }
 
     /*-- getter setter（非レコードフィールド） --*/
-
-    /*
-     * 自身のノード種別に応じて、適切な値を返す
-     */
-    public float getCenterPosX() {
-        return baseNode.getCenterPosX();
-    }
-
-    public float getCenterPosY() {
-        return baseNode.getCenterPosY();
-    }
-
     public BaseNode getNodeView() {
         return this.baseNode;
     }
-
     public void setNodeView(BaseNode node) {
         this.baseNode = node;
     }

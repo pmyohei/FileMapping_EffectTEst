@@ -592,9 +592,11 @@ public class MapActivity extends AppCompatActivity {
                 ViewGroup.LayoutParams.WRAP_CONTENT));
 
         //位置設定
-        // ※レイアウト追加後に行っている（MarginLayoutParamsがnullになってしまうため）
-        int left = nodeTable.getPosX();
-        int top  = nodeTable.getPosY();
+        //ルートノードのマージン位置に差分を反映
+        //※レイアウト追加後に行っている（MarginLayoutParamsがnullになってしまうため）
+        RootNodeView v_rootnode = findViewById(R.id.v_rootnode);
+        int left = nodeTable.getPosX() + v_rootnode.getLeft();
+        int top  = nodeTable.getPosY() + v_rootnode.getTop();
 
         ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) nodeView.getLayoutParams();
         mlp.setMargins(left, top, mlp.rightMargin, mlp.bottomMargin);
@@ -610,9 +612,6 @@ public class MapActivity extends AppCompatActivity {
             height = mTopScreanY;
         }
 
-        //float nodeLeft = v_node.getCenterPosX();
-        //float nodeTop = v_node.getCenterPosY();
-
         //スクロール開始位置（現在のマップ絶対位置）（ピンチ操作のずれを考慮）
         FrameLayout fl_map = findViewById(R.id.fl_map);
         float mapAbsX = fl_map.getTranslationX() + mPinchShiftX;
@@ -624,8 +623,8 @@ public class MapActivity extends AppCompatActivity {
 
         //マップ絶対位置のマージンを取得（ルートノードを基準に算出）
         RootNodeView v_rootnode = findViewById(R.id.v_rootnode);
-        float mapLeft = v_rootnode.getNodeLeft() - mapAbs1xX;      //※ルートノードが操作対象の場合を考慮し、getNodeLeft()を使用
-        float mapTop = v_rootnode.getNodeTop() - mapAbs1xY;
+        float mapLeft = v_rootnode.getLeft() - mapAbs1xX;
+        float mapTop  = v_rootnode.getTop() - mapAbs1xY;
 
         //移動量
         float moveDistanceX = (int) (pinchDistanceRatioX * (nodeLeft - mapLeft));

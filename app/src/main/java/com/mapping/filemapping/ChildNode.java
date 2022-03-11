@@ -395,11 +395,15 @@ public class ChildNode extends BaseNode {
         mlp.setMargins(getLeft(), getTop(), 0, 0);
 
         //Nodetable側の位置情報を更新
-        mNode.setPosX(getLeft());
-        mNode.setPosY(getTop());
+        //ルートノードの座標を基準とした相対位置
+        MapCommonData mapCommonData = (MapCommonData) ((Activity) getContext()).getApplication();
+        BaseNode rootNode = mapCommonData.getNodes().getRootNode().getNodeView();
+        int diffx = getLeft() - rootNode.getLeft();
+        int diffy = getTop()  - rootNode.getTop();
+        mNode.setPosX(diffx);
+        mNode.setPosY(diffy);
 
         //位置が変更されたため、自身(のNodeTable)を位置変更キューに追加
-        MapCommonData mapCommonData = (MapCommonData) ((Activity) getContext()).getApplication();
         mapCommonData.enqueUpdateNodeWithUnique(mNode);
 
         //子ノードも同様
@@ -413,11 +417,8 @@ public class ChildNode extends BaseNode {
 
         //子ノード分ループ
         for (NodeTable childNode : mChildNodes) {
-
             //子ノードのノードビュー
-            //ChildNode v_node = childNode.getChildNodeView();
             ChildNode v_node = (ChildNode) childNode.getNodeView();
-
             //子ノードの子ノードを移動させる
             v_node.setNodeLayoutMargin();
         }
@@ -436,7 +437,7 @@ public class ChildNode extends BaseNode {
         int parentPid = mNode.getPidParentNode();
         NodeTable parentNode = nodes.getNode(parentPid);
 
-        return parentNode.getCenterPosX();
+        return parentNode.getNodeView().getCenterPosX();
     }
 
     /*
@@ -452,7 +453,7 @@ public class ChildNode extends BaseNode {
         int parentPid = mNode.getPidParentNode();
         NodeTable parentNode = nodes.getNode(parentPid);
 
-        return parentNode.getCenterPosY();
+        return parentNode.getNodeView().getCenterPosY();
     }
 
     /*
@@ -537,7 +538,7 @@ public class ChildNode extends BaseNode {
                         if (mLineView == null) {
 
                             //親の中心座標を取得
-                            float parentCenterY = parentNode.getCenterPosY();
+                            float parentCenterY = parentNode.getNodeView().getCenterPosY();
                             if (parentCenterY == INIT_CENTER_POS) {
                                 //親ノードのレイアウトが未確定なら、次のコールバックを待つ
                                 Log.i("OnGlobalLayoutListener", "親未確定");
@@ -745,9 +746,6 @@ public class ChildNode extends BaseNode {
                 mParentRelative = currentPos;
             }
         }
-
-
-
     }
 
     /*

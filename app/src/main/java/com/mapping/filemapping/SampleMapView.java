@@ -200,7 +200,7 @@ public class SampleMapView extends FrameLayout {
         //位置設定
         //※レイアウト追加後に行うこと（MarginLayoutParamsがnullになってしまうため）
         int left = centerX + node.getPosX();
-        int top = centerY + node.getPosY();
+        int top  = centerY + node.getPosY();
 
         ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) nodeView.getLayoutParams();
         mlp.setMargins(left, top, mlp.rightMargin, mlp.bottomMargin);
