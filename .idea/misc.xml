@@ -46,6 +46,7 @@
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/help_icon_add_picture_node.xml" value="0.17" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/help_node.xml" value="0.187" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/help_picture_node.xml" value="0.187" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/seekbar_thumb.xml" value="0.1" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/selector_guide_indicator.xml" value="0.14375" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/selector_indicator.xml" value="0.106" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/font/font.xml" value="0.20462962962962963" />
@@ -133,7 +134,7 @@
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_node_name.xml" value="0.1" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_node_shadow.xml" value="0.12554112554112554" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_node_shape.xml" value="0.1" />
-        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_node_size.xml" value="0.2" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_node_size.xml" value="0.1" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_node_text.xml" value="0.15885416666666666" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_node_text_color.xml" value="0.213768115942029" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_set_thumbnail.xml" value="0.1" />
@@ -143,7 +144,7 @@
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/root_node.xml" value="0.23007246376811594" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/root_node_old.xml" value="0.23007246376811594" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/sample_map.xml" value="0.136" />
-        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/size_seekbar.xml" value="0.264" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/size_seekbar.xml" value="0.1" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/menu/toolbar_close.xml" value="0.225" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/menu/toolbar_gallery.xml" value="0.22083333333333333" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/menu/toolbar_map.xml" value="0.13333333333333333" />
