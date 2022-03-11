@@ -2,18 +2,13 @@
     <string name="app_name">Maps</string>
 
     <!--  共通  -->
-    <string name="bt_create">Create</string>
+    <string name="create">Create</string>
     <string name="cancel">Cancel</string>
+    <string name="save">Save</string>
     <string name="waiting">processing</string>
     <string name="updating">Updating</string>
     <string name="do_not_show_this_message">Don\'t show again</string>
     <string name="tab_all">All</string>
-
-    <!--  ツールバー  -->
-<!--
-    <string name="toolbar_titleTrimming">Creating thumbnail</string>
-    <string name="toolbar_titleGallery">Gallery</string>
--->
 
     <!--  ノード  -->
     <string name="node_createButtom">Create</string>
@@ -55,6 +50,7 @@
     <string name="alert_trimming_anotherPicture_ok">Select another image</string>
 
     <!-- トースト -->
+    <string name="toast_finishSave">Saved</string>
     <string name="toast_error">An error has occurred</string>
     <string name="toast_errorRgb">Please enter 0~9/A~F(a~f)</string>
     <string name="toast_reachUpperLimitNode">The maximum number of nodes has been reached</string>
@@ -82,6 +78,9 @@
     <string name="map_create_tab1">Map name</string>
     <string name="map_create_tab2">2Colors</string>
     <string name="map_create_tab3">3Colors</string>
+    <!--  マップ編集画面  -->
+    <string name="hint_map_memo">note</string>
+    <string name="toolbar_titleMapEdit">Map Edit</string>
     <!--  マップ画面  -->
     <string name="toolbar_map_changeParant">Change parent node</string>
     <!--  トリミング画面  -->
@@ -91,6 +90,16 @@
     <string name="toolbar_titleGalleryMulti">Multiple selection</string>
     <!--  移動先ノードダイアログ  -->
     <string name="move_picture_title">Please select the destination node</string>
+
+    <!--  オプションメニュー  -->
+    <string name="menu_help">help</string>
+    <string name="menu_palette">Palette</string>
+    <string name="menu_folderTree">FolderTree</string>
+    <string name="menu_accessGallery">Access Storage</string>
+    <string name="menu_nodeShape">Node Shape</string>
+    <string name="menu_close">Close</string>
+    <string name="menu_movePicture">Move Picture</string>
+    <string name="menu_removePicture">Remove Picture</string>
 
     <!-- ノードデザインタブ -->
     <string name="tab_node_name">Node name</string>
@@ -107,7 +116,7 @@
 
     <!-- ノードデザイン -->
     <string name="coloeCodeHint">123456</string>
-    <string name="node_nameHint">Maximum 16 characters</string>
+    <string name="node_nameHint">Max.16 text</string>
     <string name="title_nodeName">Node name</string>
     <string name="title_nodeSize">Node Size</string>
     <string name="title_nodeShape">Node Shape</string>
@@ -220,7 +229,7 @@
 
     <!-- リリース時とテスト時で切り替える -->
     <!--  テストID（バナー広告）  -->
-        <string name="admob_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="admob_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <!-- リリース用 -->
     <!--<string name="admob_unit_id">ca-app-pub-8046295810838892/1596264495</string>
     -->

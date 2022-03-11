@@ -27,7 +27,7 @@ import java.util.List;
 /*
  * マップ情報入力画面（新規作成／編集）
  */
-public class MapEntryActivity extends AppCompatActivity {
+public class MapCreateActivity extends AppCompatActivity {
 
     /*-- 定数 --*/
     /* 画面遷移-レスポンスコード */
@@ -37,10 +37,12 @@ public class MapEntryActivity extends AppCompatActivity {
     /* 画面遷移-キー */
     public static String KEY_MAP = "map";         //マップ
 
+    private Context mContext;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_map_entry);
+        setContentView(R.layout.activity_map_create);
 
         //マップ入力ページレイアウト
         setupCreateMapPage();
@@ -48,24 +50,10 @@ public class MapEntryActivity extends AppCompatActivity {
         //ツールバー設定
         setToolBar();
 
-        //遷移元からの情報
-        Intent intent = getIntent();
-        boolean isCreate = intent.getBooleanExtra( MapListActivity.KEY_ISCREATE, false );
+        mContext = this;
 
-        if( isCreate ){
-            //OKボタンリスナー
-            findViewById(R.id.bt_create).setOnClickListener( new PositiveClickListener(null) );
-
-        } else {
-            //編集対象のマップを取得
-            MapTable map = (MapTable) intent.getSerializableExtra(MapListActivity.KEY_MAP);
-
-            //登録済み情報として設定
-            ((EditText)findViewById(R.id.et_mapName)).setText( map.getMapName() );
-
-            //OKボタンリスナー
-            findViewById(R.id.bt_create).setOnClickListener( new PositiveClickListener(map) );
-        }
+        //OKボタンリスナー
+        findViewById(R.id.bt_create).setOnClickListener( new PositiveClickListener(null) );
 
         //キャンセル
         findViewById(R.id.bt_cancel).setOnClickListener(new View.OnClickListener() {
@@ -180,7 +168,7 @@ public class MapEntryActivity extends AppCompatActivity {
          * コンストラクタ
          */
         public PositiveClickListener(MapTable map) {
-            //対象マップ（新規生成の場合はnullが渡される）
+            //対象マップ
             mMap = map;
         }
 
@@ -192,14 +180,9 @@ public class MapEntryActivity extends AppCompatActivity {
                 return;
             }
 
-            //新規生成
-            boolean isCreate = false;
-
-            //新規生成なら、ここでマップを生成
+            //ここでマップを生成
             if( mMap == null){
                 mMap = new MapTable();
-
-                isCreate = true;
 
                 //カラーパターンは新規生成のみ
                 SampleMapView smv = findViewById(R.id.fl_map);
@@ -224,11 +207,7 @@ public class MapEntryActivity extends AppCompatActivity {
             mMap.setMapName( mapName );
 
             //非同期処理
-            if( isCreate ){
-                doAsyncCreateMap(view.getContext(), getIntent(), mMap);
-            } else {
-                doAsyncUpdateMap(view.getContext(), getIntent(), mMap);
-            }
+            doAsyncCreateMap(getIntent(), mMap);
         }
 
         /*
@@ -254,10 +233,9 @@ public class MapEntryActivity extends AppCompatActivity {
         /*
          * 非同期処理-新規生成
          */
-        private void doAsyncCreateMap(Context context, Intent intent, MapTable map){
+        private void doAsyncCreateMap(Intent intent, MapTable map){
             //DB保存処理
-            AsyncCreateMap db = new AsyncCreateMap(context, map, new AsyncCreateMap.OnFinishListener() {
-
+            AsyncCreateMap db = new AsyncCreateMap(mContext, map, new AsyncCreateMap.OnFinishListener() {
                 @Override
                 public void onFinish(int pid) {
                     //データ挿入されたため、レコードに割り当てられたpidをマップに設定
@@ -266,32 +244,6 @@ public class MapEntryActivity extends AppCompatActivity {
                     //resultコード設定
                     intent.putExtra(KEY_MAP, map );
                     setResult(RESULT_CREATED, intent );
-
-                    Log.i("Map", "マップ生成完了。マップリスト画面へ戻る");
-
-                    //元の画面へ戻る
-                    finish();
-                }
-            });
-            //非同期処理開始
-            db.execute();
-        }
-
-        /*
-         * 非同期処理-更新
-         */
-        private void doAsyncUpdateMap(Context context, Intent intent, MapTable map){
-            //DB保存処理
-            AsyncUpdateMap db = new AsyncUpdateMap(context, map, new AsyncUpdateMap.OnFinishListener() {
-
-                @Override
-                public void onFinish() {
-
-                    //resultコード設定
-                    intent.putExtra(KEY_MAP, map);
-                    setResult(RESULT_EDITED, intent);
-
-                    Log.i("Map", "マップ編集完了。リスト画面へ戻る");
 
                     //元の画面へ戻る
                     finish();
@@ -302,10 +254,5 @@ public class MapEntryActivity extends AppCompatActivity {
         }
 
     }
-
-
-
-
-
 
 }

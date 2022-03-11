@@ -54,16 +54,14 @@
             android:layout_gravity="bottom"
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
-            android:background="@color/transparent_70_black"
-            android:gravity="center"
-            android:orientation="horizontal">
+            android:background="@color/transparent_70_black">
 
             <TextView
                 android:id="@+id/bt_create"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:text="@string/bt_create"
+                android:text="@string/create"
                 android:textSize="18sp"
                 android:textColor="@color/white"
                 app:layout_constraintEnd_toStartOf="@+id/bt_cancel"

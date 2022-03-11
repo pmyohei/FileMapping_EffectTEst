@@ -6,20 +6,20 @@
     <item
         android:id="@+id/action_help"
         android:icon="@drawable/baseline_question_24"
-        android:title="ヘルプ"
-        app:showAsAction="ifRoom"/>
+        android:title="@string/menu_help"
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/action_palette"
         android:icon="@drawable/baseline_palette_20"
-        android:title="パレット"
+        android:title="@string/menu_palette"
         android:layout_gravity="left"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/action_folder_tree"
         android:icon="@drawable/baseline_folder_tree_24"
-        android:title="フォルダツリー"
-        app:showAsAction="ifRoom"/>
+        android:title="@string/menu_folderTree"
+        app:showAsAction="always"/>
 
 </menu>

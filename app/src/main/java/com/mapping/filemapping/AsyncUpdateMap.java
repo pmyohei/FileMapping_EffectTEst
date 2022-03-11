@@ -11,25 +11,25 @@ import java.util.concurrent.Executors;
  * DB非同期処理
  *   マップ更新用
  */
-public class AsyncUpdateMap {
+public class AsyncUpdateMap extends AsyncShowProgress {
 
-    private final AppDatabase       mDB;
-    private final MapTable          mMap;
-    private final OnFinishListener  mOnFinishListener;
+    private final AppDatabase mDB;
+    private final MapTable mMap;
+    private final OnFinishListener mOnFinishListener;
 
     /*
      * コンストラクタ
      */
     public AsyncUpdateMap(Context context, MapTable map, OnFinishListener listener) {
-        mDB               = AppDatabaseManager.getInstance(context);
+        super(context);
+
+        mDB = AppDatabaseManager.getInstance(context);
         mOnFinishListener = listener;
-        mMap              = map;
+        mMap = map;
     }
 
     /*
-     *
      * 非同期処理
-     *
      */
     private class AsyncRunnable implements Runnable {
 
@@ -68,7 +68,7 @@ public class AsyncUpdateMap {
      * バックグラウンド前処理
      */
     void onPreExecute() {
-        //
+        super.onPreExecute();
     }
 
     /*
@@ -89,17 +89,18 @@ public class AsyncUpdateMap {
      * バックグランド処理終了後の処理
      */
     void onPostExecute() {
+        super.onPostExecute();
 
-        //読み取り完了
+        //完了
         mOnFinishListener.onFinish();
     }
 
     /*
-     * データ作成完了リスナー
+     * 完了リスナー
      */
     public interface OnFinishListener {
         /*
-         * ノード生成完了時、コールされる
+         * 完了時、コールされる
          */
         void onFinish();
     }

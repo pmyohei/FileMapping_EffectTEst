@@ -20,6 +20,7 @@
             android:elevation="4dp"
             android:layout_gravity="top"
             android:theme="@style/Toolbar.NoActionBar"
+            android:background="@android:color/white"
             app:menu="@menu/toolbar_trimming">
 
             <TextView
@@ -83,7 +84,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@color/transparent_70_black"
-            android:text="@string/bt_create"
+            android:text="@string/create"
             android:textColor="@color/white" />
 
         <!-- バナー広告 -->

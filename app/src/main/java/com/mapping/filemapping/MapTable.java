@@ -21,6 +21,10 @@ public class MapTable implements Serializable {
     @ColumnInfo(name = "map_name")
     private String mapName;
 
+    //メモ
+    @ColumnInfo(name = "memo")
+    private String memo;
+
     //作成日
     @ColumnInfo(name = "created_date")
     private String createdDate;
@@ -62,6 +66,13 @@ public class MapTable implements Serializable {
     }
     public void setMapName(String mapName) {
         this.mapName = mapName;
+    }
+
+    public String getMemo() {
+        return memo;
+    }
+    public void setMemo(String memo) {
+        this.memo = memo;
     }
 
     public String getCreatedDate() {

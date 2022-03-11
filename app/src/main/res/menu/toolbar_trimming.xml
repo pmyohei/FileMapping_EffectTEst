@@ -6,14 +6,14 @@
     <item
         android:id="@+id/action_garally"
         android:icon="@drawable/baseline_photo_library_24"
-        android:title="写真変更"
+        android:title="@string/menu_accessGallery"
         android:layout_gravity="left"
-        app:showAsAction="ifRoom"/>
+        app:showAsAction="always"/>
 
     <item
         android:id="@+id/action_shape"
         android:icon="@drawable/baseline_node_shape_24"
-        android:title="ノードの形状"
-        app:showAsAction="ifRoom"/>
+        android:title="@string/menu_nodeShape"
+        app:showAsAction="always"/>
 
 </menu>

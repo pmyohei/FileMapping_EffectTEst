@@ -30,10 +30,12 @@
 
             <TextView
                 android:id="@+id/tv_mapName"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
                 android:textSize="18sp"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:ellipsize="end"
+                android:singleLine="true" />
 
         </androidx.appcompat.widget.Toolbar>
 

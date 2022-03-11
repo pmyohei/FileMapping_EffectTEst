@@ -6,7 +6,7 @@
     <item
         android:id="@+id/action_close"
         android:icon="@drawable/baseline_close_24"
-        android:title="閉じる"
-        app:showAsAction="ifRoom"/>
+        android:title="@string/menu_close"
+        app:showAsAction="always"/>
 
 </menu>

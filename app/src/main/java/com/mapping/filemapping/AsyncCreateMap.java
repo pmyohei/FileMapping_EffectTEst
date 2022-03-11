@@ -12,9 +12,8 @@ import java.util.concurrent.Executors;
  * DB非同期処理
  *   マップcreate用
  */
-public class AsyncCreateMap {
+public class AsyncCreateMap extends AsyncShowProgress {
 
-    private final Context           mContext;
     private final AppDatabase       mDB;
     private final MapTable          mMap;
     private       int               mMapPid;
@@ -25,7 +24,8 @@ public class AsyncCreateMap {
      * コンストラクタ
      */
     public AsyncCreateMap(Context context, MapTable map, OnFinishListener listener) {
-        mContext          = context;
+        super(context);
+
         mDB               = AppDatabaseManager.getInstance(context);
         mOnFinishListener = listener;
         mMap              = map;
@@ -92,7 +92,7 @@ public class AsyncCreateMap {
      * バックグラウンド前処理
      */
     void onPreExecute() {
-        //
+        super.onPreExecute();
     }
 
     /*
@@ -113,18 +113,16 @@ public class AsyncCreateMap {
      * バックグランド処理終了後の処理
      */
     void onPostExecute() {
+        super.onPostExecute();
 
         //読み取り完了
         mOnFinishListener.onFinish(mMapPid);
     }
 
     /*
-     * データ作成完了リスナー
+     * 完了リスナー
      */
     public interface OnFinishListener {
-        /*
-         * ノード生成完了時、コールされる
-         */
         void onFinish( int pid );
     }
 

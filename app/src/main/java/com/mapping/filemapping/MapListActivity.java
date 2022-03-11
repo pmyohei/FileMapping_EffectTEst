@@ -37,7 +37,6 @@ import java.util.ArrayList;
 public class MapListActivity extends AppCompatActivity {
 
     /* 画面遷移-キー */
-    public static String KEY_ISCREATE = "isCreate";
     public static String KEY_MAP = "map";               //マップ
     /* 画面遷移-レスポンスコード */
     public static final int RESULT_CREATED = 100;
@@ -48,6 +47,8 @@ public class MapListActivity extends AppCompatActivity {
 
     private ArrayList<MapTable> mMaps;
     private MapListAdapter mMapListAdapter;
+    //編集対象マップのリスト位置
+    private int mEditPosition;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -104,7 +105,23 @@ public class MapListActivity extends AppCompatActivity {
                     }
                 });
 
+                //リスナー設定：編集
+                mMapListAdapter.setEditMapListener(new MapListAdapter.editMapListener() {
+                    @Override
+                    public void onEditMap(MapTable map, int index) {
 
+                        Log.i("indexテスト", "index=" + index);
+
+                        //編集対象の位置を保持
+                        mEditPosition = index;
+
+                        //画面遷移
+                        Intent intent = new Intent(MapListActivity.this, MapEditActivity.class);
+                        intent.putExtra(MapListActivity.KEY_MAP, map );
+
+                        editMapLauncher.launch( intent );
+                    }
+                });
 
                 //リサイクラービューの上下にスペースを設定
                 rv_mapList.addItemDecoration(new RecyclerView.ItemDecoration() {
@@ -131,9 +148,7 @@ public class MapListActivity extends AppCompatActivity {
         findViewById(R.id.tv_create).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MapListActivity.this, MapEntryActivity.class);
-                intent.putExtra(KEY_ISCREATE, true);
-
+                Intent intent = new Intent(MapListActivity.this, MapCreateActivity.class);
                 createMapLauncher.launch(intent);
             }
         });
@@ -314,7 +329,7 @@ public class MapListActivity extends AppCompatActivity {
             if(resultCode == RESULT_CREATED) {
 
                 //マップ入力画面からデータを受け取る
-                MapTable map = (MapTable) intent.getSerializableExtra(MapEntryActivity.KEY_MAP);
+                MapTable map = (MapTable) intent.getSerializableExtra(MapCreateActivity.KEY_MAP);
 
                 //マップリストアダプタに追加通知
                 mMaps.add( map );
@@ -344,20 +359,19 @@ public class MapListActivity extends AppCompatActivity {
 
             //マップ
             if( resultCode == RESULT_EDITED) {
-                //
+                //編集されたマップを取得
+                MapTable editMap = (MapTable) intent.getSerializableExtra(MapCreateActivity.KEY_MAP);
 
+                //リストを更新して、アダプタに変更通知
+                mMaps.set( mEditPosition, editMap );
+                mMapListAdapter.notifyItemChanged( mEditPosition );
             }
 
-
-
-
-
-
-            //マップ編集結果
+/*            //マップ編集結果
             if( resultCode == RESULT_EDITED) {
 
                 //マップ入力画面からデータを受け取る
-                MapTable map = (MapTable) intent.getSerializableExtra(MapEntryActivity.KEY_MAP);
+                MapTable map = (MapTable) intent.getSerializableExtra(MapCreateActivity.KEY_MAP);
                 Log.i("MapListActivity", "編集 map=" + map.getMapName());
 
                 //リスト上のマップを更新
@@ -372,7 +386,7 @@ public class MapListActivity extends AppCompatActivity {
 
                 //アダプタに変更通知
                 mMapListAdapter.notifyItemChanged( i );
-            }
+            }*/
         }
     }
 }

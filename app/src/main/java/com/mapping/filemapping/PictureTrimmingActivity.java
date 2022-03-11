@@ -604,7 +604,6 @@ public class PictureTrimmingActivity extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         //アクティビティ終了
         finish();
-
         return super.onSupportNavigateUp();
     }
 

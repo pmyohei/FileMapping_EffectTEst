@@ -1,0 +1,354 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 2,
+    "identityHash": "e0a184759f8090178b8d12f997c1b415",
+    "entities": [
+      {
+        "tableName": "map",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`pid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `map_name` TEXT, `memo` TEXT, `created_date` TEXT, `update_date` TEXT, `first_color` TEXT, `second_color` TEXT, `third_color` TEXT, `map_color` TEXT, `is_shadow` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "pid",
+            "columnName": "pid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "mapName",
+            "columnName": "map_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "memo",
+            "columnName": "memo",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "createdDate",
+            "columnName": "created_date",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "updateDate",
+            "columnName": "update_date",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "firstColor",
+            "columnName": "first_color",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "secondColor",
+            "columnName": "second_color",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "thirdColor",
+            "columnName": "third_color",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "mapColor",
+            "columnName": "map_color",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isShadow",
+            "columnName": "is_shadow",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "pid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "node",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`pid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `pid_map` INTEGER NOT NULL, `pid_parent_node` INTEGER NOT NULL, `kind` INTEGER NOT NULL, `node_name` TEXT, `font` TEXT, `pos_x` INTEGER NOT NULL, `pos_y` INTEGER NOT NULL, `size_ratio` REAL NOT NULL, `node_shape` INTEGER NOT NULL, `node_color` TEXT, `text_color` TEXT, `border_color` TEXT, `border_size` INTEGER NOT NULL, `shadow_color` TEXT, `is_shadow` INTEGER NOT NULL, `line_size` REAL NOT NULL, `line_color` TEXT, FOREIGN KEY(`pid_map`) REFERENCES `map`(`pid`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "pid",
+            "columnName": "pid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pidMap",
+            "columnName": "pid_map",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pidParentNode",
+            "columnName": "pid_parent_node",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "kind",
+            "columnName": "kind",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nodeName",
+            "columnName": "node_name",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "fontFileName",
+            "columnName": "font",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "posX",
+            "columnName": "pos_x",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "posY",
+            "columnName": "pos_y",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sizeRatio",
+            "columnName": "size_ratio",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nodeShape",
+            "columnName": "node_shape",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "nodeColor",
+            "columnName": "node_color",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "textColor",
+            "columnName": "text_color",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "borderColor",
+            "columnName": "border_color",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "borderSize",
+            "columnName": "border_size",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "shadowColor",
+            "columnName": "shadow_color",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isShadow",
+            "columnName": "is_shadow",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lineSize",
+            "columnName": "line_size",
+            "affinity": "REAL",
+            "notNull": true
+          },
+          {
+            "fieldPath": "lineColor",
+            "columnName": "line_color",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "pid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_node_pid_map",
+            "unique": false,
+            "columnNames": [
+              "pid_map"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_node_pid_map` ON `${TABLE_NAME}` (`pid_map`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "map",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "pid_map"
+            ],
+            "referencedColumns": [
+              "pid"
+            ]
+          }
+        ]
+      },
+      {
+        "tableName": "picture",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`pid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `pid_map` INTEGER NOT NULL, `pid_parent_node` INTEGER NOT NULL, `path` TEXT, `trg_left` INTEGER NOT NULL, `trg_top` INTEGER NOT NULL, `trg_width` INTEGER NOT NULL, `trg_height` INTEGER NOT NULL, `source_image_width` INTEGER NOT NULL, `source_image_height` INTEGER NOT NULL, `is_thumbnail` INTEGER NOT NULL, FOREIGN KEY(`pid_parent_node`) REFERENCES `node`(`pid`) ON UPDATE NO ACTION ON DELETE CASCADE , FOREIGN KEY(`pid_map`) REFERENCES `map`(`pid`) ON UPDATE NO ACTION ON DELETE CASCADE )",
+        "fields": [
+          {
+            "fieldPath": "pid",
+            "columnName": "pid",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pidMap",
+            "columnName": "pid_map",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "pidParentNode",
+            "columnName": "pid_parent_node",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "path",
+            "columnName": "path",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "trgLeft",
+            "columnName": "trg_left",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "trgTop",
+            "columnName": "trg_top",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "trgWidth",
+            "columnName": "trg_width",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "trgHeight",
+            "columnName": "trg_height",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sourceImageWidth",
+            "columnName": "source_image_width",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "sourceImageHeight",
+            "columnName": "source_image_height",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isThumbnail",
+            "columnName": "is_thumbnail",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "pid"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [
+          {
+            "name": "index_picture_pid_parent_node",
+            "unique": false,
+            "columnNames": [
+              "pid_parent_node"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_picture_pid_parent_node` ON `${TABLE_NAME}` (`pid_parent_node`)"
+          },
+          {
+            "name": "index_picture_pid_map",
+            "unique": false,
+            "columnNames": [
+              "pid_map"
+            ],
+            "orders": [],
+            "createSql": "CREATE INDEX IF NOT EXISTS `index_picture_pid_map` ON `${TABLE_NAME}` (`pid_map`)"
+          }
+        ],
+        "foreignKeys": [
+          {
+            "table": "node",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "pid_parent_node"
+            ],
+            "referencedColumns": [
+              "pid"
+            ]
+          },
+          {
+            "table": "map",
+            "onDelete": "CASCADE",
+            "onUpdate": "NO ACTION",
+            "columns": [
+              "pid_map"
+            ],
+            "referencedColumns": [
+              "pid"
+            ]
+          }
+        ]
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e0a184759f8090178b8d12f997c1b415')"
+    ]
+  }
+}

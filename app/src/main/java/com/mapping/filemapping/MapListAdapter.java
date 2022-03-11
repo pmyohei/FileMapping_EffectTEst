@@ -21,15 +21,21 @@ import com.google.android.material.card.MaterialCardView;
 
 import java.util.ArrayList;
 
+/*
+ * マップリストアダプタ
+ */
 public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewHolder> {
 
     //マップリスト
     private final ArrayList<MapTable> mData;
 
     //編集画面遷移ランチャー
-    private ActivityResultLauncher<Intent> mEditMapLauncher;
+    private final ActivityResultLauncher<Intent> mEditMapLauncher;
 
+    //マップオープンリスナー
     private openMapListener mOpenMapListener;
+    //編集リスナー
+    private editMapListener mEditMapListener;
 
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
@@ -57,7 +63,7 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
         /*
          * ビューの設定
          */
-        public void setView( MapTable map ){
+        public void setView( MapTable map, int index ){
 
             //お試し
 /*            if( map.getFirstColor() != null ){
@@ -82,12 +88,8 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
             ib_edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //画面遷移
-                    Intent intent = new Intent(view.getContext(), MapEntryActivity.class);
-                    intent.putExtra(MapListActivity.KEY_ISCREATE, false );
-                    intent.putExtra(MapListActivity.KEY_MAP, map );
-
-                    mEditMapLauncher.launch( intent );
+                    //編集
+                    mEditMapListener.onEditMap( map, index );
                 }
             });
 
@@ -172,7 +174,7 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
         MapTable map = mData.get(i);
 
         //ビューの設定
-        viewHolder.setView( map );
+        viewHolder.setView( map, i );
     }
 
     /*
@@ -219,6 +221,9 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
     public void setOpenMapListener(openMapListener listener){
         mOpenMapListener = listener;
     }
+    public void setEditMapListener(editMapListener listener){
+        mEditMapListener = listener;
+    }
 
     /*
      * マップ表示リスナー
@@ -227,4 +232,10 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
         void onOpenMap(MapTable map );
     }
 
+    /*
+     * マップ名編集リスナー
+     */
+    public interface editMapListener {
+        void onEditMap(MapTable map, int index );
+    }
 }
