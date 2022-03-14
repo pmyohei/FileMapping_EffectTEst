@@ -84,7 +84,7 @@ public class BaseNode extends FrameLayout {
     public BaseNode(Context context, NodeTable node, int layoutID) {
         super(context);
 
-        Log.i("BaseNode", "2");
+        //Log.i("BaseNode", "2");
 
         //ノード情報を保持
         mNode = node;
@@ -104,15 +104,12 @@ public class BaseNode extends FrameLayout {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(layoutID, this, true);
 
-        Log.i("BaseNode", "init");
+        //Log.i("BaseNode", "init");
 
-        //ツールアイコン非表示
-        //mIsOpenToolIcon = false;
         //ツールアイコン未保持
         mIconView = null;
 
-        Log.i("init", "root getChildCount = " + getChildCount());
-
+        //Log.i("init", "root getChildCount = " + getChildCount());
 
         setOnClickListener(new OnClickListener() {
             @Override
@@ -155,7 +152,7 @@ public class BaseNode extends FrameLayout {
      */
     public void reflectViewNodeInfo() {
 
-        Log.i("BaseNode", "reflectViewNodeInfo");
+        //Log.i("BaseNode", "reflectViewNodeInfo");
 
         //ノードデザインの更新
         setNodeDesign();
@@ -471,7 +468,7 @@ public class BaseNode extends FrameLayout {
     private void setShapeCircle() {
 
         MaterialCardView cv_node = findViewById(R.id.cv_node);
-        Log.i("Card", "width=" + cv_node.getWidth() + " height=" + cv_node.getHeight());
+        //Log.i("Card", "width=" + cv_node.getWidth() + " height=" + cv_node.getHeight());
 
         //長い方の辺で縦横サイズを統一
         int max = Math.max( cv_node.getWidth(), cv_node.getHeight() );
@@ -520,8 +517,8 @@ public class BaseNode extends FrameLayout {
                     @Override
                     public void onGlobalLayout() {
 
-                        Log.i("長さの確定確認", "addOnNodeGlobalLayoutListener");
-                        Log.i("長さの確定確認", "addOnNodeGlobalLayoutListener getWidth=" + getWidth());
+                        //Log.i("長さの確定確認", "addOnNodeGlobalLayoutListener");
+                        //Log.i("長さの確定確認", "addOnNodeGlobalLayoutListener getWidth=" + getWidth());
 
                         //中心座標の計算
                         calcCenterPos();

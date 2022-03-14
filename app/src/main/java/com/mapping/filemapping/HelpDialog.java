@@ -35,38 +35,43 @@ public class HelpDialog extends DialogFragment {
     //ヘルプ種別
     public static final int HELP_KIND_ICON = 0;
     public static final int HELP_KIND_MAP = 1;
+    //Bundle保存キー
+    private static final String KEY_LAYOUT_ID = "layoutId";
+    private static final String KEY_HELP_KIND = "helpKind";
+    private static final String KEY_NODE_KIND = "nodeKind";
 
-    //ヘルプ表示対象のノード種別
-    private final int mLayoutId;
-    private final int mHelpKind;
-    private int mNodeKind;
-
-
-    /*
-     * コンストラクタ(マップ)
-     */
-    public HelpDialog(int helpKind) {
-        mHelpKind = helpKind;
-
-        //マップ画面のヘルプレイアウト
-        mLayoutId = R.layout.help_map_dialog;
+    //空のコンストラクタ
+    //※ないと、画面回転でエラーになる
+    public HelpDialog(){
+        //do nothing
     }
 
-    /*
-     * コンストラクタ(ツールアイコン）
-     */
-    public HelpDialog(int helpKind, int nodeKind) {
-        mHelpKind = helpKind;
-        mNodeKind = nodeKind;
+    public static HelpDialog newInstance(int helpKind){
+        Bundle args = new Bundle();
+        args.putInt(KEY_LAYOUT_ID, R.layout.help_map_dialog);
+        args.putInt(KEY_HELP_KIND, helpKind);
+        HelpDialog helpDialog = new HelpDialog();
+        helpDialog.setArguments(args);
 
-        //ツールアイコンのヘルプレイアウト
-        mLayoutId = R.layout.help_icon_dialog;
+        return helpDialog;
+    }
+
+    public static HelpDialog newInstance(int helpKind, int nodeKind){
+        Bundle args = new Bundle();
+        args.putInt(KEY_LAYOUT_ID, R.layout.help_icon_dialog);
+        args.putInt(KEY_HELP_KIND, helpKind);
+        args.putInt(KEY_NODE_KIND, nodeKind);
+        HelpDialog helpDialog = new HelpDialog();
+        helpDialog.setArguments(args);
+
+        return helpDialog;
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //ダイアログにレイアウトを設定
-        return inflater.inflate(mLayoutId, container, false);
+        int id = getArguments().getInt( KEY_LAYOUT_ID );
+        return inflater.inflate(id, container, false);
     }
 
     @Override
@@ -94,7 +99,8 @@ public class HelpDialog extends DialogFragment {
         setupDialogSize(dialog);
 
         //レイアウト
-        if (mHelpKind == HELP_KIND_ICON) {
+        int helpKind = getArguments().getInt(KEY_HELP_KIND);
+        if (helpKind == HELP_KIND_ICON) {
             //ツールアイコン
             setupHelpIcon();
         } else {
@@ -157,20 +163,18 @@ public class HelpDialog extends DialogFragment {
      */
     private void setupHelpIcon() {
 
-        switch (mNodeKind){
+        int nodeKind = getArguments().getInt(KEY_NODE_KIND);
+        switch ( nodeKind ){
             case NodeTable.NODE_KIND_ROOT:
                 setupHelpRootNode();
                 break;
-
             case NodeTable.NODE_KIND_NODE:
                 setupHelpNode();
                 break;
-
             case NodeTable.NODE_KIND_PICTURE:
                 setupHelpPictureNode();
                 break;
         }
-
     }
 
     /*

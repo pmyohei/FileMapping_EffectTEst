@@ -50,8 +50,6 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
             int pictureNumOnLine = ((orientation == Configuration.ORIENTATION_PORTRAIT) ? GalleryGridAdapter.PORTRAIT_NUM : GalleryGridAdapter.LANDSCAPE_NUM);
             gv_gallery.setNumColumns(pictureNumOnLine);
 
-            Log.i("タブ写真", "setPage ページ=" + position);
-
             //ギャラリーアダプタの設定
             setGaleryAdapter( position );
         }
@@ -157,8 +155,6 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
         LayoutInflater inflater = LayoutInflater.from( viewGroup.getContext() );
         View view = inflater.inflate(mLayoutIds.get(position), viewGroup, false);
 
-        Log.i("タブ写真", "onCreateViewHolder ページ=" + position);
-
         return new ViewHolder(view);
     }
 
@@ -167,8 +163,6 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
      */
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
-
-        Log.i("クローズ処理 タブ写真", "onBindViewHolder ページ=" + i);
 
         //ページ設定
         viewHolder.setPage( i );

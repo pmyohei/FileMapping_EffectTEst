@@ -487,7 +487,7 @@ public class MapActivity extends AppCompatActivity {
      */
     private void showHelpDialog() {
         //マップヘルプの表示
-        DialogFragment helpDialog = new HelpDialog(HelpDialog.HELP_KIND_MAP);
+        DialogFragment helpDialog = HelpDialog.newInstance(HelpDialog.HELP_KIND_MAP);
         helpDialog.show(getSupportFragmentManager(), "");
     }
 
@@ -1106,7 +1106,7 @@ public class MapActivity extends AppCompatActivity {
             float scaleFactor = detector.getScaleFactor();
 
             //Log.i("onScale", "getScaleFactor=" + scaleFactor);
-            Log.i("ピンチ機能", "設定比率=" + mPinchScaleX * scaleFactor);
+            //Log.i("ピンチ機能", "設定比率=" + mPinchScaleX * scaleFactor);
 
             //設定比率
             float setScaleValue = mPinchScaleX * scaleFactor;

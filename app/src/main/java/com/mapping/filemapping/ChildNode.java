@@ -52,7 +52,7 @@ public class ChildNode extends BaseNode {
     public ChildNode(Context context, NodeTable node, int layoutID) {
         super(context, node, layoutID);
 
-        Log.i("ChildNode", "3");
+        //Log.i("ChildNode", "3");
 
         //タッチリスナー
         setOnTouchListener(new NodeTouchListener());
@@ -66,14 +66,14 @@ public class ChildNode extends BaseNode {
         //BaseNode
         super.reflectViewNodeInfo();
 
-        Log.i("ChildNode", "reflectViewNodeInfo 1");
+        //Log.i("ChildNode", "reflectViewNodeInfo 1");
 
         if (mLineView == null) {
             //子ノードとしての処理が未完了なら、ここで終了
             return;
         }
 
-        Log.i("ChildNode", "reflectViewNodeInfo 2");
+        //Log.i("ChildNode", "reflectViewNodeInfo 2");
 
         //★設定を追加した際に反映
 
@@ -90,8 +90,6 @@ public class ChildNode extends BaseNode {
 
                         //レイアウト確定後は、不要なので本リスナー削除
                         getViewTreeObserver().removeOnGlobalLayoutListener(this);
-
-                        Log.i("ChildNode", "reflectViewNodeInfo onGlobalLayout");
 
                         //ライン終端位置（自ノードの中心位置)
                         mCenterPosX = getLeft() + (getWidth() / 2f);
@@ -231,8 +229,6 @@ public class ChildNode extends BaseNode {
      * 子ノードの移動
      */
     public void moveChildNodes(float movex, float movey) {
-
-        Log.i("test", "moveChildNodes 親=" + mNode.getNodeName() + " 子の数=" + mChildNodes.size());
 
         //子ノード分ループ
         for (NodeTable childNode : mChildNodes) {
@@ -650,8 +646,6 @@ public class ChildNode extends BaseNode {
 
                 case MotionEvent.ACTION_MOVE:
 
-                    Log.i("ムーブチェック", "ACTION_MOVE");
-
                     //ノードの移動量
                     float moveX = (x - mPreTouchPosX) / pinchDistanceRatioX;
                     float moveY = (y - mPreTouchPosY) / pinchDistanceRatioY;
@@ -958,7 +952,7 @@ public class ChildNode extends BaseNode {
             float middleX = (mStartPosX + mSelfPosX) / 2;
             float middleY = (mStartPosY + mSelfPosY) / 2;
 
-            Log.i("距離参考", "distance=" + distance);
+            //Log.i("距離参考", "distance=" + distance);
 
             //制御点座標（垂線上の指定割合位置をその座標とする）
             float controlX = (middleX + rotationX) * CONTROL_POINT_POS_RATIO;

@@ -664,8 +664,8 @@ public class ToolIconsView extends ConstraintLayout {
      * ヘルプダイアログを表示する
      */
     private void showHelpIconDialog() {
-        DialogFragment helpDialog = new HelpDialog( HelpDialog.HELP_KIND_ICON, mBaseNode.getNode().getKind() );
-        helpDialog.show( ((FragmentActivity)mMapActivity).getSupportFragmentManager(), "");
+        DialogFragment helpDialog = HelpDialog.newInstance(HelpDialog.HELP_KIND_ICON, mBaseNode.getNode().getKind());
+        helpDialog.show( mMapActivity.getSupportFragmentManager(), "");
     }
 
     /*

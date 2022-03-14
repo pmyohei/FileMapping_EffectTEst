@@ -85,7 +85,6 @@ public class AsyncReadGallery {
 
             //ピクチャノード分ループ
             for( Integer pictureNodePid: mPictureNodePids ){
-                Log.i("ギャラリー確認", "DBから取得=" + pictureNodePid);
 
                 //ピクチャノードに格納された写真
                 PictureArrayList<PictureTable> galleryInPictureNode = new PictureArrayList<>();
