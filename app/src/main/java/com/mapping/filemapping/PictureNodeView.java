@@ -1,18 +1,10 @@
 package com.mapping.filemapping;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.res.Resources;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
-import android.util.Log;
-import android.view.ViewTreeObserver;
 import android.widget.ImageView;
 
-import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.Picasso;
-import com.squareup.picasso.Transformation;
 
 import java.io.File;
 import java.io.Serializable;
@@ -65,6 +57,18 @@ public class PictureNodeView extends ChildNode implements Serializable {
         //ノードに画像を設定
         mThumbnail = thumbnail;
         setBitmap(thumbnail);
+    }
+
+    /*
+     * サムネイル画像の状態チェック
+     *   サムネイル画像が端末からなくなっていれば、無効画像を設定する
+     */
+    public void checkStateThumbnail() {
+        File file = new File( mThumbnail.getPath() );
+        if( !file.isFile() ){
+            //画像が端末から削除されていれば、再設定
+            setBitmap(mThumbnail);
+        }
     }
 
     /*

@@ -92,7 +92,7 @@ public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.Guid
             public void onClick(View view) {
 
                 //トリミング結果の画像
-                int croppedWidth = mView.findViewById(R.id.iv_cropped).getWidth();
+                int croppedWidth = mView.findViewById(R.id.iv_toThumbnail).getWidth();
 
                 float radius;
 

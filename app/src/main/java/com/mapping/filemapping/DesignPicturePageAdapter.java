@@ -2,21 +2,13 @@ package com.mapping.filemapping;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Typeface;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioGroup;
-import android.widget.SeekBar;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -143,7 +135,7 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
                 public void onClick(View view) {
                     //トリミング画面を開く
                     Context context = view.getContext();
-                    Intent intent = new Intent(context, PictureTrimmingActivity.class);
+                    Intent intent = new Intent(context, TrimmingActivity.class);
                     intent.putExtra(MapActivity.INTENT_MAP_PID, mv_node.getNode().getPidMap());
                     intent.putExtra(MapActivity.INTENT_NODE_PID, mv_node.getNode().getPid());
                     intent.putExtra(MapActivity.INTENT_EDIT, true);

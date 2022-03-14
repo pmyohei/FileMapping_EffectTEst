@@ -41,12 +41,15 @@
     <string name="alert_launch_mapList_message">まずは、画面下の「New Map」を押してマップを作成しましょう。</string>
     <string name="alert_launch_mapEntry_title">マップの生成</string>
     <string name="alert_launch_mapEntry_message">マップ名を入力して、好きな色を選んで下さい。\n（色はマップ作成後でも追加可能です）</string>
+    <string name="alert_launch_gallery_message">端末内の画像の保存状態を反映させたい場合、本アプリを再起動して下さい</string>
     <string name="alert_trimming_ui_title">切り取り範囲の反映</string>
     <string name="alert_trimming_ui_message">この画像では、切り取り範囲は切り取り線から指を離したタイミングで反映されます。</string>
     <string name="alert_trimming_sameThumbnail_title">選択不可</string>
     <string name="alert_trimming_sameThumbnail_message">同じ画像が既に使用されています。</string>
     <string name="alert_trimming_disableDirectory_title">もう一度選択してください</string>
     <string name="alert_trimming_disableDirectory_message">「画像」フォルダから写真を選択してください。</string>
+    <string name="alert_trimming_removed_title">もう一度選択してください</string>
+    <string name="alert_trimming_removed_message">選択中の画像は端末から削除されました。</string>
     <string name="alert_trimming_anotherPicture_ok">別の画像を選択</string>
 
     <!-- トースト -->

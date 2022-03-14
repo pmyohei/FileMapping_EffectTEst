@@ -44,7 +44,6 @@ import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.util.List;
 import java.util.Objects;
 
 public class MapActivity extends AppCompatActivity {
@@ -768,7 +767,7 @@ public class MapActivity extends AppCompatActivity {
      */
     public void transitionTrimming(NodeTable node) {
         //ピクチャトリミング画面へ遷移
-        Intent intent = new Intent(this, PictureTrimmingActivity.class);
+        Intent intent = new Intent(this, TrimmingActivity.class);
         intent.putExtra(MapActivity.INTENT_MAP_PID, node.getPidMap());
         intent.putExtra(MapActivity.INTENT_NODE_PID, node.getPid());
 
@@ -803,11 +802,24 @@ public class MapActivity extends AppCompatActivity {
     }
 
     /*
+     * onRestart()
+     */
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+
+        //端末の画像の保存状態が変更された可能性があるため、ピクチャノードのサムネイルを更新
+        NodeArrayList<NodeTable> nodes = mNodes.getAllPictureNodes();
+        for( NodeTable node: nodes ){
+            ((PictureNodeView)node.getNodeView()).checkStateThumbnail();
+        }
+    }
+
+    /*
      * onStop()
      */
     @Override
     protected void onStop() {
-        //必須
         super.onStop();
 
         //位置情報を保存

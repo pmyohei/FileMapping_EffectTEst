@@ -59,7 +59,6 @@ public class MapEditActivity extends AppCompatActivity {
 
                 //DB保存処理
                 AsyncUpdateMap db = new AsyncUpdateMap(view.getContext(), mMap, new AsyncUpdateMap.OnFinishListener() {
-
                     @Override
                     public void onFinish() {
 

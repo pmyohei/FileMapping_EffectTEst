@@ -73,9 +73,9 @@ public class RunnableDecordBitmap implements Runnable {
 /*        //表示されない
         Picasso.get()
            //.load( new File( mFilePath ) )
-           .load( R.drawable.ic_no_image )
+           .load( R.drawable.ic_no_image_gallery )
            //.load( "file://" + mFilePath )
-           .error(R.drawable.baseline_picture_read_error_24)
+           .error(R.drawable.ic_no_image_gallery)
            .into( mImageView );*/
     }
 

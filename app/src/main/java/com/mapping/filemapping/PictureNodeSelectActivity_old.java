@@ -81,7 +81,7 @@ public class PictureNodeSelectActivity_old extends AppCompatActivity {
                                 Uri contentUri = intent.getData();
 
                                 //トリミング画面へ遷移
-                                Intent nextIntent = new Intent(PictureNodeSelectActivity_old.this, PictureTrimmingActivity.class);
+                                Intent nextIntent = new Intent(PictureNodeSelectActivity_old.this, TrimmingActivity.class);
                                 nextIntent.putExtra( "URI",  contentUri);
                                 nextIntent.putExtra( MapActivity.INTENT_MAP_PID, mapPid);
                                 nextIntent.putExtra( MapActivity.INTENT_NODE_PID, selectedNodePid);

@@ -41,12 +41,15 @@
     <string name="alert_launch_mapList_message">Let\'s create a map. Press "New Map" at the bottom of the screen.</string>
     <string name="alert_launch_mapEntry_title">Creating a map</string>
     <string name="alert_launch_mapEntry_message">Enter the map name and choose the color you like.\n(Colors can be added even after the map is created)</string>
+    <string name="alert_launch_gallery_message">If you want to reflect the image storage status in the device, please restart this application.</string>
     <string name="alert_trimming_ui_title">Reflection of image cropping range</string>
     <string name="alert_trimming_ui_message">In this image, the crop area is reflected when you take your finger off the crop line.</string>
     <string name="alert_trimming_sameThumbnail_title">It can not be selected</string>
     <string name="alert_trimming_sameThumbnail_message">The same image is already in use on another node.</string>
     <string name="alert_trimming_disableDirectory_title">Please select again</string>
     <string name="alert_trimming_disableDirectory_message">Select a photo from the "Images" folder.</string>
+    <string name="alert_trimming_removed_title">Please select again</string>
+    <string name="alert_trimming_removed_message">The currently selected image has been deleted from the device.</string>
     <string name="alert_trimming_anotherPicture_ok">Select another image</string>
 
     <!-- トースト -->

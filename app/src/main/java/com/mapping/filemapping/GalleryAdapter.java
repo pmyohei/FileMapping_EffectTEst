@@ -2,12 +2,7 @@ package com.mapping.filemapping;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.Configuration;
-import android.graphics.BitmapFactory;
-import android.net.Uri;
-import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -17,10 +12,6 @@ import android.widget.ImageView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
 /*
  * ギャラリー（ノード配下の写真リスト表示）用アダプタ
@@ -58,13 +49,20 @@ public class GalleryAdapter extends BaseAdapter {
         @SuppressLint("ClickableViewAccessibility")
         public void setView( PictureInGalleryView pictureInGalleryView, int position ) {
 
+            String path = mData.get(position).getPath();
+            File file = new File(path);
+            if( !file.isFile() ){
+                //Picassoでは描画が遅れるため、ここでエラー判定を行う
+                mIv_picture.setImageResource( R.drawable.ic_no_image);
+                return;
+            }
+
             //Picassoを利用して画像を設定
             Picasso.get()
-                    .load( new File( mData.get(position).getPath() ) )
-                    .fit().centerCrop()                                    //※画像の表示範囲の指定はxmlではなくここでやること（表示がかなり重くなるため）
-                    .error(R.drawable.baseline_picture_read_error_24)
+                    .load( file )
+                    .fit().centerCrop()               //※画像の表示範囲の指定はxmlではなくここでやること（表示がかなり重くなるため）
+                    .error(R.drawable.ic_no_image)    //エラー画像の設定は、Picassoでは行わない、描画が遅れるため（※この.error設定は念のため）
                     .into( mIv_picture );
-
         }
 
     }

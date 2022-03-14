@@ -12,7 +12,7 @@
 
     <application
         android:name=".MapCommonData"
-        android:allowBackup="true"
+        android:allowBackup="false"
         android:icon="@mipmap/ic_m"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_m_round"
@@ -29,14 +29,9 @@
             android:name=".PictureGalleryActivity"
             android:exported="false" />
         <activity
-            android:name=".PictureTrimmingActivity"
-            android:exported="true" />
-        <activity
-            android:name=".PictureNodeSelectActivity_old"
-            android:exported="true" />
-        <activity
-            android:name=".ColorPickerActivity_old"
-            android:exported="true" /> <!-- Applicationの使用 -->
+            android:name=".TrimmingActivity"
+            android:screenOrientation="portrait"
+            android:exported="false" />
         <activity
             android:name=".MapCreateActivity"
             android:exported="true" />

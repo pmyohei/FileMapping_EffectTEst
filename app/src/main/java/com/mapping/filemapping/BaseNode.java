@@ -471,22 +471,13 @@ public class BaseNode extends FrameLayout {
     private void setShapeCircle() {
 
         MaterialCardView cv_node = findViewById(R.id.cv_node);
-
-        //CardView cv_node = findViewById(R.id.cv_node);
         Log.i("Card", "width=" + cv_node.getWidth() + " height=" + cv_node.getHeight());
 
-        int max;
-        int width  = cv_node.getWidth();
-        int height = cv_node.getHeight();
-        if (width > height) {
-            cv_node.setMinimumHeight(width);
-            max = width;
-        } else {
-            cv_node.setMinimumWidth(height);
-            max = height;
-        }
+        //長い方の辺で縦横サイズを統一
+        int max = Math.max( cv_node.getWidth(), cv_node.getHeight() );
+        cv_node.setMinimumHeight(max);
+        cv_node.setMinimumWidth(max);
 
-        //int max = Math.max( cv_node.getWidth(), cv_node.getHeight() );
         cv_node.setRadius(max / 2.0f);
     }
 
@@ -497,9 +488,12 @@ public class BaseNode extends FrameLayout {
 
         MaterialCardView cv_node = findViewById(R.id.cv_node);
 
-        //短い辺から角丸値を計算
-        int min = Math.min( cv_node.getWidth(), cv_node.getHeight() );
-        cv_node.setRadius(min * ResourceManager.SQUARE_CORNER_RATIO);
+        //長い方の辺で正方形を作る
+        int max = Math.max( cv_node.getWidth(), cv_node.getHeight() );
+        cv_node.setMinimumHeight(max);
+        cv_node.setMinimumWidth(max);
+
+        cv_node.setRadius(max * ResourceManager.SQUARE_CORNER_RATIO);
     }
 
 

@@ -19,6 +19,8 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.pm.ActivityInfo;
+import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
@@ -39,22 +41,22 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdView;
 import com.google.android.material.card.MaterialCardView;
 import com.isseiaoki.simplecropview.CropImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
+import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.Objects;
 
-public class PictureTrimmingActivity extends AppCompatActivity {
+public class TrimmingActivity extends AppCompatActivity {
 
     //画像選択エラー種別
-    private final int ERROR_KIND_PATH = 1;
-    private final int ERROR_KIND_SAME_THUMNBNAIL = 2;
+    private final int ERROR_KIND_PATH = 1;              //選択フォルダエラー
+    private final int ERROR_KIND_SAME_THUMNBNAIL = 2;   //同じサムネイルあり
+    private final int ERROR_KIND_REMOVED = 3;           //選択中画像が端末から削除されたs
 
     //写真ギャラリー用ランチャー
     private ActivityResultLauncher<Intent> mPictureSelectLauncher;
@@ -75,11 +77,6 @@ public class PictureTrimmingActivity extends AppCompatActivity {
 
         //ツールバー設定
         setToolBar();
-
-        //Admobロード
-        AdView adView = findViewById(R.id.adView);
-        AdRequest adRequest = new AdRequest.Builder().build();
-        adView.loadAd(adRequest);
 
         //画像未回転
         mIsRotate = false;
@@ -158,7 +155,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 //画像未選択なら、ギャラリーを表示
-                if( !mIsLayout ){
+                if( mUri == null ){
                     openPictureGallery();
                     return;
                 }
@@ -203,7 +200,18 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         pictureIntent.addCategory(Intent.CATEGORY_OPENABLE);
         pictureIntent.setType("image/*");
 
-        //遷移
+        //画面の向きを現在の向きで固定化
+        //※これをしないと、「外部ストレージにアクセス→画面向き変更→写真選択」でエラーになる
+        //※現状の仕様では、本画面は縦固定のため、横のルートにいくことはない。
+        //※外部ストレージの画面向きを固定する設定ではない。あくまでトリミング画面用。
+        Configuration config = getResources().getConfiguration();
+        if (config.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE);
+        } else if (config.orientation == Configuration.ORIENTATION_PORTRAIT) {
+            setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT);
+        }
+
+        //外部ストレージにアクセス
         mPictureSelectLauncher.launch(pictureIntent);
     }
 
@@ -212,12 +220,31 @@ public class PictureTrimmingActivity extends AppCompatActivity {
      */
     private void confirmOpenStorage( int king ) {
 
-        int titleID = ( king == ERROR_KIND_PATH ?
-                R.string.alert_trimming_disableDirectory_title :
-                R.string.alert_trimming_sameThumbnail_title );
-        int messageID = ( king == ERROR_KIND_PATH ?
-                R.string.alert_trimming_disableDirectory_message :
-                R.string.alert_trimming_sameThumbnail_message );
+        int titleID;
+        int messageID;
+
+        switch ( king ){
+            case ERROR_KIND_PATH:
+                titleID = R.string.alert_trimming_disableDirectory_title;
+                messageID = R.string.alert_trimming_disableDirectory_message;
+                break;
+
+            case ERROR_KIND_SAME_THUMNBNAIL:
+                titleID = R.string.alert_trimming_sameThumbnail_title;
+                messageID = R.string.alert_trimming_sameThumbnail_message;
+                break;
+
+            case ERROR_KIND_REMOVED:
+                titleID = R.string.alert_trimming_removed_title;
+                messageID = R.string.alert_trimming_removed_message;
+                break;
+
+            //ありえないルート
+            default:
+                titleID = R.string.alert_trimming_disableDirectory_title;
+                messageID = R.string.alert_trimming_disableDirectory_message;
+                break;
+        }
 
         AlertDialog dialog = new AlertDialog.Builder(this)
             .setTitle( getString(titleID) )
@@ -274,9 +301,9 @@ public class PictureTrimmingActivity extends AppCompatActivity {
     private void setCroppedPicture() {
 
         //トリミング結果を反映
-        ImageView iv_cropped = findViewById(R.id.iv_cropped);
+        ImageView iv_toThumbnail = findViewById(R.id.iv_toThumbnail);
         CropImageView iv_cropSource = findViewById(R.id.iv_cropSource);
-        iv_cropped.setImageBitmap(iv_cropSource.getCroppedBitmap());
+        iv_toThumbnail.setImageBitmap(iv_cropSource.getCroppedBitmap());
 
         /*-- Picassoは使わない --*/
         /*-- ・Bitmapがキャッシュに格納されてしまうため、同じ画像だとTrancelate()がコールされない --*/
@@ -307,10 +334,10 @@ public class PictureTrimmingActivity extends AppCompatActivity {
     private void setTrimmingPicture() {
 
         //トリミング結果の画像
-        final ImageView iv_cropped = findViewById(R.id.iv_cropped);
+        final ImageView iv_toThumbnail = findViewById(R.id.iv_toThumbnail);
 
         //レイアウト確定待ち
-        ViewTreeObserver observer = iv_cropped.getViewTreeObserver();
+        ViewTreeObserver observer = iv_toThumbnail.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(
             new ViewTreeObserver.OnGlobalLayoutListener() {
                 @Override
@@ -318,10 +345,10 @@ public class PictureTrimmingActivity extends AppCompatActivity {
 
                     //形状（円）を設定
                     MaterialCardView mcv = findViewById(R.id.mcv_cropped);
-                    mcv.setRadius(iv_cropped.getWidth() / 2f);
+                    mcv.setRadius(iv_toThumbnail.getWidth() / 2f);
 
                     //レイアウト確定後は、不要なので本リスナー削除
-                    iv_cropped.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    iv_toThumbnail.getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
             }
         );
@@ -341,7 +368,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
         final CropImageView iv_cropSource = findViewById(R.id.iv_cropSource);
         Picasso.get()
                 .load(mUri)
-                .error(R.drawable.baseline_picture_read_error_24)
+                .error(R.drawable.ic_no_image)
                 .into(iv_cropSource, new PicassoCallback(orientation));
     }
 
@@ -486,7 +513,7 @@ public class PictureTrimmingActivity extends AppCompatActivity {
      */
     private int getNodeShape() {
         //トリミング結果の画像
-        float imageRadius = findViewById(R.id.iv_cropped).getWidth();
+        float imageRadius = findViewById(R.id.iv_toThumbnail).getWidth();
         float cardCornerRadius = ((MaterialCardView) findViewById(R.id.mcv_cropped)).getRadius();
 
         //四角形の場合よりも確実に大きい値
@@ -584,6 +611,36 @@ public class PictureTrimmingActivity extends AppCompatActivity {
     }
 
 
+    /*
+     * onRestart()
+     */
+    @Override
+    protected void onRestart(){
+        super.onRestart();
+
+        //画像未選択の状態なら、なにもしない
+        if( mUri == null ){
+            return;
+        }
+
+        //端末の画像の保存状態が変更された可能性があるため、画像を更新
+        String path = ResourceManager.getPathFromUri(this, mUri);
+        if( path == null ){
+            //パスが生成できないなら、端末から削除されたとみなす
+
+            //設定中の画像を無効化
+            ImageView iv_toThumbnail = findViewById(R.id.iv_toThumbnail);
+            CropImageView iv_cropSource = findViewById(R.id.iv_cropSource);
+            iv_toThumbnail.setImageResource( R.drawable.ic_no_image);
+            iv_cropSource.setImageBitmap( null );
+
+            //メッセージを表示
+            confirmOpenStorage( ERROR_KIND_REMOVED );
+
+            //URI初期化
+            mUri = null;
+        }
+    }
 
 
     /*

@@ -110,7 +110,7 @@ public class MapListActivity extends AppCompatActivity {
                     @Override
                     public void onEditMap(MapTable map, int index) {
 
-                        Log.i("indexテスト", "index=" + index);
+                        //Log.i("indexテスト", "index=" + index);
 
                         //編集対象の位置を保持
                         mEditPosition = index;

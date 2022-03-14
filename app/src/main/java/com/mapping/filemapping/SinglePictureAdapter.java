@@ -24,8 +24,6 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
     private final ArrayList<PictureTable> mData;
     private final LayoutInflater mInflater;
 
-    //int Test;
-
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
      * (固有のためインナークラスで定義)
@@ -47,8 +45,6 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
          */
         public void setViewMatrix( PictureTable picture ){
 
-            //Log.i("ページ更新チェック", "★更新発生 アダプタ側=" + Test );
-
             //画像設定前に、マトリクス関連の状態をリセット
             //※画像設定済みでピンチ操作が発生しているビューへの対策
             //　これをしないと画像の初期サイズが安定しない状態になる
@@ -57,7 +53,7 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
             //画像割り当て
             Picasso.get()
                     .load( new File( picture.getPath() ) )
-                    .error(R.drawable.baseline_picture_read_error_24)
+                    .error(R.drawable.ic_no_image_single)
                     .into( iv_singlePicture );
         }
     }
