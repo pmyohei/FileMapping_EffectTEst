@@ -47,7 +47,7 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
             int orientation = gv_gallery.getContext().getResources().getConfiguration().orientation;
 
             //1行に表示する写真数を設定
-            int pictureNumOnLine = ((orientation == Configuration.ORIENTATION_PORTRAIT) ? GalleryAdapter.PORTRAIT_NUM : GalleryAdapter.LANDSCAPE_NUM);
+            int pictureNumOnLine = ((orientation == Configuration.ORIENTATION_PORTRAIT) ? GalleryGridAdapter.PORTRAIT_NUM : GalleryGridAdapter.LANDSCAPE_NUM);
             gv_gallery.setNumColumns(pictureNumOnLine);
 
             Log.i("タブ写真", "setPage ページ=" + position);
@@ -65,7 +65,7 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
             Log.i("タブ写真", "setGaleryAdapter ページ=" + pagePosition);
 
             //アダプタを設定
-            gv_gallery.setAdapter(new GalleryAdapter(gv_gallery.getContext(), mGallerys.get(pagePosition)));
+            gv_gallery.setAdapter(new GalleryGridAdapter(gv_gallery.getContext(), mGallerys.get(pagePosition)));
 
             //アイテムクリックリスナー
             gv_gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {

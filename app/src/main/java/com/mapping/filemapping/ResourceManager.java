@@ -42,6 +42,7 @@ public class ResourceManager {
     public static final String SHARED_KEY_HELP_ON_MAP = "showHelpOnMap";
     public static final String SHARED_KEY_HELP_ON_MAPLIST = "showHelpOnMapList";
     public static final String SHARED_KEY_HELP_ON_MAPENTRY = "showHelpOnMapEntry";
+    public static final String SHARED_KEY_HELP_ON_GALLERY = "showHelpOnMapGallery";
 
     //ヘルプ表示の有無（初期値 or 取得エラー時)
     //※「今後表示しない」が選択された時、falseに設定

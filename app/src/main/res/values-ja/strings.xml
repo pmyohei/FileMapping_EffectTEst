@@ -41,7 +41,8 @@
     <string name="alert_launch_mapList_message">まずは、画面下の「New Map」を押してマップを作成しましょう。</string>
     <string name="alert_launch_mapEntry_title">マップの生成</string>
     <string name="alert_launch_mapEntry_message">マップ名を入力して、好きな色を選んで下さい。\n（色はマップ作成後でも追加可能です）</string>
-    <string name="alert_launch_gallery_message">端末内の画像の保存状態を反映させたい場合、本アプリを再起動して下さい</string>
+    <string name="alert_launch_gallery_title">端末内画像との同期</string>
+    <string name="alert_launch_gallery_message">ギャラリー中の画像と端末内の画像の状態を同期したい場合、本アプリを再起動して下さい</string>
     <string name="alert_trimming_ui_title">切り取り範囲の反映</string>
     <string name="alert_trimming_ui_message">この画像では、切り取り範囲は切り取り線から指を離したタイミングで反映されます。</string>
     <string name="alert_trimming_sameThumbnail_title">選択不可</string>
@@ -98,6 +99,7 @@
     <string name="menu_help">ヘルプ</string>
     <string name="menu_palette">パレット</string>
     <string name="menu_folderTree">フォルダツリー</string>
+    <string name="menu_refresh">リフレッシュ</string>
     <string name="menu_accessGallery">外部ストレージ</string>
     <string name="menu_nodeShape">ノードの形</string>
     <string name="menu_close">クローズ</string>

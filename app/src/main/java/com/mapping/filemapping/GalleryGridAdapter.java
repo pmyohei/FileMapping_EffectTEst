@@ -16,7 +16,7 @@ import java.io.File;
 /*
  * ギャラリー（ノード配下の写真リスト表示）用アダプタ
  */
-public class GalleryAdapter extends BaseAdapter {
+public class GalleryGridAdapter extends BaseAdapter {
 
     //写真数
     public final static int PORTRAIT_NUM = 2;
@@ -64,13 +64,12 @@ public class GalleryAdapter extends BaseAdapter {
                     .error(R.drawable.ic_no_image)    //エラー画像の設定は、Picassoでは行わない、描画が遅れるため（※この.error設定は念のため）
                     .into( mIv_picture );
         }
-
     }
 
     /*
      * コンストラクタ
      */
-    public GalleryAdapter(Context context, PictureArrayList<PictureTable> data){
+    public GalleryGridAdapter(Context context, PictureArrayList<PictureTable> data){
         mContext = context;
         mData = data;
 

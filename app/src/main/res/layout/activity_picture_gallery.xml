@@ -17,9 +17,10 @@
         android:elevation="4dp"
         android:background="@android:color/white"
         android:theme="@style/Toolbar.NoActionBar"
-        app:menu="@menu/toolbar_map">
+        >
 
         <TextView
+            android:id="@+id/tv_toolbarGalleryTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/toolbar_titleGallery"

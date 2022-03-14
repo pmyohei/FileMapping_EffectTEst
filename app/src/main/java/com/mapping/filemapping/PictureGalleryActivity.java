@@ -15,6 +15,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -87,9 +88,11 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
         //resultコード設定
         setResult(MapActivity.RESULT_GALLERY, getIntent());
-
         //アダプタ更新リスト
         mUpdatePages = new ArrayList<>();
+
+        //ストレージとの同期注意事項
+        showCautionAboutSyncStorage();
 
         //タブスクロール時の処理設定
         setupGalleryPageScroll();
@@ -285,7 +288,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
                                 //タブに表示するピクチャノードサイズ
                                 int viewSize = (int) getResources().getDimension(R.dimen.gallery_tab_size);
 
-                                //サムネイルのbitmap
+                                //サムネイルのpath
                                 PictureTable thumbnail = thumbnails.get(position - 1);
                                 String path = ((thumbnail == null) ? "" : thumbnail.getPath());
 
@@ -313,6 +316,67 @@ public class PictureGalleryActivity extends AppCompatActivity {
         return mSinglePictureLauncher;
     }
 
+    /*
+     * ギャラリーをストレージと同期
+     */
+    //★リリース後対応
+    private void synchronizeGalleries() {
+
+        //キャッシュクリア
+        boolean isCache = clearRemoveImageCache();
+
+        //キャッシュクリアがあれば
+        if (isCache) {
+            //ギャラリー再更新
+            ViewPager2 vp2_gallery = findViewById(R.id.vp2_gallery);
+            GalleryPageAdapter galleryPageAdapter = (GalleryPageAdapter) vp2_gallery.getAdapter();
+            if (galleryPageAdapter != null) {
+                //全更新
+                galleryPageAdapter.notifyDataSetChanged();
+            }
+
+            //タブのサムネイルを更新
+
+        }
+    }
+
+    /*
+     * 端末から削除された画像のキャッシュをクリア
+     *   return：キャッシュ対象がなければ、falseを返す
+     */
+    //★リリース後対応
+    private boolean clearRemoveImageCache() {
+
+        boolean isCache = false;
+
+        for (PictureTable picture : mGalleries.get(0)) {
+
+            if (picture == null) {
+                //画像情報なしは対象外
+                continue;
+            }
+            String path = picture.getPath();
+            if (path.isEmpty()) {
+                //path情報なしなら対象外
+                continue;
+            }
+            File file = new File(path);
+            if (file.isFile()) {
+                //ファイル生成できているなら対象外
+                continue;
+            }
+
+            //★現状は、端末から削除された画像だけ更新対象になる
+            //リネームとかは対象外
+
+            //pathの実体がない画像のキャッシュをクリア
+            Picasso.get().invalidate(path);
+
+            isCache = true;
+        }
+
+        return isCache;
+    }
 
     /*
      * ツールバーオプションメニュー生成
@@ -321,6 +385,8 @@ public class PictureGalleryActivity extends AppCompatActivity {
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.toolbar_gallery, menu);
+
+        Log.i("menu★", "");
 
         return true;
     }*/
@@ -343,6 +409,14 @@ public class PictureGalleryActivity extends AppCompatActivity {
         }
 
         switch (item.getItemId()) {
+/*
+            //★リリース後対応
+            //ギャラリー同期
+            case R.id.action_refresh:
+                //ギャラリーをストレージの保存状態と同期する
+                synchronizeGalleries();
+
+                return true;*/
 
             //格納先ノードの移動
             case R.id.action_move:
@@ -414,12 +488,12 @@ public class PictureGalleryActivity extends AppCompatActivity {
     /*
      * 指定されたリスト内にサムネイルがある場合、除外する
      */
-    private void removeThumbnail( PictureArrayList<PictureTable> pictures ) {
+    private void removeThumbnail(PictureArrayList<PictureTable> pictures) {
         int i = 0;
-        for( PictureTable picture: pictures ){
-            if( picture.isThumbnail() ){
+        for (PictureTable picture : pictures) {
+            if (picture.isThumbnail()) {
                 //サムネイルがあれば、リストから除外
-                pictures.remove( i );
+                pictures.remove(i);
                 break;
             }
             i++;
@@ -443,13 +517,13 @@ public class PictureGalleryActivity extends AppCompatActivity {
         PictureArrayList<PictureTable> selectedPictures = getSelectedPictures();
 
         //選択写真がサムネイルしかなければ、移動不可
-        if( (selectedPictures.size() == 1) && (selectedPictures.get(0).isThumbnail()) ){
+        if ((selectedPictures.size() == 1) && (selectedPictures.get(0).isThumbnail())) {
             Toast.makeText(this, getString(R.string.toast_cannotThumbnailMove), Toast.LENGTH_SHORT).show();
             return;
         }
 
         //選択写真の中から、サムネイル写真を除外
-        removeThumbnail( selectedPictures );
+        removeThumbnail(selectedPictures);
 
         //マップ上のピクチャノードを移動先候補として表示
         PictureNodesBottomSheetDialog bottomSheetDialog
@@ -466,7 +540,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
         PictureArrayList<PictureTable> selectedPictures = getSelectedPictures();
 
         //選択写真がサムネイルしかなければ、削除不可
-        if( (selectedPictures.size() == 1) && (selectedPictures.get(0).isThumbnail()) ){
+        if ((selectedPictures.size() == 1) && (selectedPictures.get(0).isThumbnail())) {
             Toast.makeText(this, getString(R.string.toast_cannotThumbnailDelete), Toast.LENGTH_SHORT).show();
             return;
         }
@@ -476,8 +550,8 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
         //削除確認ダイアログを表示
         AlertDialog dialog = new AlertDialog.Builder(this)
-                .setTitle( getString(R.string.alert_deletePicture_title) )
-                .setMessage( message )
+                .setTitle(getString(R.string.alert_deletePicture_title))
+                .setMessage(message)
                 .setPositiveButton("OK", new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
@@ -489,7 +563,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
                 .show();
 
         //メッセージ文は、Styleのフォントが適用されないため個別に設定
-        ((TextView)dialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
+        ((TextView) dialog.findViewById(android.R.id.message)).setTypeface(Typeface.SERIF);
     }
 
 
@@ -502,12 +576,12 @@ public class PictureGalleryActivity extends AppCompatActivity {
         PictureArrayList<PictureTable> selectedPictures = getSelectedPictures();
 
         //選択写真の中から、サムネイル写真を除外
-        removeThumbnail( selectedPictures );
+        removeThumbnail(selectedPictures);
 
         //DBから写真を削除
         AsyncDeletePicture db = new AsyncDeletePicture(this, selectedPictures, new AsyncDeletePicture.OnFinishListener() {
             @Override
-            public void onFinish(boolean isThumbnail, int srcPictureNodePid ) {
+            public void onFinish(boolean isThumbnail, int srcPictureNodePid) {
                 //アダプタを更新
                 removeGallery(selectedPictures, isThumbnail);
                 //削除メッセージ
@@ -537,21 +611,26 @@ public class PictureGalleryActivity extends AppCompatActivity {
     /*
      * 複数選択操作用のメニューを設定
      */
-    public void setToolbarOptionMenu(boolean isOpen) {
+    public void setToolbarOptionMenu(boolean isMulti) {
 
         //メニュー
         Toolbar toolbar = findViewById(R.id.toolbar_gallery);
         Menu menu = toolbar.getMenu();
 
-        if (isOpen) {
-            //オープン指定
+        //タイトル
+        TextView tv_toolbarGalleryTitle = toolbar.findViewById(R.id.tv_toolbarGalleryTitle);
+
+        if (isMulti) {
+            //複数選択用メニュー
             MenuInflater inflater = getMenuInflater();
-            inflater.inflate(R.menu.toolbar_gallery, menu);
+            inflater.inflate(R.menu.toolbar_gallery_multi, menu);
 
             //ツールバー
             toolbar.setBackgroundColor(Color.BLACK);
-            toolbar.setTitleTextColor(Color.WHITE);
-            toolbar.setTitle( getString(R.string.toolbar_titleGalleryMulti) );
+            //toolbar.setTitleTextColor(Color.WHITE);
+            //toolbar.setTitle("");
+            tv_toolbarGalleryTitle.setTextColor(Color.WHITE);
+            tv_toolbarGalleryTitle.setText(R.string.toolbar_titleGalleryMulti);
 
         } else {
             if (!menu.hasVisibleItems()) {
@@ -562,10 +641,19 @@ public class PictureGalleryActivity extends AppCompatActivity {
             //クローズ指定
             menu.clear();
 
+/*
+            //★リリース後対応
+            //通常メニュー
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.toolbar_gallery, menu);
+*/
+
             //ツールバー
             toolbar.setBackgroundColor(Color.WHITE);
-            toolbar.setTitleTextColor(Color.BLACK);
-            toolbar.setTitle("");
+            //toolbar.setTitleTextColor(Color.BLACK);
+            //toolbar.setTitle("");
+            tv_toolbarGalleryTitle.setTextColor(Color.BLACK);
+            tv_toolbarGalleryTitle.setText(R.string.toolbar_titleGallery);
         }
     }
 
@@ -665,10 +753,10 @@ public class PictureGalleryActivity extends AppCompatActivity {
      *   タブ写真を無効用アイコンに変更する。
      *   para1：移動された写真リスト
      */
-    private void disableTabThumbnail( boolean isThumbnail ) {
+    private void disableTabThumbnail(boolean isThumbnail) {
 
         //サムネイルがなければ何もしない
-        if( !isThumbnail ){
+        if (!isThumbnail) {
             return;
         }
 
@@ -682,7 +770,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
         //無効アイコンを設定
         iv_picture.setImageBitmap(
-                BitmapFactory.decodeResource( getResources(), R.drawable.ic_no_image)
+                BitmapFactory.decodeResource(getResources(), R.drawable.ic_no_image)
         );
     }
 
@@ -690,7 +778,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
      * 操作対象（複数選択された時のタブ）ページのギャラリーを更新
      *   para1：移動された写真リスト
      */
-    private void updateSourceGallery( PictureArrayList<PictureTable> selectedPictures ) {
+    private void updateSourceGallery(PictureArrayList<PictureTable> selectedPictures) {
 
         //表示中ギャラリー
         ViewPager2 vp2_gallery = findViewById(R.id.vp2_gallery);
@@ -704,7 +792,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
         //アダプタに変更を通知
         GridView gv_gallery = vp2_gallery.findViewById(R.id.gv_gallery);
-        GalleryAdapter adapter = (GalleryAdapter) gv_gallery.getAdapter();
+        GalleryGridAdapter adapter = (GalleryGridAdapter) gv_gallery.getAdapter();
         adapter.notifyDataSetChanged();
     }
 
@@ -713,11 +801,11 @@ public class PictureGalleryActivity extends AppCompatActivity {
      * ノード移動先のギャラリーの更新
      *   para1：移動された写真リスト
      */
-    private void updateDestinationGallery( PictureArrayList<PictureTable> selectedPictures, int toPicutureNodePid ) {
+    private void updateDestinationGallery(PictureArrayList<PictureTable> selectedPictures, int toPicutureNodePid) {
 
         //移動先ノードが表示されていなければ、終了
         int pageIndex = isDisplayTab(toPicutureNodePid);
-        if( pageIndex == NOTHING ){
+        if (pageIndex == NOTHING) {
             return;
         }
 
@@ -725,11 +813,11 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
         //移動先ノードのギャラリーに追加
         PictureArrayList<PictureTable> gallery = mGalleries.get(pageIndex);
-        gallery.addAll( selectedPictures );
+        gallery.addAll(selectedPictures);
 
         //アダプタ更新リストに追加（あれば不要）
-        if( !mUpdatePages.contains( pageIndex ) ){
-            mUpdatePages.add( pageIndex );
+        if (!mUpdatePages.contains(pageIndex)) {
+            mUpdatePages.add(pageIndex);
 
             Log.i("ページ更新", "更新対象追加=" + pageIndex);
         }
@@ -754,22 +842,22 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
         //先頭より後のギャラリーを追加
         int size = mGalleries.size();
-        for( int i = 1; i < size; i++ ){
-            mGalleries.get(0).addAll( mGalleries.get(i) );
+        for (int i = 1; i < size; i++) {
+            mGalleries.get(0).addAll(mGalleries.get(i));
         }
 
         //アダプタ更新リストに追加（あれば不要）
-        if( !mUpdatePages.contains( ALL_PAGE_INDEX ) ){
-            mUpdatePages.add( ALL_PAGE_INDEX );
+        if (!mUpdatePages.contains(ALL_PAGE_INDEX)) {
+            mUpdatePages.add(ALL_PAGE_INDEX);
 
             Log.i("ページ更新", "更新対象追加=" + ALL_PAGE_INDEX);
         }
 
         //--
-        for( PictureTable tmp: mGalleries.get(0) ){
+        for (PictureTable tmp : mGalleries.get(0)) {
             Log.i("ページ更新", "「すべて」" + tmp.getPid());
         }
-        for( Integer tmp: mUpdatePages ){
+        for (Integer tmp : mUpdatePages) {
             Log.i("ページ更新", "「mUpdatePages」" + tmp);
         }
         //--
@@ -780,13 +868,13 @@ public class PictureGalleryActivity extends AppCompatActivity {
      * 表示中のタブにあるかどうか
      *   return：ページindex（ページ先頭には「すべて」があるため、１加算する）
      */
-    private int isDisplayTab( int toPicutureNodePid ) {
+    private int isDisplayTab(int toPicutureNodePid) {
 
         final int TOP_PAGE = 1;
 
         int i = 0;
         for (Integer pid : mPictureNodePids) {
-            if( pid == toPicutureNodePid ){
+            if (pid == toPicutureNodePid) {
                 return (i + TOP_PAGE);
             }
             i++;
@@ -795,6 +883,40 @@ public class PictureGalleryActivity extends AppCompatActivity {
         return NOTHING;
     }
 
+    /*
+     * 外部ストレージとギャラリーの同期に関する注意事項の表示
+     */
+    private void showCautionAboutSyncStorage() {
+
+        final String key = ResourceManager.SHARED_KEY_HELP_ON_GALLERY;
+
+        //表示の有無を取得
+        SharedPreferences spData = getSharedPreferences(ResourceManager.SHARED_DATA_NAME, MODE_PRIVATE);
+        boolean isShow = spData.getBoolean(key, ResourceManager.INVALID_SHOW_HELP);
+
+        if (!isShow) {
+            //表示なしが選択されていれば何もしない
+            return;
+        }
+
+        //ダイアログ
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle(getString(R.string.alert_launch_gallery_title))
+                .setMessage(getString(R.string.alert_launch_gallery_message))
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        SharedPreferences.Editor editor = spData.edit();
+                        editor.putBoolean(key, false);
+                        editor.apply();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+
+        //メッセージ文は、Styleのフォントが適用されないため個別に設定
+        ((TextView) dialog.findViewById(android.R.id.message)).setTypeface(Typeface.SERIF);
+    }
 
     /*
      * タブスクロール時の処理設定
@@ -829,7 +951,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
                 if( mUpdatePages.contains( position ) ){
                     //更新対象なら、アダプタに更新通知を送る
                     GridView gv_gallery = vp2_gallery.findViewById(R.id.gv_gallery);
-                    GalleryAdapter adapter = (GalleryAdapter) gv_gallery.getAdapter();
+                    GalleryGridAdapter adapter = (GalleryGridAdapter) gv_gallery.getAdapter();
                     adapter.notifyDataSetChanged();
 
                     Log.i("ページ更新", "更新発生=" + position);
