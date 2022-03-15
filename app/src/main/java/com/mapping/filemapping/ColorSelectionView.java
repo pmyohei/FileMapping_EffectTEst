@@ -207,9 +207,6 @@ public class ColorSelectionView extends LinearLayout {
         }
     }
 
-
-
-
     /*
      * カラー入力アイコンリスナー
      */
@@ -241,45 +238,10 @@ public class ColorSelectionView extends LinearLayout {
             //ダイアログ
             //ColorDialog dialog;
             if (mInputKind == RGB) {
-                //dialog = new ColorCodeDialog(settingColor);
                 showColorCodeDialog(settingColor);
             } else {
                 showColorPickerDialog(settingColor);
-
-                //dialog = new ColorPickerDialog(settingColor);
-                //dialog.setCancelable( false );  //画面外のキャンセル不可
             }
-
-            //OKボタンリスナー
-/*            dialog.setOnPositiveClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-
-                    //Log.i("Design", "カラーコード=" + ((EditText)view).getText());
-
-                    //カラーコード文字列
-                    ColorDrawable colorDrawable = (ColorDrawable) view.getBackground();
-                    int colorInt = colorDrawable.getColor();
-                    String code = "#" + Integer.toHexString(colorInt);
-
-                    //色を設定
-                    setColor(code);
-
-                    //色履歴の追加
-                    MapCommonData commonData = (MapCommonData)((Activity)getContext()).getApplication();
-                    int idx = commonData.addColorHistory( code );
-
-                    if( idx >= 0 ){
-                        //アダプタに追加を通知
-                        mColorHistoryAdapter.notifyItemInserted(idx);
-                    }
-
-                    //ダイアログ閉じる
-                    dialog.dismiss();
-                }
-            });*/
-
-            //dialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "ColorCode");
         }
 
         /*
