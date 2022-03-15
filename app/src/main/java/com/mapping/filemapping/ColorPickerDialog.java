@@ -26,10 +26,6 @@ public class ColorPickerDialog extends ColorDialog {
         super(color);
     }
 
-    public ColorPickerDialog() {
-        super("test");
-    }
-
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         //ダイアログにレイアウトを設定
@@ -84,15 +80,14 @@ public class ColorPickerDialog extends ColorDialog {
             }
         });
 
-
-        //OKボタン
+/*        //OKボタン
         dialog.findViewById(R.id.bt_create).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 //色確定
                 mPositiveClickListener.onClick( dialog.findViewById(R.id.v_checkColor) );
             }
-        });
+        });*/
     }
 
     /*

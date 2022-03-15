@@ -24,6 +24,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -46,7 +47,7 @@ import android.widget.Toast;
 
 import java.util.Objects;
 
-public class MapActivity extends AppCompatActivity {
+public class MapActivity extends AppCompatActivity /*implements ColorDialog.NoticeDialogListener*/ {
 
     /* 画面遷移-レスポンスコード */
     public static final int RESULT_PICTURE_NODE = 200;
@@ -1483,6 +1484,40 @@ public class MapActivity extends AppCompatActivity {
             //非同期処理開始
             db.execute();
         }
-
     }
+
+/*    @Override
+    public void onDialogPositiveClick(DialogFragment dialog) {
+
+        //Log.i("Design", "カラーコード=" + ((EditText)view).getText());
+
+        View v_checkColor = dialog.getDialog().findViewById(R.id.v_checkColor);
+
+        //カラーコード文字列
+        ColorDrawable colorDrawable = (ColorDrawable) v_checkColor.getBackground();
+        int colorInt = colorDrawable.getColor();
+        String code = "#" + Integer.toHexString(colorInt);
+
+        //色を設定
+        setColor(code);
+
+        //色履歴の追加
+        MapCommonData commonData = (MapCommonData)getApplication();
+        int idx = commonData.addColorHistory( code );
+
+        if( idx >= 0 ){
+            //アダプタに追加を通知
+            mColorHistoryAdapter.notifyItemInserted(idx);
+        }
+
+        //ダイアログ閉じる
+        dialog.dismiss();
+    }
+
+    @Override
+    public void onDialogNegativeClick(DialogFragment dialog) {
+        //ダイアログ閉じる
+        dialog.dismiss();
+    }*/
+
 }

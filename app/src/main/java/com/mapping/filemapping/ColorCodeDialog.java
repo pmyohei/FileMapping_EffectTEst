@@ -63,7 +63,7 @@ public class ColorCodeDialog extends ColorDialog implements TextWatcher {
         et_colorCode.addTextChangedListener(this);
 
         //OKボタン
-        dialog.findViewById(R.id.bt_create).setOnClickListener(new View.OnClickListener() {
+/*        dialog.findViewById(R.id.bt_create).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
@@ -77,7 +77,7 @@ public class ColorCodeDialog extends ColorDialog implements TextWatcher {
                 //色確定
                 mPositiveClickListener.onClick( dialog.findViewById(R.id.v_checkColor) );
             }
-        });
+        });*/
     }
 
     @Override

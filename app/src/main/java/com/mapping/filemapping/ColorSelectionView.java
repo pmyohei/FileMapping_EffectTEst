@@ -5,19 +5,25 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentActivity;
+import androidx.appcompat.app.AlertDialog;
+import androidx.fragment.app.DialogFragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import com.google.android.material.card.MaterialCardView;
+import com.jaredrummler.android.colorpicker.ColorPickerView;
 
 import java.util.ArrayList;
 
@@ -199,14 +205,15 @@ public class ColorSelectionView extends LinearLayout {
                 ((ChildNode) node).setLineColor(code);
                 break;
         }
-
     }
 
 
+
+
     /*
-     * カラー入力ダイアログ表示リスナー
+     * カラー入力アイコンリスナー
      */
-    private class ClickColor implements View.OnClickListener {
+    private class ClickColor implements View.OnClickListener, TextWatcher {
 
         //カラー入力方法
         public static final int RGB = 0;
@@ -214,6 +221,9 @@ public class ColorSelectionView extends LinearLayout {
 
         //カラー入力方法
         private final int mInputKind;
+
+        //表示中ダイアログ
+        private AlertDialog mDialog;
 
         /*
          * コンストラクタ
@@ -229,16 +239,19 @@ public class ColorSelectionView extends LinearLayout {
             String settingColor = getCurrentColor();
 
             //ダイアログ
-            ColorDialog dialog;
+            //ColorDialog dialog;
             if (mInputKind == RGB) {
-                dialog = new ColorCodeDialog(settingColor);
+                //dialog = new ColorCodeDialog(settingColor);
+                showColorCodeDialog(settingColor);
             } else {
-                dialog = new ColorPickerDialog(settingColor);
-                dialog.setCancelable( false );  //画面外のキャンセル不可
+                showColorPickerDialog(settingColor);
+
+                //dialog = new ColorPickerDialog(settingColor);
+                //dialog.setCancelable( false );  //画面外のキャンセル不可
             }
 
             //OKボタンリスナー
-            dialog.setOnPositiveClickListener(new View.OnClickListener() {
+/*            dialog.setOnPositiveClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
 
@@ -264,16 +277,162 @@ public class ColorSelectionView extends LinearLayout {
                     //ダイアログ閉じる
                     dialog.dismiss();
                 }
+            });*/
+
+            //dialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "ColorCode");
+        }
+
+        /*
+         * カラーコード入力ダイアログ
+         */
+        private void showColorCodeDialog(String settingColor) {
+            View layout = LayoutInflater.from(getContext()).inflate(R.layout.color_code_dialog, null);
+
+            mDialog = new AlertDialog.Builder(getContext())
+                    .setView(layout)
+                    .create();
+
+            //確認用ビューに初期色を設定
+            layout.findViewById(R.id.v_checkColor).setBackgroundColor(Color.parseColor(settingColor));
+
+            //「#」を取り除く
+            String rgb;
+            if (settingColor.length() == 7) {
+                //「#123456」→「123456」
+                rgb = settingColor.replace("#", "");
+            } else {
+                //「#FF123456」→「123456」
+                rgb = settingColor.replaceAll("^#..", "");
+            }
+
+            //RGB文字列を設定
+            EditText et_colorCode = layout.findViewById(R.id.et_colorCode);
+            et_colorCode.setText(rgb);
+            //入力リスナー設定
+            et_colorCode.addTextChangedListener(this);
+
+            //OKボタン
+            layout.findViewById(R.id.bt_create).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //OKボタンリスナー処理
+                    positiveCode();
+                }
             });
 
-            dialog.show(((FragmentActivity) getContext()).getSupportFragmentManager(), "ColorCode");
+            //キャンセルボタン
+            layout.findViewById(R.id.bt_cancel).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mDialog.dismiss();
+                }
+            });
+
+            mDialog.show();
         }
+
+        /*
+         * カラーピッカー入力ダイアログ
+         */
+        private void showColorPickerDialog(String settingColor) {
+            View layout = LayoutInflater.from(getContext()).inflate(R.layout.color_picker_dialog, null);
+
+            mDialog = new AlertDialog.Builder(getContext())
+                    .setView(layout)
+                    .create();
+
+            //確認用ビューに初期色を設定
+            layout.findViewById(R.id.v_checkColor).setBackgroundColor(Color.parseColor(settingColor));
+
+            //カラーピッカーに初期値を設定
+            ColorPickerView cpv = layout.findViewById(R.id.colorPicker);
+            cpv.setColor(Color.parseColor(settingColor));
+
+            //カラーピッカー
+            cpv.setOnColorChangedListener(new ColorPickerView.OnColorChangedListener() {
+                @Override
+                public void onColorChanged(int newColor) {
+                    //Log.i("onColorChanged", "getColor=" + cpv.getColor());
+                    //Log.i("onColorChanged", "getColor(Hex)=" + Integer.toHexString(cpv.getColor()) );
+
+                    //「例）#123456」を作成
+                    //cpv.getColor()で取得できる値「ARGB」 例）ffb58d8d
+                    String code = "#" + Integer.toHexString(cpv.getColor());
+
+                    //選択された色をチェック用のビューに反映
+                    layout.findViewById(R.id.v_checkColor).setBackgroundColor(Color.parseColor(code));
+                }
+            });
+
+            //OKボタン
+            layout.findViewById(R.id.bt_create).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    //OKボタンリスナー処理
+                    positiveCommon();
+                }
+            });
+
+            //キャンセルボタン
+            layout.findViewById(R.id.bt_cancel).setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    mDialog.dismiss();
+                }
+            });
+
+            mDialog.show();
+        }
+
+        /*
+         * ダイアログOKボタンリスナー設定
+         */
+        private void positiveCode() {
+
+            //無効な文字列チェック
+            EditText et_colorCode = mDialog.findViewById(R.id.et_colorCode);
+            if (!et_colorCode.getText().toString().matches("^[a-fA-F0-9]*")) {
+                Toast.makeText(et_colorCode.getContext(), getResources().getString(R.string.toast_errorRgb), Toast.LENGTH_SHORT).show();
+                return;
+            }
+
+            //共通設定
+            positiveCommon();
+        }
+
+        /*
+         * ダイアログOKボタンリスナー設定
+         */
+        private void positiveCommon() {
+            //確認ビュー
+            View v_checkColor = mDialog.findViewById(R.id.v_checkColor);
+
+            //カラーコード文字列
+            ColorDrawable colorDrawable = (ColorDrawable) v_checkColor.getBackground();
+            int colorInt = colorDrawable.getColor();
+            String code = "#" + Integer.toHexString(colorInt);
+
+            //色を設定
+            setColor(code);
+
+            //色履歴の追加
+            MapCommonData commonData = (MapCommonData)((Activity)getContext()).getApplication();
+            int idx = commonData.addColorHistory( code );
+
+            if( idx >= 0 ){
+                //アダプタに追加を通知
+                mColorHistoryAdapter.notifyItemInserted(idx);
+            }
+
+            //ダイアログ閉じる
+            mDialog.dismiss();
+        }
+
 
         /*
          * 設定中のカラーを取得
          */
         private String getCurrentColor() {
-
             return (mViewKind == MAP) ? getCurrentMapColor() : getCurrentNodeColor();
         }
 
@@ -366,99 +525,38 @@ public class ColorSelectionView extends LinearLayout {
             }
         }
 
+        @Override
+        public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
+        @Override
+        public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+        }
         /*
-         * 色を設定
+         * ６文字入力されたタイミングで、確認カラーに反映
          */
-/*        private void setColor( String code ){
+        @Override
+        public void afterTextChanged(Editable editable) {
+            //リスナーに渡すビューを、カラーコードのビューに入れ替え
+            EditText et_colorCode = mDialog.findViewById(R.id.et_colorCode);
+            String rgb = et_colorCode.getText().toString();
 
-            if( mViewKind == MAP ){
-                setMapColor( code );
-            } else {
-                setNodeColor( code );
+            //6文字未満なら、何もしない
+            if( rgb.length() < 6 ){
+                return;
             }
+
+            //無効な文字列チェック
+            //先頭から想定する文字が続いていない場合
+            if( !rgb.matches( "^[a-fA-F0-9]*" ) ){
+                return;
+            }
+
+            //例）「123456」→「#123456」を作成
+            String code = "#" + et_colorCode.getText().toString();
+            //確認色に反映
+            mDialog.findViewById(R.id.v_checkColor).setBackgroundColor( Color.parseColor( code ) );
         }
 
-        *//*
-         * マップ全体に色を設定
-         *//*
-        private void setMapColor( String code ){
-
-            //マップ共通データ
-            MapCommonData commonData = (MapCommonData)((Activity)getContext()).getApplication();
-            NodeArrayList<NodeTable> nodes = commonData.getNodes();
-
-            switch (mElement){
-
-                case COLOR_MAP:
-                    //マップ色
-                    mSetView.setBackgroundColor( Color.parseColor(code) );
-                    break;
-
-                case COLOR_BACKGROUNG:
-                    //ノード背景色
-                    nodes.setAllNodeBgColor( code );
-                    break;
-
-                case COLOR_TEXT:
-                    //ノードテキストカラー
-                    nodes.setAllNodeTxColor( code );
-                    break;
-
-                case COLOR_BORDER:
-                    //枠線カラー
-                    nodes.setAllNodeBorderColor( code );
-                    break;
-
-                case COLOR_SHADOW:
-                    //影カラー
-                    nodes.setAllNodeShadowColor( code );
-                    break;
-
-                case COLOR_LINE:
-                    //ラインカラー
-                    nodes.setAllNodeLineColor( code );
-                    break;
-            }
-
-        }
-
-        *//*
-         * ノード単体に色を設定
-         *//*
-        private void setNodeColor( String code ){
-
-            //ノードにキャスト
-            BaseNode node = (BaseNode) mSetView;
-
-            //色設定の対象毎に処理
-            switch (mElement) {
-
-                case COLOR_BACKGROUNG:
-                    //ノード背景色
-                    node.setNodeBackgroundColor(code);
-                    break;
-
-                case COLOR_TEXT:
-                    //ノードテキストカラー
-                    node.setNodeTextColor(code);
-                    break;
-
-                case COLOR_BORDER:
-                    //枠線カラー
-                    node.setBorderColor(code);
-                    break;
-
-                case COLOR_SHADOW:
-                    //影カラー
-                    node.setShadowColor(code);
-                    break;
-
-                case COLOR_LINE:
-                    //ラインカラー
-                    ((ChildNode) node).setLineColor(code);
-                    break;
-            }
-        }*/
     }
 
     /*
