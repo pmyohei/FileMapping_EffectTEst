@@ -42,14 +42,11 @@ public class DesignBottomSheet extends CoordinatorLayout {
     public DesignBottomSheet(Context context) {
         this(context, null);
     }
-
     public DesignBottomSheet(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
-
     public DesignBottomSheet(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
         //初期化
         init();
     }
@@ -69,15 +66,12 @@ public class DesignBottomSheet extends CoordinatorLayout {
 
             @Override
             public void onStateChanged(@NonNull View bottomSheet, int newState) {
-
                 //Log.i("ボトム状態チェック", "newState=" + newState);
                 checkAllNodeSave( newState );
             }
 
             @Override
             public void onSlide(@NonNull View bottomSheet, float slideOffset) {
-
-
             }
         });
 
@@ -254,7 +248,7 @@ public class DesignBottomSheet extends CoordinatorLayout {
 
         //ViewPager2を生成
         ViewPager2 vp2 = findViewById(R.id.vp2_design);
-        DesignPicturePageAdapter adapter = new DesignPicturePageAdapter(layoutIdList, v_node, vp2);
+        DesignPicturePageAdapter adapter = new DesignPicturePageAdapter(layoutIdList, v_node);
         vp2.setAdapter(adapter);
 
         //インジケータの設定
@@ -262,7 +256,6 @@ public class DesignBottomSheet extends CoordinatorLayout {
         new TabLayoutMediator(tabLayout, vp2,
                 (tab, position) -> tab.setText(tabs.get(position))
         ).attach();
-
     }
 
     /*

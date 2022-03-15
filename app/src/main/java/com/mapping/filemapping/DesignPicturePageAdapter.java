@@ -1,5 +1,6 @@
 package com.mapping.filemapping;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.view.LayoutInflater;
@@ -22,8 +23,6 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
     private final List<Integer>   mData;
     //設定対象ノードビュー
     private final BaseNode        mv_node;
-    //ViewPager2
-    private final ViewPager2 mvp2;
 
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
@@ -32,8 +31,6 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
 
         //設定対象ノードビュー
         private final BaseNode        mv_node;
-        //ViewPager2
-        private final ViewPager2      mvp2;
 
         /*--- サムネイル写真の変更 ---*/
         private ImageView iv_thumbnail;
@@ -44,6 +41,7 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
         private SeekbarView  sbv_nodeSize;
         private ColorSelectionView csv_border;
         private SeekbarView  sbv_borderSize;
+        @SuppressLint("UseSwitchCompatOrMaterialCode")
         private Switch sw_shadow;
         private ColorSelectionView csv_shadow;
 
@@ -54,11 +52,10 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
         /*
          * コンストラクタ
          */
-        public GuideViewHolder(View itemView, int position, BaseNode node , ViewPager2 vp2) {
+        public GuideViewHolder(View itemView, int position, BaseNode node ) {
             super(itemView);
 
             mv_node = node;
-            mvp2 = vp2;
 
             switch (position) {
                 case 0:
@@ -232,10 +229,9 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
     /*
      * コンストラクタ
      */
-    public DesignPicturePageAdapter(List<Integer> layoutIdList, View v_node, ViewPager2 vp) {
+    public DesignPicturePageAdapter(List<Integer> layoutIdList, View v_node ) {
         mData = layoutIdList;
         mv_node = (BaseNode)v_node;
-        mvp2 = vp;
     }
 
     /*
@@ -257,7 +253,7 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
         LayoutInflater inflater = LayoutInflater.from( viewGroup.getContext() );
         View view = inflater.inflate(mData.get(position), viewGroup, false);
 
-        return new GuideViewHolder(view, position, mv_node, mvp2);
+        return new GuideViewHolder(view, position, mv_node);
     }
 
     /*
