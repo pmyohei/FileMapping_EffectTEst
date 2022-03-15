@@ -174,17 +174,14 @@ public class SingleScrollImageView_old extends androidx.appcompat.widget.AppComp
             //ピンチ倍率
             float scaleFactor = detector.getScaleFactor();
 
-            ImageView iv_singleScrollPicture = findViewById(R.id.iv_singleScrollPicture);
-            int height = iv_singleScrollPicture.getHeight();
-            int width  = iv_singleScrollPicture.getWidth();
-
             mLayoutParams.height = (int)(mHeight * scaleFactor);
             mLayoutParams.width  = (int)(mWidth * scaleFactor);
 
+            ImageView iv_singleScrollPicture = findViewById(R.id.iv_singleScrollPicture);
             iv_singleScrollPicture.setLayoutParams(mLayoutParams);
 
-            Log.i("ピンチ操作", "scaleFactor=" + scaleFactor);
-            Log.i("ピンチ操作", "mHeight=" + mHeight + " → " + mLayoutParams.height);
+            //Log.i("ピンチ操作", "scaleFactor=" + scaleFactor);
+            //Log.i("ピンチ操作", "mHeight=" + mHeight + " → " + mLayoutParams.height);
 
 
 /*

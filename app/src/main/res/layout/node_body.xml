@@ -10,10 +10,10 @@
 
     <!--  ノード形状  -->
     <com.google.android.material.card.MaterialCardView
+        android:theme="@style/Theme.MaterialComponents.Light"
         android:id="@+id/cv_node"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:theme="@style/Theme.MaterialComponents.Light"
         app:cardCornerRadius="@dimen/tmp_cardCornerRadius"
         app:strokeWidth="0dp"
         app:strokeColor="@color/black">

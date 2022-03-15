@@ -1,9 +1,7 @@
 package com.mapping.filemapping;
 
 import android.annotation.SuppressLint;
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -13,13 +11,11 @@ import android.view.GestureDetector;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
-import android.widget.ImageButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import androidx.activity.result.ActivityResultLauncher;
 import androidx.cardview.widget.CardView;
 
 import com.google.android.material.card.MaterialCardView;
@@ -375,7 +371,7 @@ public class BaseNode extends FrameLayout {
         boolean isShadow = mNode.isShadow();
 
         //影色を設定
-        ((NodeOutsideView)findViewById( R.id.l_nodeBody )).setShadowColor( Color.parseColor(color), nodeKind, isShadow );
+        ((NodeOutsideView)findViewById( R.id.ll_nodeOutSide)).setShadowColor( Color.parseColor(color), nodeKind, isShadow );
 
         mNode.setShadowColor( color );
     }
@@ -384,7 +380,7 @@ public class BaseNode extends FrameLayout {
      * ノード影色の取得
      */
     public String getShadowColor() {
-        return ((NodeOutsideView)findViewById( R.id.l_nodeBody )).getShadowColor();
+        return ((NodeOutsideView)findViewById( R.id.ll_nodeOutSide)).getShadowColor();
     }
 
     /*
@@ -392,7 +388,7 @@ public class BaseNode extends FrameLayout {
      */
     public void setShadowOnOff(boolean isShadow ) {
         //影色を設定
-        ((NodeOutsideView)findViewById( R.id.l_nodeBody )).setShadowOnOff( isShadow, mNode.getKind()  );
+        ((NodeOutsideView)findViewById( R.id.ll_nodeOutSide)).setShadowOnOff( isShadow, mNode.getKind()  );
 
         mNode.setShadow( isShadow );
     }
@@ -526,6 +522,12 @@ public class BaseNode extends FrameLayout {
                         setNodeShape( mNode.getNodeShape() );
                         //サイズを設定
                         setSetScale();
+
+/*                        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
+                                LinearLayout.LayoutParams.WRAP_CONTENT,
+                                LinearLayout.LayoutParams.WRAP_CONTENT);
+                        findViewById(R.id.cv_node).setLayoutParams(param);*/
+                        //findViewById(R.id.cv_node).invalidate();
 
                         //レイアウト確定後は、不要なので本リスナー削除
                         getViewTreeObserver().removeOnGlobalLayoutListener(this);
