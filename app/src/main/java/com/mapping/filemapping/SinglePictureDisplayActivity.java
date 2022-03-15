@@ -5,6 +5,7 @@ import static android.widget.AbsListView.OnScrollListener.SCROLL_STATE_IDLE;
 import static androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_DRAGGING;
 import static androidx.viewpager2.widget.ViewPager2.SCROLL_STATE_SETTLING;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -21,18 +22,22 @@ import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
+
 import java.util.ArrayList;
 
 /*
  * 写真単体表示アクティビティ
  */
-public class SinglePictureDisplayActivity extends AppCompatActivity {
+public class SinglePictureDisplayActivity extends AppCompatActivity implements PictureNodesBottomSheetDialog.NoticeDialogListener {
 
     /*-- 定数 --*/
     /* 画面遷移-レスポンスコード */
     public static final int RESULT_UPDATE = 100;
     /* 画面遷移-キー */
-    public static String UPDATE = "update";
+    public static String UPDATE = "update";;
+    /* Bundle-キー */
+    public static String IS_UPDATE = "isUpdate";
 
     //ページ送りボタン未押下
     public static final int NO_TOUCH_PAGE_FEED_ICON = -1;
@@ -410,11 +415,8 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
      * 所属するピクチャノードの変更先をダイアログで表示
      */
     private void showMoveDestination() {
-        //参照中の写真
-        PictureTable showPicture = getDisplayedPicture();
-
         //マップ上のピクチャノードを移動先候補として表示
-        PictureNodesBottomSheetDialog bottomSheetDialog = new PictureNodesBottomSheetDialog(this, mPictureNodeInfo, showPicture);
+        PictureNodesBottomSheetDialog bottomSheetDialog = PictureNodesBottomSheetDialog.newInstance(mPictureNodeInfo);
         bottomSheetDialog.show(getSupportFragmentManager(), "");
     }
 
@@ -461,6 +463,31 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        super.onSaveInstanceState(outState);
+
+        //画面向き変更等で画面が再生成されるとき、現在の更新状態を保存
+        outState.putBoolean(IS_UPDATE, mIsUpdate);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        super.onRestoreInstanceState(savedInstanceState);
+
+        //再生成前の更新状態を取得
+        mIsUpdate = savedInstanceState.getBoolean(IS_UPDATE );
+        if( mIsUpdate ){
+            //resultコード設定
+            Intent intent = getIntent();
+            intent.putExtra(UPDATE, true );
+            setResult(RESULT_UPDATE, intent );
+
+            //更新あり
+            mIsUpdate = true;
+        }
+    }
+
     /*
      * 写真が拡大されているか否かを設定する
      *   ※本メソッドは、単体写真用ビューから、ピンチ操作があった時に
@@ -468,6 +495,106 @@ public class SinglePictureDisplayActivity extends AppCompatActivity {
      */
     public void setIsImagePinchUp( boolean isPinchUp ) {
         mIsImagePinchUp = isPinchUp;
+    }
+
+
+    /*
+     * 格納先候補のボトムシートのリスナー
+     *   サムネイルクリックリスナー
+     */
+    @Override
+    public void onThumbnailClick(BottomSheetDialogFragment dialog, int toPicutureNodePid) {
+
+        //選択先に同じ写真があるかチェック
+        checkHasSamePicture(dialog, toPicutureNodePid);
+    }
+
+    /*
+     * 格納先ノード判定（単体写真）
+     *   para1：移動先として選択されたピクチャノードpid
+     */
+    private void checkHasSamePicture(BottomSheetDialogFragment dialog, int toPicutureNodePid) {
+
+        //参照中の写真
+        PictureTable showPicture = getDisplayedPicture();
+
+        Context context = this;
+
+        //確認する写真パス
+        String path = showPicture.getPath();
+        //ピクチャテーブルを参照し、写真があるかどうかチェック
+        AsyncHasPicture db = new AsyncHasPicture(this, toPicutureNodePid, path, new AsyncHasPicture.OnFinishListener() {
+            @Override
+            public void onFinish(boolean hasPicture) {
+
+                if (hasPicture) {
+                    //既に写真があれば、トースト表示して終了
+                    Toast.makeText(context, getString(R.string.toast_samePicture), Toast.LENGTH_SHORT).show();
+                    return;
+                }
+
+                //なければ移動確認のダイアログを表示
+                confirmMoveDialog(dialog, toPicutureNodePid, showPicture.isThumbnail());
+            }
+        });
+
+        db.execute();
+    }
+
+    /*
+     * 移動確認用ダイアログの表示
+     */
+    private void confirmMoveDialog(BottomSheetDialogFragment dialog, int toPicutureNodePid, boolean isThumbnail) {
+
+        //表示メッセージ
+        String message = getString(R.string.alert_movePicture_message);
+
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
+                .setTitle( getString(R.string.alert_movePicture_title) )
+                .setMessage( message )
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int which) {
+
+                        //格納先変更処理
+                        movePicture(toPicutureNodePid);
+                        //閉じる
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+
+        //メッセージ文は、Styleのフォントが適用されないため個別に設定
+        ((TextView)alertDialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
+    }
+
+    /*
+     * 格納先変更
+     */
+    private void movePicture(int toPicutureNodePid ) {
+
+        //参照中の写真
+        PictureTable showPicture = getDisplayedPicture();
+
+        Context context = this;
+
+        //ピクチャテーブルの所属を更新
+        AsyncUpdateBelongsPicture db = new AsyncUpdateBelongsPicture(this, toPicutureNodePid, showPicture,
+            new AsyncUpdateBelongsPicture.OnFinishListener() {
+                @Override
+                public void onFinish( boolean isThumbnail ) {
+                    //移動した写真を単体表示中のアダプタから削除
+                    removePictureInAdapter();
+                    //移動写真あり
+                    Toast.makeText(context, getString(R.string.toast_moved), Toast.LENGTH_SHORT).show();
+                }
+                @Override
+                public void onFinish(boolean isThumbnail, PictureArrayList<PictureTable> movedPictures){}
+            });
+
+        //非同期処理開始
+        db.execute();
     }
 
 }

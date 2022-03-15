@@ -32,6 +32,7 @@ import android.widget.Toast;
 
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.squareup.picasso.Picasso;
@@ -44,7 +45,7 @@ import java.util.Objects;
 /*
  * 指定配下ノードの写真を一覧表示する
  */
-public class PictureGalleryActivity extends AppCompatActivity {
+public class PictureGalleryActivity extends AppCompatActivity implements PictureNodesBottomSheetDialog.NoticeDialogListener {
 
     //「すべて」タブのページindex
     public static final int ALL_PAGE_INDEX = 0;
@@ -183,8 +184,6 @@ public class PictureGalleryActivity extends AppCompatActivity {
                     @Override
                     public void onActivityResult(ActivityResult result) {
 
-                        Log.i("colorPickerLauncher", "onActivityResult()");
-
                         if (result.getResultCode() == SinglePictureDisplayActivity.RESULT_UPDATE) {
 
                             Intent intent = result.getData();
@@ -198,7 +197,6 @@ public class PictureGalleryActivity extends AppCompatActivity {
                                 }
                             }
                         }
-
                     }
                 }
         );
@@ -526,8 +524,7 @@ public class PictureGalleryActivity extends AppCompatActivity {
         removeThumbnail(selectedPictures);
 
         //マップ上のピクチャノードを移動先候補として表示
-        PictureNodesBottomSheetDialog bottomSheetDialog
-                = new PictureNodesBottomSheetDialog(this, mPictureNodeInfo, tabPictureNodePid, selectedPictures);
+        PictureNodesBottomSheetDialog bottomSheetDialog = PictureNodesBottomSheetDialog.newInstance(mPictureNodeInfo);
         bottomSheetDialog.show(getSupportFragmentManager(), "");
     }
 
@@ -627,8 +624,6 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
             //ツールバー
             toolbar.setBackgroundColor(Color.BLACK);
-            //toolbar.setTitleTextColor(Color.WHITE);
-            //toolbar.setTitle("");
             tv_toolbarGalleryTitle.setTextColor(Color.WHITE);
             tv_toolbarGalleryTitle.setText(R.string.toolbar_titleGalleryMulti);
 
@@ -640,7 +635,6 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
             //クローズ指定
             menu.clear();
-
 /*
             //★リリース後対応
             //通常メニュー
@@ -650,8 +644,6 @@ public class PictureGalleryActivity extends AppCompatActivity {
 
             //ツールバー
             toolbar.setBackgroundColor(Color.WHITE);
-            //toolbar.setTitleTextColor(Color.BLACK);
-            //toolbar.setTitle("");
             tv_toolbarGalleryTitle.setTextColor(Color.BLACK);
             tv_toolbarGalleryTitle.setText(R.string.toolbar_titleGallery);
         }
@@ -976,6 +968,129 @@ public class PictureGalleryActivity extends AppCompatActivity {
             }
 
         });
+    }
+
+    /*
+     * 格納先候補のボトムシートのリスナー
+     *   サムネイルクリックリスナー
+     */
+    @Override
+    public void onThumbnailClick(BottomSheetDialogFragment dialog, int toPicutureNodePid) {
+
+        //複数選択状態になっていない状態なら、メッセージを表示するだけ(画面向き変更対策)
+        Toolbar toolbar = findViewById(R.id.toolbar_gallery);
+        Menu menu = toolbar.getMenu();
+        if ( !menu.hasVisibleItems() ) {
+            Toast.makeText(this, getString(R.string.toast_reSelectPicture), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //選択ノードチェック
+        boolean isSame = checkSameNode(toPicutureNodePid);
+        if( isSame ){
+            Toast.makeText(this, getString(R.string.toast_samePicture), Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //選択写真
+        PictureArrayList<PictureTable> selectedPictures = getSelectedPictures();
+
+        //選択写真の中に、サムネイル写真が含まれているか
+        boolean containThumbnail = false;
+        for( PictureTable picture: selectedPictures ){
+            if( picture.isThumbnail() ){
+                //サムネイル写真あれば、チェック終了
+                containThumbnail = true;
+                break;
+            }
+        }
+
+        //移動確認のダイアログを表示
+        confirmMoveDialog(dialog, toPicutureNodePid, containThumbnail );
+    }
+
+    /*
+     * 格納先ノードが現在格納中ノードと同じか
+     *   para1：移動先として選択されたピクチャノードpid
+     */
+    private boolean checkSameNode(int toPicutureNodePid) {
+
+        //参照中タブ
+        ViewPager2 vp2_gallery = findViewById(R.id.vp2_gallery);
+        int page = vp2_gallery.getCurrentItem();
+
+        //参照中のピクチャノードのpid
+        //※先頭は「すべて」タブであるため、参照indexは１小さい位置になる
+        int tabPictureNodePid = mPictureNodePids.get(page - 1);
+
+        //移動先に選択されたノードが、移動元ノードと同じであれば、終了
+        if (toPicutureNodePid == tabPictureNodePid) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /*
+     * 移動確認用ダイアログの表示
+     */
+    private void confirmMoveDialog(BottomSheetDialogFragment dialog, int toPicutureNodePid, boolean isThumbnail) {
+
+        //表示メッセージ
+        String message = getString(R.string.alert_movePicture_message) + getString(R.string.alert_movePicture_messageAdd);
+
+        AlertDialog alertDialog = new AlertDialog.Builder(this)
+            .setTitle( getString(R.string.alert_movePicture_title) )
+            .setMessage( message )
+            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialogInterface, int which) {
+                    //格納先変更処理
+                    moveMultiplePicture(toPicutureNodePid);
+                    //閉じる
+                    dialog.dismiss();
+                }
+            })
+            .setNegativeButton("Cancel", null)
+            .show();
+
+        //メッセージ文は、Styleのフォントが適用されないため個別に設定
+        ((TextView)alertDialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
+    }
+
+    /*
+     * ノード移動処理（複数写真）
+     */
+    private void moveMultiplePicture( int toPicutureNodePid ) {
+
+        Context context = this;
+
+        //選択写真
+        PictureArrayList<PictureTable> selectedPictures = getSelectedPictures();
+
+        //ピクチャテーブルの所属を更新
+        AsyncUpdateBelongsPicture db = new AsyncUpdateBelongsPicture(this, toPicutureNodePid, selectedPictures,
+                new AsyncUpdateBelongsPicture.OnFinishListener() {
+                    @Override
+                    public void onFinish(boolean isThumbnail) {
+                    }
+                    @Override
+                    public void onFinish(boolean isThumbnail, PictureArrayList<PictureTable> movedPictures) {
+                        //移動結果をギャラリーに反映
+                        updateGallery( movedPictures, toPicutureNodePid, isThumbnail );
+
+                        //移動完了メッセージを表示
+                        if( movedPictures.size() == 0 ){
+                            //移動写真なし
+                            Toast.makeText(context, getString(R.string.toast_notMoves), Toast.LENGTH_SHORT).show();
+                        } else{
+                            //移動写真あり
+                            Toast.makeText(context, getString(R.string.toast_moved), Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+        //非同期処理開始
+        db.execute();
     }
 
 }

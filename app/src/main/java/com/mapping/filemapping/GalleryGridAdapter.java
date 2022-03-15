@@ -52,7 +52,7 @@ public class GalleryGridAdapter extends BaseAdapter {
             String path = mData.get(position).getPath();
             File file = new File(path);
             if( !file.isFile() ){
-                //Picassoでは描画が遅れるため、ここでエラー判定を行う
+                //ファイルがないとき、Picassoでは描画が遅れるため、ここでエラー設定を行う
                 mIv_picture.setImageResource( R.drawable.ic_no_image);
                 return;
             }

@@ -41,7 +41,7 @@ public class HelpDialog extends DialogFragment {
     private static final String KEY_NODE_KIND = "nodeKind";
 
     //空のコンストラクタ
-    //※ないと、画面回転でエラーになる
+    //※必須（画面回転等の画面再生成時にコールされる）
     public HelpDialog(){
         //do nothing
     }

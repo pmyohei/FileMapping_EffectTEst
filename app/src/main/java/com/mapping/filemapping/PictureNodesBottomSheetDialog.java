@@ -3,9 +3,12 @@ package com.mapping.filemapping;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.os.Parcel;
+import android.os.Parcelable;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
@@ -23,8 +26,9 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
 
     /*
      * 表示するピクチャノード情報
+     *   Bundleに保存できるように、Parcelableを実装
      */
-    public static class PictureNodeInfo {
+    public static class PictureNodeInfo implements Parcelable {
 
         private final int pictureNodePid;
         private final PictureTable thumbnail;
@@ -36,60 +40,86 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
             this.parentNodeName = parentNodeName;
         }
 
+        /*-- Parcelable --*/
+        protected PictureNodeInfo(Parcel in) {
+            pictureNodePid = in.readInt();
+            thumbnail      = (PictureTable) in.readSerializable();
+            parentNodeName = in.readString();
+        }
+
+        public static final Creator<PictureNodeInfo> CREATOR = new Creator<PictureNodeInfo>() {
+            @Override
+            public PictureNodeInfo createFromParcel(Parcel in) {
+                return new PictureNodeInfo(in);
+            }
+            @Override
+            public PictureNodeInfo[] newArray(int size) {
+                return new PictureNodeInfo[size];
+            }
+        };
+
+        @Override
+        public int describeContents() {
+            return 0;
+        }
+        @Override
+        public void writeToParcel(Parcel parcel, int i) {
+            parcel.writeInt(pictureNodePid);
+            parcel.writeSerializable(thumbnail);
+            parcel.writeString(parentNodeName);
+        }
+        /*-- Parcelable --*/
+
         public int getPictureNodePid() {
             return pictureNodePid;
         }
-
         public PictureTable getThumbnail() {
             return thumbnail;
         }
-
         public String getParentNodeName() {
             return parentNodeName;
         }
     }
 
-    /*------- 変数 -------*/
-    //表示元のアクティビティ
-    private final Activity mActivity;
-    //移動先のピクチャノード情報
-    private final ArrayList<PictureNodeInfo> mPictureNodeInfos;
-
-    //-- 単体写真
-    //参照中の写真（単体）
-    private PictureTable mShowPicture;
-
-    //-- 複数選択
-    //移動元のピクチャノードのpid
-    private int mTabPictureNodePid;
-    //選択された写真リスト
-    private PictureArrayList<PictureTable> mSelectedPictures;
-
-    //単体・複数選択判別用
-    private final boolean mIsSingle;
-
-
-    /*
-     * 単体写真用
-     */
-    public PictureNodesBottomSheetDialog( Activity activity, ArrayList<PictureNodeInfo> info, PictureTable showPicture) {
-        mActivity = activity;
-        mPictureNodeInfos = info;
-        mShowPicture = showPicture;
-
-        mIsSingle = true;
+    //リスナー
+    public interface NoticeDialogListener {
+        //格納先ピクチャノードタッチリスナー
+        void onThumbnailClick(BottomSheetDialogFragment dialog, int i);
     }
 
-    /*
-     * 複数選択時用
-     */
-    public PictureNodesBottomSheetDialog( Activity activity, ArrayList<PictureNodeInfo> info, int tabPictureNodePid, PictureArrayList<PictureTable> selectedPictures) {
-        mActivity = activity;
-        mPictureNodeInfos = info;
-        mTabPictureNodePid = tabPictureNodePid;
-        mSelectedPictures = selectedPictures;
+    //Bundle保存キー
+    private static final String KEY_PICTURE_NODE_INFO = "pictureNodeInfos";
 
-        mIsSingle = false;
+    //リスナー
+    NoticeDialogListener mListener;
+    //移動先のピクチャノード情報
+    private ArrayList<PictureNodeInfo> mPictureNodeInfos;
+
+    //空のコンストラクタ
+    //※必須（画面回転等の画面再生成時にコールされる）
+    public PictureNodesBottomSheetDialog(){
+        //do nothing
+    }
+
+    public static PictureNodesBottomSheetDialog newInstance(ArrayList<PictureNodeInfo> info) {
+        Bundle args = new Bundle();
+        args.putParcelableArrayList(KEY_PICTURE_NODE_INFO, info);
+
+        PictureNodesBottomSheetDialog dialog = new PictureNodesBottomSheetDialog();
+        dialog.setArguments(args);
+
+        return dialog;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            mListener = (NoticeDialogListener) context;
+        } catch (ClassCastException e) {
+            throw new ClassCastException( "must implement NoticeDialogListener" );
+        }
     }
 
     @Override
@@ -100,16 +130,21 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
         View view = View.inflate(getContext(), R.layout.grid_picture_node, null);
         dialog.setContentView(view);
 
+        //Bundle情報の保持
+        mPictureNodeInfos = getArguments().getParcelableArrayList( KEY_PICTURE_NODE_INFO );
+
         //ピクチャノードのサムネイルを表形式で表示
         GridView gv_thumbnail = dialog.findViewById(R.id.gv_thumbnail);
-        gv_thumbnail.setAdapter(new ThumbnailGridAdapter(getActivity(), mPictureNodeInfos, mShowPicture));
+        gv_thumbnail.setAdapter(new ThumbnailGridAdapter(getActivity(), mPictureNodeInfos));
 
         //サムネイルクリックリスナー
         gv_thumbnail.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                //移動先判定
-                checkHasNode(i);
+
+                mListener.onThumbnailClick(
+                        PictureNodesBottomSheetDialog.this,
+                        mPictureNodeInfos.get(i).getPictureNodePid() );
             }
         });
 
@@ -117,162 +152,4 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
         return dialog;
     }
 
-    /*
-     * 移動先判定
-     */
-    private void checkHasNode(int i) {
-
-        if (mIsSingle) {
-            //単体写真が移動先にあるかどうか
-            checkHasNodeSinglePicture(mPictureNodeInfos.get(i).getPictureNodePid());
-        } else {
-            //移動元のノードと同じノードが選択されたかどうか
-            checkHasNodeMultiplePicture(mPictureNodeInfos.get(i).getPictureNodePid());
-        }
-    }
-
-    /*
-     * 格納先ノード判定（単体写真）
-     *   para1：移動先として選択されたピクチャノードpid
-     */
-    private void checkHasNodeSinglePicture(int toPicutureNodePid) {
-
-        //確認する写真パス
-        String path = mShowPicture.getPath();
-        //ピクチャテーブルを参照し、写真があるかどうかチェック
-        AsyncHasPicture db = new AsyncHasPicture(getActivity(), toPicutureNodePid, path, new AsyncHasPicture.OnFinishListener() {
-            @Override
-            public void onFinish(boolean hasPicture) {
-
-                if (hasPicture) {
-                    //既に写真があれば、トースト表示して終了
-                    Toast.makeText(getActivity(), getString(R.string.toast_samePicture), Toast.LENGTH_SHORT).show();
-                    return;
-                }
-
-                //なければ移動確認のダイアログを表示
-                confirmMoveDialog(toPicutureNodePid, mShowPicture.isThumbnail());
-            }
-        });
-
-        db.execute();
-    }
-
-    /*
-     * 格納先ノード判定（複数写真）
-     *   para1：移動先として選択されたピクチャノードpid
-     *   para2：移動元のピクチャノードpid
-     */
-    private void checkHasNodeMultiplePicture(int toPicutureNodePid) {
-
-        if (toPicutureNodePid == mTabPictureNodePid) {
-            //移動先に選択されたノードが、移動元ノードと同じであれば、トーストを表示して終了
-            Toast.makeText(getActivity(), getString(R.string.toast_samePicture), Toast.LENGTH_SHORT).show();
-            return;
-        }
-
-        //選択写真の中に、サムネイル写真が含まれているか
-        boolean containThumbnail = false;
-        for( PictureTable picture: mSelectedPictures ){
-            if( picture.isThumbnail() ){
-                //サムネイル写真あれば、終了
-                containThumbnail = true;
-                break;
-            }
-        }
-
-        //なければ移動確認のダイアログを表示
-        confirmMoveDialog(toPicutureNodePid, containThumbnail );
-    }
-
-    /*
-     * 移動確認用ダイアログの表示
-     */
-    private void confirmMoveDialog(int toPicutureNodePid, boolean isThumbnail) {
-
-        //表示メッセージ
-        String message = getActivity().getString(R.string.alert_movePicture_message);
-        if( !mIsSingle ){
-            //複数選択時は、注意書きを追加
-            message += getActivity().getString(R.string.alert_movePicture_messageAdd);
-        }
-
-        AlertDialog dialog = new AlertDialog.Builder(getActivity())
-            .setTitle( getActivity().getString(R.string.alert_movePicture_title) )
-            .setMessage( message )
-            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-
-                    //格納先変更処理
-                    if( mIsSingle ){
-                        moveSinglePicture(toPicutureNodePid);
-                    } else {
-                        moveMultiplePicture(toPicutureNodePid);
-                    }
-
-                    //閉じる
-                    dismiss();
-                }
-            })
-            .setNegativeButton("Cancel", null)
-            .show();
-
-        //メッセージ文は、Styleのフォントが適用されないため個別に設定
-        ((TextView)dialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
-    }
-
-    /*
-     * ノード移動処理（単体写真）
-     */
-    private void moveSinglePicture( int toPicutureNodePid ) {
-
-        //ピクチャテーブルの所属を更新
-        AsyncUpdateBelongsPicture db = new AsyncUpdateBelongsPicture(getActivity(), toPicutureNodePid, mShowPicture,
-                new AsyncUpdateBelongsPicture.OnFinishListener() {
-                    @Override
-                    public void onFinish( boolean isThumbnail ) {
-                        //移動した写真を単体表示中のアダプタから削除
-                        ((SinglePictureDisplayActivity) mActivity).removePictureInAdapter();
-
-                        //移動写真あり
-                        Toast.makeText(getActivity(), getString(R.string.toast_moved), Toast.LENGTH_SHORT).show();
-                    }
-                    @Override
-                    public void onFinish(boolean isThumbnail, PictureArrayList<PictureTable> movedPictures){}
-                });
-
-        //非同期処理開始
-        db.execute();
-    }
-
-    /*
-     * ノード移動処理（複数写真）
-     */
-    private void moveMultiplePicture( int toPicutureNodePid ) {
-
-        //ピクチャテーブルの所属を更新
-        AsyncUpdateBelongsPicture db = new AsyncUpdateBelongsPicture(getActivity(), toPicutureNodePid, mSelectedPictures,
-            new AsyncUpdateBelongsPicture.OnFinishListener() {
-                @Override
-                public void onFinish(boolean isThumbnail) {
-                }
-                @Override
-                public void onFinish(boolean isThumbnail, PictureArrayList<PictureTable> movedPictures) {
-                    //移動結果をギャラリーに反映
-                    ((PictureGalleryActivity) mActivity).updateGallery( movedPictures, toPicutureNodePid, isThumbnail );
-
-                    //移動完了メッセージを表示
-                    if( movedPictures.size() == 0 ){
-                        //移動写真なし
-                        Toast.makeText(getActivity(), getString(R.string.toast_notMoves), Toast.LENGTH_SHORT).show();
-                    } else{
-                        //移動写真あり
-                        Toast.makeText(getActivity(), getString(R.string.toast_moved), Toast.LENGTH_SHORT).show();
-                    }
-                }
-            });
-        //非同期処理開始
-        db.execute();
-    }
 }

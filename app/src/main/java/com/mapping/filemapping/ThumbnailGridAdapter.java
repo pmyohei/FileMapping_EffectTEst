@@ -23,42 +23,34 @@ public class ThumbnailGridAdapter extends BaseAdapter {
     public final static int PORTRAIT_NUM = 2;
     public final static int LANDSCAPE_NUM = 6;
 
-    //参照中の写真
-    private PictureTable mShowPicture;
     //マップ上のピクチャノード情報
     private final ArrayList<PictureNodesBottomSheetDialog.PictureNodeInfo> mData;
-    private final float mDp;
     private final Context mContext;
     private final LayoutInflater mInflater;
-    private int mPictureNumOnLine;            //1行で表示する写真の数
+    //private int mPictureNumOnLine;            //1行で表示する写真の数
 
 
     /*
      * コンストラクタ
      */
-    public ThumbnailGridAdapter(Context context, ArrayList<PictureNodesBottomSheetDialog.PictureNodeInfo> data, PictureTable showPicture){
+    public ThumbnailGridAdapter(Context context, ArrayList<PictureNodesBottomSheetDialog.PictureNodeInfo> data){
         mContext = context;
         mData = data;
         mInflater = LayoutInflater.from(context);
-        mShowPicture = showPicture;
-
-        //画面密度
-        mDp = context.getResources().getDisplayMetrics().density;
 
         //1行の写真表示数を設定
-        setPictureNumOnLine();
+        //setPictureNumOnLine();
     }
 
     /*
      * 表示写真の1辺の長さを設定
      */
     public void setPictureNumOnLine() {
-
         //画面向きを取得
         int orientation = mContext.getResources().getConfiguration().orientation;
 
         //向きに応じて、1行で表示する写真数を設定
-        mPictureNumOnLine = ( (orientation == Configuration.ORIENTATION_PORTRAIT) ? PORTRAIT_NUM : LANDSCAPE_NUM );
+        //mPictureNumOnLine = ( (orientation == Configuration.ORIENTATION_PORTRAIT) ? PORTRAIT_NUM : LANDSCAPE_NUM );
     }
 
     @Override

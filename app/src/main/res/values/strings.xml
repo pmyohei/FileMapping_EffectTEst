@@ -66,6 +66,7 @@
     <string name="toast_childNode">Cannot make its own child node a parent node</string>
     <string name="toast_errorMapName">Please enter the map name</string>
     <string name="toast_samePicture">The same images is already stored</string>
+    <string name="toast_reSelectPicture">Please select the photo again</string>
     <string name="toast_errorGetPath">Failure</string>
     <string name="toast_storePicture">The image was stored in the node\n(Images that are already stored will not be stored)</string>
     <string name="toast_storeError">Error: Please select from the "Images" folder</string>

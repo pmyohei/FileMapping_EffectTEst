@@ -77,7 +77,6 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
                     }
 
                     /*--- 複数選択モードの場合、クリック時に自動でCheckable処理が入るため、本リスナー内では何もしない ---*/
-
                 }
             });
 

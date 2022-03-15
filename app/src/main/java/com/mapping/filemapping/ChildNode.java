@@ -252,7 +252,7 @@ public class ChildNode extends BaseNode {
             //子ノードのノードビュー
             ChildNode v_node = (ChildNode) childNode.getNodeView();
 
-            Log.i("test", "反転時の自ノード情報 自分=" + mNode.getNodeName() + " 自分のX位置=" + mCenterPosX);
+            //Log.i("test", "反転時の自ノード情報 自分=" + mNode.getNodeName() + " 自分のX位置=" + mCenterPosX);
 
             //移動先の位置を反映
             if (flip == FLIP_X) {
@@ -285,7 +285,7 @@ public class ChildNode extends BaseNode {
         mCenterPosX = left + (getWidth() / 2f);
         mCenterPosY = top + (getHeight() / 2f);
 
-        Log.i("move", "move Node=" + mNode.getNodeName() + " posx=" + mCenterPosX + " posy=" + mCenterPosY);
+        //Log.i("move", "move Node=" + mNode.getNodeName() + " posx=" + mCenterPosX + " posy=" + mCenterPosY);
 
         //ツールアイコンの移動
         moveToolIcon(moveX, moveY);

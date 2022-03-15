@@ -66,6 +66,7 @@
     <string name="toast_childNode">子ノードを親ノードにはできません</string>
     <string name="toast_errorMapName">マップ名を入力してください</string>
     <string name="toast_samePicture">既に同じ画像があります</string>
+    <string name="toast_reSelectPicture">もう一度写真を選択して下さい</string>
     <string name="toast_errorGetPath">失敗しました</string>
     <string name="toast_storePicture">画像を格納しました\n（同じ画像は格納されません）</string>
     <string name="toast_storeError">エラー：「画像」フォルダから選択して下さい</string>

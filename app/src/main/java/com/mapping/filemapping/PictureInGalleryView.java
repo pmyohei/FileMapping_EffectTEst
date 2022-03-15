@@ -33,11 +33,9 @@ public class PictureInGalleryView extends LinearLayout implements Checkable {
     public PictureInGalleryView(Context context, @Nullable AttributeSet attrs) {
         super(context, attrs);
     }
-
     public PictureInGalleryView(Context context, @Nullable AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
     }
-
     public PictureInGalleryView(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
         super(context, attrs, defStyleAttr, defStyleRes);
     }
