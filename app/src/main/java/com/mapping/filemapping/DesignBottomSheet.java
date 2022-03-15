@@ -254,7 +254,7 @@ public class DesignBottomSheet extends CoordinatorLayout {
 
         //ViewPager2を生成
         ViewPager2 vp2 = findViewById(R.id.vp2_design);
-        DesignPicturePageAdapter adapter = new DesignPicturePageAdapter(layoutIdList, v_node, ((FragmentActivity) getContext()).getSupportFragmentManager(), vp2);
+        DesignPicturePageAdapter adapter = new DesignPicturePageAdapter(layoutIdList, v_node, vp2);
         vp2.setAdapter(adapter);
 
         //インジケータの設定

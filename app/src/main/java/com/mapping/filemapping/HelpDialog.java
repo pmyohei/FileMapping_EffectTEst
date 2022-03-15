@@ -2,6 +2,7 @@ package com.mapping.filemapping;
 
 import android.app.Dialog;
 import android.content.Context;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.Rect;
 import android.graphics.drawable.ColorDrawable;
@@ -114,15 +115,23 @@ public class HelpDialog extends DialogFragment {
      */
     private void setupDialogSize(Dialog dialog) {
 
-        Window window = dialog.getWindow();
+        //縦画面時の横割合
+        final float PORTRAIT_RATIO = 0.8f;
+        //横画面時の横割合
+        final float LANDSCAPE_RATIO = 0.5f;
+
+        //画面向きを取得
+        int orientation = getResources().getConfiguration().orientation;
+        float widthRatio = ( (orientation == Configuration.ORIENTATION_PORTRAIT) ? PORTRAIT_RATIO : LANDSCAPE_RATIO );
 
         //画面メトリクスの取得
         DisplayMetrics metrics = getResources().getDisplayMetrics();
 
         //レイアウトパラメータ
-        WindowManager.LayoutParams lp = window.getAttributes();
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
         //lp.height = metrics.heightPixels / 2;
-        lp.width = (int) (metrics.widthPixels * 0.8f);
+        lp.width = (int) (metrics.widthPixels * widthRatio);
 
         //サイズ設定
         window.setAttributes(lp);

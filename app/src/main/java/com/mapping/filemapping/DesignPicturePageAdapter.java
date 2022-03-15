@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.Switch;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.FragmentManager;
@@ -20,8 +22,6 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
     private final List<Integer>   mData;
     //設定対象ノードビュー
     private final BaseNode        mv_node;
-    //FragmentManager
-    private final FragmentManager mFragmentManager;
     //ViewPager2
     private final ViewPager2 mvp2;
 
@@ -44,6 +44,7 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
         private SeekbarView  sbv_nodeSize;
         private ColorSelectionView csv_border;
         private SeekbarView  sbv_borderSize;
+        private Switch sw_shadow;
         private ColorSelectionView csv_shadow;
 
         /*--- ライン ---*/
@@ -87,6 +88,7 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
 
                 case 4:
                     //影色
+                    sw_shadow = itemView.findViewById(R.id.sw_shadow);
                     csv_shadow = itemView.findViewById(R.id.csv_shadow);
                     break;
 
@@ -182,6 +184,16 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
         private void setPage4() {
             //影色
             csv_shadow.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_SHADOW, mv_node );
+
+            //影のon/off
+            sw_shadow.setChecked( mv_node.isShadow() );
+            sw_shadow.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                @Override
+                public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                    //影の状態を反転
+                    mv_node.switchShadow();
+                }
+            });
         }
 
         /*
@@ -220,11 +232,10 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
     /*
      * コンストラクタ
      */
-    public DesignPicturePageAdapter(List<Integer> layoutIdList, View v_node, FragmentManager fragmentManager, ViewPager2 vp) {
-        mData            = layoutIdList;
-        mv_node          =  (BaseNode)v_node;
-        mFragmentManager = fragmentManager;
-        mvp2             = vp;
+    public DesignPicturePageAdapter(List<Integer> layoutIdList, View v_node, ViewPager2 vp) {
+        mData = layoutIdList;
+        mv_node = (BaseNode)v_node;
+        mvp2 = vp;
     }
 
     /*
@@ -242,7 +253,6 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
     @NonNull
     @Override
     public GuideViewHolder onCreateViewHolder(ViewGroup viewGroup, int position) {
-
         //レイアウトを生成
         LayoutInflater inflater = LayoutInflater.from( viewGroup.getContext() );
         View view = inflater.inflate(mData.get(position), viewGroup, false);
@@ -255,10 +265,8 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
      */
     @Override
     public void onBindViewHolder(@NonNull GuideViewHolder viewHolder, final int i) {
-
         //ページ設定
         viewHolder.setPage( i );
-
     }
 
     /*
@@ -269,8 +277,4 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
         //ページ数
         return mData.size();
     }
-
-
-
-
 }
