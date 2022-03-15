@@ -11,22 +11,21 @@ import java.util.concurrent.Executors;
  * DB非同期処理
  *   マップdelete用
  */
-public class AsyncDeleteMap {
+public class AsyncDeleteMap extends AsyncShowProgress  {
 
-    private final Context           mContext;
-    private final AppDatabase       mDB;
-    private final MapTable          mMap;
-    private final OnFinishListener  mOnFinishListener;
-
+    private final AppDatabase mDB;
+    private final MapTable mMap;
+    private final OnFinishListener mOnFinishListener;
 
     /*
      * コンストラクタ
      */
     public AsyncDeleteMap(Context context, MapTable map, OnFinishListener listener) {
-        mContext          = context;
-        mDB               = AppDatabaseManager.getInstance(context);
+        super(context);
+
+        mDB = AppDatabaseManager.getInstance(context);
         mOnFinishListener = listener;
-        mMap              = map;
+        mMap = map;
     }
 
     /*
@@ -69,7 +68,7 @@ public class AsyncDeleteMap {
      * バックグラウンド前処理
      */
     void onPreExecute() {
-        //
+        super.onPreExecute();
     }
 
     /*
@@ -90,6 +89,8 @@ public class AsyncDeleteMap {
      * バックグランド処理終了後の処理
      */
     void onPostExecute() {
+        super.onPostExecute();
+
         //処理完了
         mOnFinishListener.onFinish();
     }
@@ -103,6 +104,4 @@ public class AsyncDeleteMap {
          */
         void onFinish();
     }
-
-
 }

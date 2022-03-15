@@ -26,16 +26,33 @@ import java.util.ArrayList;
  */
 public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewHolder> {
 
+    /*
+     * マップ表示リスナー
+     */
+    public interface openMapListener {
+        void onOpenMap(MapTable map );
+    }
+    /*
+     * マップ名編集リスナー
+     */
+    public interface editMapListener {
+        void onEditMap(MapTable map, int index );
+    }
+    /*
+     * マップ削除リスナー
+     */
+    public interface deleteMapListener {
+        void onDeleteMap(MapTable map, int index );
+    }
+
     //マップリスト
     private final ArrayList<MapTable> mData;
-
-    //編集画面遷移ランチャー
-    private final ActivityResultLauncher<Intent> mEditMapLauncher;
-
     //マップオープンリスナー
     private openMapListener mOpenMapListener;
     //編集リスナー
     private editMapListener mEditMapListener;
+    //削除リスナー
+    private deleteMapListener mDeleteMapListener;
 
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
@@ -79,7 +96,6 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
             mcv_map.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //マップオープン
                     mOpenMapListener.onOpenMap( map );
                 }
             });
@@ -88,7 +104,6 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
             ib_edit.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //編集
                     mEditMapListener.onEditMap( map, index );
                 }
             });
@@ -97,35 +112,7 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
             ib_delete.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
-                    Context context = view.getContext();
-
-                    //削除確認ダイアログを表示
-                    AlertDialog dialog = new AlertDialog.Builder(context)
-                            .setTitle( context.getString(R.string.alert_map_delete_title) )
-                            .setMessage( context.getString(R.string.alert_map_delete_message) )
-                            .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                                @Override
-                                public void onClick(DialogInterface dialog, int which) {
-
-                                    //DBから自マップ削除
-                                    AsyncDeleteMap db = new AsyncDeleteMap(context, map, new AsyncDeleteMap.OnFinishListener() {
-                                        @Override
-                                        public void onFinish() {
-                                            //アダプタへ自身を削除させる
-                                            Log.i("deleteMap", "mMap.getMapName()=" + map.getMapName());
-                                            deleteMap(map.getPid() );
-                                        }
-                                    });
-                                    //非同期処理開始
-                                    db.execute();
-                                }
-                            })
-                            .setNegativeButton("Cancel", null)
-                            .show();
-
-                    //メッセージ文は、Styleのフォントが適用されないため個別に設定
-                    ((TextView)dialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
+                    mDeleteMapListener.onDeleteMap( map, index );
                 }
             });
 
@@ -136,9 +123,8 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
     /*
      * コンストラクタ
      */
-    public MapListAdapter( ArrayList<MapTable> data, ActivityResultLauncher<Intent> startCreateMapForResult ) {
+    public MapListAdapter( ArrayList<MapTable> data ) {
         mData = data;
-        mEditMapLauncher = startCreateMapForResult;
     }
 
     /*
@@ -187,55 +173,15 @@ public class MapListAdapter extends RecyclerView.Adapter<MapListAdapter.MapViewH
         //return 0;
     }
 
-    /*
-     * マップ編集画面遷移ランチャーを取得
-     */
-    public ActivityResultLauncher<Intent> getEditLauncher(){
-        return mEditMapLauncher;
-    }
-
-    /*
-     * マップ削除
-     *   リスト内からマップを削除し、自身に削除通知を送る
-     */
-    public void deleteMap( int mapPid ){
-
-        int i = 0;
-        for( MapTable map: mData ){
-            Log.i("deleteMap", "map.id=" + map.getPid() + " target-mapPid=" + mapPid);
-
-            if( map.getPid() == mapPid ){
-                Log.i("deleteMap", "map=" + map.getMapName());
-                break;
-            }
-            i++;
-        }
-
-        //リストから指定マップを削除
-        mData.remove(i);
-
-        //自身に削除通知を送る
-        notifyItemRemoved(i);
-    }
-
     public void setOpenMapListener(openMapListener listener){
         mOpenMapListener = listener;
     }
     public void setEditMapListener(editMapListener listener){
         mEditMapListener = listener;
     }
-
-    /*
-     * マップ表示リスナー
-     */
-    public interface openMapListener {
-        void onOpenMap(MapTable map );
+    public void setDeleteMapListener(deleteMapListener listener){
+        mDeleteMapListener = listener;
     }
 
-    /*
-     * マップ名編集リスナー
-     */
-    public interface editMapListener {
-        void onEditMap(MapTable map, int index );
-    }
+
 }

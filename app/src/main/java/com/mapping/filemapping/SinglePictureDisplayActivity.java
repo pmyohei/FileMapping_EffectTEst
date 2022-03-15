@@ -410,7 +410,6 @@ public class SinglePictureDisplayActivity extends AppCompatActivity implements P
         vp2_singlePicture.setUserInputEnabled(true);
     }
 
-
     /*
      * 所属するピクチャノードの変更先をダイアログで表示
      */

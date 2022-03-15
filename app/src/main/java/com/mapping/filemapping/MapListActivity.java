@@ -44,11 +44,14 @@ public class MapListActivity extends AppCompatActivity {
     //許可リクエストコード
     public static final int REQUEST_EXTERNAL_STORAGE = 1;
 
-
+    //
     private ArrayList<MapTable> mMaps;
+    //
     private MapListAdapter mMapListAdapter;
     //編集対象マップのリスト位置
     private int mEditPosition;
+    //マップ編集ランチャー
+    ActivityResultLauncher<Intent> mEditMapLauncher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,7 +67,7 @@ public class MapListActivity extends AppCompatActivity {
                         new ActivityResultContracts.StartActivityForResult(),
                         new CreateMapResultCallback());
         //画面遷移ランチャー（マップ編集用）
-        ActivityResultLauncher<Intent> editMapLauncher =
+        mEditMapLauncher =
                 registerForActivityResult(
                         new ActivityResultContracts.StartActivityForResult(),
                         new EditMapResultCallback());
@@ -92,7 +95,7 @@ public class MapListActivity extends AppCompatActivity {
                 //レイアウトからリストビューを取得
                 RecyclerView rv_mapList = findViewById(R.id.rv_mapList);
                 //アダプタ設定
-                mMapListAdapter = new MapListAdapter(mMaps, editMapLauncher);
+                mMapListAdapter = new MapListAdapter(mMaps);
                 rv_mapList.setAdapter(mMapListAdapter);
                 rv_mapList.setLayoutManager(new LinearLayoutManager(context));
 
@@ -101,7 +104,7 @@ public class MapListActivity extends AppCompatActivity {
                     @Override
                     public void onOpenMap(MapTable map) {
                         //指定マップを開く
-                        openMap( map, false );
+                        openMap(map, false);
                     }
                 });
 
@@ -109,36 +112,18 @@ public class MapListActivity extends AppCompatActivity {
                 mMapListAdapter.setEditMapListener(new MapListAdapter.editMapListener() {
                     @Override
                     public void onEditMap(MapTable map, int index) {
-
-                        //Log.i("indexテスト", "index=" + index);
-
-                        //編集対象の位置を保持
-                        mEditPosition = index;
-
-                        //画面遷移
-                        Intent intent = new Intent(MapListActivity.this, MapEditActivity.class);
-                        intent.putExtra(MapListActivity.KEY_MAP, map );
-
-                        editMapLauncher.launch( intent );
+                        editMap( map, index );
                     }
                 });
 
-                //リサイクラービューの上下にスペースを設定
-                rv_mapList.addItemDecoration(new RecyclerView.ItemDecoration() {
+                //リスナー設定：削除
+                mMapListAdapter.setDeleteMapListener(new MapListAdapter.deleteMapListener() {
                     @Override
-                    public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, @NonNull RecyclerView parent, @NonNull RecyclerView.State state) {
-                        super.getItemOffsets(outRect, view, parent, state);
-
-                        int position = parent.getChildAdapterPosition(view);
-                        //先頭と最後尾に適当な大きさのスペースを設定
-                        //※以下の値は適当（ちょうどボタン分の高さには別にしない。）
-                        if (position == 0) {
-                            outRect.top = 200;
-                        } else if (position == state.getItemCount() - 1) {
-                            outRect.bottom = 300;
-                        }
+                    public void onDeleteMap(MapTable map, int index) {
+                        removeMap( map, index );
                     }
                 });
+
             }
         });
         //非同期処理開始
@@ -155,56 +140,13 @@ public class MapListActivity extends AppCompatActivity {
 
         //権限の確認
         int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-        if( permission != PackageManager.PERMISSION_GRANTED ){
+        if (permission != PackageManager.PERMISSION_GRANTED) {
             //権限付与
             permissionsStorage();
-        } else{
+        } else {
             //権限ありなら、即ヘルプダイアログの表示
             showFirstLaunchDialog();
         }
-
-/*        //疑似-動作確認用----------------------------------------------------------------
-        //仮；画面遷移
-        findViewById(R.id.next).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Intent intent = new Intent(MapListActivity.this, MapActivity.class);
-                intent.putExtra("MapID", mMapPid);
-
-                startActivity(intent);
-            }
-        });
-
-        //仮：疑似データ生成
-        findViewById(R.id.create).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //疑似データ生成
-                new GIJI_AsyncCreateDBOperaion(view.getContext(), false, new GIJI_AsyncCreateDBOperaion.OnCreateListener() {
-
-                    @Override
-                    public void onCreate(int mapPid) {
-                        mMapPid = mapPid;
-
-                        //mMapListAdapter.notifyDataSetChanged();
-                        mMapListAdapter.notifyAll();
-                    }
-                }).execute();
-            }
-        });
-
-        //仮：疑似データ削除
-        findViewById(R.id.delete).setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //疑似データ削除
-                new GIJI_AsyncCreateDBOperaion(view.getContext(), true).execute();
-
-                //mMapListAdapter.notifyAll();
-            }
-        });
-        //-----------------------------------------------------------------*/
-
     }
 
     /*
@@ -239,23 +181,76 @@ public class MapListActivity extends AppCompatActivity {
                 .show();
 
         //メッセージ文は、Styleのフォントが適用されないため個別に設定
-        ((TextView)dialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
+        ((TextView) dialog.findViewById(android.R.id.message)).setTypeface(Typeface.SERIF);
     }
 
     /*
      * マップ画面へ遷移
      */
-    private void openMap( MapTable map, boolean isNew ){
+    private void openMap(MapTable map, boolean isNew) {
 
-        MapCommonData commonData = (MapCommonData)getApplication();
+        MapCommonData commonData = (MapCommonData) getApplication();
         //マップ情報
-        commonData.setMap( map );
+        commonData.setMap(map);
 
         //マップ画面へ遷移
         Intent intent = new Intent(MapListActivity.this, MapActivity.class);
         intent.putExtra(ResourceManager.KEY_NEW_MAP, isNew);
         startActivity(intent);
     }
+
+    /*
+     * マップ情報の編集
+     */
+    private void editMap( MapTable map, int index ){
+
+        //Log.i("indexテスト", "index=" + index);
+
+        //編集対象の位置を保持
+        mEditPosition = index;
+
+        //画面遷移
+        Intent intent = new Intent(MapListActivity.this, MapEditActivity.class);
+        intent.putExtra(MapListActivity.KEY_MAP, map);
+
+        mEditMapLauncher.launch(intent);
+    }
+
+    /*
+     * マップの削除
+     */
+    private void removeMap( MapTable map, int index ){
+
+        Context context = this;
+
+        //削除確認ダイアログを表示
+        AlertDialog dialog = new AlertDialog.Builder(this)
+                .setTitle( getString(R.string.alert_map_delete_title))
+                .setMessage( getString(R.string.alert_map_delete_message))
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+
+                        //DBから自マップ削除
+                        AsyncDeleteMap db = new AsyncDeleteMap(context, map, new AsyncDeleteMap.OnFinishListener() {
+                            @Override
+                            public void onFinish() {
+                                //リストから削除して、アダプタを更新
+                                mMaps.remove(index);
+                                mMapListAdapter.notifyItemRemoved(index);
+                            }
+                        });
+                        //非同期処理開始
+                        db.execute();
+                    }
+                })
+                .setNegativeButton("Cancel", null)
+                .show();
+
+        //メッセージ文は、Styleのフォントが適用されないため個別に設定
+        ((TextView) dialog.findViewById(android.R.id.message)).setTypeface(Typeface.SERIF);
+    }
+
 
     /*
      * 権限付与

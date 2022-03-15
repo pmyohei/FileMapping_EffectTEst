@@ -84,7 +84,7 @@
     <string name="map_create_tab2">2Colors</string>
     <string name="map_create_tab3">3Colors</string>
     <!--  マップ編集画面  -->
-    <string name="hint_map_memo">note</string>
+    <string name="hint_map_memo">note(Max.128 text)</string>
     <string name="toolbar_titleMapEdit">Map Edit</string>
     <!--  マップ画面  -->
     <string name="toolbar_map_changeParant">Change parent node</string>

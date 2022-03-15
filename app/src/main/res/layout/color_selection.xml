@@ -57,15 +57,16 @@
         android:layout_gravity="center"
         android:layout_marginStart="24dp"
         android:layout_marginTop="60dp"
+        android:background="@drawable/bt_image"
         android:src="@drawable/baseline_update_24"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_rgb" />
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_history"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="80dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="40dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/iv_updateHistory"
