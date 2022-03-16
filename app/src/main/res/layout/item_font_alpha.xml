@@ -9,7 +9,7 @@
     android:gravity="center"
     android:theme="@style/Theme.MaterialComponents.Light"
     app:cardCornerRadius="@dimen/font_item_half_size"
-    app:cardElevation="8dp"
+    app:cardElevation="4dp"
     >
 
     <TextView
@@ -23,23 +23,3 @@
 
 </com.google.android.material.card.MaterialCardView>
 
-<!--
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ll_fontItem"
-    android:layout_width="@dimen/font_item_size"
-    android:layout_height="@dimen/font_item_size"
-    android:layout_margin="12dp"
-    android:gravity="center"
-    android:orientation="vertical"
-    android:background="@drawable/frame_font">
-
-    <TextView
-        android:id="@+id/tv_sampleFont"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/font_sample_alphabet"
-        android:textSize="32sp"
-        android:textColor="@color/black"/>
-
-</LinearLayout>-->

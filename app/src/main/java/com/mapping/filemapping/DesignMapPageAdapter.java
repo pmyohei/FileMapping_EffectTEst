@@ -22,6 +22,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.List;
+import java.util.Locale;
 
 public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdapter.PageViewHolder> {
 
@@ -44,6 +45,7 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         private ColorSelectionView csv_text;
         private RecyclerView rv_fontAlphabet;
         private RecyclerView rv_fontjapanese;
+        private TextView tv_fontjapanese;
         private ImageView iv_circle;
         private ImageView iv_square;
         private ColorSelectionView csv_border;
@@ -75,6 +77,7 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
                     //フォント
                     rv_fontAlphabet = itemView.findViewById(R.id.rv_fontAlphabet);
                     rv_fontjapanese = itemView.findViewById(R.id.rv_fontJapanese);
+                    tv_fontjapanese = itemView.findViewById(R.id.tv_fontJapanese);
                     break;
 
                 case 2:
@@ -176,24 +179,37 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
             //レイアウトマネージャの生成・設定（横スクロール）
             LinearLayoutManager ll_manager = new LinearLayoutManager(context);
             ll_manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-            LinearLayoutManager ll_manager2 = new LinearLayoutManager(context);
-            ll_manager2.setOrientation(LinearLayoutManager.HORIZONTAL);
-
             rv_fontAlphabet.setLayoutManager(ll_manager);
-            rv_fontjapanese.setLayoutManager(ll_manager2);
+
 
             //フォントリソースリストを取得
             List<Typeface> alphaFonts = ResourceManager.getAlphabetFonts( context );
-            List<Typeface> jpFonts = ResourceManager.getJapaneseFonts( context );
-
             //RecyclerViewにアダプタを設定
             rv_fontAlphabet.setAdapter( new FontAdapter( alphaFonts, null, mv_map, FontAdapter.ALPHABET ) );
-            rv_fontjapanese.setAdapter( new FontAdapter( jpFonts, null, mv_map, FontAdapter.JAPANESE ) );
-
             //スクロールリスナー（ViewPager2のタブ切り替えを制御）
             ViewPager2 vp2_design = mv_map.getRootView().findViewById(R.id.vp2_design);
             rv_fontAlphabet.addOnItemTouchListener( new Vp2OnItemTouchListener( vp2_design ) );
-            rv_fontjapanese.addOnItemTouchListener( new Vp2OnItemTouchListener( vp2_design ) );
+
+
+            //日本語設定の場合のみ、日本語フォントも設定
+            Locale locale = Locale.getDefault();
+            if(locale.equals(Locale.JAPAN)||locale.equals(Locale.JAPANESE)){
+                LinearLayoutManager ll_manager2 = new LinearLayoutManager(context);
+                ll_manager2.setOrientation(LinearLayoutManager.HORIZONTAL);
+                rv_fontjapanese.setLayoutManager(ll_manager2);
+
+                //フォントリソースリストを取得
+                List<Typeface> jpFonts = ResourceManager.getJapaneseFonts( context );
+                //RecyclerViewにアダプタを設定
+                rv_fontjapanese.setAdapter( new FontAdapter( jpFonts, null, mv_map, FontAdapter.JAPANESE ) );
+                //スクロールリスナー（ViewPager2のタブ切り替えを制御）
+                rv_fontjapanese.addOnItemTouchListener( new Vp2OnItemTouchListener( vp2_design ) );
+
+            } else {
+                //日本語以外なら、非表示
+                tv_fontjapanese.setVisibility( View.GONE );
+                rv_fontjapanese.setVisibility( View.GONE );
+            }
         }
 
         /*

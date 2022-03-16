@@ -28,6 +28,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
+import java.util.Locale;
 
 public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAdapter.GuideViewHolder> {
 
@@ -49,11 +50,13 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
         private ColorSelectionView csv_text;
         private RecyclerView rv_fontAlphabet;
         private RecyclerView rv_fontjapanese;
+        private TextView tv_fontjapanese;
         /*--- ノードデザイン ---*/
         private ColorSelectionView csv_background;
         private ImageView iv_circle;
         private ImageView iv_square;
         private SeekbarView  sbv_nodeSize;
+        private TextView tv_titel_nodeSize;
         private ColorSelectionView csv_border;
         private SeekbarView  sbv_borderSize;
         private ColorSelectionView csv_shadow;
@@ -83,10 +86,12 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
                     //フォント
                     rv_fontAlphabet = itemView.findViewById(R.id.rv_fontAlphabet);
                     rv_fontjapanese = itemView.findViewById(R.id.rv_fontJapanese);
+                    tv_fontjapanese = itemView.findViewById(R.id.tv_fontJapanese);
                     break;
 
                 case 2:
                     //ノードサイズ
+                    tv_titel_nodeSize = itemView.findViewById(R.id.tv_titel_nodeSize);
                     sbv_nodeSize = itemView.findViewById(R.id.sbv_nodeSize);
                     //ラインサイズ
                     tv_titel_lineSize = itemView.findViewById(R.id.tv_titel_lineSize);
@@ -185,43 +190,66 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
             //レイアウトマネージャの生成・設定（横スクロール）
             LinearLayoutManager ll_manager = new LinearLayoutManager(context);
             ll_manager.setOrientation(LinearLayoutManager.HORIZONTAL);
-            LinearLayoutManager ll_manager2 = new LinearLayoutManager(context);
-            ll_manager2.setOrientation(LinearLayoutManager.HORIZONTAL);
-
             rv_fontAlphabet.setLayoutManager(ll_manager);
-            rv_fontjapanese.setLayoutManager(ll_manager2);
 
             //フォントリソースリストを取得
             List<Typeface> alphaFonts = ResourceManager.getAlphabetFonts( context );
-            List<Typeface> jpFonts = ResourceManager.getJapaneseFonts( context );
-
             //RecyclerViewにアダプタを設定
             rv_fontAlphabet.setAdapter( new FontAdapter( alphaFonts, mv_node, null, FontAdapter.ALPHABET ) );
-            rv_fontjapanese.setAdapter( new FontAdapter( jpFonts, mv_node, null, FontAdapter.JAPANESE ) );
-
             //スクロールリスナー（ViewPager2のタブ切り替えを制御）
             ViewPager2 vp2_design = mv_node.getRootView().findViewById(R.id.vp2_design);
             rv_fontAlphabet.addOnItemTouchListener( new Vp2OnItemTouchListener( vp2_design ) );
-            rv_fontjapanese.addOnItemTouchListener( new Vp2OnItemTouchListener( vp2_design ) );
+
+            //日本語設定の場合のみ、日本語フォントも設定
+            Locale locale = Locale.getDefault();
+            if(locale.equals(Locale.JAPAN)||locale.equals(Locale.JAPANESE)){
+                LinearLayoutManager ll_manager2 = new LinearLayoutManager(context);
+                ll_manager2.setOrientation(LinearLayoutManager.HORIZONTAL);
+                rv_fontjapanese.setLayoutManager(ll_manager2);
+
+                //フォントリソースリストを取得
+                List<Typeface> jpFonts = ResourceManager.getJapaneseFonts( context );
+                //RecyclerViewにアダプタを設定
+                rv_fontjapanese.setAdapter( new FontAdapter( jpFonts, mv_node, null, FontAdapter.JAPANESE ) );
+                //スクロールリスナー（ViewPager2のタブ切り替えを制御）
+                rv_fontjapanese.addOnItemTouchListener( new Vp2OnItemTouchListener( vp2_design ) );
+
+            } else {
+                //日本語以外なら、非表示
+                tv_fontjapanese.setVisibility( View.GONE );
+                rv_fontjapanese.setVisibility( View.GONE );
+            }
         }
 
         /*
          * ページ設定（２）
          */
         private void setPage2() {
-            //ノードサイズ
-            sbv_nodeSize.setNodeSizeSeekbar( mv_node );
+
             //枠サイズ
             sbv_borderSize.setBorderSizeSeekbar( mv_node );
 
-            //ルートノード以外はラインサイズも設定対象
+            //ノードサイズ
+            //★リリース後、全対象にする
+            if( mv_node.getNode().getKind() == NodeTable.NODE_KIND_PICTURE ){
+                //ピクチャノードのみ設定
+                sbv_nodeSize.setNodeSizeSeekbar( mv_node );
+            } else {
+                //ルートノード、ノード
+                tv_titel_nodeSize.setVisibility( View.GONE );
+                sbv_nodeSize.setVisibility( View.GONE );
+            }
+
+            //ラインサイズ
             if( mv_node.getNode().getKind() == NodeTable.NODE_KIND_ROOT ){
+                //ルートノード
                 tv_titel_lineSize.setVisibility( View.GONE );
                 sbv_lineSize.setVisibility( View.GONE );
             } else {
-                //ラインサイズ
+                //ノード、ピクチャノード
                 sbv_lineSize.setLineSizeSeekbar( mv_node );
             }
+
         }
 
         /*

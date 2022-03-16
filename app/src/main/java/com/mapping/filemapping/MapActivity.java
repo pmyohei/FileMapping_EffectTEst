@@ -1032,7 +1032,7 @@ public class MapActivity extends AppCompatActivity /*implements ColorDialog.Noti
                 float x = fl_map.getTranslationX() + distanceX;
                 float y = fl_map.getTranslationY() + distanceY;
 
-                Log.i("マップ移動対応", "予定 移動先X=" + (x) + " 移動先Y=" + (y));
+                //Log.i("マップ移動対応", "予定 移動先X=" + (x) + " 移動先Y=" + (y));
 
                 //マップサイズを超えて移動しようとした場合、最大サイズに丸める（最大移動距離を超えて移動させない）
                 x = ( x >= 0 ?
@@ -1048,10 +1048,10 @@ public class MapActivity extends AppCompatActivity /*implements ColorDialog.Noti
                 fl_map.setTranslationX(x);
                 fl_map.setTranslationY(y);
 
-                Log.i("マップ移動対応", "実際 移動先X=" + (x) + " 移動先Y=" + (y));
-                Log.i("マップ移動対応", "-----------------");
+                //Log.i("マップ移動対応", "実際 移動先X=" + (x) + " 移動先Y=" + (y));
+                //Log.i("マップ移動対応", "-----------------");
                 //Log.i("サイズチェック", "map_max_size(px)=" + (int)getResources().getDimension(R.dimen.map_max_size_x));
-                Log.i("サイズチェック", "map_max_size(dp)=" + (getResources().getDimension(R.dimen.map_max_size_x) / getResources().getDisplayMetrics().density));
+                //Log.i("サイズチェック", "map_max_size(dp)=" + (getResources().getDimension(R.dimen.map_max_size_x) / getResources().getDisplayMetrics().density));
 
                 mPreTouchPosX = motionEvent.getX();
                 mPreTouchPosY = motionEvent.getY();
@@ -1209,12 +1209,6 @@ public class MapActivity extends AppCompatActivity /*implements ColorDialog.Noti
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-
-            //Log.i("onFling", "velocityX=" + velocityX + " velocityY=" + velocityY);
-
-
-//            mFlingScroller.fling(currentX, currentY, velocityX / SCALE, velocityY / SCALE, minX, minY, maxX, maxY);
-//            postInvalidate();
 
             FrameLayout root = findViewById(R.id.fl_map);
 

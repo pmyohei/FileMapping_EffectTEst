@@ -137,6 +137,8 @@
 
     <string name="font_sample_alphabet">A</string>
     <string name="font_sample_japanese">あ</string>
+    <string name="font_alphabet">Alphabet</string>
+    <string name="font_japanese">Japanese</string>
 
     <string name="color_rgb">Code</string>
     <string name="color_graphic">Palette</string>
@@ -146,6 +148,7 @@
     <string name="size_line">Line thickness</string>
 
     <string name="shadow_on_off">ON／OFF</string>
+
 
     <!-- フォルダツリー -->
     <string name="tree_title">Node list\n(Click a node name to move it to the center of the screen)</string>

@@ -137,6 +137,8 @@
 
     <string name="font_sample_alphabet">A</string>
     <string name="font_sample_japanese">あ</string>
+    <string name="font_alphabet">アルファベット</string>
+    <string name="font_japanese">日本語</string>
 
     <string name="color_rgb">コード</string>
     <string name="color_graphic">パレット</string>

@@ -19,7 +19,11 @@ import java.util.LinkedHashSet;
  *   Serializable：intentによるデータの受け渡しを行うために実装
  */
 @Entity(tableName = "node",
-        foreignKeys = { @ForeignKey(entity = MapTable.class,     parentColumns = "pid", childColumns  = "pid_map",     onDelete = ForeignKey.CASCADE),},
+        foreignKeys = { @ForeignKey(
+                            entity = MapTable.class,
+                            parentColumns = "pid",
+                            childColumns  = "pid_map",
+                            onDelete = ForeignKey.CASCADE),},
         indices     = { @Index(value = {"pid_map"})}
                     //@Index(value = {"pid_picture"})}
 )
