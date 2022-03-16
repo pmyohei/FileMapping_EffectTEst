@@ -24,7 +24,6 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.ColorDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -87,6 +86,9 @@ public class MapActivity extends AppCompatActivity /*implements ColorDialog.Noti
     private Scroller mFlingScroller;
     //DrawerLayoutのオープン状態
     private boolean mDrawerIsOpen = false;
+    //最大マップ移動距離（マップサイズの半分の大きさ）
+    private float mMaxMapScaleX;
+    private float mMaxMapScaleY;
 
     //マップテーブル
     private MapTable mMap;
@@ -127,6 +129,9 @@ public class MapActivity extends AppCompatActivity /*implements ColorDialog.Noti
 
         //ツールバー設定
         initToolBar();
+
+        //最大マップ移動距離の設定
+        setMapScalevalue();
 
         //フリング用スクロール生成
         mFlingScroller = new Scroller(this, new DecelerateInterpolator());
@@ -295,13 +300,30 @@ public class MapActivity extends AppCompatActivity /*implements ColorDialog.Noti
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
-
     /*
      * マップ背景色の設定
      */
     private void initMapColor() {
         //マップ色の設定
         setMapColor(mMap.getMapColor());
+    }
+
+    /*
+     * マップ背景色の設定
+     */
+    private void setMapScalevalue() {
+
+        float density = getResources().getDisplayMetrics().density;
+
+        //レイアウトに設定されているマップサイズ：px→dp
+        float mapSizeX = getResources().getDimension(R.dimen.map_max_size_x) / density;
+        float mapSizeY = getResources().getDimension(R.dimen.map_max_size_y) / density;
+
+        //最大マップ移動距離は、マップサイズの半分
+        mMaxMapScaleX = mapSizeX / 2f;
+        mMaxMapScaleY = mapSizeY / 2f;
+
+        Log.i("最大距離", "mMaxMapScaleX=" + (mMaxMapScaleX) + " mMaxMapScaleY=" + (mMaxMapScaleY));
     }
 
     /*
@@ -967,6 +989,7 @@ public class MapActivity extends AppCompatActivity /*implements ColorDialog.Noti
 
     /*
      * タッチイベント
+     *    マップ参照位置の移動
      */
     @Override
     public boolean onTouchEvent(MotionEvent motionEvent) {
@@ -1004,15 +1027,31 @@ public class MapActivity extends AppCompatActivity /*implements ColorDialog.Noti
 
                 //Log.i("MotionEvent", "preX=" + mPreTouchPosX + " preY=" + mPreTouchPosY);
                 //Log.i("MotionEvent", "getX=" + motionEvent.getX() + " getY=" + motionEvent.getY());
-                //Log.i("MotionEvent", "diffX=" + distanceX + " diffY=" + distanceY);
 
-                //現在位置
-                float x = fl_map.getTranslationX();
-                float y = fl_map.getTranslationY();
+                //移動先座標
+                float x = fl_map.getTranslationX() + distanceX;
+                float y = fl_map.getTranslationY() + distanceY;
+
+                Log.i("マップ移動対応", "予定 移動先X=" + (x) + " 移動先Y=" + (y));
+
+                //マップサイズを超えて移動しようとした場合、最大サイズに丸める（最大移動距離を超えて移動させない）
+                x = ( x >= 0 ?
+                        Math.min( x, mMaxMapScaleX ):
+                        Math.max( x, -mMaxMapScaleX )
+                    );
+                y = ( y >= 0 ?
+                        Math.min( y, mMaxMapScaleY ):
+                        Math.max( y, -mMaxMapScaleY )
+                    );
 
                 //前回からの移動量を反映
-                fl_map.setTranslationX(x + distanceX);
-                fl_map.setTranslationY(y + distanceY);
+                fl_map.setTranslationX(x);
+                fl_map.setTranslationY(y);
+
+                Log.i("マップ移動対応", "実際 移動先X=" + (x) + " 移動先Y=" + (y));
+                Log.i("マップ移動対応", "-----------------");
+                //Log.i("サイズチェック", "map_max_size(px)=" + (int)getResources().getDimension(R.dimen.map_max_size_x));
+                Log.i("サイズチェック", "map_max_size(dp)=" + (getResources().getDimension(R.dimen.map_max_size_x) / getResources().getDisplayMetrics().density));
 
                 mPreTouchPosX = motionEvent.getX();
                 mPreTouchPosY = motionEvent.getY();
@@ -1032,7 +1071,7 @@ public class MapActivity extends AppCompatActivity /*implements ColorDialog.Noti
 
 
     /*
-     * ピンチ（拡大・縮小）操作リスナー
+     * ピンチ（マップ拡大・縮小）操作リスナー
      */
     private class PinchListener extends ScaleGestureDetector.SimpleOnScaleGestureListener {
 
@@ -1194,10 +1233,10 @@ public class MapActivity extends AppCompatActivity /*implements ColorDialog.Noti
                     (int) nowy,                    //scroll の開始位置 (Y)
                     (int) (velocityX / SCALE),     //初速
                     (int) (velocityY / SCALE),     //初速
-                    -2000,  //★最大値に合わせて可変にする必要あり
-                    2000,
-                    -2000,
-                    2000
+                    -(int)mMaxMapScaleX,
+                    (int)mMaxMapScaleX,
+                    -(int)mMaxMapScaleY,
+                    (int)mMaxMapScaleY
             );
 
             //フリング操作時、加速度をスクロールに反映

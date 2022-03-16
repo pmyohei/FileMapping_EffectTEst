@@ -42,8 +42,8 @@
         <!--  マップ全体  -->
         <FrameLayout
             android:id="@+id/fl_map"
-            android:layout_width="@dimen/map_max_size"
-            android:layout_height="@dimen/map_max_size"
+            android:layout_width="@dimen/map_max_size_x"
+            android:layout_height="@dimen/map_max_size_y"
             android:layout_gravity="center"
             tools:context=".MapActivity">
 
@@ -63,38 +63,14 @@
                 android:layout_marginStart="20dp"
                 android:visibility="invisible"/>
 
-<!--            <com.mapping.filemapping.ToolIconsView
-                android:id="@+id/toolIconsView"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:visibility="gone"/>-->
-
         </FrameLayout>
-
-        <!--  BottomSheet（デザイン設定画面用）  -->
-<!--
-        <include
-            android:id="@+id/l_bottomSheet"
-            layout="@layout/design_bottom_sheet" />
--->
 
         <com.mapping.filemapping.DesignBottomSheet
             android:id="@+id/dbs_design"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"/>
-<!--
 
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_gravity="bottom">
-
-            <include layout="@layout/design_bottom_sheet" />
-
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
-
--->
     </FrameLayout>
 
     <!--  ナビゲーションビュー  -->

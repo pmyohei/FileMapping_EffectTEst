@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <!--  マップ  -->
-    <dimen name="map_max_size">4000dp</dimen>
+    <dimen name="map_max_size_x">5000dp</dimen>
+    <dimen name="map_max_size_y">5000dp</dimen>
 
     <!--  ノード  -->
     <dimen name="node_elevation">4dp</dimen>
