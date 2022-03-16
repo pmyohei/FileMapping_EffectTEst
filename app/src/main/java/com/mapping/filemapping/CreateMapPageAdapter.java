@@ -36,8 +36,6 @@ public class CreateMapPageAdapter extends RecyclerView.Adapter<CreateMapPageAdap
         private final View mfl_sampleMap;
         /*--- マップ名 ---*/
         private EditText et_mapName;
-        /*--- ノード数 ---*/
-        private NumberPicker np_nodeNum ;
 
         /*--- カラーパターン ---*/
         private RecyclerView rv_colorPattern2;
@@ -51,23 +49,26 @@ public class CreateMapPageAdapter extends RecyclerView.Adapter<CreateMapPageAdap
 
             mfl_sampleMap = fl_sampleMap;
 
-            if (position == 0) {
-                //マップ名
-                et_mapName = itemView.findViewById(R.id.et_mapName);
+            switch (position) {
+                case 0:
+                    //マップ名
+                    et_mapName = itemView.findViewById(R.id.et_mapName);
+                    break;
 
-            } else if (position == 1) {
-                //ノード数
-                //np_nodeNum = itemView.findViewById(R.id.np_nodeNum);
-                //カラーパターン2色
-                rv_colorPattern2 = itemView.findViewById(R.id.rv_colorPattern2);
-                rv_colorPattern2.addItemDecoration(new ColorPatternItemDecoration());
+                case 1:
+                    //ノード数
+                    //np_nodeNum = itemView.findViewById(R.id.np_nodeNum);
+                    //カラーパターン2色
+                    rv_colorPattern2 = itemView.findViewById(R.id.rv_colorPattern2);
+                    break;
 
-            } else if (position == 2) {
-                //カラーパターン3色
-                rv_colorPattern3 = itemView.findViewById(R.id.rv_colorPattern3);
-                rv_colorPattern3.addItemDecoration(new ColorPatternItemDecoration());
+                case 2:
+                    //カラーパターン3色
+                    rv_colorPattern3 = itemView.findViewById(R.id.rv_colorPattern3);
+                    break;
 
-            } else if (position == 3) {
+                case 3:
+                    break;
             }
         }
 
@@ -76,14 +77,18 @@ public class CreateMapPageAdapter extends RecyclerView.Adapter<CreateMapPageAdap
          */
         public void setPage(int position) {
 
-            if (position == 0) {
-                setPage0();
-            } else if (position == 1) {
-                setPage1();
-                //setPage1_old();
-            } else if (position == 2) {
-                setPage2();
-            } else if (position == 3) {
+            switch (position) {
+                case 0:
+                    setPage0();
+                    break;
+                case 1:
+                    setPage1();
+                    break;
+                case 2:
+                    setPage2();
+                    break;
+                case 3:
+                    break;
             }
         }
 
@@ -94,29 +99,6 @@ public class CreateMapPageAdapter extends RecyclerView.Adapter<CreateMapPageAdap
             //文字入力リスナーを設定
             et_mapName.addTextChangedListener(this);
         }
-
-        /*
-         * ページ設定（１）
-         */
-/*        public void setPage1_old() {
-
-            //サンプルノード数範囲
-            final int NODE_NUM_MIN = 1;
-            final int NODE_NUM_MAX = 5;
-
-            // 最大、最小を設定
-            np_nodeNum.setValue(NODE_NUM_MIN);
-            np_nodeNum.setMinValue(NODE_NUM_MIN);
-            np_nodeNum.setMaxValue(NODE_NUM_MAX);
-
-            //リスナー：値変更時
-            np_nodeNum.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
-                @Override
-                public void onValueChange(NumberPicker numberPicker, int i, int i1) {
-                    //マップへの反映処理
-                }
-            });
-        }*/
 
         /*
          * ページ設定（２）
@@ -156,23 +138,6 @@ public class CreateMapPageAdapter extends RecyclerView.Adapter<CreateMapPageAdap
         public void afterTextChanged(Editable editable) {
             //サンプルマップ側へ設定
             ((SampleMapView)mfl_sampleMap).setMapName( editable.toString() );
-        }
-
-        /*
-         * カラーパターン最終アイテムの下にスペースを設定
-         */
-        private class ColorPatternItemDecoration extends RecyclerView.ItemDecoration {
-            @Override
-            public void getItemOffsets(@NonNull Rect outRect, @NonNull View view, RecyclerView parent, RecyclerView.State state) {
-                int position = parent.getChildAdapterPosition(view);
-                //先頭と最後尾に適当な大きさのスペースを設定
-                //※以下の値は適当（ちょうどボタン分の高さには別にしない。）
-                if (position == 0) {
-                    outRect.top = 200;
-                } else if (position == state.getItemCount() - 1) {
-                    outRect.bottom = 300;
-                }
-            }
         }
 
     }

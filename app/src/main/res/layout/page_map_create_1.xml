@@ -4,4 +4,7 @@
     android:id="@+id/rv_colorPattern2"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_marginTop="4dp" />
+    android:layout_marginTop="4dp"
+    android:clipToPadding="false"
+    android:paddingTop="60dp"
+    android:paddingBottom="60dp" />

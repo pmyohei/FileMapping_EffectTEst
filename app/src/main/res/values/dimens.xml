@@ -4,6 +4,10 @@
     <dimen name="map_max_size_x">5000dp</dimen>
     <dimen name="map_max_size_y">5000dp</dimen>
 
+    <!--  サンプルマップ  -->
+    <dimen name="sample_node_posx">120dp</dimen>
+    <dimen name="sample_node_posy">100dp</dimen>
+
     <!--  ノード  -->
     <dimen name="node_elevation">4dp</dimen>
     <dimen name="node_toolIcon_elevation">1dp</dimen>   <!-- 影は1とする（マップ色が同じ色でもアイコンを見えやすくするため） -->

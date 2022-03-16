@@ -6,4 +6,7 @@
     android:layout_height="match_parent"
     android:layout_marginTop="0dp"
     android:layout_gravity="center"
-    android:gravity="center" />
+    android:gravity="center"
+    android:clipToPadding="false"
+    android:paddingTop="60dp"
+    android:paddingBottom="60dp" />

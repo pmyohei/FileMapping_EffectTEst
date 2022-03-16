@@ -133,8 +133,10 @@ public class SampleMapView extends FrameLayout {
         nodeA.setKind(NodeTable.NODE_KIND_NODE);
         //位置
         //※中心に対するoffsetを指定
-        //nodeA.setPos(100, -300);
-        nodeA.setPos(200, -150);
+        float density = getResources().getDisplayMetrics().density;
+        float sample_node_posx = getResources().getDimension(R.dimen.sample_node_posx) / density;
+        float sample_node_posy = getResources().getDimension(R.dimen.sample_node_posy) / density;
+        nodeA.setPos( (int)sample_node_posx, (int)-sample_node_posy);
         //PID（仮）
         nodeR.setPid(1);
         nodeA.setPid(2);
