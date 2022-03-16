@@ -825,6 +825,23 @@ public class MapActivity extends AppCompatActivity /*implements ColorDialog.Noti
     }
 
     /*
+     * 編集用ボトムシートの表示
+     */
+    public void openEdit(BaseNode node) {
+
+        //更新対象ビューに追加
+        MapCommonData mapCommonData = (MapCommonData) getApplication();
+        mapCommonData.enqueUpdateNodeWithUnique(node.getNode());
+
+        //ノード本体のマージンを取得
+        float marginLeft = node.getLeft();
+        float marginTop  = node.getTop();
+
+        //BottomSheetを開く（画面移動あり）
+        openDesignBottomSheet(DesignBottomSheet.NODE, node, marginLeft, marginTop, MOVE_UPPER);
+    }
+
+    /*
      * onRestart()
      */
     @Override
@@ -978,6 +995,20 @@ public class MapActivity extends AppCompatActivity /*implements ColorDialog.Noti
 
                 break;
             }
+
+            //編集（ピクチャノードのみ）
+            case ToolIconsView.REQUEST_EXTERNAL_EDIT_PICTURE_NODE: {
+                if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //外部ストレージ(media)を一覧で表示
+                    openEdit( mToolIconNode.getNodeView() );
+
+                } else {
+                    retPermission = false;
+                }
+
+                break;
+            }
+
         }
 
         //許可が取れなかった場合

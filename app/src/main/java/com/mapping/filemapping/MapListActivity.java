@@ -262,18 +262,17 @@ public class MapListActivity extends AppCompatActivity {
             return;
         }
 
-        //許可ダイアログは必須
+        //API23以降は、許可ダイアログ必須
         String[] PERMISSIONS_STORAGE = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
         };
-        int permission = ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE);
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    this,
-                    PERMISSIONS_STORAGE,
-                    REQUEST_EXTERNAL_STORAGE
-            );
-        }
+
+        //許可されていなければ、許可を要求
+        ActivityCompat.requestPermissions(
+                this,
+                PERMISSIONS_STORAGE,
+                REQUEST_EXTERNAL_STORAGE
+        );
     }
 
     /*

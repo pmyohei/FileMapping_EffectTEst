@@ -1,8 +1,10 @@
 package com.mapping.filemapping;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,6 +13,7 @@ import android.widget.ImageView;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -60,7 +63,7 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
             switch (position) {
                 case 0:
                     //サムネイルの変更
-                    iv_thumbnail    = itemView.findViewById(R.id.iv_thumbnail);
+                    iv_thumbnail = itemView.findViewById(R.id.iv_thumbnail);
                     break;
 
                 case 1:

@@ -70,6 +70,7 @@ public class ToolIconsView extends ConstraintLayout {
     public static final int REQUEST_EXTERNAL_STORAGE_FOR_PICTURE_NODE = 1;
     public static final int REQUEST_EXTERNAL_STORAGE_FOR_GALLERY = 2;
     public static final int REQUEST_EXTERNAL_STORAGE_FOR_ADD_PICTURE = 3;
+    public static final int REQUEST_EXTERNAL_EDIT_PICTURE_NODE = 4;
 
     //対象ノード
     private BaseNode mBaseNode;
@@ -423,6 +424,26 @@ public class ToolIconsView extends ConstraintLayout {
                     public void onClick(View view) {
                         //Log.i("アイコン", "クリックされました");
 
+                        if( mBaseNode.getNode().getKind() == NodeTable.NODE_KIND_PICTURE ){
+                            //ピクチャノードなら権限確認
+                            int permission = ContextCompat.checkSelfPermission(mMapActivity, Manifest.permission.READ_EXTERNAL_STORAGE);
+                            if (permission != PackageManager.PERMISSION_GRANTED) {
+
+                                mMapActivity.setToolIconNode(mBaseNode.getNode());
+
+                                //権限付与
+                                permissionsStorage(REQUEST_EXTERNAL_EDIT_PICTURE_NODE);
+                            } else {
+                                //権限があれば、編集
+                                mMapActivity.openEdit(mBaseNode);
+                            }
+
+                        } else {
+                            //ピクチャノード以外は、編集処理へ
+                            mMapActivity.openEdit(mBaseNode);
+                        }
+
+/*
                         //更新対象ビューに追加
                         MapCommonData mapCommonData = (MapCommonData) mMapActivity.getApplication();
                         mapCommonData.enqueUpdateNodeWithUnique(mBaseNode.getNode());
@@ -433,6 +454,7 @@ public class ToolIconsView extends ConstraintLayout {
 
                         //BottomSheetを開く（画面移動あり）
                         mMapActivity.openDesignBottomSheet(DesignBottomSheet.NODE, mBaseNode, marginLeft, marginTop, MOVE_UPPER);
+*/
 
                         //ノードに持たせていた自分をクローズ
                         mBaseNode.closeIconView();
@@ -682,14 +704,12 @@ public class ToolIconsView extends ConstraintLayout {
         String[] PERMISSIONS_STORAGE = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
         };
-        int permission = ContextCompat.checkSelfPermission(mMapActivity, Manifest.permission.READ_EXTERNAL_STORAGE);
-        if (permission != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(
-                    mMapActivity,
-                    PERMISSIONS_STORAGE,
-                    requestCode
-            );
-        }
+        //権限要求
+        ActivityCompat.requestPermissions(
+                mMapActivity,
+                PERMISSIONS_STORAGE,
+                requestCode
+        );
     }
 }
 
