@@ -32,15 +32,14 @@ public class RootNodeView extends BaseNode implements Serializable {
     //シリアルID
     private static final long serialVersionUID = ResourceManager.SERIAL_VERSION_UID_NODE_VIEW;
 
-
     /*
      *  コンストラクタ
      * 　 レイアウトに埋め込んだビューの生成時は、本コンストラクタがコールされる
      */
     public RootNodeView(Context context, AttributeSet attrs) {
         //BaseNode
-        super(context, attrs, R.layout.root_node);
+        super(context, attrs, R.layout.node_outside);
 
-        Log.i("RootNodeView", "2");
+        //Log.i("RootNodeView", "2");
     }
 }

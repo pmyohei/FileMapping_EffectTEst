@@ -19,8 +19,6 @@ public class NodeOutsideView extends LinearLayout {
     private Paint mPaint;
     private int mShadowColor;
 
-    float mRadius = 0.0f;
-
     /*
      *　レイアウトから生成時用
      */
@@ -31,6 +29,8 @@ public class NodeOutsideView extends LinearLayout {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.node_body, this, true);
 
+        Log.i("28対応", "getRootView=" + getRootView().getClass());
+
         //OnDraw()をコールさせる設定
         setWillNotDraw(false);
     }
@@ -40,11 +40,13 @@ public class NodeOutsideView extends LinearLayout {
      */
     public void initPaint( int nodeKind ) {
 
-        if( (nodeKind != NodeTable.NODE_KIND_PICTURE) && (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) ){
+        //if( (nodeKind != NodeTable.NODE_KIND_PICTURE) && (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) ){
+        if( /*(nodeKind != NodeTable.NODE_KIND_PICTURE) &&*/ (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) ){
             //ピクチャノード以外で、API28以下なら、レイヤータイプを設定
             //※API28以下は、影の描画に必要な処理
             //※ピクチャノードでは、以下をコールすると写真が円形にならない
-            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            //setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            setLayerType(View.LAYER_TYPE_SOFTWARE, mPaint);
         }
         
         //ペイント生成

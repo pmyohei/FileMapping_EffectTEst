@@ -19,7 +19,7 @@ public class PictureNodeView extends ChildNode implements Serializable {
      */
     @SuppressLint("ClickableViewAccessibility")
     public PictureNodeView(Context context, NodeTable node, PictureTable thumbnail) {
-        super(context, node, R.layout.picture_node);
+        super(context, node, R.layout.node_outside);
 
         //サムネイル写真
         mThumbnail = thumbnail;
