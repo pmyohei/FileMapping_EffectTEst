@@ -25,7 +25,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
-            android:padding="12dp"
+            android:padding="10dp"
             android:text="@string/sample"
             android:textColor="@color/white"/>
 

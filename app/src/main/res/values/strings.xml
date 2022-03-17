@@ -57,6 +57,7 @@
     <string name="toast_finishSave">Saved</string>
     <string name="toast_error">An error has occurred</string>
     <string name="toast_errorRgb">Please enter 0~9/A~F(a~f)</string>
+    <string name="toast_errorFont">Currently unavailable</string>
     <string name="toast_reachUpperLimitNode">The maximum number of nodes has been reached</string>
     <string name="toast_reachUpperLimitPictureNode">The maximum number of picture nodes has been reached</string>
     <string name="toast_reachUpperLimitHierarchy">The maximum number of picture nodes has been reached</string>

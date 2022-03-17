@@ -21,7 +21,6 @@ public class ColorPatternAdapter extends RecyclerView.Adapter<ColorPatternAdapte
     public static final int COLOR_2 = 2;
     public static final int COLOR_3 = 3;
 
-    //private final List<String> mData;
     private final String[] mData;
     private final SampleMapView mfl_sampleMap;
     private final int mPattern;
@@ -42,7 +41,6 @@ public class ColorPatternAdapter extends RecyclerView.Adapter<ColorPatternAdapte
             super(itemView);
 
             mfl_sampleMap = (SampleMapView)view;
-
             ll_colorItem   = itemView.findViewById(R.id.ll_colorItem);
         }
 

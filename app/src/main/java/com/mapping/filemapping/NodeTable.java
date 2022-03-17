@@ -152,6 +152,7 @@ public class NodeTable implements Serializable {
      * コンストラクタ
      */
     public NodeTable(String nodeName, int mapPid, int parentPid, int kind, int posX, int posY) {
+        //パラメータ以外のデータを初期化
         this();
 
         this.nodeName = nodeName;
@@ -179,8 +180,9 @@ public class NodeTable implements Serializable {
         this.borderSize = DEFAULT_THICK_BORDER;
         //ノードサイズ
         this.sizeRatio = DEFAULT_SIZE_RATIO;
+        //フォントファイル名
+        this.fontFileName = "";
     }
-
 
     /*-- getter setter --*/
     public int getPid() {

@@ -19,6 +19,7 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.google.android.material.card.MaterialCardView;
 
@@ -77,11 +78,8 @@ public class BaseNode extends FrameLayout {
     public BaseNode(Context context, NodeTable node, int layoutID) {
         super(context);
 
-        //Log.i("BaseNode", "2");
-
         //ノード情報を保持
         mNode = node;
-
         init(layoutID);
     }
 
@@ -108,6 +106,7 @@ public class BaseNode extends FrameLayout {
         //ツールアイコン未保持
         mIconView = null;
 
+        //ノードクリックリスナー
         setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -163,7 +162,6 @@ public class BaseNode extends FrameLayout {
         setAsBaseNodeInfo();
         //親ノード属性のデザインを設定
         setAsParentNodeInfo();
-
     }
 
     /*
@@ -199,6 +197,8 @@ public class BaseNode extends FrameLayout {
         setNodeTextColor( mNode.getTextColor() );
         //ノード背景色
         setNodeBackgroundColor(mNode.getNodeColor());
+        //フォント
+        initNodeFont(mNode.getFontFileName() );
     }
 
     /*
@@ -224,7 +224,6 @@ public class BaseNode extends FrameLayout {
      * ノード背景色の取得
      */
     public String getNodeBackgroundColor() {
-
         return mNode.getNodeColor();
     }
 
@@ -244,12 +243,43 @@ public class BaseNode extends FrameLayout {
         return mNode.getTextColor();
     }
 
+
     /*
      * ノード名のフォント設定
      */
-    public void setNodeFont(Typeface font) {
-        //継承先で実装
+    public void initNodeFont(String fontFileName) {
+
+        //何もしない
+        if( (fontFileName == null) || (fontFileName.isEmpty()) ){
+            return;
+        }
+
+        //指定フォントファイル名から、フォントを生成
+        Context context = getContext();
+        int fontID = context.getResources().getIdentifier( fontFileName, "font", context.getPackageName() );
+
+        //運用誤りでファイル名文字列のファイルがない場合、何もしない
+        if( fontID == 0 ){
+            //Log.i("フォント保存対応", "初期設定 変換エラー=" + fontFileName);
+            return;
+        }
+
+        //フォント生成エラーの場合、何もしない
+        Typeface font = ResourcesCompat.getFont(context, fontID);
+        if( font == null ){
+            return;
+        }
+
+        //設定
+        setNodeFont( font, fontFileName );
     }
+
+    /*
+     * ノード名のフォント設定
+     */
+    public void setNodeFont(Typeface font, String fontFileName) {
+        //継承先で実装
+;    }
 
     /*
      * ノード形の設定

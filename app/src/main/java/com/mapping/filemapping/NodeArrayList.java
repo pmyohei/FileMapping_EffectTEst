@@ -455,11 +455,11 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
     /*
      *　全ノードのテキストフォントの設定
      */
-    public void setAllNodeFont(Typeface font ) {
+    public void setAllNodeFont(Typeface font, String fontFileName ) {
 
         //リストの内のノードすべて
         for( NodeTable node: this ){
-            node.getNodeView().setNodeFont( font );
+            node.getNodeView().setNodeFont( font, fontFileName );
         }
 
         //全体デザイン変更あり

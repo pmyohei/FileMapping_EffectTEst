@@ -57,6 +57,7 @@
     <string name="toast_finishSave">保存しました</string>
     <string name="toast_error">エラーが発生しました</string>
     <string name="toast_errorRgb">0~9/A~F(a~f)を入力して下さい</string>
+    <string name="toast_errorFont">現在選択できません</string>
     <string name="toast_reachUpperLimitNode">ノード数の上限に達しています</string>
     <string name="toast_reachUpperLimitPictureNode">ピクチャノード数の上限に達しています</string>
     <string name="toast_reachUpperLimitHierarchy">階層の上限に達しています</string>

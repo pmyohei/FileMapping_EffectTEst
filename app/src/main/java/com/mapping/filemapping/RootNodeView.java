@@ -80,7 +80,7 @@ public class RootNodeView extends BaseNode implements Serializable {
      * ノード名のフォント設定
      */
     @Override
-    public void setNodeFont(Typeface font) {
+    public void setNodeFont(Typeface font, String fontFileName) {
 
         TextView tv_node = findViewById(R.id.tv_node);
         tv_node.setTypeface( font );
@@ -101,12 +101,8 @@ public class RootNodeView extends BaseNode implements Serializable {
                 }
         );
 
-        //Log.i("フォントサイズ", "size=" + ObjectSizeCalculator.sizeOf( font ) );
-        //Log.i("フォントサイズ", "文字列=" + font.toString() );
-        //Log.i("フォントサイズ", "size=" + font.toString().length() );
-
-        //★保存はファイル名で行う
-        //mNode
+        //ファイル名を保存
+        mNode.setFontFileName( fontFileName );
     }
 
     /*

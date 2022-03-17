@@ -181,15 +181,14 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
             ll_manager.setOrientation(LinearLayoutManager.HORIZONTAL);
             rv_fontAlphabet.setLayoutManager(ll_manager);
 
-
             //フォントリソースリストを取得
-            List<Typeface> alphaFonts = ResourceManager.getAlphabetFonts( context );
+            //List<Typeface> alphaFonts = ResourceManager.getAlphabetFonts( context );
+            List<String> alphaFonts = ResourceManager.getAlphabetFonts();
             //RecyclerViewにアダプタを設定
             rv_fontAlphabet.setAdapter( new FontAdapter( alphaFonts, null, mv_map, FontAdapter.ALPHABET ) );
             //スクロールリスナー（ViewPager2のタブ切り替えを制御）
             ViewPager2 vp2_design = mv_map.getRootView().findViewById(R.id.vp2_design);
             rv_fontAlphabet.addOnItemTouchListener( new Vp2OnItemTouchListener( vp2_design ) );
-
 
             //日本語設定の場合のみ、日本語フォントも設定
             Locale locale = Locale.getDefault();
@@ -199,7 +198,8 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
                 rv_fontjapanese.setLayoutManager(ll_manager2);
 
                 //フォントリソースリストを取得
-                List<Typeface> jpFonts = ResourceManager.getJapaneseFonts( context );
+                //List<Typeface> jpFonts = ResourceManager.getJapaneseFonts( context );
+                List<String> jpFonts = ResourceManager.getJapaneseFonts();
                 //RecyclerViewにアダプタを設定
                 rv_fontjapanese.setAdapter( new FontAdapter( jpFonts, null, mv_map, FontAdapter.JAPANESE ) );
                 //スクロールリスナー（ViewPager2のタブ切り替えを制御）

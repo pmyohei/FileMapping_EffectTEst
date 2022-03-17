@@ -109,6 +109,40 @@ public class ResourceManager {
     }
 
     /*
+     * 本アプリケーション内のフォントリスト(英語)
+     */
+    public static List<String> getAlphabetFonts() {
+
+        List<String> fonts = new ArrayList<>();
+        fonts.add("luxurious_roman_regular");
+        fonts.add("roboto_regular");
+        fonts.add("the_nautigal_bold");
+        fonts.add("dancing_script_medium");
+        fonts.add("oswald_variable_font_wght");
+        fonts.add("caveat_medium");
+        fonts.add("moon_dance_regular");
+        fonts.add("josefin_sans_semibold");
+
+        return fonts;
+    }
+
+    /*
+     * 本アプリケーション内のフォントリスト(日本語)
+     */
+    public static List<String> getJapaneseFonts() {
+
+        List<String> fonts = new ArrayList<>();
+        fonts.add("ipaexm");
+        fonts.add("ipaexg");
+        fonts.add("hannari_mincho_regular");
+        fonts.add("senobi_gothic_medium");
+        fonts.add("jk_maru_gothic_m");
+        fonts.add("pixel_mplus10_regular");
+
+        return fonts;
+    }
+
+    /*
      *　コンテンツURIから絶対パスを取得（/~~/~~/xxx.png）
      */
     public static String getPathFromUri(Context context, Uri uri) {

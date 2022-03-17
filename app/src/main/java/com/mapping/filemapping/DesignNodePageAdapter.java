@@ -193,7 +193,8 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
             rv_fontAlphabet.setLayoutManager(ll_manager);
 
             //フォントリソースリストを取得
-            List<Typeface> alphaFonts = ResourceManager.getAlphabetFonts( context );
+            //List<Typeface> alphaFonts = ResourceManager.getAlphabetFonts( context );
+            List<String> alphaFonts = ResourceManager.getAlphabetFonts();
             //RecyclerViewにアダプタを設定
             rv_fontAlphabet.setAdapter( new FontAdapter( alphaFonts, mv_node, null, FontAdapter.ALPHABET ) );
             //スクロールリスナー（ViewPager2のタブ切り替えを制御）
@@ -208,7 +209,8 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
                 rv_fontjapanese.setLayoutManager(ll_manager2);
 
                 //フォントリソースリストを取得
-                List<Typeface> jpFonts = ResourceManager.getJapaneseFonts( context );
+                //List<Typeface> jpFonts = ResourceManager.getJapaneseFonts( context );
+                List<String> jpFonts = ResourceManager.getJapaneseFonts();
                 //RecyclerViewにアダプタを設定
                 rv_fontjapanese.setAdapter( new FontAdapter( jpFonts, mv_node, null, FontAdapter.JAPANESE ) );
                 //スクロールリスナー（ViewPager2のタブ切り替えを制御）
