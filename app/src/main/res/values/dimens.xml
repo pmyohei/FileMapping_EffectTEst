@@ -58,6 +58,10 @@
     <!--  ヘルプ  -->
     <dimen name="help_icon_size">40dp</dimen>
     <dimen name="help_title_size">18sp</dimen>
+    <dimen name="help_head1_height">32dp</dimen>
+    <dimen name="help_head2_height">20dp</dimen>
+    <dimen name="help_autoSizeMinTextSize">8sp</dimen>
+
 
     <!--  テキストサイズ自動調整（未使用）  -->
 <!--

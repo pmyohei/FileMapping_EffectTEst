@@ -34,8 +34,11 @@
                 android:text="@string/help_map_title_toolbar" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                app:autoSizeMinTextSize="@dimen/help_autoSizeMinTextSize"
+                app:autoSizeTextType="uniform"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/help_head1_height"
+                android:gravity="center"
                 android:layout_marginTop="20dp"
                 android:textColor="@color/black"
                 android:textSize="16sp"
@@ -102,9 +105,12 @@
                 android:background="@color/transparent_50_black" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                app:autoSizeMinTextSize="@dimen/help_autoSizeMinTextSize"
+                app:autoSizeTextType="uniform"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/help_head1_height"
                 android:layout_marginTop="40dp"
+                android:gravity="center"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="16sp"

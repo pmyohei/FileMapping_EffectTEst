@@ -38,7 +38,7 @@
     <string name="alert_deleteNode_title">Remove node</string>
     <string name="alert_deleteNode_message">All subordinate nodes will also be removed.\nThe photos in the node will not be removed from your device.</string>
     <string name="alert_launch_mapList_title">At first</string>
-    <string name="alert_launch_mapList_message">Let\'s create a map. Press "New Map" at the bottom of the screen.</string>
+    <string name="alert_launch_mapList_message">Let\'s create a map. Press "New Map".</string>
     <string name="alert_launch_mapEntry_title">Creating a map</string>
     <string name="alert_launch_mapEntry_message">Enter the map name and choose the color you like.\n(Colors can be added even after the map is created)</string>
     <string name="alert_launch_gallery_title">Synchronization</string>
@@ -167,7 +167,7 @@
     <string name="help_icon_add_picture_node_note">*Up to "2" picture nodes can be created on one node</string>
     <string name="help_icon_edit_name">Node editing</string>
     <string name="help_icon_edit">You can edit the node\nSelect this icon if you want to change the design or node name</string>
-    <string name="help_icon_edit_note">*If you want to unify all node designs, select the icon below at the top of the map screen</string>
+    <string name="help_icon_edit_note">*If you want to unify all node designs, select the icon below at the top of the map</string>
     <string name="help_icon_delete_name">Remove node</string>
     <string name="help_icon_delete">You can remove nodes and child nodes from the map.</string>
     <string name="help_icon_delete_note">*The photo associated with the node to be deleted will not be deleted from the terminal.</string>
@@ -184,7 +184,7 @@
     <string name="help_icon_close">You can close the icon.</string>
 
     <!-- マップ画面のヘルプ -->
-    <string name="help_map_title">How to operate the map screen</string>
+    <string name="help_map_title">How to operate the map</string>
     <string name="help_map_title_word">The term</string>
     <string name="help_map_title_basic_ope">Basic operation</string>
     <string name="help_map_title_toolbar">Map top icon</string>
@@ -213,7 +213,7 @@
     <string name="help_map_basic_sample2_details6">6.Feel free to choose your photo</string>
     <string name="help_map_basic_sample2_details7">If you want to see the photos stored in the node, select "Gallery Icon"</string>
 
-    <string name="help_map_toolbar_details1">About the icon at the top of the map screen.</string>
+    <string name="help_map_toolbar_details1">About the icon at the top of the map.</string>
     <string name="help_map_toolbar_palette1">Overall map design changes</string>
     <string name="help_map_toolbar_palette2">You can change the color of the map and the design of all the nodes.</string>
     <string name="help_map_toolbar_tree1">View nodes in tree format</string>

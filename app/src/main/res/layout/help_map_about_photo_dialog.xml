@@ -25,13 +25,17 @@
             android:orientation="vertical">
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                app:autoSizeMinTextSize="@dimen/help_autoSizeMinTextSize"
+                app:autoSizeTextType="uniform"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/help_head1_height"
+                android:gravity="center"
                 android:layout_marginTop="8dp"
                 android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="@dimen/help_title_size"
-                android:text="@string/help_map_title_picture" />
+                android:text="@string/help_map_title_picture"
+                />
 
             <TextView
                 android:layout_width="wrap_content"
@@ -49,16 +53,22 @@
                 android:textSize="16sp"
                 android:text="@string/help_map_aboutPicture_2" />
 
-            <ImageView
-                android:id="@+id/next"
+            <com.google.android.material.imageview.ShapeableImageView
+                app:shapeAppearanceOverlay="@style/roundedCornersImageView"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_marginTop="20dp"
+                app:strokeWidth="1dp"
+                app:strokeColor="@color/black"
                 app:srcCompat="@drawable/ic_no_image" />
 
             <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                app:autoSizeMinTextSize="@dimen/help_autoSizeMinTextSize"
+                app:autoSizeTextType="uniform"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/help_head2_height"
+                android:layout_marginTop="4dp"
+                android:gravity="center"
                 android:textColor="@color/black"
                 android:textSize="12sp"
                 android:text="@string/help_map_aboutPicture_3" />

@@ -187,12 +187,12 @@
     <string name="help_map_title_word">用語</string>
     <string name="help_map_title_basic_ope">基本操作</string>
     <string name="help_map_title_toolbar">マップ上部アイコン</string>
-    <string name="help_map_title_picture">画像の扱いについて</string>
+    <string name="help_map_title_picture">画像の扱い</string>
     <string name="help_map_title_limitations">制限事項</string>
 
-    <string name="help_map_word_node_1">・ノード</string>
+    <string name="help_map_word_node_1">＜ノード＞</string>
     <string name="help_map_word_node_2">マップ上の円形のものを指します。\nタッチすると操作アイコンが表示されます。</string>
-    <string name="help_map_word_picture_1">・ピクチャノード</string>
+    <string name="help_map_word_picture_1">＜ピクチャノード＞</string>
     <string name="help_map_word_picture_2">マップ上に画像を表示できるノードです。\nこのノードに、関連する画像を格納できます。</string>
 
     <string name="help_map_basic_details1">まずはノードをタッチしてみましょう！\n操作アイコンが表示されます。\n各種アイコンから、新しいノードの作成や写真の紐づけをすることができます。</string>
@@ -223,7 +223,7 @@
     <string name="help_map_aboutPicture_1">本アプリでは、お使いの端末に保存された写真や画像をマップ上のノードに紐づけて管理しています。</string>
     <string name="help_map_aboutPicture_2">・端末内の画像が削除されたり保存場所が変更されると、マップからも削除されますのでご注意下さい</string>
     <string name="help_map_aboutPicture_3">（紐づけできなくなった画像）</string>
-    <string name="help_map_aboutPicture_4">・本アプリでは、端末内の画像を削除する機能はありません。マップからノードや写真を削除した場合でも、端末からその画像が削除されることはありません。</string>
+    <string name="help_map_aboutPicture_4">・本アプリでは、端末から画像を削除する機能はありません。\nマップからノードや画像を削除した場合でも、端末からその画像が削除されることはありません。</string>
 
     <string name="help_map_limitaions_details1">・１つのノードに作れるノードは５つまで</string>
     <string name="help_map_limitaions_details2">・１つのノードに作れるピクチャノード（写真を格納するためのノード）は２つまで</string>
