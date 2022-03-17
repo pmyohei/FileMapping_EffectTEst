@@ -36,19 +36,6 @@ public class PictureNodeView extends ChildNode implements Serializable {
      * 初期化処理
      */
     private void initNode() {
-        //ノードの中身の表示を変更
-        //findViewById(R.id.tv_node).setVisibility(GONE);
-        //findViewById(R.id.iv_node).setVisibility(VISIBLE);
-
-        ShapeableImageView test = findViewById(R.id.iv_node);
-
-        //ShapeAppearanceModel.Builder a = ShapeAppearanceModel.builder( test.getContext(), R.style.roundedCornersImageView, R.style.roundedCornersImageView );
-        ShapeAppearanceModel.Builder a = ShapeAppearanceModel.builder( test.getContext(), R.style.roundedCornersImageView, 0 );
-
-        test.setShapeAppearanceModel( a.build() );
-        /*test.setStrokeColor();
-        test.setStrokeWidth();
-        test.setStrokeWidth();*/
 
         //ノードに画像を設定
         findViewById(R.id.iv_node).post(()-> {
@@ -112,16 +99,6 @@ public class PictureNodeView extends ChildNode implements Serializable {
                 .error(R.drawable.ic_no_image)
                 .into( iv_node );
     }
-
-    /*
-     * 比率込みのノード本体サイズ（横幅）を取得
-     *   ※ノード本体のサイズ
-     */
-/*    @Override
-    public float getScaleNodeBodyWidth() {
-        //現在の横幅 * 現在の比率
-        return findViewById(R.id.iv_node).getWidth() * mNode.getSizeRatio();
-    }*/
 
     /*
      * ノード枠線サイズの設定

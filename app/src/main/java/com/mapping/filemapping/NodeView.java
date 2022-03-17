@@ -44,16 +44,6 @@ public class NodeView extends ChildNode implements Serializable {
     }
 
     /*
-     * 比率込みのノード本体サイズ（横幅）を取得
-     *   ※ノード本体のサイズ
-     */
-/*    @Override
-    public float getScaleNodeBodyWidth() {
-        //現在の横幅 * 現在の比率
-        return findViewById(R.id.cv_node).getWidth() * mNode.getSizeRatio();
-    }*/
-
-    /*
      * ノード枠線サイズの設定
      */
     @Override

@@ -35,8 +35,6 @@ public class BaseNode extends FrameLayout {
 
     //ノード情報
     public NodeTable mNode;
-    //ダブルタップ検知用
-    public GestureDetector mGestureDetector;
     //ノード中心座標
     public float mCenterPosX = INIT_CENTER_POS;
     public float mCenterPosY = INIT_CENTER_POS;
@@ -83,8 +81,6 @@ public class BaseNode extends FrameLayout {
 
         //ノード情報を保持
         mNode = node;
-        //ノード操作ランチャーを保持
-        //mNodeOperationLauncher = launcher;
 
         init(layoutID);
     }
@@ -125,11 +121,6 @@ public class BaseNode extends FrameLayout {
             }
         });
 
-        //※クリックを有効にしないとタッチ処理が検出されない
-        //setClickable(true);
-        //タッチリスナー
-        setOnTouchListener(new RootNodeTouchListener());
-
         //ノード情報をビューに設定
         reflectViewNodeInfo();
     }
@@ -137,14 +128,10 @@ public class BaseNode extends FrameLayout {
     /*
      * ペイント初期化
      */
-    public void initPaint( int nodeKind ) {
+    public void initPaint() {
 
-        //if( (nodeKind != NodeTable.NODE_KIND_PICTURE) && (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) ){
-        if( /*(nodeKind != NodeTable.NODE_KIND_PICTURE) &&*/ (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) ){
-            //ピクチャノード以外で、API28以下なら、レイヤータイプを設定
+        if( Build.VERSION.SDK_INT <= Build.VERSION_CODES.P ){
             //※API28以下は、影の描画に必要な処理
-            //※ピクチャノードでは、以下をコールすると写真が円形にならない
-            //setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             setLayerType(View.LAYER_TYPE_SOFTWARE, mPaint);
         }
 
@@ -158,9 +145,6 @@ public class BaseNode extends FrameLayout {
      * ノードテーブルの情報をノードビューに反映する
      */
     public void reflectViewNodeInfo() {
-
-        //Log.i("BaseNode", "reflectViewNodeInfo");
-
         //ノードデザインの更新
         setNodeDesign();
     }
@@ -334,11 +318,6 @@ public class BaseNode extends FrameLayout {
      */
     public void setBorderSize( int thick ) {
         //継承先で実装
-
-        /*        //枠サイズを設定
-        ((MaterialCardView)findViewById( R.id.cv_node )).setStrokeWidth( thick );
-
-        mNode.setBorderSize( thick );*/
     }
 
     /*
@@ -353,31 +332,13 @@ public class BaseNode extends FrameLayout {
      */
     public void setBorderColor( String color ) {
         //継承先で実装
-
-        /*        //枠色を設定
-        ((MaterialCardView)findViewById( R.id.cv_node )).setStrokeColor( Color.parseColor(color) );
-
-        mNode.setBorderColor( color );*/
     }
 
     /*
      * ノード枠色の取得
      */
     public String getBorderColor() {
-
         return mNode.getBorderColor();
-
-/*        MaterialCardView cv_node = findViewById(R.id.cv_node);
-
-        ColorStateList colorStateList = cv_node.getStrokeColorStateList();
-
-        if( colorStateList == null ){
-            //取得失敗なら、無効値用の色を返す
-            return ResourceManager.NODE_INVALID_COLOR;
-        }
-
-        int colorInt = colorStateList.getDefaultColor();
-        return ( "#" + Integer.toHexString( colorInt ) );*/
     }
 
     /*
@@ -387,11 +348,8 @@ public class BaseNode extends FrameLayout {
 
         //現在の影の有無
         boolean isShadow = mNode.isShadow();
-
         //影色を設定
-        //((NodeOutsideView)findViewById( R.id.ll_nodeOutSide)).setShadowColor( Color.parseColor(color), nodeKind, isShadow );
         setLayerShadowColor(Color.parseColor(color), nodeKind, isShadow );
-
         mNode.setShadowColor( color );
     }
 
@@ -399,7 +357,6 @@ public class BaseNode extends FrameLayout {
      * ノード影色の取得
      */
     public String getShadowColor() {
-        //return ((NodeOutsideView)findViewById( R.id.ll_nodeOutSide)).getShadowColor();
         return ( "#" + Integer.toHexString( mShadowColor ) );
     }
 
@@ -408,9 +365,7 @@ public class BaseNode extends FrameLayout {
      */
     public void setShadowOnOff(boolean isShadow ) {
         //影色を設定
-        //((NodeOutsideView)findViewById( R.id.ll_nodeOutSide)).setShadowOnOff( isShadow, mNode.getKind()  );
         setLayerShadowOnOff( isShadow, mNode.getKind() );
-
         mNode.setShadow( isShadow );
     }
 
@@ -421,7 +376,7 @@ public class BaseNode extends FrameLayout {
 
         //ペイント未生成なら生成
         if( mPaint == null ){
-            initPaint( nodeKind );
+            initPaint();
         }
 
         //色更新
@@ -449,7 +404,7 @@ public class BaseNode extends FrameLayout {
 
         //ペイント未生成なら生成
         if( mPaint == null ){
-            initPaint(nodeKind);
+            initPaint();
         }
 
         if( isShadow ){
@@ -490,8 +445,6 @@ public class BaseNode extends FrameLayout {
      */
     public void setSetScale() {
         float ratio = mNode.getSizeRatio();
-        //findViewById( R.id.cl_node ).setScaleX( ratio );
-        //findViewById( R.id.cl_node ).setScaleY( ratio );
         setScaleX( ratio );
         setScaleY( ratio );
     }
@@ -556,16 +509,6 @@ public class BaseNode extends FrameLayout {
      */
     public void setShapeCircle() {
         //継承先で実装
-
-/*        MaterialCardView cv_node = findViewById(R.id.cv_node);
-        //Log.i("Card", "width=" + cv_node.getWidth() + " height=" + cv_node.getHeight());
-
-        //長い方の辺で縦横サイズを統一
-        int max = Math.max( cv_node.getWidth(), cv_node.getHeight() );
-        cv_node.setMinimumHeight(max);
-        cv_node.setMinimumWidth(max);
-
-        cv_node.setRadius(max / 2.0f);*/
     }
 
     /*
@@ -573,15 +516,6 @@ public class BaseNode extends FrameLayout {
      */
     public void setShapeSquare() {
         //継承先で実装
-
-/*        MaterialCardView cv_node = findViewById(R.id.cv_node);
-
-        //長い方の辺で正方形を作る
-        int max = Math.max( cv_node.getWidth(), cv_node.getHeight() );
-        cv_node.setMinimumHeight(max);
-        cv_node.setMinimumWidth(max);
-
-        cv_node.setRadius(max * ResourceManager.SQUARE_CORNER_RATIO);*/
     }
 
 
@@ -632,58 +566,6 @@ public class BaseNode extends FrameLayout {
         mClickListener = listener;
     }
 
-
-    /*
-     * ノードタッチリスナー
-     */
-    public class RootNodeTouchListener implements OnTouchListener, Serializable {
-
-        //シリアルID
-        private static final long serialVersionUID = 3L;
-
-        /*
-         * コンストラクタ
-         */
-        public RootNodeTouchListener() {
-
-            //ダブルタップリスナーを実装したGestureDetector
-            mGestureDetector = new GestureDetector(getContext(), new DoubleTapListener());
-        }
-
-        @Override
-        public boolean onTouch(View view, MotionEvent event) {
-
-            //ダブルタップ処理
-            return mGestureDetector.onTouchEvent(event);
-        }
-
-        /*
-         * ダブルタップリスナー
-         */
-        private class DoubleTapListener extends GestureDetector.SimpleOnGestureListener implements Serializable{
-
-            /*
-             * ダブルタップリスナー
-             *   ツールアイコンの表示制御を行う。
-             *   ※他ノードがオープン中であれば、クローズしてタップされたノードのツールアイコンを表示する
-             */
-            @Override
-            public boolean onDoubleTap(MotionEvent event) {
-
-                Log.i("tap", "onDoubleTap getChildCount1 = " + getChildCount());
-
-                //ツールアイコン表示制御
-                //operationToolIcon();
-
-                //
-                //mClickListener.onClick( mNode.getNodeView() );
-
-                //return super.onDoubleTap(event);
-                return true;
-            }
-        }
-    }
-
     @Override
     protected void onDraw(Canvas canvas) {
 
@@ -692,7 +574,6 @@ public class BaseNode extends FrameLayout {
         }
 
         //ノードの横幅
-        //int radius = findViewById(R.id.cv_node).getWidth();
         int radius = (int)(getNodeBodyWidth() / 2f);
         canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, radius, mPaint);
     }
@@ -726,9 +607,6 @@ public class BaseNode extends FrameLayout {
     }
     public void closeIconView() {
         this.mIconView.closeMyself();
-        this.mIconView = null;
-    }
-    public void clearIconView() {
         this.mIconView = null;
     }
 }

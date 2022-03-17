@@ -569,8 +569,7 @@ public class ChildNode extends BaseNode {
     /*
      * ノードタッチリスナー
      */
-    //private class NodeTouchListener implements View.OnTouchListener {
-    private class NodeTouchListener extends RootNodeTouchListener implements Serializable {
+    private class NodeTouchListener implements OnTouchListener, Serializable {
 
         //方向ビット
         final int BIT_X = 0x01;    //自ノードが親ノードより右にいる場合
@@ -599,23 +598,9 @@ public class ChildNode extends BaseNode {
         @Override
         public boolean onTouch(View view, MotionEvent event) {
 
-            //ルートノード側の共通処理をコール
-            //boolean ret = super.onTouch( view, event );
-
-/*            Log.i("NodeTouchListener", "super.onTouch=" + ret + " event.getAction()=" + event.getAction());
-
-            //共通処理を行った場合、終了
-            if( ret ){
-                Log.i("NodeTouchListener", "ダブルタッチしたため終了");
-                return true;
-            }*/
-
             //タッチしている位置取得（スクリーン座標）
             int x = (int) event.getRawX();
             int y = (int) event.getRawY();
-
-            //
-            //boolean ret = false;
 
             switch (event.getAction()) {
 
