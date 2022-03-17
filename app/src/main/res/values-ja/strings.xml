@@ -212,7 +212,7 @@
     <string name="help_map_basic_sample2_details6">⑥好きな写真を選択</string>
     <string name="help_map_basic_sample2_details7">ギャラリーアイコンを選択すると、ノードに格納された写真を確認することができます。</string>
 
-    <string name="help_map_toolbar_details1">本画面上部のアイコンについて</string>
+    <string name="help_map_toolbar_details1">画面上部のアイコンについて</string>
     <string name="help_map_toolbar_palette1">全体的なマップデザイン変更</string>
     <string name="help_map_toolbar_palette2">マップの背景色やマップ上のすべてのノードのデザインを変更できます。</string>
     <string name="help_map_toolbar_tree1">ノードのツリー表示</string>

@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="12dp"
-    android:paddingBottom="12dp"
     android:background="@color/white"
     android:orientation="vertical">
 
@@ -52,9 +51,10 @@
             <!--  操作例①　-->
             <TextView
                 app:autoSizeMinTextSize="@dimen/help_autoSizeMinTextSize"
+                app:autoSizeMaxTextSize="16sp"
                 app:autoSizeTextType="uniform"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/help_head2_height"
+                android:layout_height="@dimen/help_head3_height"
                 android:gravity="center"
                 android:layout_marginTop="60dp"
                 android:textStyle="bold"
@@ -64,9 +64,10 @@
 
             <TextView
                 app:autoSizeMinTextSize="@dimen/help_autoSizeMinTextSize"
+                app:autoSizeMaxTextSize="16sp"
                 app:autoSizeTextType="uniform"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/help_head2_height"
+                android:layout_height="@dimen/help_head3_height"
                 android:gravity="center"
                 android:layout_marginTop="20dp"
                 android:textStyle="bold"
@@ -101,9 +102,10 @@
             <!--  操作例② -->
             <TextView
                 app:autoSizeMinTextSize="@dimen/help_autoSizeMinTextSize"
+                app:autoSizeMaxTextSize="16sp"
                 app:autoSizeTextType="uniform"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/help_head2_height"
+                android:layout_height="@dimen/help_head3_height"
                 android:gravity="center"
                 android:layout_marginTop="60dp"
                 android:textStyle="bold"
@@ -113,9 +115,10 @@
 
             <TextView
                 app:autoSizeMinTextSize="@dimen/help_autoSizeMinTextSize"
+                app:autoSizeMaxTextSize="16sp"
                 app:autoSizeTextType="uniform"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/help_head2_height"
+                android:layout_height="@dimen/help_head3_height"
                 android:gravity="center"
                 android:layout_marginTop="20dp"
                 android:textStyle="bold"

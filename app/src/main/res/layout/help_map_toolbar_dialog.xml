@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="12dp"
-    android:paddingBottom="12dp"
     android:background="@color/white"
     android:orientation="vertical">
 
@@ -35,9 +34,10 @@
 
             <TextView
                 app:autoSizeMinTextSize="@dimen/help_autoSizeMinTextSize"
+                app:autoSizeMaxTextSize="16sp"
                 app:autoSizeTextType="uniform"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/help_head1_height"
+                android:layout_height="@dimen/help_head2_height"
                 android:gravity="center"
                 android:layout_marginTop="20dp"
                 android:textColor="@color/black"
@@ -106,6 +106,7 @@
 
             <TextView
                 app:autoSizeMinTextSize="@dimen/help_autoSizeMinTextSize"
+                app:autoSizeMaxTextSize="16sp"
                 app:autoSizeTextType="uniform"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/help_head1_height"

@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="12dp"
-    android:paddingBottom="12dp"
     android:background="@color/white"
     android:orientation="vertical">
 
@@ -348,15 +347,16 @@
                     android:textSize="16sp" />
 
                 <TextView
+                    app:autoSizeMinTextSize="@dimen/help_autoSizeMinTextSize"
+                    app:autoSizeMaxTextSize="16sp"
+                    app:autoSizeTextType="uniform"
                     android:layout_width="match_parent"
-                    android:layout_height="@dimen/help_head2_height"
+                    android:layout_height="@dimen/help_head3_height"
                     android:layout_marginTop="16dp"
                     android:gravity="center"
                     android:text="@string/help_icon_change_parent_note"
                     android:textColor="@color/black"
-                    android:textSize="16sp"
-                    app:autoSizeMinTextSize="@dimen/help_autoSizeMinTextSize"
-                    app:autoSizeTextType="uniform" />
+                    android:textSize="16sp"/>
 
                 <ImageView
                     android:layout_width="wrap_content"

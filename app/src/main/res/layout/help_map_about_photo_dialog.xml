@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingTop="12dp"
-    android:paddingBottom="12dp"
     android:background="@color/white"
     android:orientation="vertical">
 
@@ -26,6 +25,7 @@
 
             <TextView
                 app:autoSizeMinTextSize="@dimen/help_autoSizeMinTextSize"
+                app:autoSizeMaxTextSize="@dimen/help_title_size"
                 app:autoSizeTextType="uniform"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/help_head1_height"
@@ -64,9 +64,10 @@
 
             <TextView
                 app:autoSizeMinTextSize="@dimen/help_autoSizeMinTextSize"
+                app:autoSizeMaxTextSize="12sp"
                 app:autoSizeTextType="uniform"
                 android:layout_width="match_parent"
-                android:layout_height="@dimen/help_head2_height"
+                android:layout_height="@dimen/help_head3_height"
                 android:layout_marginTop="4dp"
                 android:gravity="center"
                 android:textColor="@color/black"
@@ -77,7 +78,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:layout_marginBottom="20dp"
+                android:layout_marginBottom="10dp"
                 android:textColor="@color/black"
                 android:textSize="16sp"
                 android:text="@string/help_map_aboutPicture_4" />
