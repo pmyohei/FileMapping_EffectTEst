@@ -32,7 +32,7 @@ public class NodeOutsideView extends LinearLayout {
         Log.i("28対応", "getRootView=" + getRootView().getClass());
 
         //OnDraw()をコールさせる設定
-        setWillNotDraw(false);
+        //setWillNotDraw(false);
     }
 
     /*
@@ -158,13 +158,13 @@ public class NodeOutsideView extends LinearLayout {
     @Override
     protected void onDraw(Canvas canvas) {
 
-        if( mPaint == null ){
+/*        if( mPaint == null ){
             return;
         }
 
         //ノードの横幅
         int width = findViewById(R.id.cv_node).getWidth();
-        canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, (width / 2f), mPaint);
+        canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, (width / 2f), mPaint);*/
     }
 
 }

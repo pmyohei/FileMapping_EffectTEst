@@ -3,8 +3,11 @@ package com.mapping.filemapping;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -13,7 +16,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.cardview.widget.CardView;
@@ -23,16 +25,12 @@ import com.google.android.material.card.MaterialCardView;
 import java.io.Serializable;
 
 /*
- *  ルートノード
- *    Serializable：intentによるデータの受け渡しを行うために実装
+ *  ベースノード
+ *    ノードの基本クラス。どのクラスにも実装される。
  */
 public class BaseNode extends FrameLayout {
 
-    /* フィールド */
-    //シリアルID
-    //private static final long serialVersionUID = ResourceManager.SERIAL_VERSION_UID_NODE_VIEW;
-
-    //中心座標の初期値
+    //中心座標の初期値（ありえない値）
     public static float INIT_CENTER_POS = -0.1f;
 
     //ノード情報
@@ -42,16 +40,18 @@ public class BaseNode extends FrameLayout {
     //ノード中心座標
     public float mCenterPosX = INIT_CENTER_POS;
     public float mCenterPosY = INIT_CENTER_POS;
-    //ツールアイコン表示
-    //public boolean mIsOpenToolIcon;
-    //ノード操作発生時の画面遷移ランチャー
-    //public ActivityResultLauncher<Intent> mNodeOperationLauncher;
-    //ノード生成／編集クリックリスナー
-    //private MapActivity.NodeDesignClickListener mNodeDesignClickListener;
     //ダブルタップリスナー
     private View.OnClickListener mClickListener;
     //アイコンビュー（開いていない場合は、nullを設定する）
     private ToolIconsView mIconView;
+
+    //影用ペイント
+    private Paint mPaint;
+    //影色
+    private int mShadowColor;
+    //影サイズの最小・最大値
+    private float MIN_RADIUS;
+    private float MAX_RADIUS;
 
     /*
      * コンストラクタ
@@ -67,8 +67,7 @@ public class BaseNode extends FrameLayout {
     public BaseNode(Context context, AttributeSet attrs, int layoutID) {
         super(context, attrs);
 
-        Log.i("BaseNode", "1");
-
+        //初期化処理
         init(layoutID);
     }
 
@@ -100,12 +99,18 @@ public class BaseNode extends FrameLayout {
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(layoutID, this, true);
 
-        //Log.i("BaseNode", "init");
+        //影サイズの最小最大（px→dp）
+        MIN_RADIUS = getResources().getDimension(R.dimen.shadow_radius_min);
+        MAX_RADIUS = getResources().getDimension(R.dimen.shadow_radius_max);
+
+        //Log.i("影半径", "MIN_RADIUS=" + MIN_RADIUS);
+        //Log.i("影半径", "MAX_RADIUS=" + MAX_RADIUS);
+
+        //OnDraw()をコールさせる設定
+        setWillNotDraw(false);
 
         //ツールアイコン未保持
         mIconView = null;
-
-        //Log.i("init", "root getChildCount = " + getChildCount());
 
         setOnClickListener(new OnClickListener() {
             @Override
@@ -127,21 +132,27 @@ public class BaseNode extends FrameLayout {
 
         //ノード情報をビューに設定
         reflectViewNodeInfo();
-
-        //ツールアイコン設定
-        //setCommonToolIcon();
-        //setParentToolIcon();
-
-
-        //お試し
-/*        setOnClickListener(new OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                mClickListener.onClick( view );
-            }
-        });*/
     }
 
+    /*
+     * ペイント初期化
+     */
+    public void initPaint( int nodeKind ) {
+
+        //if( (nodeKind != NodeTable.NODE_KIND_PICTURE) && (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) ){
+        if( /*(nodeKind != NodeTable.NODE_KIND_PICTURE) &&*/ (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P) ){
+            //ピクチャノード以外で、API28以下なら、レイヤータイプを設定
+            //※API28以下は、影の描画に必要な処理
+            //※ピクチャノードでは、以下をコールすると写真が円形にならない
+            //setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            setLayerType(View.LAYER_TYPE_SOFTWARE, mPaint);
+        }
+
+        //ペイント生成
+        mPaint = new Paint();
+        mPaint.setColor(Color.WHITE);
+        mPaint.setAntiAlias(true);
+    }
 
     /*
      * ノードテーブルの情報をノードビューに反映する
@@ -322,34 +333,41 @@ public class BaseNode extends FrameLayout {
      * ノード枠線サイズの設定
      */
     public void setBorderSize( int thick ) {
-        //枠サイズを設定
+        //継承先で実装
+
+        /*        //枠サイズを設定
         ((MaterialCardView)findViewById( R.id.cv_node )).setStrokeWidth( thick );
 
-        mNode.setBorderSize( thick );
+        mNode.setBorderSize( thick );*/
     }
 
     /*
      * ノード枠線サイズの取得
      */
     public int getBorderSize() {
-        return ((MaterialCardView)findViewById( R.id.cv_node )).getStrokeWidth();
+        return mNode.getBorderSize();
     }
 
     /*
      * ノード枠色の設定
      */
     public void setBorderColor( String color ) {
-        //枠色を設定
+        //継承先で実装
+
+        /*        //枠色を設定
         ((MaterialCardView)findViewById( R.id.cv_node )).setStrokeColor( Color.parseColor(color) );
 
-        mNode.setBorderColor( color );
+        mNode.setBorderColor( color );*/
     }
 
     /*
      * ノード枠色の取得
      */
     public String getBorderColor() {
-        MaterialCardView cv_node = findViewById(R.id.cv_node);
+
+        return mNode.getBorderColor();
+
+/*        MaterialCardView cv_node = findViewById(R.id.cv_node);
 
         ColorStateList colorStateList = cv_node.getStrokeColorStateList();
 
@@ -359,7 +377,7 @@ public class BaseNode extends FrameLayout {
         }
 
         int colorInt = colorStateList.getDefaultColor();
-        return ( "#" + Integer.toHexString( colorInt ) );
+        return ( "#" + Integer.toHexString( colorInt ) );*/
     }
 
     /*
@@ -371,7 +389,8 @@ public class BaseNode extends FrameLayout {
         boolean isShadow = mNode.isShadow();
 
         //影色を設定
-        ((NodeOutsideView)findViewById( R.id.ll_nodeOutSide)).setShadowColor( Color.parseColor(color), nodeKind, isShadow );
+        //((NodeOutsideView)findViewById( R.id.ll_nodeOutSide)).setShadowColor( Color.parseColor(color), nodeKind, isShadow );
+        setLayerShadowColor(Color.parseColor(color), nodeKind, isShadow );
 
         mNode.setShadowColor( color );
     }
@@ -380,17 +399,38 @@ public class BaseNode extends FrameLayout {
      * ノード影色の取得
      */
     public String getShadowColor() {
-        return ((NodeOutsideView)findViewById( R.id.ll_nodeOutSide)).getShadowColor();
+        //return ((NodeOutsideView)findViewById( R.id.ll_nodeOutSide)).getShadowColor();
+        return ( "#" + Integer.toHexString( mShadowColor ) );
     }
 
     /*
-     * ノード影の有無の設定
+     * ノード影のon/offの設定
      */
     public void setShadowOnOff(boolean isShadow ) {
         //影色を設定
-        ((NodeOutsideView)findViewById( R.id.ll_nodeOutSide)).setShadowOnOff( isShadow, mNode.getKind()  );
+        //((NodeOutsideView)findViewById( R.id.ll_nodeOutSide)).setShadowOnOff( isShadow, mNode.getKind()  );
+        setLayerShadowOnOff( isShadow, mNode.getKind() );
 
         mNode.setShadow( isShadow );
+    }
+
+    /*
+     * 影色の設定
+     */
+    public void setLayerShadowColor(int colorHex, int nodeKind, boolean isShadow) {
+
+        //ペイント未生成なら生成
+        if( mPaint == null ){
+            initPaint( nodeKind );
+        }
+
+        //色更新
+        mShadowColor = colorHex;
+
+        //影設定ありなら、設定色で描画
+        if( isShadow ){
+            setLayerShadowOnOff( true, nodeKind );
+        }
     }
 
     /*
@@ -400,6 +440,41 @@ public class BaseNode extends FrameLayout {
         //OnOff反転
         boolean isShadow = !mNode.isShadow();
         this.setShadowOnOff( isShadow );
+    }
+
+    /*
+     * 影の有無を設定
+     */
+    public void setLayerShadowOnOff(boolean isShadow, int nodeKind ) {
+
+        //ペイント未生成なら生成
+        if( mPaint == null ){
+            initPaint(nodeKind);
+        }
+
+        if( isShadow ){
+            float nodeRadius = getNodeBodyWidth() / 8f;
+
+            //最大最小チェック
+            //※最小限のサイズと最大サイズを設定
+            if( nodeRadius < MIN_RADIUS ){
+                nodeRadius = MIN_RADIUS;
+            } else if( nodeRadius > MAX_RADIUS ){
+                nodeRadius = MAX_RADIUS;
+            }
+
+            //Log.i("影半径", "nodeRadius=" + nodeRadius);
+
+            //影の設定
+            mPaint.setShadowLayer(nodeRadius, 0, 0, mShadowColor);
+
+        } else {
+            //影を削除
+            mPaint.clearShadowLayer();
+        }
+
+        //再描画
+        invalidate();
     }
 
     /*
@@ -441,12 +516,30 @@ public class BaseNode extends FrameLayout {
     }
 
     /*
+     * ノード本体サイズ（横幅）を取得
+     *   ※ノード本体のサイズ
+     */
+    public float getNodeBodyWidth() {
+        //現在の横幅 * 現在の比率
+        if( mNode.getKind() == NodeTable.NODE_KIND_PICTURE ){
+            return findViewById(R.id.iv_node).getWidth();
+        } else {
+            return findViewById(R.id.cv_node).getWidth();
+        }
+    }
+
+    /*
      * 比率込みのノード本体サイズ（横幅）を取得
      *   ※ノード本体のサイズ
      */
     public float getScaleNodeBodyWidth() {
+
         //現在の横幅 * 現在の比率
-        return findViewById(R.id.cv_node).getWidth() * mNode.getSizeRatio();
+        if( mNode.getKind() == NodeTable.NODE_KIND_PICTURE ){
+            return findViewById(R.id.iv_node).getWidth() * mNode.getSizeRatio();
+        } else {
+            return findViewById(R.id.cv_node).getWidth() * mNode.getSizeRatio();
+        }
     }
 
     /*
@@ -461,9 +554,10 @@ public class BaseNode extends FrameLayout {
     /*
      * ノードの形を円形にする
      */
-    private void setShapeCircle() {
+    public void setShapeCircle() {
+        //継承先で実装
 
-        MaterialCardView cv_node = findViewById(R.id.cv_node);
+/*        MaterialCardView cv_node = findViewById(R.id.cv_node);
         //Log.i("Card", "width=" + cv_node.getWidth() + " height=" + cv_node.getHeight());
 
         //長い方の辺で縦横サイズを統一
@@ -471,22 +565,23 @@ public class BaseNode extends FrameLayout {
         cv_node.setMinimumHeight(max);
         cv_node.setMinimumWidth(max);
 
-        cv_node.setRadius(max / 2.0f);
+        cv_node.setRadius(max / 2.0f);*/
     }
 
     /*
      * ノードの形を四角（角丸）にする
      */
-    private void setShapeSquare() {
+    public void setShapeSquare() {
+        //継承先で実装
 
-        MaterialCardView cv_node = findViewById(R.id.cv_node);
+/*        MaterialCardView cv_node = findViewById(R.id.cv_node);
 
         //長い方の辺で正方形を作る
         int max = Math.max( cv_node.getWidth(), cv_node.getHeight() );
         cv_node.setMinimumHeight(max);
         cv_node.setMinimumWidth(max);
 
-        cv_node.setRadius(max * ResourceManager.SQUARE_CORNER_RATIO);
+        cv_node.setRadius(max * ResourceManager.SQUARE_CORNER_RATIO);*/
     }
 
 
@@ -522,12 +617,6 @@ public class BaseNode extends FrameLayout {
                         setNodeShape( mNode.getNodeShape() );
                         //サイズを設定
                         setSetScale();
-
-/*                        LinearLayout.LayoutParams param = new LinearLayout.LayoutParams(
-                                LinearLayout.LayoutParams.WRAP_CONTENT,
-                                LinearLayout.LayoutParams.WRAP_CONTENT);
-                        findViewById(R.id.cv_node).setLayoutParams(param);*/
-                        //findViewById(R.id.cv_node).invalidate();
 
                         //レイアウト確定後は、不要なので本リスナー削除
                         getViewTreeObserver().removeOnGlobalLayoutListener(this);
@@ -595,7 +684,21 @@ public class BaseNode extends FrameLayout {
         }
     }
 
-    /*-- getter／setter --*/
+    @Override
+    protected void onDraw(Canvas canvas) {
+
+        if( mPaint == null ){
+            return;
+        }
+
+        //ノードの横幅
+        //int radius = findViewById(R.id.cv_node).getWidth();
+        int radius = (int)(getNodeBodyWidth() / 2f);
+        canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, radius, mPaint);
+    }
+
+    /*------ getter／setter ------*/
+
     public NodeTable getNode() {
         return mNode;
     }

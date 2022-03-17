@@ -8,6 +8,19 @@
         <item name="android:typeface">serif</item>
     </style>
 
+
+    <!--  ピクチャノード（円形）  -->
+    <style name="circleImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">50%</item>
+    </style>
+    <!--  ピクチャノード（角丸）  -->
+    <style name="roundedCornersImageView" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">10%</item>
+    </style>
+
+
     <!--  RGB・カラーピッカー用  -->
     <style name="color_selecter">
         <item name="android:layout_width">wrap_content</item>

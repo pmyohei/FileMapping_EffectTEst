@@ -2,8 +2,12 @@ package com.mapping.filemapping;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
+import android.content.res.ColorStateList;
+import android.graphics.Color;
 import android.widget.ImageView;
 
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.shape.ShapeAppearanceModel;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -19,7 +23,8 @@ public class PictureNodeView extends ChildNode implements Serializable {
      */
     @SuppressLint("ClickableViewAccessibility")
     public PictureNodeView(Context context, NodeTable node, PictureTable thumbnail) {
-        super(context, node, R.layout.node_outside);
+        //super(context, node, R.layout.node_outside);
+        super(context, node, R.layout.picture_node);
 
         //サムネイル写真
         mThumbnail = thumbnail;
@@ -32,8 +37,18 @@ public class PictureNodeView extends ChildNode implements Serializable {
      */
     private void initNode() {
         //ノードの中身の表示を変更
-        findViewById(R.id.tv_node).setVisibility(GONE);
-        findViewById(R.id.iv_node).setVisibility(VISIBLE);
+        //findViewById(R.id.tv_node).setVisibility(GONE);
+        //findViewById(R.id.iv_node).setVisibility(VISIBLE);
+
+        ShapeableImageView test = findViewById(R.id.iv_node);
+
+        //ShapeAppearanceModel.Builder a = ShapeAppearanceModel.builder( test.getContext(), R.style.roundedCornersImageView, R.style.roundedCornersImageView );
+        ShapeAppearanceModel.Builder a = ShapeAppearanceModel.builder( test.getContext(), R.style.roundedCornersImageView, 0 );
+
+        test.setShapeAppearanceModel( a.build() );
+        /*test.setStrokeColor();
+        test.setStrokeWidth();
+        test.setStrokeWidth();*/
 
         //ノードに画像を設定
         findViewById(R.id.iv_node).post(()-> {
@@ -96,6 +111,78 @@ public class PictureNodeView extends ChildNode implements Serializable {
                 .transform( new ThumbnailTransformation( thumbnail, iv_node.getWidth() ) )
                 .error(R.drawable.ic_no_image)
                 .into( iv_node );
+    }
+
+    /*
+     * 比率込みのノード本体サイズ（横幅）を取得
+     *   ※ノード本体のサイズ
+     */
+/*    @Override
+    public float getScaleNodeBodyWidth() {
+        //現在の横幅 * 現在の比率
+        return findViewById(R.id.iv_node).getWidth() * mNode.getSizeRatio();
+    }*/
+
+    /*
+     * ノード枠線サイズの設定
+     */
+    @Override
+    public void setBorderSize( int thick ) {
+        //枠サイズを設定
+        ((ShapeableImageView)findViewById( R.id.iv_node )).setStrokeWidth( thick );
+
+        mNode.setBorderSize( thick );
+    }
+
+    /*
+     * ノード枠色の設定
+     */
+    @Override
+    public void setBorderColor( String color ) {
+
+        ColorStateList colorState = new ColorStateList(
+            new int[][] {
+                    new int[]{ android.R.attr.state_checked},
+                    new int[]{ -android.R.attr.state_checked},
+            },
+            new int[] {
+                    Color.parseColor( color ),
+                    Color.parseColor( color ),
+            }
+        );
+
+        //枠色を設定
+        ((ShapeableImageView)findViewById( R.id.iv_node )).setStrokeColor( colorState );
+
+        mNode.setBorderColor( color );
+    }
+
+    /*
+     * ノードの形を円形にする
+     */
+    @Override
+    public void setShapeCircle() {
+
+        ShapeableImageView iv_node = findViewById(R.id.iv_node);
+        //円形
+        ShapeAppearanceModel.Builder builder
+                = ShapeAppearanceModel.builder( iv_node.getContext(), R.style.circleImageView, 0 );
+        //適用
+        iv_node.setShapeAppearanceModel( builder.build() );
+    }
+
+    /*
+     * ノードの形を四角（角丸）にする
+     */
+    @Override
+    public void setShapeSquare() {
+
+        ShapeableImageView iv_node = findViewById(R.id.iv_node);
+        //角丸
+        ShapeAppearanceModel.Builder builder
+                = ShapeAppearanceModel.builder( iv_node.getContext(), R.style.roundedCornersImageView, 0 );
+        //適用
+        iv_node.setShapeAppearanceModel( builder.build() );
     }
 
 }
