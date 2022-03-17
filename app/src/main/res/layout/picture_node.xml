@@ -9,12 +9,14 @@
     android:gravity="center">
 
     <!--  ピクチャノード  -->
+    <!--  ※paddingを入れないと、枠を設定した時に端が切れる -->
     <com.google.android.material.imageview.ShapeableImageView
         app:shapeAppearanceOverlay="@style/circleImageView"
         android:id="@+id/iv_node"
         android:layout_width="@dimen/thumnbnail_default_size"
         android:layout_height="@dimen/thumnbnail_default_size"
         android:layout_gravity="center"
+        android:padding="4dp"
         android:src="@drawable/ic_no_image"/>
 
 </LinearLayout>

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
+import android.util.Log;
 import android.widget.ImageView;
 
 import com.google.android.material.imageview.ShapeableImageView;
