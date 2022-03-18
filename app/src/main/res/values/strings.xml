@@ -12,7 +12,7 @@
 
     <!--  ノード  -->
     <string name="node_createButtom">Create</string>
-    <string name="node_cancelButtom">Cancel</string>a
+    <string name="node_cancelButtom">Cancel</string>
 
     <!--  ダイアログ  -->
     <string name="alert_map_delete_title">Remove Map</string>
@@ -81,6 +81,7 @@
     <!--  マップリスト画面  -->
     <string name="bt_new_map">New Map</string>
     <!--  マップ生成画面  -->
+    <string name="map_create_sample">Sample</string>
     <string name="map_create_tab1">Map name</string>
     <string name="map_create_tab2">2Colors</string>
     <string name="map_create_tab3">3Colors</string>
@@ -111,6 +112,7 @@
     <!-- ノードデザインタブ -->
     <string name="tab_node_name">Node name</string>
     <string name="tab_thumnbnail">Thumbnail</string>
+    <string name="change_thumnbnail">Change Thumbnail</string>
     <string name="tab_map_color">Map color</string>
     <string name="tab_font">Font</string>
     <string name="tab_text_color">Text Color</string>
@@ -152,7 +154,8 @@
 
 
     <!-- フォルダツリー -->
-    <string name="tree_title">Node list\n(Click a node name to move it to the center of the screen)</string>
+    <string name="tree_title">Node list</string>
+    <string name="tree_title2">(Touch a node name to move it to the center of the screen)</string>
     <string name="no_nodeName">(No Name)</string>
     <string name="no_nodeNamePictureNode">Picture Node</string>
     <string name="top_nodeName">・</string>

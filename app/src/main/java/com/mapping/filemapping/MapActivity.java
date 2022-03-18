@@ -46,7 +46,10 @@ import android.widget.Toast;
 
 import java.util.Objects;
 
-public class MapActivity extends AppCompatActivity /*implements ColorDialog.NoticeDialogListener*/ {
+/*
+ * マップ画面
+ */
+public class MapActivity extends AppCompatActivity {
 
     /* 画面遷移-レスポンスコード */
     public static final int RESULT_PICTURE_NODE = 200;

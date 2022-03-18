@@ -4,7 +4,7 @@
     <!--  共通  -->
     <string name="create">Create</string>
     <string name="cancel">Cancel</string>
-    <string name="save">保存</string>
+    <string name="save">Save</string>
     <string name="waiting">処理中</string>
     <string name="updating">更新中</string>
     <string name="do_not_show_this_message">今後、このメッセージを表示しない</string>
@@ -12,7 +12,7 @@
 
     <!--  ノード  -->
     <string name="node_createButtom">作成</string>
-    <string name="node_cancelButtom">キャンセル</string>a
+    <string name="node_cancelButtom">キャンセル</string>
 
     <!--  ダイアログ  -->
     <string name="alert_map_delete_title">マップ削除確認</string>
@@ -81,6 +81,7 @@
     <!--  マップリスト画面  -->
     <string name="bt_new_map">New Map</string>
     <!--  マップ生成画面  -->
+    <string name="map_create_sample">Sample</string>
     <string name="map_create_tab1">マップ名</string>
     <string name="map_create_tab2">2Colors</string>
     <string name="map_create_tab3">3Colors</string>
@@ -111,6 +112,7 @@
     <!-- ノードデザインタブ -->
     <string name="tab_node_name">ノード名</string>
     <string name="tab_thumnbnail">サムネイル</string>
+    <string name="change_thumnbnail">サムネイルの変更</string>
     <string name="tab_map_color">マップ色</string>
     <string name="tab_font">フォント</string>
     <string name="tab_text_color">テキスト色</string>
@@ -151,7 +153,8 @@
     <string name="shadow_on_off">ON／OFF</string>
 
     <!-- フォルダツリー -->
-    <string name="tree_title">ノード一覧\n（クリックで画面中央へ移動）</string>
+    <string name="tree_title">ノード一覧</string>
+    <string name="tree_title2">（タッチで画面中央へ移動）</string>
     <string name="no_nodeName">（ノード名なし）</string>
     <string name="no_nodeNamePictureNode">ピクチャ</string>
     <string name="top_nodeName">・</string>
@@ -198,12 +201,12 @@
 
     <string name="help_map_basic_details1">まずはノードをタッチしてみましょう！\n操作アイコンが表示されます。\n各種アイコンから、新しいノードの作成や写真の紐づけをすることができます。</string>
     <string name="help_map_basic_details1_note">※アイコンの詳細は、タッチした時に現れる「？」アイコンでご確認下さい\n</string>
-    <string name="help_map_basic_sample1">操作例のご紹介①</string>
+    <string name="help_map_basic_sample1">操作例１</string>
     <string name="help_map_basic_sample1_title">～新しくノードを作成したい～</string>
     <string name="help_map_basic_sample1_details1">①ノードをタッチ</string>
     <string name="help_map_basic_sample1_details2">②ノード作成アイコンを選択</string>
 
-    <string name="help_map_basic_sample2">操作例のご紹介②</string>
+    <string name="help_map_basic_sample2">操作例２</string>
     <string name="help_map_basic_sample2_title">～ピクチャノードに写真を格納したい～</string>
     <string name="help_map_basic_sample2_details1">①ノードをタッチ</string>
     <string name="help_map_basic_sample2_details2">②ピクチャノード作成アイコンを選択</string>
@@ -217,7 +220,7 @@
     <string name="help_map_toolbar_palette1">全体的なマップデザイン変更</string>
     <string name="help_map_toolbar_palette2">マップの背景色やマップ上のすべてのノードのデザインを変更できます。</string>
     <string name="help_map_toolbar_tree1">ノードのツリー表示</string>
-    <string name="help_map_toolbar_tree2">マップ上にあるすべてのノードをツリー形式で確認できます</string>
+    <string name="help_map_toolbar_tree2">マップ上にあるすべてのノードをツリー形式で確認できます。</string>
     <string name="help_map_toolbar_disable1">～アイコンが見えなくなったとき～</string>
     <string name="help_map_toolbar_disable2">アイコンが見えにくくなったときは、ツールバーをタッチすると見えやすくなります。</string>
 

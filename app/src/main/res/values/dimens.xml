@@ -43,7 +43,8 @@
     <dimen name="font_item_size">48dp</dimen>
     <dimen name="font_item_half_size">24dp</dimen>
     <!--  デザインボトムシートのトップパディング  -->
-    <dimen name="design_bottom_sheet_top_padding">36dp</dimen>
+    <dimen name="design_sheet_paddingTop">28dp</dimen>
+    <dimen name="design_sheet_paddingBottom">80dp</dimen>
     <!--  シークバーのつまみサイズ  -->
     <dimen name="seekbar_thumb_size">28dp</dimen>
 

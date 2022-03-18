@@ -129,14 +129,19 @@ public class BaseNode extends FrameLayout {
      */
     public void initPaint() {
 
-        if( Build.VERSION.SDK_INT <= Build.VERSION_CODES.P ){
-            //※API28以下は、影の描画に必要な処理
-            setLayerType(View.LAYER_TYPE_SOFTWARE, mPaint);
-        }
-
         //ペイント生成
         mPaint = new Paint();
-        mPaint.setColor(Color.TRANSPARENT);
+
+        if( Build.VERSION.SDK_INT <= Build.VERSION_CODES.P ){
+            //※API28以下は、影の描画に必要な処理
+            setLayerType(View.LAYER_TYPE_SOFTWARE, null);
+            //※透明の場合、影は描画されない
+            mPaint.setColor(Color.WHITE);
+
+        } else {
+            mPaint.setColor(Color.TRANSPARENT);
+        }
+
         mPaint.setAntiAlias(true);
     }
 
@@ -324,6 +329,7 @@ public class BaseNode extends FrameLayout {
         boolean isShadow = mNode.isShadow();
         //影色を設定
         setLayerShadowColor(Color.parseColor(color), isShadow );
+
         mNode.setShadowColor( color );
     }
 
@@ -391,8 +397,6 @@ public class BaseNode extends FrameLayout {
             } else if( nodeRadius > MAX_RADIUS ){
                 nodeRadius = MAX_RADIUS;
             }
-
-            //Log.i("影半径", "nodeRadius=" + nodeRadius);
 
             //影の設定
             mPaint.setShadowLayer(nodeRadius, 0, 0, mShadowColor);

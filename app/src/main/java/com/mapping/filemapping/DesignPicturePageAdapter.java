@@ -9,9 +9,12 @@ import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
 import android.widget.Switch;
+import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
 
@@ -20,7 +23,7 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
     //フィールド変数
     private final List<Integer>   mData;
     //設定対象ノードビュー
-    private final BaseNode        mv_node;
+    private final BaseNode mv_node;
 
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
@@ -28,10 +31,11 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
     class GuideViewHolder extends RecyclerView.ViewHolder {
 
         //設定対象ノードビュー
-        private final BaseNode        mv_node;
+        private final BaseNode mv_node;
 
         /*--- サムネイル写真の変更 ---*/
-        private ImageView iv_thumbnail;
+        private MaterialCardView mcv_thumbnail;
+        private TextView tv_contents;
 
         /*--- ノードデザイン ---*/
         private ImageView iv_circle;
@@ -64,7 +68,9 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
             switch (position) {
                 case 0:
                     //サムネイルの変更
-                    iv_thumbnail = itemView.findViewById(R.id.iv_thumbnail);
+                    mcv_thumbnail = itemView.findViewById(R.id.mcv_thumbnail);
+                    tv_contents = itemView.findViewById(R.id.tv_contents);
+
                     break;
 
                 case 1:
@@ -139,7 +145,7 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
         private void setPage0() {
 
             //ノード生成
-            iv_thumbnail.setOnClickListener(new View.OnClickListener() {
+            mcv_thumbnail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
                     //トリミング画面を開く
@@ -150,10 +156,10 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
                     intent.putExtra(MapActivity.INTENT_EDIT, true);
 
                     //開始
-                    ((MapActivity)context).getTrimmingLauncher().launch(intent);
+                    //※上記のcontextではキャスト不可でエラー
+                    ((MapActivity)tv_contents.getContext()).getTrimmingLauncher().launch(intent);
                 }
             });
-
         }
 
         /*

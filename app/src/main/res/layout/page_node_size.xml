@@ -14,7 +14,8 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/design_bottom_sheet_top_padding"
+            android:paddingTop="@dimen/design_sheet_paddingTop"
+            android:paddingBottom="@dimen/design_sheet_paddingBottom"
             android:orientation="vertical">
 
             <!-- ノードサイズ -->

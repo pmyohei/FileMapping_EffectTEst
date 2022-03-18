@@ -18,7 +18,10 @@
         android:layout_height="match_parent"
         android:gravity="center"
         android:text="@string/font_sample_japanese"
-        android:textSize="32sp"
-        android:textColor="@color/black"/>
+        android:textSize="28sp"
+        android:textColor="@color/black"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeMaxTextSize="28sp"
+        app:autoSizeTextType="uniform"/>
 
 </com.google.android.material.card.MaterialCardView>

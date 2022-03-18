@@ -25,14 +25,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 /*
- * マップ情報入力画面（新規作成／編集）
+ * マップ新規作成画面
  */
 public class MapCreateActivity extends AppCompatActivity {
 
     /*-- 定数 --*/
     /* 画面遷移-レスポンスコード */
     public static final int RESULT_CREATED = 100;
-    public static final int RESULT_EDITED  = 101;
 
     /* 画面遷移-キー */
     public static String KEY_MAP = "map";         //マップ

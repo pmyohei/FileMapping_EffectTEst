@@ -29,7 +29,6 @@
             android:id="@+id/vp2_createMap"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:paddingTop="4dp"
             android:layout_gravity="center"/>
 
         <!-- インジケータ -->

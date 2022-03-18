@@ -16,26 +16,18 @@
     >
 
     <TextView
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeMaxTextSize="18sp"
+        app:autoSizeTextType="uniform"
         android:id="@+id/tv_mapName"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
         android:layout_marginTop="72dp"
         android:layout_marginBottom="72dp"
-        android:layout_gravity="center"
-        android:text="Sample"
+        android:gravity="center"
+        android:text="@string/sample"
         android:textSize="18sp"
-        android:textColor="@color/black"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-<!--
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:paddingStart="1dp"
-        android:paddingEnd="1dp"
-        android:background="@color/gray">
-    </View>-->
+        android:textColor="@color/black" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -44,17 +36,6 @@
         android:gravity="end"
         android:layout_marginBottom="8dp"
         android:orientation="horizontal">
-
-<!--
-        <ImageButton
-            android:id="@+id/ib_map"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="12dp"
-            android:background="@color/white"
-            app:srcCompat="@drawable/baseline_open_map_24" />
--->
 
         <ImageButton
             android:id="@+id/ib_edit"

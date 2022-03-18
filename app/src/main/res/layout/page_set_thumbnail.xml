@@ -4,40 +4,33 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:gravity="center"
     android:orientation="vertical">
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:overScrollMode="never">
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/mcv_thumbnail"
+        android:layout_width="@dimen/node_shape_sample_size"
+        android:layout_height="@dimen/node_shape_sample_size"
+        android:padding="8dp"
+        android:theme="@style/Theme.MaterialComponents.Light"
+        app:cardCornerRadius="@dimen/color_history_item_half_size"
+        app:cardElevation="4dp">
 
-        <LinearLayout
-            android:layout_width="match_parent"
+        <ImageView
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/design_bottom_sheet_top_padding"
-            android:orientation="vertical">
+            android:layout_gravity="center"
+            android:src="@drawable/baseline_change_thumbnail_24" />
 
-            <TextView
-                android:id="@+id/tv_titleNodeDesign"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
-                android:layout_gravity="center_horizontal"
-                android:text="トップ写真の変更"
-                android:textColor="@color/black"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="parent" />
+    </com.google.android.material.card.MaterialCardView>
 
-            <ImageView
-                android:id="@+id/iv_thumbnail"
-                android:layout_width="@dimen/node_shape_sample_size"
-                android:layout_height="@dimen/node_shape_sample_size"
-                android:layout_margin="16dp"
-                android:layout_gravity="center"
-                android:src="@drawable/baseline_change_thumbnail_24" />
-
-        </LinearLayout>
-
-    </ScrollView>
+    <TextView
+        android:id="@+id/tv_contents"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:layout_gravity="center_horizontal"
+        android:text="@string/change_thumnbnail"
+        android:textColor="@color/black" />
 
 </LinearLayout>
