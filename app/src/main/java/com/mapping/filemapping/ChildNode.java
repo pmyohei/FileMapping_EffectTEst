@@ -685,6 +685,9 @@ public class ChildNode extends BaseNode {
         //描画終了座標（自ノード位置）
         private float mSelfPosX;
         private float mSelfPosY;
+        //描画開始位置の距離
+        private final float LINE_START_OFFSET;
+
 
         /*
          * コンストラクタ
@@ -711,6 +714,8 @@ public class ChildNode extends BaseNode {
             calcSelfEdgePos();
             //ノードに対して背面になるようにする（デフォルト値は0のため、0未満の値を指定）
             setTranslationZ(-1);
+
+            LINE_START_OFFSET = getResources().getDimension( R.dimen.line_start_offset );
         }
 
 
@@ -728,11 +733,9 @@ public class ChildNode extends BaseNode {
             //ラジアン角度を取得
             double radian = Math.atan(a);
 
-            final float CROSS_RADIUS_RATIO = 1.2f;
-
             //交点に相当する座標を計算（自ノード側）
             //ノードよりも少し大きい半径を取得
-            float radius = (getScaleNodeBodyWidth() / 2f) * CROSS_RADIUS_RATIO;
+            float radius = (getScaleNodeBodyWidth() / 2f) + LINE_START_OFFSET;
             int x = (int) (Math.cos(radian) * radius);
             int y = (int) (Math.sin(radian) * radius);
 
@@ -742,7 +745,7 @@ public class ChildNode extends BaseNode {
 
             //交点に相当する座標を計算（親ノード側）
             //ノードよりも少し大きい半径を取得
-            radius = (mParentNode.getScaleNodeBodyWidth() / 2f) * CROSS_RADIUS_RATIO;
+            radius = (mParentNode.getScaleNodeBodyWidth() / 2f) + LINE_START_OFFSET;
             x = (int) (Math.cos(radian) * radius);
             y = (int) (Math.sin(radian) * radius);
 

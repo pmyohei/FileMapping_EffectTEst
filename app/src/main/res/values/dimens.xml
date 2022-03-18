@@ -18,6 +18,9 @@
     <dimen name="shadow_radius_min">8dp</dimen>
     <dimen name="shadow_radius_max">20dp</dimen>
 
+    <!--  ライン  -->
+    <dimen name="line_start_offset">6dp</dimen>
+
     <!--  サンプルマップ  -->
     <dimen name="change_color_pattern_icon">36dp</dimen>
     <dimen name="switch_shadow_icon">36dp</dimen>
