@@ -600,7 +600,7 @@ public class MapActivity extends AppCompatActivity /*implements ColorDialog.Noti
         nodeTable.setNodeView(nodeView);
 
         //レイアウト確定後の処理を設定
-        nodeView.addOnNodeGlobalLayoutListener();
+        nodeView.addLayoutConfirmedListener();
     }
 
     /*

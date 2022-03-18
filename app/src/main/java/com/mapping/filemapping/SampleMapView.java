@@ -3,7 +3,6 @@ package com.mapping.filemapping;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -180,7 +179,7 @@ public class SampleMapView extends FrameLayout {
             //ビューにノード情報を設定
             rootNodeView.setNode(node);
             //中心座標を設定
-            rootNodeView.addOnNodeGlobalLayoutListener();
+            rootNodeView.addLayoutConfirmedListener();
 
             //NodeTable側でノードビューを保持
             node.setNodeView(rootNodeView);
@@ -193,7 +192,7 @@ public class SampleMapView extends FrameLayout {
 
         //ノード生成
         ChildNode nodeView = new NodeView(getContext(), node);
-        nodeView.setSampleRootNode( rootNode.getNode() );
+        nodeView.setSampleRootNode( rootNode.getNode() );   //サンプルマップの場合、親ノードをフィールドに持たせる
 
         //ノードをマップに追加
         fl_map.addView(nodeView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
@@ -209,11 +208,9 @@ public class SampleMapView extends FrameLayout {
         mlp.setMargins(left, top, mlp.rightMargin, mlp.bottomMargin);
 
         //レイアウト確定後の処理を設定
-        nodeView.addOnNodeGlobalLayoutListener();
-
+        nodeView.addLayoutConfirmedListener();
         //ノードビューを保持
         node.setNodeView(nodeView);
-
         //タッチリスナーを削除（サンプルマップでは不要のため）
         nodeView.removeTouchListener();
     }

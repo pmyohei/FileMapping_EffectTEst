@@ -484,26 +484,6 @@ public class BaseNode extends FrameLayout {
         return getWidth() * mNode.getSizeRatio();
     }
 
-
-    /*
-     * ノード中心座標の設定
-     */
-    public void calcCenterPos() {
-        //中心座標を計算し、設定
-        this.mCenterPosX = getLeft() + (getWidth() / 2f);
-        this.mCenterPosY = getTop() + (getHeight() / 2f);
-
-        Log.i("確定順調査", "自分の中心位置を初確定=" + mNode.getNodeName());
-
-        Log.i("ラインタイミング", "Base確定 ノード名=" + mNode.getNodeName() + " mCenterPosX=" + mCenterPosX);
-        Log.i("中心位置Y調査", "Base確定 ノード名=" + mNode.getNodeName() + " mCenterPosY=" + mCenterPosY);
-        Log.i("中心位置Y調査２", "Base確定 ノード名=" + mNode.getNodeName() + " getTop()=" + getTop());
-        Log.i("中心位置Y調査２", "Base確定 ノード名=" + mNode.getNodeName() + " getHeight()=" + getHeight());
-        Log.i("中心位置Y調査２", "Base確定 ノード名(cv_node)=" + mNode.getNodeName() + " getHeight()=" + findViewById(R.id.cv_node).getHeight());
-        Log.i("中心位置Y調査２", "Base確定 ノード名(tv_node)=" + mNode.getNodeName() + " getHeight()=" + findViewById(R.id.tv_node).getHeight());
-
-    }
-
     /*
      * ノードの形を円形にする
      */
@@ -535,15 +515,11 @@ public class BaseNode extends FrameLayout {
     }*/
 
     /*
-     * レイアウト確定後処理の設定
+     * レイアウト確定後リスナーの追加
+     *　　ノードの形状、ノードの比率を設定
+     *   ノードの形状は、ノード名が確定しないと適切な形にできないため、このタイミングで設定する
      */
-    public void addOnNodeGlobalLayoutListener() {
-
-        Log.i("確定順調査", "addOnNodeGlobalLayoutListenerコール（Base）=" + mNode.getNodeName());
-
-/*        post(()-> {
-            Log.i("確定順調査", "post=" + mNode.getNodeName() + " height()" + getHeight());
-        });*/
+    public void addLayoutConfirmedListener() {
 
         ViewTreeObserver observer = getViewTreeObserver();
         observer.addOnGlobalLayoutListener(
@@ -551,14 +527,9 @@ public class BaseNode extends FrameLayout {
                 @Override
                 public void onGlobalLayout() {
 
-                    //Log.i("長さの確定確認", "addOnNodeGlobalLayoutListener");
-                    //Log.i("中心位置Y調査２", "addOnNodeGlobalLayoutListener getHeight=" + getHeight());
-
-                    Log.i("ラインタイミング", "Baseレイアウト確定=" + mNode.getNodeName());
-
                     //ノードの形状
                     setNodeShape( mNode.getNodeShape() );
-                    //サイズを設定
+                    //スケールサイズを設定
                     setSetScale();
 
                     //レイアウト確定後は、不要なので本リスナー削除

@@ -2,30 +2,21 @@ package com.mapping.filemapping;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.graphics.Typeface;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.ViewTreeObserver;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.RadioButton;
-import android.widget.RadioGroup;
-import android.widget.SeekBar;
 import android.widget.Switch;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
-
-import com.google.android.material.card.MaterialCardView;
 
 import java.util.List;
 import java.util.Locale;
@@ -328,7 +319,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
         public void afterTextChanged(Editable editable) {
             //ノードに反映
             mv_node.setNodeName( editable.toString() );
-            mv_node.addOnNodeGlobalLayoutListener();
+            mv_node.addLayoutConfirmedListener();
         }
         /*--  --*/
 
