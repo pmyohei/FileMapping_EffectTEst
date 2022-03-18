@@ -197,7 +197,7 @@ public class ColorSelectionView extends LinearLayout {
 
             case COLOR_SHADOW:
                 //影カラー
-                node.setShadowColor(code, node.getNode().getKind());
+                node.setShadowColor(code);
                 break;
 
             case COLOR_LINE:

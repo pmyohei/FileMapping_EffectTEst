@@ -587,9 +587,6 @@ public class MapActivity extends AppCompatActivity /*implements ColorDialog.Noti
      */
     private void initAllNodeCommon(BaseNode nodeView, NodeTable nodeTable) {
 
-        //レイアウト確定後の処理を設定
-        nodeView.addOnNodeGlobalLayoutListener();
-
         //ノードクリックリスナー
         nodeView.setOnNodeClickListener(new View.OnClickListener() {
                 @Override
@@ -601,6 +598,9 @@ public class MapActivity extends AppCompatActivity /*implements ColorDialog.Noti
 
         //ノードビューを保持
         nodeTable.setNodeView(nodeView);
+
+        //レイアウト確定後の処理を設定
+        nodeView.addOnNodeGlobalLayoutListener();
     }
 
     /*

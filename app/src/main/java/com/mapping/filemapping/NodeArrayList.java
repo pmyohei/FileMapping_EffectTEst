@@ -515,7 +515,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
 
         //リストの内のノードすべて
         for( NodeTable node: this ){
-            node.getNodeView().setShadowColor( color, node.getKind() );
+            node.getNodeView().setShadowColor( color );
         }
 
         //全体デザイン変更あり

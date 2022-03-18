@@ -188,19 +188,20 @@ public class SampleMapView extends FrameLayout {
             return;
         }
 
+        //ルートノード
+        BaseNode rootNode = findViewById(R.id.v_rootNode);
+
         //ノード生成
         ChildNode nodeView = new NodeView(getContext(), node);
+        nodeView.setSampleRootNode( rootNode.getNode() );
 
         //ノードをマップに追加
         fl_map.addView(nodeView, new ViewGroup.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT, ViewGroup.LayoutParams.WRAP_CONTENT));
 
-        //ルートノード
-        BaseNode rootNode = findViewById(R.id.v_rootNode);
-        int centerX = rootNode.getLeft() + (rootNode.getWidth() / 2);
-        int centerY = rootNode.getTop() + (rootNode.getHeight() / 2);
-
         //位置設定
         //※レイアウト追加後に行うこと（MarginLayoutParamsがnullになってしまうため）
+        int centerX = rootNode.getLeft() + (rootNode.getWidth() / 2);
+        int centerY = rootNode.getTop() + (rootNode.getHeight() / 2);
         int left = centerX + node.getPosX();
         int top  = centerY + node.getPosY();
 
@@ -208,7 +209,7 @@ public class SampleMapView extends FrameLayout {
         mlp.setMargins(left, top, mlp.rightMargin, mlp.bottomMargin);
 
         //レイアウト確定後の処理を設定
-        ((ChildNode) nodeView).addOnNodeGlobalLayoutListener(rootNode.getNode());
+        nodeView.addOnNodeGlobalLayoutListener();
 
         //ノードビューを保持
         node.setNodeView(nodeView);

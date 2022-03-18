@@ -174,11 +174,11 @@ public class BaseNode extends FrameLayout {
         }
 
         //枠色
-        setBorderColor(mNode.getBorderColor());
+        setBorderColor( mNode.getBorderColor() );
         //枠サイズ
-        setBorderSize(mNode.getBorderSize());
+        setBorderSize( mNode.getBorderSize() );
         //影色
-        setShadowColor(mNode.getShadowColor(), mNode.getKind());
+        setShadowColor( mNode.getShadowColor() );
     }
 
     /*
@@ -326,12 +326,11 @@ public class BaseNode extends FrameLayout {
     /*
      * ノード影色の設定
      */
-    public void setShadowColor( String color, int nodeKind ) {
-
+    public void setShadowColor( String color ) {
         //現在の影の有無
         boolean isShadow = mNode.isShadow();
         //影色を設定
-        setLayerShadowColor(Color.parseColor(color), nodeKind, isShadow );
+        setLayerShadowColor(Color.parseColor(color), isShadow );
         mNode.setShadowColor( color );
     }
 
@@ -347,14 +346,14 @@ public class BaseNode extends FrameLayout {
      */
     public void setShadowOnOff(boolean isShadow ) {
         //影色を設定
-        setLayerShadowOnOff( isShadow, mNode.getKind() );
+        setLayerShadowOnOff( isShadow );
         mNode.setShadow( isShadow );
     }
 
     /*
      * 影色の設定
      */
-    public void setLayerShadowColor(int colorHex, int nodeKind, boolean isShadow) {
+    public void setLayerShadowColor(int colorHex, boolean isShadow) {
 
         //ペイント未生成なら生成
         if( mPaint == null ){
@@ -366,7 +365,7 @@ public class BaseNode extends FrameLayout {
 
         //影設定ありなら、設定色で描画
         if( isShadow ){
-            setLayerShadowOnOff( true, nodeKind );
+            setLayerShadowOnOff( true );
         }
     }
 
@@ -382,7 +381,7 @@ public class BaseNode extends FrameLayout {
     /*
      * 影の有無を設定
      */
-    public void setLayerShadowOnOff(boolean isShadow, int nodeKind ) {
+    public void setLayerShadowOnOff(boolean isShadow ) {
 
         //ペイント未生成なら生成
         if( mPaint == null ){
@@ -455,7 +454,7 @@ public class BaseNode extends FrameLayout {
      *   ※ノード本体のサイズ
      */
     public float getNodeBodyWidth() {
-        //現在の横幅 * 現在の比率
+        //現在の横幅
         if( mNode.getKind() == NodeTable.NODE_KIND_PICTURE ){
             return findViewById(R.id.iv_node).getWidth();
         } else {
@@ -478,12 +477,31 @@ public class BaseNode extends FrameLayout {
     }
 
     /*
+     * 比率込みのノード本体サイズ（横幅）を取得
+     *   ※ノード本体のサイズ
+     */
+    public float getScaleNodeWidth() {
+        return getWidth() * mNode.getSizeRatio();
+    }
+
+
+    /*
      * ノード中心座標の設定
      */
     public void calcCenterPos() {
         //中心座標を計算し、設定
         this.mCenterPosX = getLeft() + (getWidth() / 2f);
         this.mCenterPosY = getTop() + (getHeight() / 2f);
+
+        Log.i("確定順調査", "自分の中心位置を初確定=" + mNode.getNodeName());
+
+        Log.i("ラインタイミング", "Base確定 ノード名=" + mNode.getNodeName() + " mCenterPosX=" + mCenterPosX);
+        Log.i("中心位置Y調査", "Base確定 ノード名=" + mNode.getNodeName() + " mCenterPosY=" + mCenterPosY);
+        Log.i("中心位置Y調査２", "Base確定 ノード名=" + mNode.getNodeName() + " getTop()=" + getTop());
+        Log.i("中心位置Y調査２", "Base確定 ノード名=" + mNode.getNodeName() + " getHeight()=" + getHeight());
+        Log.i("中心位置Y調査２", "Base確定 ノード名(cv_node)=" + mNode.getNodeName() + " getHeight()=" + findViewById(R.id.cv_node).getHeight());
+        Log.i("中心位置Y調査２", "Base確定 ノード名(tv_node)=" + mNode.getNodeName() + " getHeight()=" + findViewById(R.id.tv_node).getHeight());
+
     }
 
     /*
@@ -510,7 +528,10 @@ public class BaseNode extends FrameLayout {
         int widthSize = MeasureSpec.getSize(widthMeasureSpec);
 
         Log.i("長さの確定確認", "onMeasure widthSize=" + widthSize);
-        Log.i("長さの確定確認", "onMeasure getWidth=" + getWidth());
+
+        if( mNode != null ){
+            Log.i("確定順調査", "onMeasure=" + mNode.getNodeName() + " height()" + getHeight());
+        }
     }*/
 
     /*
@@ -518,26 +539,32 @@ public class BaseNode extends FrameLayout {
      */
     public void addOnNodeGlobalLayoutListener() {
 
+        Log.i("確定順調査", "addOnNodeGlobalLayoutListenerコール（Base）=" + mNode.getNodeName());
+
+/*        post(()-> {
+            Log.i("確定順調査", "post=" + mNode.getNodeName() + " height()" + getHeight());
+        });*/
+
         ViewTreeObserver observer = getViewTreeObserver();
         observer.addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
+            new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
 
-                        //Log.i("長さの確定確認", "addOnNodeGlobalLayoutListener");
-                        //Log.i("長さの確定確認", "addOnNodeGlobalLayoutListener getWidth=" + getWidth());
+                    //Log.i("長さの確定確認", "addOnNodeGlobalLayoutListener");
+                    //Log.i("中心位置Y調査２", "addOnNodeGlobalLayoutListener getHeight=" + getHeight());
 
-                        //中心座標の計算
-                        calcCenterPos();
-                        //ノードの形状
-                        setNodeShape( mNode.getNodeShape() );
-                        //サイズを設定
-                        setSetScale();
+                    Log.i("ラインタイミング", "Baseレイアウト確定=" + mNode.getNodeName());
 
-                        //レイアウト確定後は、不要なので本リスナー削除
-                        getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                    }
+                    //ノードの形状
+                    setNodeShape( mNode.getNodeShape() );
+                    //サイズを設定
+                    setSetScale();
+
+                    //レイアウト確定後は、不要なので本リスナー削除
+                    getViewTreeObserver().removeOnGlobalLayoutListener(this);
                 }
+            }
         );
     }
 
@@ -546,6 +573,15 @@ public class BaseNode extends FrameLayout {
      */
     public void setOnNodeClickListener( View.OnClickListener listener ) {
         mClickListener = listener;
+    }
+
+    @Override
+    protected void onLayout(boolean changed, int left, int top, int right, int bottom) {
+        super.onLayout(changed, left, top, right, bottom);
+
+        //中心座標を計算し、設定
+        this.mCenterPosX = left + (getWidth() / 2f);
+        this.mCenterPosY = top + (getHeight() / 2f);
     }
 
     @Override

@@ -23,8 +23,6 @@ public class NodeView extends ChildNode implements Serializable {
      */
     @SuppressLint("ClickableViewAccessibility")
     public NodeView(Context context, AttributeSet attrs) {
-        //super(context, new NodeTable(), null, R.layout.node);
-        //super(context, null, R.layout.node_outside);
         super(context, null, R.layout.node);
     }
 
@@ -34,9 +32,7 @@ public class NodeView extends ChildNode implements Serializable {
      */
     @SuppressLint("ClickableViewAccessibility")
     public NodeView(Context context, NodeTable node) {
-        //super(context, node, R.layout.node_outside);
         super(context, node, R.layout.node);
-        //Log.i("NodeView", "3");
 
         initNode();
     }
