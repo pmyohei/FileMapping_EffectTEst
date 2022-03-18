@@ -45,7 +45,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
         /*--- ノードデザイン ---*/
         private ColorSelectionView csv_background;
         private ImageView iv_circle;
-        private ImageView iv_square;
+        private ImageView iv_squareRounded;
         private SeekbarView  sbv_nodeSize;
         private TextView tv_titel_nodeSize;
         private ColorSelectionView csv_border;
@@ -94,7 +94,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
                 case 3:
                     //ノード形
                     iv_circle = itemView.findViewById(R.id.iv_circle);
-                    iv_square = itemView.findViewById(R.id.iv_square);
+                    iv_squareRounded = itemView.findViewById(R.id.iv_squareRounded);
                     break;
 
                 case 4:
@@ -251,7 +251,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
         private void setPage3() {
             //ノード形
             iv_circle.setOnClickListener( new ClickShapeImage(NodeTable.CIRCLE) );
-            iv_square.setOnClickListener( new ClickShapeImage(NodeTable.SQUARE) );
+            iv_squareRounded.setOnClickListener( new ClickShapeImage(NodeTable.SQUARE_ROUNDED) );
         }
 
         /*

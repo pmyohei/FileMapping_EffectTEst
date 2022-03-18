@@ -131,7 +131,13 @@ public class NodeTable implements Serializable {
 
     //ノード形
     public static final int CIRCLE = 0;
-    public static final int SQUARE = 1;
+    public static final int CIRCLE_LITTLE = 1;
+    public static final int SQUARE_ROUNDED = 2;
+    public static final int SQUARE = 3;
+    public static final int OCTAGON = 4;
+    public static final int OCTAGON_ROUNDED = 5;
+    public static final int DIA = 6;
+    public static final int DIA_SEMI = 7;
 
     //デフォルトカラー
     public static final String DEFAULT_COLOR_WHITE = "#FFFFFF";

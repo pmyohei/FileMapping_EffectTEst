@@ -285,14 +285,7 @@ public class BaseNode extends FrameLayout {
      * ノード形の設定
      */
     public void setNodeShape( int shapeKind ) {
-
-        if( shapeKind == NodeTable.CIRCLE ){
-            setShapeCircle();
-        } else {
-            setShapeSquare();
-        }
-
-        mNode.setNodeShape( shapeKind );
+        //継承先で実装
     }
 
     /*
@@ -487,16 +480,20 @@ public class BaseNode extends FrameLayout {
     /*
      * ノードの形を円形にする
      */
+/*
     public void setShapeCircle() {
         //継承先で実装
     }
 
-    /*
+    */
+/*
      * ノードの形を四角（角丸）にする
-     */
+     *//*
+
     public void setShapeSquare() {
         //継承先で実装
     }
+*/
 
 
 /*    @Override

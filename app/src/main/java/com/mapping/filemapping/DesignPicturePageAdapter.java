@@ -1,10 +1,8 @@
 package com.mapping.filemapping;
 
-import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
-import android.content.pm.PackageManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,10 +11,7 @@ import android.widget.ImageView;
 import android.widget.Switch;
 
 import androidx.annotation.NonNull;
-import androidx.core.content.ContextCompat;
-import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
-import androidx.viewpager2.widget.ViewPager2;
 
 import java.util.List;
 
@@ -40,7 +35,13 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
 
         /*--- ノードデザイン ---*/
         private ImageView iv_circle;
+        private ImageView iv_circleLittle;
+        private ImageView iv_squareRounded;
         private ImageView iv_square;
+        private ImageView iv_octagon;
+        private ImageView iv_octagonRounded;
+        private ImageView iv_dia;
+        private ImageView iv_diaSemi;
         private SeekbarView  sbv_nodeSize;
         private ColorSelectionView csv_border;
         private SeekbarView  sbv_borderSize;
@@ -78,7 +79,13 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
                 case 2:
                     //ノード形
                     iv_circle = itemView.findViewById(R.id.iv_circle);
+                    iv_circleLittle = itemView.findViewById(R.id.iv_circleLittle);
+                    iv_squareRounded = itemView.findViewById(R.id.iv_squareRounded);
                     iv_square = itemView.findViewById(R.id.iv_square);
+                    iv_octagon = itemView.findViewById(R.id.iv_octagon);
+                    iv_octagonRounded = itemView.findViewById(R.id.iv_octagonRounded);
+                    iv_dia = itemView.findViewById(R.id.iv_dia);
+                    iv_diaSemi = itemView.findViewById(R.id.iv_diaSemi);
                     break;
 
                 case 3:
@@ -166,8 +173,14 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
          */
         private void setPage2() {
             //ノード形
-            iv_circle.setOnClickListener(new ClickShapeImage(NodeTable.CIRCLE) );
+            iv_circle.setOnClickListener( new ClickShapeImage(NodeTable.CIRCLE) );
+            iv_circleLittle.setOnClickListener( new ClickShapeImage(NodeTable.CIRCLE_LITTLE) );
+            iv_squareRounded.setOnClickListener( new ClickShapeImage(NodeTable.SQUARE_ROUNDED) );
             iv_square.setOnClickListener( new ClickShapeImage(NodeTable.SQUARE) );
+            iv_octagon.setOnClickListener( new ClickShapeImage(NodeTable.OCTAGON) );
+            iv_octagonRounded.setOnClickListener( new ClickShapeImage(NodeTable.OCTAGON_ROUNDED) );
+            iv_dia.setOnClickListener( new ClickShapeImage(NodeTable.DIA) );
+            iv_diaSemi.setOnClickListener( new ClickShapeImage(NodeTable.DIA_SEMI) );
         }
 
         /*

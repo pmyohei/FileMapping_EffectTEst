@@ -1428,11 +1428,14 @@ public class MapActivity extends AppCompatActivity /*implements ColorDialog.Noti
                 //サムネイル変更
                 //新しいサムネイル
                 PictureTable newThumbnail = (PictureTable)intent.getSerializableExtra(ResourceManager.KEY_NEW_THUMBNAIL);
+                int shape = intent.getIntExtra(ResourceManager.KEY_NEW_SHAPE, NodeTable.CIRCLE);
 
                 //変更されたピクチャノード
                 int pictureNodePid = newThumbnail.getPidParentNode();
                 //サムネイルを更新
-                ((PictureNodeView)mNodes.getNode( pictureNodePid ).getNodeView()).updateThumbnail( newThumbnail );
+                PictureNodeView node = (PictureNodeView)mNodes.getNode( pictureNodePid ).getNodeView();
+                node.updateThumbnail( newThumbnail );
+                node.setNodeShape( shape );
 
             } else if( resultCode == RESULT_GALLERY) {
                 //do nothing

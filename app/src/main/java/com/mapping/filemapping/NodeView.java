@@ -125,37 +125,36 @@ public class NodeView extends ChildNode implements Serializable {
         mNode.setBorderColor( color );
     }
 
+
     /*
-     * ノードの形を円形にする
+     * ノード形の設定
      */
     @Override
-    public void setShapeCircle() {
+    public void setNodeShape( int shapeKind ) {
 
+        //長い方の辺
         MaterialCardView cv_node = findViewById(R.id.cv_node);
-        //Log.i("Card", "width=" + cv_node.getWidth() + " height=" + cv_node.getHeight());
+        int max = Math.max( cv_node.getWidth(), cv_node.getHeight() );
+
+        float radius = -1;
+        if( shapeKind == NodeTable.CIRCLE ){
+            radius = max / 2.0f;
+        } else if ( shapeKind == NodeTable.SQUARE_ROUNDED ){
+            radius = max * ResourceManager.SQUARE_CORNER_RATIO;
+        }
+
+        //ノード全体設定で指定された時のために、ノードに設定できない形状が指定された場合は何もしない
+        if( radius == -1 ){
+            return;
+        }
 
         //長い方の辺で縦横サイズを統一
-        int max = Math.max( cv_node.getWidth(), cv_node.getHeight() );
         cv_node.setMinimumHeight(max);
         cv_node.setMinimumWidth(max);
+        cv_node.setRadius(radius);
 
-        cv_node.setRadius(max / 2.0f);
+        mNode.setNodeShape( shapeKind );
     }
 
-    /*
-     * ノードの形を四角（角丸）にする
-     */
-    @Override
-    public void setShapeSquare() {
-
-        MaterialCardView cv_node = findViewById(R.id.cv_node);
-
-        //長い方の辺で正方形を作る
-        int max = Math.max( cv_node.getWidth(), cv_node.getHeight() );
-        cv_node.setMinimumHeight(max);
-        cv_node.setMinimumWidth(max);
-
-        cv_node.setRadius(max * ResourceManager.SQUARE_CORNER_RATIO);
-    }
 
 }

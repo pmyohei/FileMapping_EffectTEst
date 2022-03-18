@@ -161,7 +161,7 @@ public class DesignBottomSheet extends CoordinatorLayout {
 
         } else {
             //ノード形のみの指定
-            setupNodeSizeLayout(view);
+            setupNodeSizeLayout();
 
             heightRatio = ONE_THIRD;
         }
@@ -183,7 +183,7 @@ public class DesignBottomSheet extends CoordinatorLayout {
         layoutIdList.add( R.layout.page_node_name);
         layoutIdList.add( R.layout.page_node_font);
         layoutIdList.add( R.layout.page_node_size);
-        layoutIdList.add( R.layout.page_node_shape);
+        layoutIdList.add( R.layout.page_node_shape_node_only);
         layoutIdList.add( R.layout.page_node_text_color);
         layoutIdList.add( R.layout.page_node_color);
         layoutIdList.add( R.layout.page_node_border_color);
@@ -297,21 +297,23 @@ public class DesignBottomSheet extends CoordinatorLayout {
         new TabLayoutMediator(tabLayout, vp2,
                 (tab, position) -> tab.setText(tabs.get(position))
         ).attach();
-
     }
 
     /*
      * ノードサイズ限定のレイアウトを設定
      */
-    private void setupNodeSizeLayout(View v_node) {
+    private void setupNodeSizeLayout() {
         //ノードデザイン設定レイアウト
         List<Integer> layoutIdList = new ArrayList<>();
         layoutIdList.add(R.layout.page_node_shape);
 
         ViewPager2 vp = findViewById(R.id.vp2_design);
-        NodeShapeAdapter adapter = new NodeShapeAdapter(layoutIdList, v_node);
+        NodeShapeAdapter adapter = new NodeShapeAdapter(layoutIdList);
         vp.setAdapter(adapter);
 
+        //インジケータはなし
+        TabLayout tabLayout = findViewById(R.id.tab_bottomDesign);
+        tabLayout.setVisibility(GONE);
     }
 
     /*

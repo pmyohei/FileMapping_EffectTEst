@@ -42,6 +42,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.shape.ShapeAppearanceModel;
 import com.isseiaoki.simplecropview.CropImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
@@ -69,6 +71,8 @@ public class TrimmingActivity extends AppCompatActivity {
     private String mPath;
     //サムネイルリスト
     private PictureArrayList<PictureTable> mThumbnails;
+    //サムネイルイメージの形状
+    private int mShape;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,6 +86,8 @@ public class TrimmingActivity extends AppCompatActivity {
         mIsRotate = false;
         //レイアウト設定未完了
         mIsLayout = false;
+        //形状初期値
+        mShape = NodeTable.CIRCLE;
 
         Context context = this;
 
@@ -103,7 +109,7 @@ public class TrimmingActivity extends AppCompatActivity {
                                 if (path == null) {
                                     //端末の画像フォルダから選択する旨を表示
                                     //※画像フォルダからアクセスしていないとみなす
-                                    confirmOpenStorage( ERROR_KIND_PATH );
+                                    confirmOpenStorage(ERROR_KIND_PATH);
                                     return;
                                 }
 
@@ -155,7 +161,7 @@ public class TrimmingActivity extends AppCompatActivity {
             public void onClick(View v) {
 
                 //画像未選択なら、ギャラリーを表示
-                if( mUri == null ){
+                if (mUri == null) {
                     openPictureGallery();
                     return;
                 }
@@ -218,12 +224,12 @@ public class TrimmingActivity extends AppCompatActivity {
     /*
      *　アラートダイアログを表示
      */
-    private void confirmOpenStorage( int king ) {
+    private void confirmOpenStorage(int king) {
 
         int titleID;
         int messageID;
 
-        switch ( king ){
+        switch (king) {
             case ERROR_KIND_PATH:
                 titleID = R.string.alert_trimming_disableDirectory_title;
                 messageID = R.string.alert_trimming_disableDirectory_message;
@@ -247,27 +253,27 @@ public class TrimmingActivity extends AppCompatActivity {
         }
 
         AlertDialog dialog = new AlertDialog.Builder(this)
-            .setTitle( getString(titleID) )
-            .setMessage( getString(messageID) )
-            .setPositiveButton(getString(R.string.alert_trimming_anotherPicture_ok), new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    //端末ギャラリーを開く
-                    openPictureGallery();
-                }
-            })
-            //.setCancelable(false)   //キャンセル不可（ボタン押下しない限り閉じない）
-            .show();
+                .setTitle(getString(titleID))
+                .setMessage(getString(messageID))
+                .setPositiveButton(getString(R.string.alert_trimming_anotherPicture_ok), new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        //端末ギャラリーを開く
+                        openPictureGallery();
+                    }
+                })
+                //.setCancelable(false)   //キャンセル不可（ボタン押下しない限り閉じない）
+                .show();
 
         //メッセージ文は、Styleのフォントが適用されないため個別に設定
-        ((TextView)dialog.findViewById(android.R.id.message)).setTypeface( Typeface.SERIF );
+        ((TextView) dialog.findViewById(android.R.id.message)).setTypeface(Typeface.SERIF);
     }
 
     /*
      *　サムネイルが既にあるかどうか
      *    ただし、設定中の画像であれば、なしとする（トリミング範囲の変更であるため）
      */
-    private boolean hasThumbnail( String path ) {
+    private boolean hasThumbnail(String path) {
 
         //遷移元からの情報
         Intent intent = getIntent();
@@ -332,26 +338,6 @@ public class TrimmingActivity extends AppCompatActivity {
      *　トリミング画像の設定
      */
     private void setTrimmingPicture() {
-
-        //トリミング結果の画像
-        final ImageView iv_toThumbnail = findViewById(R.id.iv_toThumbnail);
-
-        //レイアウト確定待ち
-        ViewTreeObserver observer = iv_toThumbnail.getViewTreeObserver();
-        observer.addOnGlobalLayoutListener(
-            new ViewTreeObserver.OnGlobalLayoutListener() {
-                @Override
-                public void onGlobalLayout() {
-
-                    //形状（円）を設定
-                    MaterialCardView mcv = findViewById(R.id.mcv_cropped);
-                    mcv.setRadius(iv_toThumbnail.getWidth() / 2f);
-
-                    //レイアウト確定後は、不要なので本リスナー削除
-                    iv_toThumbnail.getViewTreeObserver().removeOnGlobalLayoutListener(this);
-                }
-            }
-        );
 
         //画面の向きを取得
         int orientation = ORIENTATION_NORMAL;
@@ -430,9 +416,9 @@ public class TrimmingActivity extends AppCompatActivity {
 
         NodeTable parentNode = mapCommonData.getNodeInMap(selectedNodePid);
         //初期生成位置オフセット
-        int initRelativePos = (int)getResources().getDimension(R.dimen.init_relative_pos);
+        int initRelativePos = (int) getResources().getDimension(R.dimen.init_relative_pos);
         //スケールを考慮したノード半径
-        int radius = (int)(parentNode.getNodeView().getScaleWidth() / 2f);
+        int radius = (int) (parentNode.getNodeView().getScaleWidth() / 2f);
         //ノード初期位置を親ノードから一定の距離離した位置にする
         int posX = (int) parentNode.getPosX() + radius + initRelativePos;
         int posY = (int) parentNode.getPosY();
@@ -509,19 +495,66 @@ public class TrimmingActivity extends AppCompatActivity {
     }
 
     /*
+     *　サムネイルイメージの形状設定
+     */
+    public void setThumbnailShape( int shape ) {
+
+        int style = -1;
+        switch ( shape ){
+
+            case NodeTable.CIRCLE:
+                style = R.style.circle;
+                break;
+
+            case NodeTable.CIRCLE_LITTLE:
+                style = R.style.circleLittle;
+                break;
+
+            case NodeTable.SQUARE_ROUNDED:
+                style = R.style.squareRounded;
+                break;
+
+            case NodeTable.SQUARE:
+                style = R.style.square;
+                break;
+
+            case NodeTable.OCTAGON:
+                style = R.style.octagon;
+                break;
+
+            case NodeTable.OCTAGON_ROUNDED:
+                style = R.style.octagonRounded;
+                break;
+
+            case NodeTable.DIA:
+                style = R.style.dia;
+                break;
+
+            case NodeTable.DIA_SEMI:
+                style = R.style.diaSemi;
+                break;
+        }
+
+        if( style == -1 ){
+            //一応ガード
+            return;
+        }
+
+        //適用
+        ShapeableImageView iv_toThumbnail = findViewById(R.id.iv_toThumbnail);
+        ShapeAppearanceModel.Builder builder
+                = ShapeAppearanceModel.builder( iv_toThumbnail.getContext(), style, 0 );
+        iv_toThumbnail.setShapeAppearanceModel( builder.build() );
+
+        //形状保持
+        mShape = shape;
+    }
+
+    /*
      *　設定中の形状の取得
      */
     private int getNodeShape() {
-        //トリミング結果の画像
-        float imageRadius = findViewById(R.id.iv_toThumbnail).getWidth();
-        float cardCornerRadius = ((MaterialCardView) findViewById(R.id.mcv_cropped)).getRadius();
-
-        //四角形の場合よりも確実に大きい値
-        float largerSquare = imageRadius * (SQUARE_CORNER_RATIO * 2f);
-
-        //「四角形の場合に設定される値より確実に大きい値」よりも角の値が小さい場合、四角と判断する
-        //※形の変更が発生しない場合、厳密に角サイズがimageに対して半分の値になっていない場合があるため
-        return ( (largerSquare > cardCornerRadius) ? NodeTable.SQUARE : NodeTable.CIRCLE );
+        return mShape;
     }
 
     /*
@@ -599,6 +632,7 @@ public class TrimmingActivity extends AppCompatActivity {
                 //変わったノードとサムネ情報を返す
                 Intent retIntent = getIntent();
                 retIntent.putExtra(ResourceManager.KEY_NEW_THUMBNAIL, newPicture);
+                retIntent.putExtra(ResourceManager.KEY_NEW_SHAPE, mShape);
                 setResult(MapActivity.RESULT_UPDATE_TUHMBNAIL, retIntent);
 
                 //元の画面へ戻る
@@ -680,7 +714,7 @@ public class TrimmingActivity extends AppCompatActivity {
             case R.id.action_shape:
                 //ノードの形状設定
                 DesignBottomSheet l_bottomSheet = findViewById(R.id.dbs_shape);
-                l_bottomSheet.openBottomSheet(DesignBottomSheet.SHAPE_ONLY, findViewById(R.id.mcv_cropped));
+                l_bottomSheet.openBottomSheet(DesignBottomSheet.SHAPE_ONLY, null);
 
                 return true;
 

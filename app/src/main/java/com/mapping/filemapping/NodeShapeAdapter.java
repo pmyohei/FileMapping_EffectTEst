@@ -8,7 +8,8 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.imageview.ShapeableImageView;
+import com.google.android.material.shape.ShapeAppearanceModel;
 
 import java.util.List;
 
@@ -19,34 +20,38 @@ public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.Guid
 
     //フィールド変数
     private final List<Integer> mData;
-    //サンプルノード用
-    private final View mView;
 
     /*
      * ViewHolder：リスト内の各アイテムのレイアウトを含む View のラッパー
      */
     static class GuideViewHolder extends RecyclerView.ViewHolder {
 
-        //サンプルノード用
-        private final View mView;
-
         //ノードの形状
         private ImageView iv_circle;
+        private ImageView iv_circleLittle;
+        private ImageView iv_squareRounded;
         private ImageView iv_square;
-
+        private ImageView iv_octagon;
+        private ImageView iv_octagonRounded;
+        private ImageView iv_dia;
+        private ImageView iv_diaSemi;
 
         /*
          * コンストラクタ
          */
-        public GuideViewHolder(View itemView, int position, View view ) {
+        public GuideViewHolder(View itemView, int position ) {
             super(itemView);
-
-            mView = view;
 
             if (position == 0) {
                 //サイズ
                 iv_circle = itemView.findViewById(R.id.iv_circle);
+                iv_circleLittle = itemView.findViewById(R.id.iv_circleLittle);
+                iv_squareRounded = itemView.findViewById(R.id.iv_squareRounded);
                 iv_square = itemView.findViewById(R.id.iv_square);
+                iv_octagon = itemView.findViewById(R.id.iv_octagon);
+                iv_octagonRounded = itemView.findViewById(R.id.iv_octagonRounded);
+                iv_dia = itemView.findViewById(R.id.iv_dia);
+                iv_diaSemi = itemView.findViewById(R.id.iv_diaSemi);
             }
         }
 
@@ -65,11 +70,15 @@ public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.Guid
          * ページ設定（０）
          */
         public void setPage0() {
-
-            //円形
-            iv_circle.setOnClickListener(new ClickShapeImage( NodeTable.CIRCLE) );
-            //四角形
-            iv_square.setOnClickListener( new ClickShapeImage( NodeTable.SQUARE) );
+            //形状
+            iv_circle.setOnClickListener( new ClickShapeImage(NodeTable.CIRCLE) );
+            iv_circleLittle.setOnClickListener( new ClickShapeImage(NodeTable.CIRCLE_LITTLE) );
+            iv_squareRounded.setOnClickListener( new ClickShapeImage(NodeTable.SQUARE_ROUNDED) );
+            iv_square.setOnClickListener( new ClickShapeImage(NodeTable.SQUARE) );
+            iv_octagon.setOnClickListener( new ClickShapeImage(NodeTable.OCTAGON) );
+            iv_octagonRounded.setOnClickListener( new ClickShapeImage(NodeTable.OCTAGON_ROUNDED) );
+            iv_dia.setOnClickListener( new ClickShapeImage(NodeTable.DIA) );
+            iv_diaSemi.setOnClickListener( new ClickShapeImage(NodeTable.DIA_SEMI) );
         }
 
         /*
@@ -90,23 +99,8 @@ public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.Guid
 
             @Override
             public void onClick(View view) {
-
-                //トリミング結果の画像
-                int croppedWidth = mView.findViewById(R.id.iv_toThumbnail).getWidth();
-
-                float radius;
-
-                //ノードに対して、形状を適用
-                if( mShapeKind == NodeTable.CIRCLE ){
-                    //円
-                    radius = croppedWidth / 2f;
-                } else {
-                    //四角形
-                    radius = croppedWidth * ResourceManager.SQUARE_CORNER_RATIO;
-                }
-
-                //角丸設定
-                ((MaterialCardView)mView).setRadius( radius );
+                //形状を保持させる
+                ((TrimmingActivity)view.getContext()).setThumbnailShape( mShapeKind );
             }
         }
     }
@@ -114,9 +108,8 @@ public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.Guid
     /*
      * コンストラクタ
      */
-    public NodeShapeAdapter(List<Integer> layoutIdList, View view) {
+    public NodeShapeAdapter(List<Integer> layoutIdList) {
         mData = layoutIdList;
-        mView = view;
     }
 
     /*
@@ -126,7 +119,6 @@ public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.Guid
     public int getItemViewType(int position) {
         //レイアウトIDを返す
         return position;
-        //return mData.get(position);
     }
 
     /*
@@ -140,7 +132,7 @@ public class NodeShapeAdapter extends RecyclerView.Adapter<NodeShapeAdapter.Guid
         LayoutInflater inflater = LayoutInflater.from( viewGroup.getContext() );
         View view = inflater.inflate(mData.get(position), viewGroup, false);
 
-        return new GuideViewHolder(view, position, mView);
+        return new GuideViewHolder(view, position);
     }
 
     /*

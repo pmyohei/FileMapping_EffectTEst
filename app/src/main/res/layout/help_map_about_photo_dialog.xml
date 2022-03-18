@@ -54,7 +54,7 @@
                 android:text="@string/help_map_aboutPicture_2" />
 
             <com.google.android.material.imageview.ShapeableImageView
-                app:shapeAppearanceOverlay="@style/roundedCornersImageView"
+                app:shapeAppearanceOverlay="@style/squareRounded"
                 android:layout_width="120dp"
                 android:layout_height="120dp"
                 android:layout_marginTop="20dp"

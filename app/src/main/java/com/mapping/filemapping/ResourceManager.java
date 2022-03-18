@@ -49,13 +49,11 @@ public class ResourceManager {
     public static final boolean INVALID_SHOW_HELP = true;
 
     /* 画面遷移-キー */
-    public static final String KEY_MAPID = "MapID";
     public static final String KEY_NEW_MAP = "IsNewMap";
     public static final String KEY_CREATED_NODE = "CreatedNode";
-    public static final String KEY_UPDATED_NODE = "UpdatedNode";
     public static final String KEY_THUMBNAIL = "thumbnail";
     public static final String KEY_NEW_THUMBNAIL = "new_thumbnail";
-    public static final String KEY_OLD_THUMBNAIL = "old_thumbnail";
+    public static final String KEY_NEW_SHAPE = "new_shape";
 
     //serialVersionUID
     public static final long SERIAL_VERSION_UID_NODE_TABLE = 1L;

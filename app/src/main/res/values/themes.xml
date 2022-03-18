@@ -10,14 +10,44 @@
 
 
     <!--  ピクチャノード（円形）  -->
-    <style name="circleImageView" parent="">
+    <style name="circle" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">50%</item>
     </style>
+    <!--  ピクチャノード（まあまあ円形）  -->
+    <style name="circleLittle" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">42%</item>
+    </style>
     <!--  ピクチャノード（角丸）  -->
-    <style name="roundedCornersImageView" parent="">
+    <style name="squareRounded" parent="">
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">10%</item>
+    </style>
+    <!--  ピクチャノード（四角）  -->
+    <style name="square" parent="">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">0%</item>
+    </style>
+    <!--  ピクチャノード（八角形）  -->
+    <style name="octagon" parent="">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">33%</item>
+    </style>
+    <!--  ピクチャノード（八角形）  -->
+    <style name="octagonRounded" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">33%</item>
+    </style>
+    <!--  ピクチャノード（ダイア）  -->
+    <style name="dia" parent="">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">50%</item>
+    </style>
+    <!--  ピクチャノード（ダイア（セミ））  -->
+    <style name="diaSemi" parent="">
+        <item name="cornerFamily">cut</item>
+        <item name="cornerSize">46%</item>
     </style>
 
 

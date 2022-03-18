@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.google.android.material.imageview.ShapeableImageView;
@@ -39,7 +38,7 @@ public class PictureNodeView extends ChildNode implements Serializable {
     private void initNode() {
 
         //ノードに画像を設定
-        findViewById(R.id.iv_node).post(()-> {
+        findViewById(R.id.iv_node).post(() -> {
             //Log.i("サイズ確定", "post ノードサイズ=" + findViewById(R.id.iv_node).getWidth());
             setThumbnail();
         });
@@ -67,8 +66,8 @@ public class PictureNodeView extends ChildNode implements Serializable {
      *   サムネイル画像が端末からなくなっていれば、無効画像を設定する
      */
     public void checkStateThumbnail() {
-        File file = new File( mThumbnail.getPath() );
-        if( !file.isFile() ){
+        File file = new File(mThumbnail.getPath());
+        if (!file.isFile()) {
             //画像が端末から削除されていれば、再設定
             setBitmap(mThumbnail);
         }
@@ -82,11 +81,11 @@ public class PictureNodeView extends ChildNode implements Serializable {
         //画像ビュー
         ImageView iv_node = findViewById(R.id.iv_node);
         //path
-        String path = ( (thumbnail == null) ? "": thumbnail.getPath() );
+        String path = ((thumbnail == null) ? "" : thumbnail.getPath());
 
         //別のマップのサムネイルがキャッシュされている可能性があるため、キャッシュを削除する
         //※これをしないと、別のマップに同じサムネイルがあったとき、そのサムネイル情報で表示されてしまう
-        Picasso.get().invalidate( new File(path) );
+        Picasso.get().invalidate(new File(path));
 
         //画像割り当て
         //※fit()ではなく、一定値を指定したresize()を使用
@@ -94,73 +93,104 @@ public class PictureNodeView extends ChildNode implements Serializable {
         // ある程度の解像度を確保するためにresize()を使用する。
         // 仮にマップ画面が重くなる場合は、このリサイズ値を見直す
         Picasso.get()
-                .load( new File(path) )
-                .resize( ThumbnailTransformation.RESIZE, ThumbnailTransformation.RESIZE)
-                .transform( new ThumbnailTransformation( thumbnail, iv_node.getWidth() ) )
+                .load(new File(path))
+                .resize(ThumbnailTransformation.RESIZE, ThumbnailTransformation.RESIZE)
+                .transform(new ThumbnailTransformation(thumbnail, iv_node.getWidth()))
                 .error(R.drawable.ic_no_image)
-                .into( iv_node );
+                .into(iv_node);
     }
 
     /*
      * ノード枠線サイズの設定
      */
     @Override
-    public void setBorderSize( int thick ) {
+    public void setBorderSize(int thick) {
         //枠サイズを設定
-        ((ShapeableImageView)findViewById( R.id.iv_node )).setStrokeWidth( thick );
+        ((ShapeableImageView) findViewById(R.id.iv_node)).setStrokeWidth(thick);
 
-        mNode.setBorderSize( thick );
+        mNode.setBorderSize(thick);
     }
 
     /*
      * ノード枠色の設定
      */
     @Override
-    public void setBorderColor( String color ) {
+    public void setBorderColor(String color) {
 
         ColorStateList colorState = new ColorStateList(
-            new int[][] {
-                    new int[]{ android.R.attr.state_checked},
-                    new int[]{ -android.R.attr.state_checked},
-            },
-            new int[] {
-                    Color.parseColor( color ),
-                    Color.parseColor( color ),
-            }
+                new int[][]{
+                        new int[]{android.R.attr.state_checked},
+                        new int[]{-android.R.attr.state_checked},
+                },
+                new int[]{
+                        Color.parseColor(color),
+                        Color.parseColor(color),
+                }
         );
 
         //枠色を設定
-        ((ShapeableImageView)findViewById( R.id.iv_node )).setStrokeColor( colorState );
+        ((ShapeableImageView) findViewById(R.id.iv_node)).setStrokeColor(colorState);
 
-        mNode.setBorderColor( color );
+        mNode.setBorderColor(color);
     }
 
     /*
-     * ノードの形を円形にする
+     * ノード形の設定
      */
     @Override
-    public void setShapeCircle() {
+    public void setNodeShape( int shapeKind ) {
+        super.setNodeShape(shapeKind);
 
-        ShapeableImageView iv_node = findViewById(R.id.iv_node);
-        //円形
-        ShapeAppearanceModel.Builder builder
-                = ShapeAppearanceModel.builder( iv_node.getContext(), R.style.circleImageView, 0 );
+        int style = -1;
+        switch ( shapeKind ){
+
+            case NodeTable.CIRCLE:
+                style = R.style.circle;
+                break;
+
+            case NodeTable.CIRCLE_LITTLE:
+                style = R.style.circleLittle;
+                break;
+
+            case NodeTable.SQUARE_ROUNDED:
+                style = R.style.squareRounded;
+                break;
+
+            case NodeTable.SQUARE:
+                style = R.style.square;
+                break;
+
+            case NodeTable.OCTAGON:
+                style = R.style.octagon;
+                break;
+
+            case NodeTable.OCTAGON_ROUNDED:
+                style = R.style.octagonRounded;
+                break;
+
+            case NodeTable.DIA:
+                style = R.style.dia;
+                break;
+
+            case NodeTable.DIA_SEMI:
+                style = R.style.diaSemi;
+                break;
+        }
+
+        if( style == -1 ){
+            //一応ガード
+            return;
+        }
+
         //適用
+        ShapeableImageView iv_node = findViewById(R.id.iv_node);
+        ShapeAppearanceModel.Builder builder
+                = ShapeAppearanceModel.builder( iv_node.getContext(), style, 0 );
         iv_node.setShapeAppearanceModel( builder.build() );
+
+        //テーブルに保存
+        mNode.setNodeShape( shapeKind );
     }
 
-    /*
-     * ノードの形を四角（角丸）にする
-     */
-    @Override
-    public void setShapeSquare() {
-
-        ShapeableImageView iv_node = findViewById(R.id.iv_node);
-        //角丸
-        ShapeAppearanceModel.Builder builder
-                = ShapeAppearanceModel.builder( iv_node.getContext(), R.style.roundedCornersImageView, 0 );
-        //適用
-        iv_node.setShapeAppearanceModel( builder.build() );
-    }
 
 }
