@@ -17,6 +17,7 @@
     <dimen name="init_relative_pos">110dp</dimen>
     <dimen name="shadow_radius_min">8dp</dimen>
     <dimen name="shadow_radius_max">20dp</dimen>
+    <dimen name="thumbnail_image_padding">4dp</dimen>
 
     <!--  ライン  -->
     <dimen name="line_start_offset">6dp</dimen>

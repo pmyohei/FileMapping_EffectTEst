@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_node"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="24dp"
@@ -9,14 +10,14 @@
     android:gravity="center">
 
     <!--  ピクチャノード  -->
-    <!--  ※paddingを入れないと、枠を設定した時に端が切れる -->
+    <!--  ※paddingを入れないと、枠を設定した時に端が切れるため、設定を外さないこと -->
     <com.google.android.material.imageview.ShapeableImageView
         app:shapeAppearanceOverlay="@style/circle"
         android:id="@+id/iv_node"
         android:layout_width="@dimen/thumnbnail_default_size"
         android:layout_height="@dimen/thumnbnail_default_size"
         android:layout_gravity="center"
-        android:padding="4dp"
+        android:padding="@dimen/thumbnail_image_padding"
         android:src="@drawable/ic_no_image"/>
 
 </LinearLayout>

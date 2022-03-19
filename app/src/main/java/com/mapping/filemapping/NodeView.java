@@ -154,6 +154,7 @@ public class NodeView extends ChildNode implements Serializable {
         cv_node.setRadius(radius);
 
         mNode.setNodeShape( shapeKind );
+
     }
 
 

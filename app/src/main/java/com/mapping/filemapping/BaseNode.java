@@ -22,6 +22,7 @@ import androidx.cardview.widget.CardView;
 import androidx.core.content.res.ResourcesCompat;
 
 import com.google.android.material.card.MaterialCardView;
+import com.google.android.material.imageview.ShapeableImageView;
 
 import java.io.Serializable;
 
@@ -453,7 +454,8 @@ public class BaseNode extends FrameLayout {
     public float getNodeBodyWidth() {
         //現在の横幅
         if( mNode.getKind() == NodeTable.NODE_KIND_PICTURE ){
-            return findViewById(R.id.iv_node).getWidth();
+            //※paddingを考慮したサイズ（実際のサムネイルサイズ）を返す
+            return findViewById(R.id.iv_node).getWidth() - getResources().getDimension(R.dimen.thumbnail_image_padding) * 2;
         } else {
             return findViewById(R.id.cv_node).getWidth();
         }
@@ -563,10 +565,167 @@ public class BaseNode extends FrameLayout {
             return;
         }
 
-        //ノードの横幅
+        if( mNode.getKind() == NodeTable.NODE_KIND_PICTURE ) {
+
+            switch (mNode.getNodeShape()) {
+                //四角形
+                case NodeTable.SQUARE:
+                case NodeTable.SQUARE_ROUNDED:
+                    drawShadowSquare( canvas, NodeTable.NODE_KIND_PICTURE );
+                    return;
+
+                //ダイア
+                case NodeTable.DIA:
+                case NodeTable.DIA_SEMI:
+                    drawShadowDia( canvas );
+                    return;
+            }
+
+        } else {
+            if( mNode.getNodeShape() == NodeTable.SQUARE_ROUNDED ){
+                drawShadowSquare( canvas, NodeTable.NODE_KIND_NODE );
+                return;
+            }
+        }
+
+        //円形
+        drawShadowCircle( canvas );
+
+/*        return;
+
         int radius = (int)(getNodeBodyWidth() / 2f);
+
+        if( (mNode.getKind() == NodeTable.NODE_KIND_PICTURE)
+                && (mNode.getNodeShape() == NodeTable.DIA) ){
+
+            float thumnbnailWidth = getNodeBodyWidth();
+
+            //int left = findViewById(R.id.iv_node).getLeft() - findViewById(R.id.ll_node).getLeft();
+            //left += getResources().getDimension(R.dimen.thumbnail_image_padding);
+            canvas.save();
+            //canvas.rotate(45, (left + getNodeBodyWidth() * 0.75f + getResources().getDimension(R.dimen.thumbnail_image_padding))/2f, (left + getNodeBodyWidth() * 0.75f + getResources().getDimension(R.dimen.thumbnail_image_padding))/2f);
+            canvas.rotate(45, getWidth() / 2f, getWidth() / 2f);
+            //canvas.rotate(45, 1, 1);
+            Log.i("回転", "getWidth()" + getWidth());
+            Log.i("回転", "getHeight()" + getHeight());
+
+            int left = (int)((float)findViewById(R.id.iv_node).getLeft() + thumnbnailWidth/8f - findViewById(R.id.ll_node).getLeft());
+            left += getResources().getDimension(R.dimen.thumbnail_image_padding);
+
+            canvas.drawRect( left, left,
+                    (left + getNodeBodyWidth() * 0.75f + getResources().getDimension(R.dimen.thumbnail_image_padding)),
+                    (left + getNodeBodyWidth() * 0.75f + getResources().getDimension(R.dimen.thumbnail_image_padding)),
+                    mPaint);
+            canvas.restore();
+
+            return;
+        }
+
+        if( (mNode.getKind() == NodeTable.NODE_KIND_PICTURE)
+                && (mNode.getNodeShape() == NodeTable.SQUARE) ){
+
+            int left = findViewById(R.id.iv_node).getLeft() - findViewById(R.id.ll_node).getLeft();
+            Log.i("レクト", "left=" + left);
+            //left *= getResources().getDisplayMetrics().density;
+            //Log.i("レクト", "left(den)=" + left);
+            left += getResources().getDimension(R.dimen.thumbnail_image_padding);
+            canvas.drawRect( left, left, left + getNodeBodyWidth() + getResources().getDimension(R.dimen.thumbnail_image_padding), left + getNodeBodyWidth() + getResources().getDimension(R.dimen.thumbnail_image_padding), mPaint);
+
+            return;
+        }
+
+
+        //ノードの横幅
+        //int radius = (int)(getNodeBodyWidth() / 2f);
+        canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, radius, mPaint);*/
+    }
+
+    /*
+     * 円の影を描画
+     */
+    public void drawShadowCircle( Canvas canvas ) {
+        //ノード本体サイズ
+        int radius = (int)(getNodeBodyWidth() / 2f);
+
+        //--- API28以下のサイズ調整
+        //--- 八角形の場合、角にペイントの色が見えてしまうため、少し縮小
+        if( (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P)
+                && ( mNode.getNodeShape() == NodeTable.OCTAGON )
+                && ( mNode.getKind() == NodeTable.NODE_KIND_PICTURE )){
+            //縮小値は任意
+            radius *= 0.9;
+        }
+
         canvas.drawCircle(getWidth() / 2f, getHeight() / 2f, radius, mPaint);
     }
+
+    /*
+     * 四角形の影を描画
+     */
+    public void drawShadowSquare( Canvas canvas, int nodeKind ) {
+
+        int id;
+        int padding = 0;
+        if (nodeKind == NodeTable.NODE_KIND_PICTURE) {
+            id = R.id.iv_node;
+            //ピクチャノードの場合、paddingが設定されているため、その分を加算
+            padding = (int)getResources().getDimension(R.dimen.thumbnail_image_padding);
+        } else {
+            id = R.id.cv_node;
+        }
+
+        //ノード本体（ピクチャノードなら、サムネイル画像の開始位置）
+        int nodeBodyOrg = findViewById( id ).getLeft() - findViewById(R.id.ll_node).getLeft();
+        nodeBodyOrg += padding;
+
+        //ノード本体のサイズ
+        float nodeBodyWidth = getNodeBodyWidth();
+
+        //--- API28以下のサイズ調整
+        //--- 角丸四角の場合、角にペイントの色が見えてしまうため、少し縮小
+        if( (Build.VERSION.SDK_INT <= Build.VERSION_CODES.P)
+                && ( mNode.getNodeShape() == NodeTable.SQUARE_ROUNDED )
+                && ( mNode.getKind() == NodeTable.NODE_KIND_PICTURE )){
+            //縮小値は任意
+            nodeBodyOrg *= 1.08f;
+            nodeBodyWidth *= 0.95f;
+        }
+
+        //四角形を描画
+        canvas.drawRect( nodeBodyOrg, nodeBodyOrg,
+                nodeBodyOrg + nodeBodyWidth,
+                nodeBodyOrg + nodeBodyWidth,
+                mPaint);
+    }
+
+    /*
+     * ダイアの影を描画
+     */
+    public void drawShadowDia( Canvas canvas ) {
+
+        ShapeableImageView iv_node = findViewById(R.id.iv_node);
+
+        int padding = (int)getResources().getDimension(R.dimen.thumbnail_image_padding);
+        //サムネイルサイズ（paddingなし）
+        float thumbnailWidthNoPadding = getNodeBodyWidth();
+        //サムネイルサイズ（paddingあり）
+        float thumbnailWidth = iv_node.getWidth();
+
+        //四角描画の前に、４５度傾ける
+        canvas.save();
+        canvas.rotate(45, getWidth() / 2f, getWidth() / 2f);
+
+        //サムネイルの表示の始まり座標
+        int nodeBodyOrg = (int)((float)iv_node.getLeft() + thumbnailWidth / 8f - findViewById(R.id.ll_node).getLeft());
+        nodeBodyOrg += padding;
+
+        canvas.drawRect( nodeBodyOrg, nodeBodyOrg,
+                (nodeBodyOrg + thumbnailWidthNoPadding * 0.75f - padding),
+                (nodeBodyOrg + thumbnailWidthNoPadding * 0.75f - padding),
+                mPaint);
+        canvas.restore();
+    }
+
 
     /*------ getter／setter ------*/
 

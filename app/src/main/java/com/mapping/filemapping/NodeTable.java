@@ -130,9 +130,9 @@ public class NodeTable implements Serializable {
     public static final int PICTURE_MIN_SIZE = 100;
 
     //ノード形
-    public static final int CIRCLE = 0;
+    public static final int CIRCLE = 0;             //ノード、ピクチャノード共通
     public static final int CIRCLE_LITTLE = 1;
-    public static final int SQUARE_ROUNDED = 2;
+    public static final int SQUARE_ROUNDED = 2;     //ノード、ピクチャノード共通
     public static final int SQUARE = 3;
     public static final int OCTAGON = 4;
     public static final int OCTAGON_ROUNDED = 5;

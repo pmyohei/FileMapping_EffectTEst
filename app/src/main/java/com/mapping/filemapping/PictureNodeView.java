@@ -23,7 +23,6 @@ public class PictureNodeView extends ChildNode implements Serializable {
      */
     @SuppressLint("ClickableViewAccessibility")
     public PictureNodeView(Context context, NodeTable node, PictureTable thumbnail) {
-        //super(context, node, R.layout.node_outside);
         super(context, node, R.layout.picture_node);
 
         //サムネイル写真
@@ -139,7 +138,7 @@ public class PictureNodeView extends ChildNode implements Serializable {
      */
     @Override
     public void setNodeShape( int shapeKind ) {
-        super.setNodeShape(shapeKind);
+        //super.setNodeShape(shapeKind);
 
         int style = -1;
         switch ( shapeKind ){
@@ -190,6 +189,9 @@ public class PictureNodeView extends ChildNode implements Serializable {
 
         //テーブルに保存
         mNode.setNodeShape( shapeKind );
+
+
+        invalidate();
     }
 
 
