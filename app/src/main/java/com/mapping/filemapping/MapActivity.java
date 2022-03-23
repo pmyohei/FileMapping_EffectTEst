@@ -869,10 +869,10 @@ public class MapActivity extends AppCompatActivity {
         MapCommonData mapCommonData = (MapCommonData) getApplication();
         NodeArrayList<NodeTable> nodeQue = mapCommonData.getUpdateNodeQue();
 
-/*        Log.i("親変更", "nodeQue.size()=" + nodeQue.size());
+        //Log.i("親変更", "nodeQue.size()=" + nodeQue.size());
 
-        for( NodeTable node: nodeQue){
-            Log.i("親変更", "ノード名=" + node.getNodeName() + " 親ノード=" + node.getPidParentNode());
+/*        for( NodeTable node: nodeQue){
+            Log.i("キューの確認", "ノード名=" + node.getNodeName() + " 親ノード=" + node.getPidParentNode());
         }*/
 
         //更新対象ノードがあれば
@@ -1439,6 +1439,10 @@ public class MapActivity extends AppCompatActivity {
                 PictureNodeView node = (PictureNodeView)mNodes.getNode( pictureNodePid ).getNodeView();
                 node.updateThumbnail( newThumbnail );
                 node.setNodeShape( shape );
+
+                //更新対象キューに追加
+                MapCommonData mapCommonData = (MapCommonData) getApplication();
+                mapCommonData.enqueUpdateNodeWithUnique(node.getNode());
 
             } else if( resultCode == RESULT_GALLERY) {
                 //do nothing

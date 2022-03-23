@@ -7,7 +7,6 @@ import android.view.View;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
-import java.util.List;
 import java.util.Locale;
 
 /*
@@ -15,6 +14,8 @@ import java.util.Locale;
  */
 public class MapCommonData extends Application {
 
+    //透明なし時の先頭値
+    private final String TRANCEPARENT_HEAD = "#FF";
     //ピンチ操作後のビュー間の距離の比率
     private float pinchDistanceRatioX = 1.0f;
     private float pinchDistanceRatioY = 1.0f;
@@ -136,14 +137,13 @@ public class MapCommonData extends Application {
         //「色情報を大文字＋透過情報を削除」してリストを再作成
         //※重複を排除するとき、大文字と小文字で別の色と判定されるのを回避するため
         ArrayList<String> tmpUpperColors = new ArrayList<>();
-        final String TRANCEPARENT = "#FF";
         for( String color: tmpColors ){
             //大文字
             String upper = color.toUpperCase(Locale.ROOT);
             //透明度の情報があれば除外
-            if( ( upper.length() == 9 ) && ( upper.contains(TRANCEPARENT)) ){
+            if( ( upper.length() == 9 ) && ( upper.contains(TRANCEPARENT_HEAD)) ){
                 //#FF001122→#001122 にする
-                upper = upper.replace(TRANCEPARENT, "#");
+                upper = upper.replace(TRANCEPARENT_HEAD, "#");
             }
             tmpUpperColors.add( upper );
         }
@@ -164,16 +164,24 @@ public class MapCommonData extends Application {
      */
     public int addColorHistory( String addColor ) {
 
-        for( String color: mColorHistory ){
+        //大文字
+        String upper = addColor.toUpperCase(Locale.ROOT);
+        //透明度の情報があれば除外
+        if( ( upper.length() == 9 ) && ( upper.contains(TRANCEPARENT_HEAD)) ){
+            //#FF001122→#001122 にする
+            upper = upper.replace(TRANCEPARENT_HEAD, "#");
+        }
 
-            if( color.equals( addColor ) ){
+        //既存の色履歴をチェック
+        for( String color: mColorHistory ){
+            if( color.equals( upper ) ){
                 //既に同じ色があれば、追加なし
                 return -1;
             }
         }
 
         //新しい色であれば追加
-        mColorHistory.add( addColor );
+        mColorHistory.add( upper );
         return mColorHistory.size() - 1;
     }
 

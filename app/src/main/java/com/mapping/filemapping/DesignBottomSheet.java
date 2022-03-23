@@ -132,7 +132,7 @@ public class DesignBottomSheet extends CoordinatorLayout {
     public void openBottomSheet(int kind, View view) {
 
         final float HALF = 0.5f;
-        final float ONE_THIRD = 0.3f;
+        //final float ONE_THIRD = 0.3f;
 
         float heightRatio;
 
@@ -163,7 +163,7 @@ public class DesignBottomSheet extends CoordinatorLayout {
             //ノード形のみの指定
             setupNodeSizeLayout();
 
-            heightRatio = ONE_THIRD;
+            heightRatio = HALF;
         }
 
         //高さ設定

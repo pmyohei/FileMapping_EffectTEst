@@ -190,7 +190,6 @@ public class PictureNodeView extends ChildNode implements Serializable {
         //テーブルに保存
         mNode.setNodeShape( shapeKind );
 
-
         invalidate();
     }
 

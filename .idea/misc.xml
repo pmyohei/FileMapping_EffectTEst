@@ -174,6 +174,7 @@
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/frame_check_color.xml" value="0.1895" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/frame_font.xml" value="0.1895" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/frame_item_map.xml" value="0.21979166666666666" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/ic_no_image.xml" value="0.169" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/selector_guide_indicator.xml" value="0.26974358974358975" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_color_picker.xml" value="0.1609375" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_main.xml" value="0.2318840579710145" />
@@ -186,6 +187,7 @@
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_picture_trimming.xml" value="0.14159067882472137" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/color_picker_dialog.xml" value="0.1" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/color_selection.xml" value="0.12943262411347517" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/help_map_about_photo_dialog.xml" value="0.12563323201621074" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/hierarchy_node.xml" value="0.1" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/input_node_design.xml" value="0.24864130434782608" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/input_node_line.xml" value="0.24864130434782608" />
