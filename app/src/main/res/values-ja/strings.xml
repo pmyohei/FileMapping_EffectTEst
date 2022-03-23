@@ -175,7 +175,7 @@
     <string name="help_icon_delete">ノードとその配下のノードをマップ上から削除します。</string>
     <string name="help_icon_delete_note">※削除対象のノードに紐づけた写真は、端末上からは削除されません</string>
     <string name="help_icon_photo_library_name">ギャラリー表示</string>
-    <string name="help_icon_photo_library">このノードに紐づけた写真をギャラリーで確認ことができます。</string>
+    <string name="help_icon_photo_library">このノードに紐づけた写真をギャラリーで確認することができます。</string>
     <string name="help_icon_change_parent_name">親ノードの変更</string>
     <string name="help_icon_change_parent">親ノードを変更します。\nこのアイコンを選択した後、親にしたいノードをタッチすると、そのノードを親に変更できます。</string>
     <string name="help_icon_change_parent_note">※「ピクチャノード」は親ノードにできません</string>

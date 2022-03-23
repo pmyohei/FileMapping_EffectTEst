@@ -3,6 +3,7 @@ package com.mapping.filemapping;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
 import android.text.Editable;
@@ -304,7 +305,8 @@ public class ColorSelectionView extends LinearLayout {
                     .create();
 
             //確認用ビューに初期色を設定
-            layout.findViewById(R.id.v_checkColor).setBackgroundColor(Color.parseColor(settingColor));
+            View v_checkColor = layout.findViewById(R.id.v_checkColor);
+            v_checkColor.setBackgroundColor(Color.parseColor(settingColor));
 
             //カラーピッカーに初期値を設定
             ColorPickerView cpv = layout.findViewById(R.id.colorPicker);

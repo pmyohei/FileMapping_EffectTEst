@@ -10,9 +10,9 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:paddingTop="60dp"
+        android:paddingTop="40dp"
         android:layout_marginStart="12dp"
-        android:layout_marginBottom="12dp"
+        android:layout_marginBottom="4dp"
         android:text="@string/tree_title"
         android:textStyle="bold"
         android:textColor="@color/transparent_70_black"
@@ -23,7 +23,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:layout_marginStart="12dp"
-        android:layout_marginBottom="12dp"
         android:text="@string/tree_title2"
         android:textColor="@color/transparent_70_black"
         android:textSize="14sp" />
