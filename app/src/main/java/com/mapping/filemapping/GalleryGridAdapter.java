@@ -3,7 +3,6 @@ package com.mapping.filemapping;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -54,7 +53,7 @@ public class GalleryGridAdapter extends BaseAdapter {
             File file = new File(path);
             if( !file.isFile() ){
                 //ファイルがないとき、Picassoでは描画が遅れるため、ここでエラー設定を行う
-                mIv_picture.setImageResource( R.drawable.ic_no_image);
+                mIv_picture.setImageResource( R.drawable.baseline_no_image);
                 return;
             }
 
@@ -62,7 +61,7 @@ public class GalleryGridAdapter extends BaseAdapter {
             Picasso.get()
                     .load( file )
                     .fit().centerCrop()               //※画像の表示範囲の指定はxmlではなくここでやること（表示がかなり重くなるため）
-                    .error(R.drawable.ic_no_image)    //エラー画像の設定は、Picassoでは行わない、描画が遅れるため（※この.error設定は念のため）
+                    .error(R.drawable.baseline_no_image)    //エラー画像の設定は、Picassoでは行わない、描画が遅れるため（※この.error設定は念のため）
                     .into( mIv_picture );
         }
     }

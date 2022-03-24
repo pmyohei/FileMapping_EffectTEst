@@ -18,6 +18,6 @@
         android:layout_height="@dimen/thumnbnail_default_size"
         android:layout_gravity="center"
         android:padding="@dimen/thumbnail_image_padding"
-        android:src="@drawable/ic_no_image"/>
+        android:src="@drawable/baseline_no_image"/>
 
 </LinearLayout>

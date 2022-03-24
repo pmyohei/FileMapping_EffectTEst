@@ -95,7 +95,7 @@ public class PictureNodeView extends ChildNode implements Serializable {
                 .load(new File(path))
                 .resize(ThumbnailTransformation.RESIZE, ThumbnailTransformation.RESIZE)
                 .transform(new ThumbnailTransformation(thumbnail, iv_node.getWidth()))
-                .error(R.drawable.ic_no_image)
+                .error(R.drawable.baseline_no_image)
                 .into(iv_node);
     }
 

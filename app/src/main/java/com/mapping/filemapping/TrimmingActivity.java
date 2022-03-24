@@ -4,7 +4,6 @@ import static android.media.ExifInterface.ORIENTATION_NORMAL;
 import static android.media.ExifInterface.ORIENTATION_ROTATE_90;
 
 import static com.isseiaoki.simplecropview.CropImageView.RotateDegrees.ROTATE_90D;
-import static com.mapping.filemapping.ResourceManager.SQUARE_CORNER_RATIO;
 
 import androidx.activity.result.ActivityResult;
 import androidx.activity.result.ActivityResultCallback;
@@ -36,19 +35,16 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.google.android.material.card.MaterialCardView;
 import com.google.android.material.imageview.ShapeableImageView;
 import com.google.android.material.shape.ShapeAppearanceModel;
 import com.isseiaoki.simplecropview.CropImageView;
 import com.squareup.picasso.Callback;
 import com.squareup.picasso.Picasso;
 
-import java.io.File;
 import java.io.FileDescriptor;
 import java.io.IOException;
 import java.util.Objects;
@@ -354,7 +350,7 @@ public class TrimmingActivity extends AppCompatActivity {
         final CropImageView iv_cropSource = findViewById(R.id.iv_cropSource);
         Picasso.get()
                 .load(mUri)
-                .error(R.drawable.ic_no_image)
+                .error(R.drawable.baseline_no_image)
                 .into(iv_cropSource, new PicassoCallback(orientation));
     }
 
@@ -665,7 +661,7 @@ public class TrimmingActivity extends AppCompatActivity {
             //設定中の画像を無効化
             ImageView iv_toThumbnail = findViewById(R.id.iv_toThumbnail);
             CropImageView iv_cropSource = findViewById(R.id.iv_cropSource);
-            iv_toThumbnail.setImageResource( R.drawable.ic_no_image);
+            iv_toThumbnail.setImageResource( R.drawable.baseline_no_image);
             iv_cropSource.setImageBitmap( null );
 
             //メッセージを表示

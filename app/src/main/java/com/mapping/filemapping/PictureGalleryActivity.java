@@ -297,7 +297,7 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
                                         .load(new File(path))
                                         .resize(ThumbnailTransformation.RESIZE, ThumbnailTransformation.RESIZE)
                                         .transform(new ThumbnailTransformation(thumbnail, viewSize))
-                                        .error(R.drawable.ic_no_image)
+                                        .error(R.drawable.baseline_no_image)
                                         .into(iv_picture);
                             }
                         }
@@ -762,7 +762,7 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
 
         //無効アイコンを設定
         iv_picture.setImageBitmap(
-                BitmapFactory.decodeResource(getResources(), R.drawable.ic_no_image)
+                BitmapFactory.decodeResource(getResources(), R.drawable.baseline_no_image)
         );
     }
 

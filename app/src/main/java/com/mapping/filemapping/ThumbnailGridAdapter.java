@@ -1,7 +1,6 @@
 package com.mapping.filemapping;
 
 import android.content.Context;
-import android.content.res.Configuration;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -98,7 +97,7 @@ public class ThumbnailGridAdapter extends BaseAdapter {
                 .load( new File( path ) )
                 .resize( ThumbnailTransformation.RESIZE, ThumbnailTransformation.RESIZE )
                 .transform( new ThumbnailTransformation( thumbnail, viewSize ) )
-                .error(R.drawable.ic_no_image)
+                .error(R.drawable.baseline_no_image)
                 .into( iv_picture );
 
         //親ノード名を取得。なければ、なし用の文言を設定
