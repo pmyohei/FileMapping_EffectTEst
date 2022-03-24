@@ -63,7 +63,6 @@ public class SinglePictureDisplayActivity extends AppCompatActivity implements P
         mGalley = (ArrayList) intent.getSerializableExtra("pictures");
         //表示開始位置
         int showPosition = intent.getIntExtra("position", 0);
-        ;
 
         //格納先更新フラグ（削除か格納先の移動が発生したとき、フラグを更新する）
         mIsUpdate = false;
@@ -163,13 +162,13 @@ public class SinglePictureDisplayActivity extends AppCompatActivity implements P
                             //ページ遷移が１ページだけ
 
                             //Log.i("ページ更新チェック", "★更新発生 preCurrent=" + prePage);
-                            Log.i("ページ更新チェック", "★更新発生 通知テスト ピンチフラグ 通知判定直前 preCurrent→" + prePage);
-                            Log.i("ページ更新チェック", "★更新発生 通知テスト ピンチフラグ 通知判定直前 current→" + nextPage);
+                            //Log.i("ページ更新チェック", "★更新発生 通知テスト ピンチフラグ 通知判定直前 preCurrent→" + prePage);
+                            //Log.i("ページ更新チェック", "★更新発生 通知テスト ピンチフラグ 通知判定直前 current→" + nextPage);
 
                             //参照していた写真が拡大された状態で画面遷移された場合
                             //if (preMatrixImageView != null && preMatrixImageView.isPinchUp()) {
                             if (mIsImagePinchUp) {
-                                Log.i("ページ更新チェック", "★更新発生 通知テスト ピンチフラグ 拡大しているので更新通知を送る→" + prePage);
+                                //Log.i("ページ更新チェック", "★更新発生 通知テスト ピンチフラグ 拡大しているので更新通知を送る→" + prePage);
 
                                 //参照していたページを更新
                                 adapter.notifyItemChanged(prePage);
@@ -186,12 +185,12 @@ public class SinglePictureDisplayActivity extends AppCompatActivity implements P
             @Override
             public void onPageSelected(int position) {
                 super.onPageSelected(position);
-                Log.i("コール順確認", "onPageSelected ページ=" + position);
+                //Log.i("コール順確認", "onPageSelected ページ=" + position);
             }
 
             @Override
             public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                Log.i("コール順確認", "onPageScrolled ページ=" + position);
+                //Log.i("コール順確認", "onPageScrolled ページ=" + position);
             }
         });
 
@@ -594,6 +593,10 @@ public class SinglePictureDisplayActivity extends AppCompatActivity implements P
 
         //非同期処理開始
         db.execute();
+
+        //写真削除後は、ページ送り有効にする
+        ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
+        vp2_singlePicture.setUserInputEnabled(true);
     }
 
 }

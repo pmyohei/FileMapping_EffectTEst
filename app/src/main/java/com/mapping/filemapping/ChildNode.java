@@ -827,7 +827,6 @@ public class ChildNode extends BaseNode {
         public Path createFirstOrderBezierCurve() {
 
             //Path生成
-            //★初期生成させる
             @SuppressLint("DrawAllocation") Path path = new Path();
 
             //スタート地点を移動
@@ -912,7 +911,6 @@ public class ChildNode extends BaseNode {
         public Path createSecondOrderBezierCurve() {
 
             //Path生成
-            //★初期生成させる
             @SuppressLint("DrawAllocation") Path path = new Path();
 
             //スタート地点を移動
