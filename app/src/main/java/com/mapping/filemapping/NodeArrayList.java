@@ -618,7 +618,7 @@ public class NodeArrayList<E> extends ArrayList<NodeTable> implements Serializab
      */
     public BaseNode getShowingIconNode() {
 
-        //リストの内の子ノードすべて
+        //リスト内の子ノードすべて
         for( NodeTable node: this ){
             //アイコンビューを持っているかチェック
             if( node.getNodeView().hasIconView() ){

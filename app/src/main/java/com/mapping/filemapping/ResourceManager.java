@@ -7,6 +7,7 @@ import android.content.ContentResolver;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.DatabaseUtils;
+import android.graphics.Insets;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Build;
@@ -14,6 +15,7 @@ import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.WindowInsets;
 import android.view.WindowManager;
 import android.view.WindowMetrics;
 
@@ -236,4 +238,44 @@ public class ResourceManager {
         }
     }
 
+
+    /*
+     *　スクリーン横幅を取得（ナビゲーションバーのサイズを除外。横画面時の横幅を知りたい時用）
+     */
+/*    public static int getScreenWidthWithoutNavibar( Context context ) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowManager windowManager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
+            WindowMetrics windowMetrics = windowManager.getCurrentWindowMetrics();
+
+            Insets insets = windowMetrics.getWindowInsets().getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
+
+            return windowMetrics.getBounds().width() - insets.bottom;
+
+        } else {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            ((Activity)context).getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
+            return displayMetrics.widthPixels;
+        }
+    }*/
+
+    /*
+     *　スクリーン縦幅を取得（ナビゲーションバーのサイズを除外。縦画面時の縦幅を知りたい時用）
+     */
+/*    public static int getScreenHeightWithoutNavibar( Context context ) {
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+            WindowManager windowManager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
+            WindowMetrics windowMetrics = windowManager.getCurrentWindowMetrics();
+
+            Insets insets = windowMetrics.getWindowInsets().getInsetsIgnoringVisibility(WindowInsets.Type.systemBars());
+            return windowMetrics.getBounds().height() - insets.bottom;
+
+        } else {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            ((Activity)context).getWindowManager().getDefaultDisplay().getRealMetrics(displayMetrics);
+
+            return displayMetrics.heightPixels;
+        }
+    }*/
 }

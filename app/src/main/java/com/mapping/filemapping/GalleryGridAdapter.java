@@ -3,6 +3,7 @@ package com.mapping.filemapping;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.Configuration;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -47,7 +48,7 @@ public class GalleryGridAdapter extends BaseAdapter {
          * ビューの設定
          */
         @SuppressLint("ClickableViewAccessibility")
-        public void setView( PictureInGalleryView pictureInGalleryView, int position ) {
+        public void setView( int position ) {
 
             String path = mData.get(position).getPath();
             File file = new File(path);
@@ -87,7 +88,6 @@ public class GalleryGridAdapter extends BaseAdapter {
 
         //画面向きを取得
         int orientation = mContext.getResources().getConfiguration().orientation;
-
         //向きに応じて、1行で表示する写真数を設定
         mPictureNumOnLine = ( (orientation == Configuration.ORIENTATION_PORTRAIT) ? PORTRAIT_NUM : LANDSCAPE_NUM );
     }
@@ -115,9 +115,8 @@ public class GalleryGridAdapter extends BaseAdapter {
             convertView = new PictureInGalleryView(mContext);
 
             //写真用ビューのサイズ
-            //※parent(=GridView)は、レイアウトが確定していない状態にあるため、その親のレイアウトのサイズを取得
-            //※（横幅は同じため、問題なし）
-            int sideLength = (parent.getRootView().getWidth() / mPictureNumOnLine) - (int)mDp*2;
+            //※ナビゲーションバーがあっても横画面時に表示エリアのサイズが適切になるように、アクティビティのルートレイアウトのサイズを取得
+            int sideLength = (parent.getRootView().findViewById(R.id.ll_gallery).getWidth() / mPictureNumOnLine) - (int)mDp*2;
             AbsListView.LayoutParams params = new AbsListView.LayoutParams(
                     sideLength,
                     sideLength);
@@ -127,17 +126,13 @@ public class GalleryGridAdapter extends BaseAdapter {
             holder = new ViewHolder( convertView );
             convertView.setTag(holder);
 
-            //float dp = mContext.getResources().getDisplayMetrics().density;
-            //Log.i("ギャラリー", "position=" + position + " 前回設定サイズ=" + (parent.getWidth() / 2 - (int)dp) );
-            //Log.i("ギャラリー", "position=" + position + " mPictureNumOnLine=" + mPictureNumOnLine);
-
         } else {
             //一度表示されているなら、そのまま活用
             holder = (ViewHolder)convertView.getTag();
         }
 
         //写真ビュー設定
-        holder.setView( (PictureInGalleryView)convertView, position );
+        holder.setView( position );
 
         //設定したビューを返す
         return convertView;
