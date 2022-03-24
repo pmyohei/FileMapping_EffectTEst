@@ -27,7 +27,7 @@
         ]]>
     </string>
     <string name="alert_deletePicture_messageAdd">\n*Thumbnails are not deleted.</string>
-    <string name="alert_movePicture_title">Move photos</string>
+    <string name="alert_movePicture_title">Move photo</string>
     <string name="alert_movePicture_message">Do you want to move the photo to the selection node?</string>
     <string name="alert_movePicture_messageAdd">
         <![CDATA[

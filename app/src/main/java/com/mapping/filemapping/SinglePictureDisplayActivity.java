@@ -407,6 +407,9 @@ public class SinglePictureDisplayActivity extends AppCompatActivity implements P
         //写真削除後は、ページ送り有効にする
         ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
         vp2_singlePicture.setUserInputEnabled(true);
+        //ページ送りアイコン非表示
+        findViewById(R.id.iv_pre).setVisibility(View.GONE);
+        findViewById(R.id.iv_next).setVisibility(View.GONE);
     }
 
     /*
@@ -597,6 +600,9 @@ public class SinglePictureDisplayActivity extends AppCompatActivity implements P
         //写真削除後は、ページ送り有効にする
         ViewPager2 vp2_singlePicture = findViewById(R.id.vp2_singlePicture);
         vp2_singlePicture.setUserInputEnabled(true);
+        //ページ送りアイコン非表示
+        findViewById(R.id.iv_pre).setVisibility(View.GONE);
+        findViewById(R.id.iv_next).setVisibility(View.GONE);
     }
 
 }
