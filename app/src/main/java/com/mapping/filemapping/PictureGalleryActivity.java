@@ -682,12 +682,24 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
                         //レイアウト確定後は、不要なので本リスナー削除
                         gv_gallery.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
+                        Log.i("複数選択確定", "addOnGlobalLayoutListener");
+
                         //ギャラリーの選択中状態を解除
                         GalleryPageAdapter galleryPageAdapter = (GalleryPageAdapter) vp2_gallery.getAdapter();
                         galleryPageAdapter.cancellationMultipleSelection(gv_gallery);
                     }
                 }
         );
+
+
+        vp2_gallery.post(() -> {
+
+            Log.i("複数選択確定", "post");
+
+            //ギャラリーの選択中状態を解除
+            GalleryPageAdapter galleryPageAdapter = (GalleryPageAdapter) vp2_gallery.getAdapter();
+            galleryPageAdapter.cancellationMultipleSelection(gv_gallery);
+        });
     }
 
     /*
@@ -723,11 +735,11 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
         //}
         //--
 
-        //タブで表示しているサムネイルの更新
-        disableTabThumbnail(isThumbnail);
-
         //選択状態を解除
         closeMultipleOptionMenu();
+
+        //タブで表示しているサムネイルの更新
+        disableTabThumbnail(isThumbnail);
 
         //参照中のギャラリーを更新
         updateSourceGallery(selectedPictures);
@@ -1078,6 +1090,9 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
                     public void onFinish(boolean isThumbnail, PictureArrayList<PictureTable> movedPictures) {
                         //移動結果をギャラリーに反映
                         updateGallery( movedPictures, toPicutureNodePid, isThumbnail );
+
+                        //複数選択モードを解除
+                        cancellationSelected();
 
                         //移動完了メッセージを表示
                         if( movedPictures.size() == 0 ){
