@@ -722,6 +722,15 @@ public class MapActivity extends AppCompatActivity {
             return;
         }
 
+        //マップデザインの場合
+        if( designKind == DesignBottomSheet.MAP ){
+            //ツールアイコンを開いているviewがいれば、閉じてもらう
+            BaseNode node = mNodes.getShowingIconNode();
+            if( node != null ){
+                node.closeIconView();
+            }
+        }
+
         //ボトムシートを開く
         l_bottomSheet.openBottomSheet(designKind, view);
     }

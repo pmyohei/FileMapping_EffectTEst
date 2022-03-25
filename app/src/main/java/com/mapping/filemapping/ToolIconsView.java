@@ -443,19 +443,6 @@ public class ToolIconsView extends ConstraintLayout {
                             mMapActivity.openEdit(mBaseNode);
                         }
 
-/*
-                        //更新対象ビューに追加
-                        MapCommonData mapCommonData = (MapCommonData) mMapActivity.getApplication();
-                        mapCommonData.enqueUpdateNodeWithUnique(mBaseNode.getNode());
-
-                        //ノード本体のマージンを取得
-                        float marginLeft = mBaseNode.getLeft();
-                        float marginTop  = mBaseNode.getTop();
-
-                        //BottomSheetを開く（画面移動あり）
-                        mMapActivity.openDesignBottomSheet(DesignBottomSheet.NODE, mBaseNode, marginLeft, marginTop, MOVE_UPPER);
-*/
-
                         //ノードに持たせていた自分をクローズ
                         mBaseNode.closeIconView();
                     }
