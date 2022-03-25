@@ -651,6 +651,7 @@ public class BaseNode extends FrameLayout {
                 mPaint);
     }
 
+
     /*
      * ダイアの影を描画
      */

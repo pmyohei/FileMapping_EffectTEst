@@ -503,14 +503,6 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
      */
     private void showMoveDestination() {
 
-        //参照中タブ
-        ViewPager2 vp2_gallery = findViewById(R.id.vp2_gallery);
-        int page = vp2_gallery.getCurrentItem();
-
-        //参照中のピクチャノードのpid
-        //※先頭は「すべて」タブであるため、参照indexは１小さい位置になる
-        int tabPictureNodePid = mPictureNodePids.get(page - 1);
-
         //選択写真
         PictureArrayList<PictureTable> selectedPictures = getSelectedPictures();
 
@@ -519,9 +511,6 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
             Toast.makeText(this, getString(R.string.toast_cannotThumbnailMove), Toast.LENGTH_SHORT).show();
             return;
         }
-
-        //選択写真の中から、サムネイル写真を除外
-        removeThumbnail(selectedPictures);
 
         //マップ上のピクチャノードを移動先候補として表示
         PictureNodesBottomSheetDialog bottomSheetDialog = PictureNodesBottomSheetDialog.newInstance(mPictureNodeInfo);
@@ -664,11 +653,14 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
         }
 
         //選択中の写真を非選択にする
+        //※ここで全チェックを解除しているが、表示されるときチェック状態が残っている画像がでてくる（選択写真の数が多いと）
+        //  暫定的な対応として、GalleryGridAdapterのsetView()内でも、画像表示時、選択モードでなければ選択状態を解除するようにしている
         int count = gv_gallery.getCount();
         for (int i = 0; i < count; i++) {
             if (gv_gallery.isItemChecked(i)) {
                 //選択中のものを解除
                 gv_gallery.setItemChecked(i, false);
+                //Log.i("複数選択対応", "解除 i=" + i);
             }
         }
 
@@ -682,24 +674,13 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
                         //レイアウト確定後は、不要なので本リスナー削除
                         gv_gallery.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-                        Log.i("複数選択確定", "addOnGlobalLayoutListener");
+                        //Log.i("複数選択確定", "addOnGlobalLayoutListener");
 
                         //ギャラリーの選択中状態を解除
-                        GalleryPageAdapter galleryPageAdapter = (GalleryPageAdapter) vp2_gallery.getAdapter();
-                        galleryPageAdapter.cancellationMultipleSelection(gv_gallery);
+                        gv_gallery.setChoiceMode( GridView.CHOICE_MODE_NONE );
                     }
                 }
         );
-
-
-        vp2_gallery.post(() -> {
-
-            Log.i("複数選択確定", "post");
-
-            //ギャラリーの選択中状態を解除
-            GalleryPageAdapter galleryPageAdapter = (GalleryPageAdapter) vp2_gallery.getAdapter();
-            galleryPageAdapter.cancellationMultipleSelection(gv_gallery);
-        });
     }
 
     /*
@@ -1004,21 +985,8 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
             return;
         }
 
-        //選択写真
-        PictureArrayList<PictureTable> selectedPictures = getSelectedPictures();
-
-        //選択写真の中に、サムネイル写真が含まれているか
-        boolean containThumbnail = false;
-        for( PictureTable picture: selectedPictures ){
-            if( picture.isThumbnail() ){
-                //サムネイル写真あれば、チェック終了
-                containThumbnail = true;
-                break;
-            }
-        }
-
         //移動確認のダイアログを表示
-        confirmMoveDialog(dialog, toPicutureNodePid, containThumbnail );
+        confirmMoveDialog(dialog, toPicutureNodePid );
     }
 
     /*
@@ -1046,7 +1014,7 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
     /*
      * 移動確認用ダイアログの表示
      */
-    private void confirmMoveDialog(BottomSheetDialogFragment dialog, int toPicutureNodePid, boolean isThumbnail) {
+    private void confirmMoveDialog(BottomSheetDialogFragment dialog, int toPicutureNodePid) {
 
         //表示メッセージ
         String message = getString(R.string.alert_movePicture_message) + getString(R.string.alert_movePicture_messageAdd);
@@ -1079,6 +1047,8 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
 
         //選択写真
         PictureArrayList<PictureTable> selectedPictures = getSelectedPictures();
+        //サムネイル写真を除外
+        removeThumbnail(selectedPictures);
 
         //ピクチャテーブルの所属を更新
         AsyncUpdateBelongsPicture db = new AsyncUpdateBelongsPicture(this, toPicutureNodePid, selectedPictures,

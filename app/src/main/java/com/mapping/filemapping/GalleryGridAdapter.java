@@ -7,6 +7,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 
 import com.squareup.picasso.Picasso;
@@ -25,6 +26,7 @@ public class GalleryGridAdapter extends BaseAdapter {
     private final PictureArrayList<PictureTable> mData;
     private final float mDp;
     private final Context mContext;
+    private final GridView mGV_gallery;
     private int mPictureNumOnLine;              //1行で表示する写真の数
 
 
@@ -33,13 +35,15 @@ public class GalleryGridAdapter extends BaseAdapter {
      */
     private class ViewHolder {
 
-        //セル位置
+        //画像view
+        private final PictureInGalleryView mPictureInGalleryView;
         private final ImageView mIv_picture;
 
         /*
          * コンストラクタ
          */
         public ViewHolder(View view){
+            mPictureInGalleryView = (PictureInGalleryView)view;
             mIv_picture = view.findViewById( R.id.iv_picture );
         }
 
@@ -48,6 +52,12 @@ public class GalleryGridAdapter extends BaseAdapter {
          */
         @SuppressLint("ClickableViewAccessibility")
         public void setView( int position ) {
+
+            //複数選択モードでなければ、チェック状態なしにする
+            //※複数選択を解除しても、viewのデザインが選択状態になっているケースの対応
+            if( mGV_gallery.getChoiceMode() == GridView.CHOICE_MODE_NONE ){
+                mPictureInGalleryView.setChecked(false);
+            }
 
             String path = mData.get(position).getPath();
             File file = new File(path);
@@ -69,8 +79,9 @@ public class GalleryGridAdapter extends BaseAdapter {
     /*
      * コンストラクタ
      */
-    public GalleryGridAdapter(Context context, PictureArrayList<PictureTable> data){
+    public GalleryGridAdapter(Context context, GridView gv_gallery, PictureArrayList<PictureTable> data){
         mContext = context;
+        mGV_gallery = gv_gallery;
         mData = data;
 
         //画面密度

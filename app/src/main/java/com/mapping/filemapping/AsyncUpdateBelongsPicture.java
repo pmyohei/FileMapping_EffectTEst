@@ -144,12 +144,13 @@ public class AsyncUpdateBelongsPicture {
                 picture.setPidParentNode( mPicutureNodePid );
 
                 //対象写真がサムネイル写真の場合
-                if( picture.isThumbnail() ){
+                //★現在、サムネイルかどうかの判定は先で使用していない
+/*                if( picture.isThumbnail() ){
                     //サムネイル情報を無効化（移動先では別のサムネイルがあるため）
                     picture.setDisableThumbnail();
                     //フラグ更新
                     mIsThumbnail = true;
-                }
+                }*/
 
                 //更新
                 dao.update( picture );

@@ -54,22 +54,18 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
             setGaleryAdapter( position );
         }
 
-
         /*
          * ギャラリーアダプタの設定
          */
         private void setGaleryAdapter( int pagePosition ) {
 
-            Log.i("タブ写真", "setGaleryAdapter ページ=" + pagePosition);
-
             //アダプタを設定
-            gv_gallery.setAdapter(new GalleryGridAdapter(gv_gallery.getContext(), mGallerys.get(pagePosition)));
+            gv_gallery.setAdapter( new GalleryGridAdapter(gv_gallery.getContext(), gv_gallery, mGallerys.get(pagePosition)) );
 
-            //アイテムクリックリスナー
+            //アイテム（ギャラリー中の画像）クリックリスナー
             gv_gallery.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-
                     //複数選択モードでなければ
                     if( gv_gallery.getChoiceMode() == GridView.CHOICE_MODE_NONE ){
                         //ギャラリーの単体表示へ
@@ -80,7 +76,7 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
                 }
             });
 
-            //アイテムロングクリックリスナー
+            //アイテム（ギャラリー中の画像）ロングクリックリスナー
             gv_gallery.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
                 @Override
                 public boolean onItemLongClick(AdapterView<?> adapterView, View view, int i, long l) {
@@ -91,11 +87,11 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
                     }
 
                     if( gv_gallery.getChoiceMode() == GridView.CHOICE_MODE_NONE ){
-                        //複数選択モード出なければ、複数選択モードへ移行
-                        //※この設定をすることで、クリックするとチェック状態が設定される
+                        //複数選択モードではなければ、複数選択モードへ移行
+                        //※この設定をすることで、タッチするとチェック状態が設定される
                         gv_gallery.setChoiceMode(GridView.CHOICE_MODE_MULTIPLE);
 
-                        //ロングクリックの場合、選択判定にならないため、手動で設定
+                        //ロングクリックの場合、選択判定にならないため、手動でチェック状態を設定
                         gv_gallery.setItemChecked( i, true );
 
                         //ツールバーにメニューを表示
@@ -179,10 +175,10 @@ public class GalleryPageAdapter extends RecyclerView.Adapter<GalleryPageAdapter.
     /*
      * 複数選択状態の解除
      */
-    public void cancellationMultipleSelection(GridView gv_gallery) {
+/*    public void cancellationMultipleSelection(GridView gv_gallery) {
         //表示中GridViewの複数選択モードを解除
         gv_gallery.setChoiceMode( GridView.CHOICE_MODE_NONE );
-    }
+    }*/
 
 
 }
