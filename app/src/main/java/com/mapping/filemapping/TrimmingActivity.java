@@ -645,6 +645,11 @@ public class TrimmingActivity extends AppCompatActivity {
         int mapPid = intent.getIntExtra(MapActivity.INTENT_MAP_PID, 0);
         int pictureNodePid = intent.getIntExtra(MapActivity.INTENT_NODE_PID, 0);
 
+        //マップ共通データから、該当するピクチャノードの形状を設定
+        MapCommonData mapCommonData = (MapCommonData) getApplication();
+        NodeTable pictureNode = mapCommonData.getNodes().getNode( pictureNodePid );
+        pictureNode.setNodeShape( mShape );
+
         //トリミング情報
         final CropImageView iv_cropTarget = findViewById(R.id.iv_cropSource);
         RectF rectInfo = iv_cropTarget.getActualCropRect();
@@ -664,7 +669,7 @@ public class TrimmingActivity extends AppCompatActivity {
         picture.setTrimmingInfo(rectInfo, width, height);
 
         //DB保存処理
-        AsyncUpdateThumbnail db = new AsyncUpdateThumbnail(this, picture, new AsyncUpdateThumbnail.OnFinishListener() {
+        AsyncUpdateThumbnail db = new AsyncUpdateThumbnail(this, pictureNode, picture, new AsyncUpdateThumbnail.OnFinishListener() {
             @Override
             public void onFinish(PictureTable newPicture) {
                 //変わったノードとサムネ情報を返す

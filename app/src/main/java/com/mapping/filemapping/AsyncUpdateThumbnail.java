@@ -14,6 +14,7 @@ import java.util.concurrent.Executors;
 public class AsyncUpdateThumbnail {
 
     private final AppDatabase mDB;
+    private final NodeTable mPictureNode;
     private final PictureTable mPicture;
     private final OnFinishListener mOnFinishListener;
 
@@ -23,9 +24,10 @@ public class AsyncUpdateThumbnail {
     /*
      * コンストラクタ
      */
-    public AsyncUpdateThumbnail(Context context, PictureTable picture, OnFinishListener listener) {
+    public AsyncUpdateThumbnail(Context context, NodeTable pictureNode, PictureTable picture, OnFinishListener listener) {
         mDB = AppDatabaseManager.getInstance(context);
         mOnFinishListener = listener;
+        mPictureNode = pictureNode;
         mPicture = picture;
 
         //返却データ
@@ -61,6 +63,11 @@ public class AsyncUpdateThumbnail {
          * DBからデータを取得
          */
         private void dbOperation() {
+
+            //NodeTableDao
+            NodeTableDao nodeDao = mDB.daoNodeTable();
+            //ピクチャノード更新
+            nodeDao.updateNode( mPictureNode );
 
             //PictureTableDao
             PictureTableDao dao = mDB.daoPictureTable();

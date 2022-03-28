@@ -1430,6 +1430,9 @@ public class MapActivity extends AppCompatActivity {
             int resultCode = result.getResultCode();
 
             if( resultCode == RESULT_PICTURE_NODE) {
+                //ピクチャノード新規生成
+                //★リリース後：ノード周りの情報の処理タイミングをサムネイル更新側と合わせる。
+                //           何をトリミング画面でやって、何を本画面でやるか等
 
                 if( !mEnableDrawNode ){
                     //画面初期化が発生していた場合、何もする必要なし（初期描画で描画されるため）
@@ -1441,18 +1444,22 @@ public class MapActivity extends AppCompatActivity {
                 PictureTable thumbnail  = (PictureTable)intent.getSerializableExtra(ResourceManager.KEY_THUMBNAIL);
 
                 //リストに追加
-                MapCommonData mapCommonData = (MapCommonData) getApplication();
-                mapCommonData.addNodes(pictureNode);
-
-                Log.i("ピクチャノード生成問題", "onActivityResult：新ピクチャノードをdraw");
+                mNodes.add( pictureNode );
 
                 //ピクチャノード生成
                 drawPictureNode(pictureNode, thumbnail);
 
             } else if( resultCode == RESULT_UPDATE_TUHMBNAIL) {
                 //サムネイル変更
-                //新しいサムネイル
+
+                if( !mEnableDrawNode ){
+                    //画面初期化が発生していた場合、何もする必要なし（初期描画で描画されるため）
+                    return;
+                }
+
+                //新サムネイル
                 PictureTable newThumbnail = (PictureTable)intent.getSerializableExtra(ResourceManager.KEY_NEW_THUMBNAIL);
+                //形状
                 int shape = intent.getIntExtra(ResourceManager.KEY_NEW_SHAPE, NodeTable.CIRCLE);
 
                 //変更されたピクチャノード
@@ -1461,10 +1468,6 @@ public class MapActivity extends AppCompatActivity {
                 PictureNodeView node = (PictureNodeView)mNodes.getNode( pictureNodePid ).getNodeView();
                 node.updateThumbnail( newThumbnail );
                 node.setNodeShape( shape );
-
-                //更新対象キューに追加
-                MapCommonData mapCommonData = (MapCommonData) getApplication();
-                mapCommonData.enqueUpdateNodeWithUnique(node.getNode());
 
             } else if( resultCode == RESULT_GALLERY) {
                 //do nothing
