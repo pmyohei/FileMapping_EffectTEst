@@ -33,12 +33,14 @@
             android:exported="false" />
         <activity
             android:name=".MapCreateActivity"
+            android:screenOrientation="portrait"
             android:exported="true" />
         <activity
             android:name=".MapActivity"
             android:exported="true" />
         <activity
             android:name=".MapListActivity"
+            android:screenOrientation="portrait"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

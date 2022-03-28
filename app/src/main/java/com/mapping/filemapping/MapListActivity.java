@@ -361,26 +361,6 @@ public class MapListActivity extends AppCompatActivity {
                 mMapListAdapter.notifyItemChanged( mEditPosition );
             }
 
-/*            //マップ編集結果
-            if( resultCode == RESULT_EDITED) {
-
-                //マップ入力画面からデータを受け取る
-                MapTable map = (MapTable) intent.getSerializableExtra(MapCreateActivity.KEY_MAP);
-                Log.i("MapListActivity", "編集 map=" + map.getMapName());
-
-                //リスト上のマップを更新
-                int i = 0;
-                for( MapTable mapData: mMaps ){
-                    if( mapData.getPid() == map.getPid() ){
-                        mapData.setMapName( map.getMapName() );
-                        break;
-                    }
-                    i++;
-                }
-
-                //アダプタに変更通知
-                mMapListAdapter.notifyItemChanged( i );
-            }*/
         }
     }
 }
