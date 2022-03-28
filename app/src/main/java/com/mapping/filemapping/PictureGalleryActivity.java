@@ -271,38 +271,57 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
             //タブの設定
             TabLayout tabLayout = findViewById(R.id.tab_pictureNode);
             new TabLayoutMediator(tabLayout, vp2_gallery,
-                    new TabLayoutMediator.TabConfigurationStrategy() {
-                        @Override
-                        public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                            //タブの設定
-                            if (position == 0) {
-                                //先頭のタブはすべての写真を表示する
-                                tab.setText(getString(R.string.tab_all));
+                new TabLayoutMediator.TabConfigurationStrategy() {
+                    @Override
+                    public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
+                        //タブの設定
+                        if (position == 0) {
+                            //先頭のタブはすべての写真を表示する
+                            tab.setText(getString(R.string.tab_all));
 
-                            } else {
-                                //先頭より後はピクチャノードのサムネイルを設定
-                                tab.setCustomView(R.layout.item_gallery_tab);
+                        } else {
+                            //先頭より後はピクチャノードのサムネイルを設定
+                            tab.setCustomView(R.layout.item_gallery_tab);
 
-                                //タブに表示するピクチャノードサイズ
-                                int viewSize = (int) getResources().getDimension(R.dimen.gallery_tab_size);
+                            //タブに表示するピクチャノードサイズ
+                            int viewSize = (int) getResources().getDimension(R.dimen.gallery_tab_size);
 
-                                //サムネイルのpath
-                                PictureTable thumbnail = thumbnails.get(position - 1);
-                                String path = ((thumbnail == null) ? "" : thumbnail.getPath());
+                            //サムネイルのpath
+                            PictureTable thumbnail = thumbnails.get(position - 1);
+                            String path = ((thumbnail == null) ? "" : thumbnail.getPath());
 
-                                //アイコンとして設定
-                                //※画質を担保するため、resize()である程度画像の大きさを確保してからtransform()に渡す
-                                ImageView iv_picture = tab.getCustomView().findViewById(R.id.iv_picture);
-                                Picasso.get()
-                                        .load(new File(path))
-                                        .resize(ThumbnailTransformation.RESIZE, ThumbnailTransformation.RESIZE)
-                                        .transform(new ThumbnailTransformation(thumbnail, viewSize))
-                                        .error(R.drawable.baseline_no_image)
-                                        .into(iv_picture);
-                            }
+                            //アイコンとして設定
+                            //※画質を担保するため、resize()である程度画像の大きさを確保してからtransform()に渡す
+                            ImageView iv_picture = tab.getCustomView().findViewById(R.id.iv_picture);
+                            Picasso.get()
+                                    .load(new File(path))
+                                    .resize(ThumbnailTransformation.RESIZE, ThumbnailTransformation.RESIZE)
+                                    .transform(new ThumbnailTransformation(thumbnail, viewSize))
+                                    .error(R.drawable.baseline_no_image)
+                                    .into(iv_picture);
                         }
                     }
+                }
             ).attach();
+
+            //タブ選択リスナー
+            tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
+                @Override
+                public void onTabSelected(TabLayout.Tab tab) {
+                    //タブ選択時（選択中のタブにタッチされた場合、onTabReselected()がコールされる）
+                    //Log.i("複数選択タブ", "onTabSelected=" + tab.getPosition());
+                    //複数選択解除
+                    closeMultipleOptionMenu();
+                }
+                @Override
+                public void onTabUnselected(TabLayout.Tab tab) {
+                    //Log.i("複数選択タブ", "onTabUnselected=" + tab.getPosition());
+                }
+                @Override
+                public void onTabReselected(TabLayout.Tab tab) {
+                    //Log.i("複数選択タブ", "onTabReselected=" + tab.getPosition());
+                }
+            });
 
         });
     }
@@ -1059,9 +1078,6 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
                     public void onFinish(boolean isThumbnail, PictureArrayList<PictureTable> movedPictures) {
                         //移動結果をギャラリーに反映
                         updateGallery( movedPictures, toPicutureNodePid, isThumbnail );
-
-                        //複数選択モードを解除
-                        cancellationSelected();
 
                         //移動完了メッセージを表示
                         if( movedPictures.size() == 0 ){
