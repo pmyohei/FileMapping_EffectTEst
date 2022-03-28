@@ -30,7 +30,6 @@
             android:exported="false" />
         <activity
             android:name=".TrimmingActivity"
-            android:screenOrientation="portrait"
             android:exported="false" />
         <activity
             android:name=".MapCreateActivity"

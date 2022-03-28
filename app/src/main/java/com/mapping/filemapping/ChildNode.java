@@ -477,6 +477,14 @@ public class ChildNode extends BaseNode {
                 parentNode = mSampleRootNode;
             }
 
+            //画面再生成時のガード対応
+            //※親ノードが共通リスト内にまだない場合がある
+            if( parentNode == null ){
+                //次のコールバックを待つ
+                Log.i("画面おち問題", "通貨チェック");
+                return;
+            }
+
             //親の中心座標を取得
             float parentCenterY = parentNode.getNodeView().getCenterPosY();
             if (parentCenterY == INIT_CENTER_POS) {
@@ -491,6 +499,8 @@ public class ChildNode extends BaseNode {
             ViewGroup vg = (ViewGroup) getRootView();
             FrameLayout fl_map = vg.findViewById(R.id.fl_map);
             fl_map.addView(line);
+
+            Log.i("ピクチャノード生成問題", "onLayout：ラインの新規追加");
 
         } else {
             //ライン生成済みなら、再描画

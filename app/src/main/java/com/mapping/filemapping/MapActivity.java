@@ -198,6 +198,8 @@ public class MapActivity extends AppCompatActivity {
             @Override
             public void onRead(NodeArrayList<NodeTable> nodeList, PictureArrayList<PictureTable> thumbnailList) {
 
+                Log.i("ピクチャノード生成問題", "onRead：DB読み取り完了");
+
                 //マップ共通データ
                 MapCommonData mapCommonData = (MapCommonData) getApplication();
                 mapCommonData.setNodes(nodeList);
@@ -583,6 +585,8 @@ public class MapActivity extends AppCompatActivity {
         initChildNodeCommon( nodeView, nodeTable );
         //全ノード共通設定
         initAllNodeCommon(nodeView, nodeTable);
+
+        Log.i("ピクチャノード生成問題", "drawPictureNode：ピクチャノードの描画 nodeTable.getPosX()=" + nodeTable.getPosX());
     }
 
     /*
@@ -1426,6 +1430,12 @@ public class MapActivity extends AppCompatActivity {
             int resultCode = result.getResultCode();
 
             if( resultCode == RESULT_PICTURE_NODE) {
+
+                if( !mEnableDrawNode ){
+                    //画面初期化が発生していた場合、何もする必要なし（初期描画で描画されるため）
+                    return;
+                }
+
                 //新規ピクチャノードを取得
                 NodeTable pictureNode = (NodeTable)intent.getSerializableExtra(ResourceManager.KEY_CREATED_NODE);
                 PictureTable thumbnail  = (PictureTable)intent.getSerializableExtra(ResourceManager.KEY_THUMBNAIL);
@@ -1433,6 +1443,8 @@ public class MapActivity extends AppCompatActivity {
                 //リストに追加
                 MapCommonData mapCommonData = (MapCommonData) getApplication();
                 mapCommonData.addNodes(pictureNode);
+
+                Log.i("ピクチャノード生成問題", "onActivityResult：新ピクチャノードをdraw");
 
                 //ピクチャノード生成
                 drawPictureNode(pictureNode, thumbnail);

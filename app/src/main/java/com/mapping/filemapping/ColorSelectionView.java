@@ -2,7 +2,6 @@ package com.mapping.filemapping;
 
 import android.app.Activity;
 import android.content.Context;
-import android.content.pm.ActivityInfo;
 import android.content.res.ColorStateList;
 import android.content.res.Configuration;
 import android.graphics.Color;
@@ -299,13 +298,7 @@ public class ColorSelectionView extends LinearLayout {
          */
         private void showColorPickerDialog(String settingColor) {
 
-            View layout;
-            Configuration config = getResources().getConfiguration();
-            if (config.orientation == Configuration.ORIENTATION_PORTRAIT) {
-                layout = LayoutInflater.from(getContext()).inflate(R.layout.color_picker_dialog_portrait, null);
-            } else {
-                layout = LayoutInflater.from(getContext()).inflate(R.layout.color_picker_dialog_landscape, null);
-            }
+            View layout = LayoutInflater.from(getContext()).inflate(R.layout.color_picker_dialog, null);
 
             mDialog = new AlertDialog.Builder(getContext())
                     .setView(layout)

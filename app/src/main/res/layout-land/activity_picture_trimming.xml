@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!--  ツールバー  -->
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_trimming"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="top"
+            android:background="@android:color/white"
+            android:elevation="4dp"
+            android:theme="@style/Toolbar.NoActionBar"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:menu="@menu/toolbar_trimming">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/toolbar_titleTrimming"
+                android:textColor="@color/black" />
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <androidx.constraintlayout.widget.Guideline
+            android:id="@+id/guideline"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintGuide_percent="0.3" />
+
+        <!--  クリップイメージ（サムネイルイメージ）  -->
+        <com.google.android.material.imageview.ShapeableImageView
+            android:id="@+id/iv_toThumbnail"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginStart="8dp"
+            android:adjustViewBounds="true"
+            android:padding="20dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/baseline_no_image"
+            app:shapeAppearanceOverlay="@style/circle"
+            app:strokeColor="@color/black"
+            app:strokeWidth="1dp"
+            app:layout_constraintBottom_toBottomOf="@+id/iv_cropSource"
+            app:layout_constraintEnd_toStartOf="@+id/iv_cropSource"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/iv_cropSource"/>
+
+        <!--  仕切り線  -->
+        <View
+            android:layout_width="1dp"
+            android:layout_height="0dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            android:background="@color/black"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_trimming"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/guideline"
+            app:layout_constraintEnd_toStartOf="@+id/iv_cropSource"
+            />
+
+        <!--  選択した写真  -->
+        <com.isseiaoki.simplecropview.CropImageView
+            android:id="@+id/iv_cropSource"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:adjustViewBounds="true"
+            android:padding="12dp"
+            app:layout_constraintLeft_toLeftOf="@id/guideline"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/toolbar_trimming"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.122" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <!--  BottomSheet（ノード形の設定画面用）  -->
+    <com.mapping.filemapping.DesignBottomSheet
+        android:id="@+id/dbs_shape"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"/>
+
+</FrameLayout>

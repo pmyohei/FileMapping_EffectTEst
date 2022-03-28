@@ -92,7 +92,7 @@
     <!--  マップ画面  -->
     <string name="toolbar_map_changeParant">親ノード変更</string>
     <!--  トリミング画面  -->
-    <string name="toolbar_titleTrimming">サムネイルの作成</string>
+    <string name="toolbar_titleTrimming">サムネイル作成</string>
     <!--  ギャラリー画面  -->
     <string name="toolbar_titleGallery">ギャラリー</string>
     <string name="toolbar_titleGalleryMulti">複数選択</string>
