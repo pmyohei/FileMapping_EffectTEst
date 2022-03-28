@@ -896,7 +896,6 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
                         editor.apply();
                     }
                 })
-                .setNegativeButton("Cancel", null)
                 .show();
 
         //メッセージ文は、Styleのフォントが適用されないため個別に設定

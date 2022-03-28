@@ -35,8 +35,8 @@
 
     <!--  デザインレイアウト  -->
     <!--  色選択ダイアログの選択色の円  -->
-    <dimen name="color_picker_check_circle">52dp</dimen>
-    <dimen name="color_picker_check_circle_half">26dp</dimen>
+    <dimen name="color_picker_check_circle">48dp</dimen>
+    <dimen name="color_picker_check_circle_half">24dp</dimen>
     <!--  色選択ビューの各種アイコンサイズ  -->
     <dimen name="color_history_item_size">48dp</dimen>
     <dimen name="color_history_item_half_size">24dp</dimen>

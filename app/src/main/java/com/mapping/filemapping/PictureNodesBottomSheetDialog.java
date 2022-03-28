@@ -9,12 +9,18 @@ import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.FrameLayout;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
+import com.google.android.material.bottomsheet.BottomSheetBehavior;
+import com.google.android.material.bottomsheet.BottomSheetDialog;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 
 import java.util.ArrayList;
@@ -129,6 +135,34 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
 
         View view = View.inflate(getContext(), R.layout.grid_picture_node, null);
         dialog.setContentView(view);
+
+
+/*        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(final DialogInterface dialog) {
+                BottomSheetDialog d = (BottomSheetDialog) dialog;
+                FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+                // Right here!
+                final BottomSheetBehavior behaviour = BottomSheetBehavior.from(bottomSheet);
+                behaviour.addBottomSheetCallback(new BottomSheetBehavior.BottomSheetCallback() {
+                    @Override
+                    public void onStateChanged(@NonNull View bottomSheet, int newState) {
+                        if (newState == BottomSheetBehavior.STATE_HIDDEN) {
+                            dialog.dismiss();
+                        }
+
+                        if (newState == BottomSheetBehavior.STATE_DRAGGING) {
+                            behaviour.setState(BottomSheetBehavior.STATE_EXPANDED);
+                        }
+                    }
+
+                    @Override
+                    public void onSlide(@NonNull View bottomSheet, float slideOffset) {
+
+                    }
+                });
+            }
+        });*/
 
         //Bundle情報の保持
         mPictureNodeInfos = getArguments().getParcelableArrayList( KEY_PICTURE_NODE_INFO );
