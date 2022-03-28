@@ -39,6 +39,7 @@
         app:tabIndicatorColor="@color/black"
         app:tabMinWidth="0dp"
         app:tabRippleColor="@null"
+        app:tabGravity="start"
         app:tabMode="scrollable" />
 
     <!-- 各種デザイン情報の入力ページ -->

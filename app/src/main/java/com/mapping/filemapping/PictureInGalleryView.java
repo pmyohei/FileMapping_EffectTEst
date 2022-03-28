@@ -5,6 +5,7 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.widget.Checkable;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 
 import androidx.annotation.Nullable;
@@ -48,15 +49,17 @@ public class PictureInGalleryView extends LinearLayout implements Checkable {
 
         //選択状態の変更対象ビュー
         MaterialCardView mcv_picture = findViewById( R.id.mcv_picture );
+        ImageView iv_check = findViewById( R.id.iv_check );
 
         if( b ){
             //選択中に設定
-            mcv_picture.setStrokeWidth( 20 );
+            mcv_picture.setStrokeWidth( 12 );
+            iv_check.setVisibility(VISIBLE);
         } else {
             //非選択中に設定
             mcv_picture.setStrokeWidth( 0 );
+            iv_check.setVisibility(GONE);
         }
-
     }
 
 
