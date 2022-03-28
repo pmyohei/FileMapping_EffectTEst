@@ -139,6 +139,9 @@
     <string name="title_mapDesign">マップデザイン</string>
     <string name="title_mapBackgroundColor">マップの色</string>
 
+    <string name="shape_common">共通</string>
+    <string name="shape_pictureNodeOnly">ピクチャノードのみ</string>
+
     <string name="font_sample_alphabet">A</string>
     <string name="font_sample_japanese">あ</string>
     <string name="font_alphabet">アルファベット</string>

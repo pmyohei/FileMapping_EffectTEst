@@ -139,6 +139,9 @@
     <string name="title_mapDesign">Map Design</string>
     <string name="title_mapBackgroundColor">Map color</string>
 
+    <string name="shape_common">Common</string>
+    <string name="shape_pictureNodeOnly">Picture Node Only</string>
+
     <string name="font_sample_alphabet">A</string>
     <string name="font_sample_japanese">あ</string>
     <string name="font_alphabet">Alphabet</string>

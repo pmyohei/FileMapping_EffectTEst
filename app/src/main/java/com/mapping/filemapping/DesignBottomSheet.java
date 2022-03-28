@@ -267,7 +267,7 @@ public class DesignBottomSheet extends CoordinatorLayout {
         layoutIdList.add( R.layout.page_map_design);
         layoutIdList.add( R.layout.page_node_font);
         layoutIdList.add( R.layout.page_node_size);
-        layoutIdList.add( R.layout.page_node_shape);
+        layoutIdList.add( R.layout.page_node_shape_map);
         layoutIdList.add( R.layout.page_node_text_color);
         layoutIdList.add( R.layout.page_node_color);
         layoutIdList.add( R.layout.page_node_border_color);
