@@ -71,6 +71,7 @@
     <string name="toast_errorGetPath">失敗しました</string>
     <string name="toast_storePicture">画像を格納しました\n（同じ画像は格納されません）</string>
     <string name="toast_storeError">エラー：「画像」フォルダから選択して下さい</string>
+    <string name="toast_orientationError">エラー：写真追加時は、画面向きを固定した状態で操作してください</string>
     <string name="toast_moved">移動しました</string>
     <string name="toast_notMoves">移動した画像はありません</string>
     <string name="toast_cannotThumbnailMove">サムネイル画像は移動できません</string>

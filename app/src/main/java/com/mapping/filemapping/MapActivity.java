@@ -55,7 +55,6 @@ public class MapActivity extends AppCompatActivity {
     public static final int RESULT_PICTURE_NODE = 200;
     public static final int RESULT_UPDATE_TUHMBNAIL = 201;
     public static final int RESULT_GALLERY = 202;
-
     /* 画面遷移-キー */
     public static String INTENT_MAP_PID = "MapPid";
     public static String INTENT_NODE_PID = "NodePid";
@@ -122,6 +121,8 @@ public class MapActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_map);
+
+        Log.i("画面向き問題", "onCreate");
 
         //本マップ情報を保持
         MapCommonData mapCommonData = (MapCommonData) getApplication();
@@ -686,9 +687,9 @@ public class MapActivity extends AppCompatActivity {
                 if (!scroller.isFinished()) {
                     scroller.computeScrollOffset();
 
+                    //scroller側の座標を反映
                     fl_map.setTranslationX(scroller.getCurrX());
                     fl_map.setTranslationY(scroller.getCurrY());
-
                 } else {
                     scrollAnimator.cancel();
                 }
@@ -1464,7 +1465,7 @@ public class MapActivity extends AppCompatActivity {
      * 画面遷移からの戻りのコールバック通知
      *   ・写真追加（外部ストレージアクセス）からの戻り
      */
-    private static class ExternalStorageResultCallback implements ActivityResultCallback<ActivityResult> {
+    private class ExternalStorageResultCallback implements ActivityResultCallback<ActivityResult> {
 
         private final Context mContext;
 
@@ -1494,14 +1495,27 @@ public class MapActivity extends AppCompatActivity {
             //選択されているピクチャノード情報
             MapCommonData mapCommonData = (MapCommonData) ((ComponentActivity)mContext).getApplication();
             NodeArrayList<NodeTable> nodes =  mapCommonData.getNodes();
-            NodeTable pictureNode = nodes.getShowingIconNode().getNode();
+            //画面向き変更等で、画面初期化された場合のガード
+            if( nodes == null ){
+                Toast.makeText(mContext, mContext.getString(R.string.toast_orientationError), Toast.LENGTH_LONG).show();
+                return;
+            }
 
+            //画面向き変更等で、画面初期化された場合のガード
+            BaseNode tmp = nodes.getShowingIconNode();
+            if( tmp == null ){
+                Toast.makeText(mContext, mContext.getString(R.string.toast_orientationError), Toast.LENGTH_LONG).show();
+                return;
+            }
+
+            //ツールアイコンオープン中のノード
+            NodeTable pictureNode = tmp.getNode();
+
+            //ノード情報
             int mapPid = pictureNode.getPidMap();
             int nodePid = pictureNode.getPid();
-
             //絶対pathリスト
             PictureArrayList<PictureTable> pictures = new PictureArrayList<>();
-
             //パスエラーが発生したかどうか
             boolean isPathError = false;
 

@@ -71,6 +71,7 @@
     <string name="toast_errorGetPath">Failure</string>
     <string name="toast_storePicture">The image was stored in the node\n(Images that are already stored will not be stored)</string>
     <string name="toast_storeError">Error: Please select from the "Images" folder</string>
+    <string name="toast_orientationError">When adding a photo, operate with the screen orientation fixed.</string>
     <string name="toast_moved">The photo has been moved.</string>
     <string name="toast_notMoves">No photos moved.</string>
     <string name="toast_cannotThumbnailMove">Thumbnails cannot be moved.</string>
