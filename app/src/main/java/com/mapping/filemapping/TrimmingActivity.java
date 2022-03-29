@@ -352,12 +352,11 @@ public class TrimmingActivity extends AppCompatActivity {
      */
     private void setSelectedPicture() {
 
-        //画面の向きを取得
+        //選択画像の向き（メタデータ）を取得
         int orientation = ORIENTATION_NORMAL;
         try {
             ExifInterface exifInterface = new ExifInterface(mPath);
             orientation = Integer.parseInt(exifInterface.getAttribute(ExifInterface.TAG_ORIENTATION));
-
         } catch (Exception e) {
             Log.e(e.toString(), "ExifInterface Error");
         }

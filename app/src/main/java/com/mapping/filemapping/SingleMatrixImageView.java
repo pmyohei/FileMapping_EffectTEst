@@ -80,7 +80,7 @@ public class SingleMatrixImageView extends androidx.appcompat.widget.AppCompatIm
      */
     public void resetMatrixData() {
 
-        Log.i("ピンチ拡大チェック", "リセットコール");
+        //Log.i("ピンチ拡大チェック", "リセットコール");
 
         //スケールタイプをデフォルトに戻す
         setScaleType( ImageView.ScaleType.FIT_CENTER );

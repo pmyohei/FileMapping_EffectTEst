@@ -500,8 +500,6 @@ public class ChildNode extends BaseNode {
             FrameLayout fl_map = vg.findViewById(R.id.fl_map);
             fl_map.addView(line);
 
-            Log.i("ピクチャノード生成問題", "onLayout：ラインの新規追加");
-
         } else {
             //ライン生成済みなら、再描画
             mLineView.reDraw();

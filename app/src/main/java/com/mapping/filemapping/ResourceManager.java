@@ -147,7 +147,7 @@ public class ResourceManager {
      */
     public static String getPathFromUri(Context context, Uri uri) {
 
-        Log.i("URI変換", "対象のuri=" + uri);
+        //Log.i("URI変換", "対象のuri=" + uri);
 
         ContentResolver contentResolver = context.getContentResolver();
 
@@ -165,7 +165,7 @@ public class ResourceManager {
         String[] wholeIdSplit = wholeId.split(":");
         if( wholeIdSplit.length <= 1 ){
             //「:」がなければMediaではないURIとみなす
-            Log.i("URI変換", "wholeId=" + wholeId);
+            //Log.i("URI変換", "wholeId=" + wholeId);
             return null;
         }
 
@@ -179,7 +179,7 @@ public class ResourceManager {
         Cursor cursor = contentResolver.query(
                 MediaStore.Images.Media.EXTERNAL_CONTENT_URI, columns, where, new String[]{id}, null);
 
-        Log.i("URI変換", "dump cursor:" + DatabaseUtils.dumpCursorToString(cursor));
+        //Log.i("URI変換", "dump cursor:" + DatabaseUtils.dumpCursorToString(cursor));
 
         String path = null;
         if (cursor.moveToFirst()) {

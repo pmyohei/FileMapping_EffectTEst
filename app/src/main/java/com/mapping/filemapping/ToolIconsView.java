@@ -398,11 +398,14 @@ public class ToolIconsView extends ConstraintLayout {
                         }
 
                         //権限の確認
-                        int permission = ContextCompat.checkSelfPermission(mMapActivity, Manifest.permission.READ_EXTERNAL_STORAGE);
+                        //※API29のみ、WRITEを要求しないとimageにアクセスできない
+                        String permissionStr = ( Build.VERSION.SDK_INT == Build.VERSION_CODES.Q
+                                ? Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                : Manifest.permission.READ_EXTERNAL_STORAGE);
+                        int permission = ContextCompat.checkSelfPermission(mMapActivity, permissionStr);
                         if (permission != PackageManager.PERMISSION_GRANTED) {
                             //操作対象のノードを設定
                             mMapActivity.setToolIconNode(mBaseNode.getNode());
-
                             //権限付与
                             permissionsStorage(REQUEST_EXTERNAL_STORAGE_FOR_PICTURE_NODE);
                         } else {
@@ -426,11 +429,14 @@ public class ToolIconsView extends ConstraintLayout {
 
                         if( mBaseNode.getNode().getKind() == NodeTable.NODE_KIND_PICTURE ){
                             //ピクチャノードなら権限確認
-                            int permission = ContextCompat.checkSelfPermission(mMapActivity, Manifest.permission.READ_EXTERNAL_STORAGE);
+                            //※API29のみ、WRITEを要求しないとimageにアクセスできない
+                            String permissionStr = ( Build.VERSION.SDK_INT == Build.VERSION_CODES.Q
+                                    ? Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                    : Manifest.permission.READ_EXTERNAL_STORAGE);
+                            int permission = ContextCompat.checkSelfPermission(mMapActivity, permissionStr);
                             if (permission != PackageManager.PERMISSION_GRANTED) {
 
                                 mMapActivity.setToolIconNode(mBaseNode.getNode());
-
                                 //権限付与
                                 permissionsStorage(REQUEST_EXTERNAL_EDIT_PICTURE_NODE);
                             } else {
@@ -458,7 +464,11 @@ public class ToolIconsView extends ConstraintLayout {
                         //Log.i("アイコン", "クリックされました");
 
                         //権限の確認
-                        int permission = ContextCompat.checkSelfPermission(mMapActivity, Manifest.permission.READ_EXTERNAL_STORAGE);
+                        //※API29のみ、WRITEを要求しないとimageにアクセスできない
+                        String permissionStr = ( Build.VERSION.SDK_INT == Build.VERSION_CODES.Q
+                                ? Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                : Manifest.permission.READ_EXTERNAL_STORAGE);
+                        int permission = ContextCompat.checkSelfPermission(mMapActivity, permissionStr);
                         if (permission != PackageManager.PERMISSION_GRANTED) {
 
                             mMapActivity.setToolIconNode(mBaseNode.getNode());
@@ -565,7 +575,11 @@ public class ToolIconsView extends ConstraintLayout {
                     public void onClick(View view) {
 
                         //権限の確認
-                        int permission = ContextCompat.checkSelfPermission(mMapActivity, Manifest.permission.READ_EXTERNAL_STORAGE);
+                        //※API29のみ、WRITEを要求しないとimageにアクセスできない
+                        String permissionStr = ( Build.VERSION.SDK_INT == Build.VERSION_CODES.Q
+                                ? Manifest.permission.WRITE_EXTERNAL_STORAGE
+                                : Manifest.permission.READ_EXTERNAL_STORAGE);
+                        int permission = ContextCompat.checkSelfPermission(mMapActivity, permissionStr);
                         if (permission != PackageManager.PERMISSION_GRANTED) {
                             //権限付与
                             permissionsStorage(REQUEST_EXTERNAL_STORAGE_FOR_ADD_PICTURE);
@@ -691,6 +705,10 @@ public class ToolIconsView extends ConstraintLayout {
         String[] PERMISSIONS_STORAGE = {
                 Manifest.permission.READ_EXTERNAL_STORAGE,
         };
+        //API29のみ、WRITEを要求しないとimageにアクセスできないため、API29ならパーミッション上書き
+        if( Build.VERSION.SDK_INT == Build.VERSION_CODES.Q ){
+            PERMISSIONS_STORAGE[0] = Manifest.permission.WRITE_EXTERNAL_STORAGE;
+        }
         //権限要求
         ActivityCompat.requestPermissions(
                 mMapActivity,

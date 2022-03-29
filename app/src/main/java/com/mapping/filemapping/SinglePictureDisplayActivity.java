@@ -94,7 +94,7 @@ public class SinglePictureDisplayActivity extends AppCompatActivity implements P
 
             @Override
             public void onPageScrollStateChanged(int state) {
-                Log.i("コール順確認", "onPageScrollStateChanged state=" + state);
+                //Log.i("コール順確認", "onPageScrollStateChanged state=" + state);
 
                 //スクロール状態
                 switch (state) {
