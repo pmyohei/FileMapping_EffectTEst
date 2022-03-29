@@ -5,7 +5,6 @@
     <dimen name="map_max_size_y">5000dp</dimen>
 
     <!--  サンプルマップ  -->
-    <dimen name="sample_node_posx">140dp</dimen>
     <dimen name="sample_node_posy">100dp</dimen>
 
     <!--  ノード  -->

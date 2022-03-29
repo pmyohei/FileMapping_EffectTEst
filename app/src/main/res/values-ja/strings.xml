@@ -83,6 +83,7 @@
     <string name="bt_new_map">New Map</string>
     <!--  マップ生成画面  -->
     <string name="map_create_sample">Sample</string>
+    <string name="map_create_sample_A">A</string>
     <string name="map_create_tab1">マップ名</string>
     <string name="map_create_tab2">2Colors</string>
     <string name="map_create_tab3">3Colors</string>

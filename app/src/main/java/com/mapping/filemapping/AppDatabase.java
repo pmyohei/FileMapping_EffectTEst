@@ -13,8 +13,8 @@ import androidx.room.RoomDatabase;
                 MapTable.class,         //マップテーブル
                 NodeTable.class,        //ノードテーブル
                 PictureTable.class,     //ピクチャテーブル
-        }
-        //exportSchema = false
+        },
+        exportSchema = true
 /*        autoMigrations = {
                 @AutoMigration(from = 1, to = 1)
         }*/

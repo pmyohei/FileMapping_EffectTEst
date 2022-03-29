@@ -3,6 +3,7 @@ package com.mapping.filemapping;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -53,14 +54,13 @@ public class SampleMapView extends FrameLayout {
 
     public SampleMapView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
-        init();
+        init(context);
     }
 
     /*
      * 初期化
      */
-    private void init() {
+    private void init(Context context) {
 
         //レイアウト生成
         LayoutInflater inflater = LayoutInflater.from(getContext());
@@ -122,8 +122,8 @@ public class SampleMapView extends FrameLayout {
         NodeTable nodeR = new NodeTable();
         NodeTable nodeA = new NodeTable();
         //ノード名（仮）
-        nodeR.setNodeName("Sample");
-        nodeA.setNodeName("A");
+        nodeR.setNodeName( getResources().getString(R.string.map_create_sample) );
+        nodeA.setNodeName( getResources().getString(R.string.map_create_sample_A) );
         //マップID（仮）
         nodeR.setPidMap(1);
         nodeA.setPidMap(1);
@@ -133,7 +133,7 @@ public class SampleMapView extends FrameLayout {
         //位置
         //※中心に対するoffsetを指定
         float density = getResources().getDisplayMetrics().density;
-        float sample_node_posx = getResources().getDimension(R.dimen.sample_node_posx) / density;
+        float sample_node_posx = findViewById(R.id.fl_sampleMap).getWidth() / 6f;
         float sample_node_posy = getResources().getDimension(R.dimen.sample_node_posy) / density;
         nodeA.setPos( (int)sample_node_posx, (int)-sample_node_posy);
         //PID（仮）

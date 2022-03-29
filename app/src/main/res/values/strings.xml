@@ -83,6 +83,7 @@
     <string name="bt_new_map">New Map</string>
     <!--  マップ生成画面  -->
     <string name="map_create_sample">Sample</string>
+    <string name="map_create_sample_A">A</string>
     <string name="map_create_tab1">Map name</string>
     <string name="map_create_tab2">2Colors</string>
     <string name="map_create_tab3">3Colors</string>
@@ -196,7 +197,7 @@
     <string name="help_map_title_word">The term</string>
     <string name="help_map_title_basic_ope">Basic operation</string>
     <string name="help_map_title_toolbar">Map top icon</string>
-    <string name="help_map_title_picture">Notes on images in this application</string>
+    <string name="help_map_title_picture">About Images</string>
     <string name="help_map_title_limitations">Limitations</string>
 
     <string name="help_map_word_node_1">-NODE-</string>

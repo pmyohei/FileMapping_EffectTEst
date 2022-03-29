@@ -269,14 +269,14 @@ public class MapListActivity extends AppCompatActivity {
         //-- API23以降は、許可ダイアログ必須
 
         //要求パーミッション
-        String[] PERMISSIONS_STORAGE = new String[1];
-        //API29のみ、WRITEを要求しないとimageにアクセスできないため、API29ならWRITEを要求
+        //許可ダイアログは必須
+        String[] PERMISSIONS_STORAGE = {
+                Manifest.permission.READ_EXTERNAL_STORAGE,
+        };
+        //API29のみ、WRITEを要求しないとimageにアクセスできないため、API29ならパーミッション上書き
         if( Build.VERSION.SDK_INT == Build.VERSION_CODES.Q ){
             PERMISSIONS_STORAGE[0] = Manifest.permission.WRITE_EXTERNAL_STORAGE;
-        } else {
-            PERMISSIONS_STORAGE[0] = Manifest.permission.READ_EXTERNAL_STORAGE;
         }
-
         //許可されていなければ、許可を要求
         ActivityCompat.requestPermissions(
                 this,
