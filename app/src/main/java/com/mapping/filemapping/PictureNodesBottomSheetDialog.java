@@ -1,19 +1,28 @@
 package com.mapping.filemapping;
 
+import static com.google.android.material.bottomsheet.BottomSheetBehavior.STATE_COLLAPSED;
+
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.os.Parcel;
 import android.os.Parcelable;
+import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.FrameLayout;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -136,6 +145,61 @@ public class PictureNodesBottomSheetDialog extends BottomSheetDialogFragment {
         View view = View.inflate(getContext(), R.layout.grid_picture_node, null);
         dialog.setContentView(view);
 
+        //画面メトリクスの取得
+        DisplayMetrics metrics = getResources().getDisplayMetrics();
+
+        //レイアウトパラメータ
+        Window window = dialog.getWindow();
+        WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
+        lp.height = metrics.heightPixels / 2;
+        //lp.width = (int) (metrics.widthPixels * widthRatio);
+        //サイズ設定
+        window.setAttributes(lp);
+
+        BottomSheetDialog d = (BottomSheetDialog) dialog;
+        FrameLayout bottomSheet = d.findViewById(com.google.android.material.R.id.design_bottom_sheet);
+        final BottomSheetBehavior behaviour = BottomSheetBehavior.from(bottomSheet);
+        behaviour.setState( BottomSheetBehavior.STATE_EXPANDED );
+        behaviour.setDraggable( false );
+
+/*        dialog.findViewById(R.id.ll_header).setOnClickListener(new View.OnClickListener() {
+            @SuppressLint("UseCompatLoadingForDrawables")
+            @Override
+            public void onClick(View view) {
+
+                Drawable icon;
+                if( behaviour.getState() == BottomSheetBehavior.STATE_EXPANDED ){
+                    behaviour.setState( BottomSheetBehavior.STATE_HALF_EXPANDED );
+                    icon = getResources().getDrawable(R.drawable.baseline_up_24);
+                } else {
+                    behaviour.setState( BottomSheetBehavior.STATE_EXPANDED );
+                    icon = getResources().getDrawable(R.drawable.baseline_down_close_24);
+                }
+
+                //アイコン切り替え
+                ImageView iv_header = dialog.findViewById(R.id.iv_header);
+                if( iv_header != null ){
+                    iv_header.setImageDrawable( icon );
+                }
+            }
+        });*/
+
+/*        dialog.findViewById(R.id.ll_header).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View view, MotionEvent motionEvent) {
+                switch (motionEvent.getAction()) {
+                    case MotionEvent.ACTION_DOWN:
+                        behaviour.setDraggable( true );
+                        Log.i("ボトム問題", "有効");
+                        break;
+                    case MotionEvent.ACTION_UP:
+                        behaviour.setDraggable( false );
+                        Log.i("ボトム問題", "無効");
+                        break;
+                }
+                return false;
+            }
+        });*/
 
 /*        dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override

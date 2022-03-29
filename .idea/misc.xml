@@ -7,6 +7,7 @@
         <entry key="..\:/Users/t.yohei/.gradle/caches/transforms-3/860adbe8dcf7b2c0c96a21956f99af82/transformed/browser-1.0.0/res/layout/browser_actions_context_menu_row.xml" value="0.325" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable-v24/baseline_add_photo_library_24.xml" value="0.101" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable-v24/outline_palette_24.xml" value="0.12760416666666666" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable-xhdpi/baseline_up_24.xml" value="0.145" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/NoImage.xml" value="0.1" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_add_24.xml" value="0.2234375" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_add_a_photo_24.xml" value="0.2234375" />
@@ -94,7 +95,7 @@
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/design_bottom_sheet_old.xml" value="0.1" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/design_bottom_sheet_old2.xml" value="0.1234375" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/design_dialog.xml" value="0.20153985507246377" />
-        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/grid_picture_node.xml" value="0.264" />
+        <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/grid_picture_node.xml" value="0.17192982456140352" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/help_icon_dialog.xml" value="0.1" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/help_map_about_photo_dialog.xml" value="0.1" />
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/layout/help_map_basic operation_dialog.xml" value="0.22447916666666667" />

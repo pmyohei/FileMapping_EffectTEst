@@ -109,21 +109,12 @@ public class DesignBottomSheet extends CoordinatorLayout {
 
         //高さを設定
         ViewGroup.LayoutParams layoutParams = bs_design.getLayoutParams();
-        int windowHeight = getWindowHeight(context);
         if (layoutParams != null) {
             //画面の高さの半分
+            int windowHeight = ResourceManager.getScreenHeight( context );
             layoutParams.height = (int) (windowHeight * ratio);
         }
         bs_design.setLayoutParams(layoutParams);
-    }
-
-    /*
-     * 画面縦サイズの取得
-     */
-    private int getWindowHeight(Context context) {
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        ((Activity) context).getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-        return displayMetrics.heightPixels;
     }
 
     /*
