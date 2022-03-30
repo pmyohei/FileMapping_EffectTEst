@@ -29,7 +29,7 @@ import java.util.ArrayList;
 /*
  * 写真単体表示アクティビティ
  */
-public class SinglePictureDisplayActivity extends AppCompatActivity implements PictureNodesBottomSheetDialog.NoticeDialogListener {
+public class SinglePictureDisplayActivity extends AppCompatActivity implements PictureNodesDialog.NoticeDialogListener {
 
     /*-- 定数 --*/
     /* 画面遷移-レスポンスコード */
@@ -45,7 +45,7 @@ public class SinglePictureDisplayActivity extends AppCompatActivity implements P
     //表示する写真リスト
     ArrayList<PictureTable> mGalley;
     //マップ上のピクチャノード情報
-    private ArrayList<PictureNodesBottomSheetDialog.PictureNodeInfo> mPictureNodeInfo;
+    private ArrayList<PictureNodesDialog.PictureNodeInfo> mPictureNodeInfo;
     //写真の格納先変更フラグ
     private boolean mIsUpdate;
     //ページ遷移アイコン押下時のページindex
@@ -323,7 +323,7 @@ public class SinglePictureDisplayActivity extends AppCompatActivity implements P
                     PictureTable thumbnail = thumbnails.getThumbnail(pid);
 
                     //ピクチャノード情報を生成
-                    mPictureNodeInfo.add(new PictureNodesBottomSheetDialog.PictureNodeInfo(
+                    mPictureNodeInfo.add(new PictureNodesDialog.PictureNodeInfo(
                             pid,
                             thumbnail,
                             parentNodeName
@@ -417,7 +417,7 @@ public class SinglePictureDisplayActivity extends AppCompatActivity implements P
      */
     private void showMoveDestination() {
         //マップ上のピクチャノードを移動先候補として表示
-        PictureNodesBottomSheetDialog bottomSheetDialog = PictureNodesBottomSheetDialog.newInstance(mPictureNodeInfo);
+        PictureNodesDialog bottomSheetDialog = PictureNodesDialog.newInstance(mPictureNodeInfo);
         bottomSheetDialog.show(getSupportFragmentManager(), "");
     }
 
@@ -504,7 +504,7 @@ public class SinglePictureDisplayActivity extends AppCompatActivity implements P
      *   サムネイルクリックリスナー
      */
     @Override
-    public void onThumbnailClick(BottomSheetDialogFragment dialog, int toPicutureNodePid) {
+    public void onThumbnailClick(PictureNodesDialog dialog, int toPicutureNodePid) {
 
         //選択先に同じ写真があるかチェック
         checkHasSamePicture(dialog, toPicutureNodePid);
@@ -514,7 +514,7 @@ public class SinglePictureDisplayActivity extends AppCompatActivity implements P
      * 格納先ノード判定（単体写真）
      *   para1：移動先として選択されたピクチャノードpid
      */
-    private void checkHasSamePicture(BottomSheetDialogFragment dialog, int toPicutureNodePid) {
+    private void checkHasSamePicture(PictureNodesDialog dialog, int toPicutureNodePid) {
 
         //参照中の写真
         PictureTable showPicture = getDisplayedPicture();
@@ -545,7 +545,7 @@ public class SinglePictureDisplayActivity extends AppCompatActivity implements P
     /*
      * 移動確認用ダイアログの表示
      */
-    private void confirmMoveDialog(BottomSheetDialogFragment dialog, int toPicutureNodePid, boolean isThumbnail) {
+    private void confirmMoveDialog(PictureNodesDialog dialog, int toPicutureNodePid, boolean isThumbnail) {
 
         //表示メッセージ
         String message = getString(R.string.alert_movePicture_message);

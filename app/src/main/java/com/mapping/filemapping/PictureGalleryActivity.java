@@ -9,6 +9,7 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.fragment.app.DialogFragment;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.app.AlertDialog;
@@ -45,7 +46,7 @@ import java.util.Objects;
 /*
  * 指定配下ノードの写真を一覧表示する
  */
-public class PictureGalleryActivity extends AppCompatActivity implements PictureNodesBottomSheetDialog.NoticeDialogListener {
+public class PictureGalleryActivity extends AppCompatActivity implements PictureNodesDialog.NoticeDialogListener {
 
     //「すべて」タブのページindex
     public static final int ALL_PAGE_INDEX = 0;
@@ -61,7 +62,7 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
     //タブに表示しているピクチャノードのpidリスト
     List<Integer> mPictureNodePids;
     //マップ上のピクチャノード情報
-    private ArrayList<PictureNodesBottomSheetDialog.PictureNodeInfo> mPictureNodeInfo;
+    private ArrayList<PictureNodesDialog.PictureNodeInfo> mPictureNodeInfo;
     //アダプタ更新リスト
     List<Integer> mUpdatePages;
 
@@ -155,7 +156,7 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
                     PictureTable thumbnail = thumbnails.getThumbnail(pid);
 
                     //ピクチャノード情報を生成
-                    mPictureNodeInfo.add(new PictureNodesBottomSheetDialog.PictureNodeInfo(
+                    mPictureNodeInfo.add(new PictureNodesDialog.PictureNodeInfo(
                             pid,
                             thumbnail,
                             parentNodeName
@@ -532,7 +533,7 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
         }
 
         //マップ上のピクチャノードを移動先候補として表示
-        PictureNodesBottomSheetDialog bottomSheetDialog = PictureNodesBottomSheetDialog.newInstance(mPictureNodeInfo);
+        PictureNodesDialog bottomSheetDialog = PictureNodesDialog.newInstance(mPictureNodeInfo);
         bottomSheetDialog.show(getSupportFragmentManager(), "");
     }
 
@@ -604,11 +605,8 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
      */
     private void closeMultipleOptionMenu() {
 
-        Log.i("メニュー", "クローズ処理 closeMultipleOptionMenu()");
-
         //複数選択メニューを閉じる
         setToolbarOptionMenu(false);
-
         //アイテムを非選択状態に
         cancellationSelected();
     }
@@ -621,7 +619,6 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
         //メニュー
         Toolbar toolbar = findViewById(R.id.toolbar_gallery);
         Menu menu = toolbar.getMenu();
-
         //タイトル
         TextView tv_toolbarGalleryTitle = toolbar.findViewById(R.id.tv_toolbarGalleryTitle);
 
@@ -666,6 +663,10 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
         ViewPager2 vp2_gallery = findViewById(R.id.vp2_gallery);
         GridView gv_gallery = vp2_gallery.findViewById(R.id.gv_gallery);
 
+        //単体写真を移動させて本画面に戻ってきたとき、本ビューがnullになっているためガードを入れる
+        if( gv_gallery == null ){
+            return;
+        }
         //複数選択状態でなければ、何もしない
         if (gv_gallery.getChoiceMode() != GridView.CHOICE_MODE_MULTIPLE) {
             return;
@@ -687,18 +688,16 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
         //※setItemChecked(false)の反映が完了する前にモードを変更すると、状態が変わらなくなるため
         ViewTreeObserver observer = gv_gallery.getViewTreeObserver();
         observer.addOnGlobalLayoutListener(
-                new ViewTreeObserver.OnGlobalLayoutListener() {
-                    @Override
-                    public void onGlobalLayout() {
-                        //レイアウト確定後は、不要なので本リスナー削除
-                        gv_gallery.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+            new ViewTreeObserver.OnGlobalLayoutListener() {
+                @Override
+                public void onGlobalLayout() {
+                    //レイアウト確定後は、不要なので本リスナー削除
+                    gv_gallery.getViewTreeObserver().removeOnGlobalLayoutListener(this);
 
-                        //Log.i("複数選択確定", "addOnGlobalLayoutListener");
-
-                        //ギャラリーの選択中状態を解除
-                        gv_gallery.setChoiceMode( GridView.CHOICE_MODE_NONE );
-                    }
+                    //ギャラリーの選択中状態を解除
+                    gv_gallery.setChoiceMode( GridView.CHOICE_MODE_NONE );
                 }
+            }
         );
     }
 
@@ -986,7 +985,7 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
      *   サムネイルクリックリスナー
      */
     @Override
-    public void onThumbnailClick(BottomSheetDialogFragment dialog, int toPicutureNodePid) {
+    public void onThumbnailClick(PictureNodesDialog dialog, int toPicutureNodePid) {
 
         //複数選択状態になっていない状態なら、メッセージを表示するだけ(画面向き変更対策)
         Toolbar toolbar = findViewById(R.id.toolbar_gallery);
@@ -1032,7 +1031,7 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
     /*
      * 移動確認用ダイアログの表示
      */
-    private void confirmMoveDialog(BottomSheetDialogFragment dialog, int toPicutureNodePid) {
+    private void confirmMoveDialog(PictureNodesDialog dialog, int toPicutureNodePid) {
 
         //表示メッセージ
         String message = getString(R.string.alert_movePicture_message) + getString(R.string.alert_movePicture_messageAdd);

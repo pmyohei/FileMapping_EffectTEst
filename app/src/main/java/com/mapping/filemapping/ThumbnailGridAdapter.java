@@ -18,38 +18,19 @@ import java.util.ArrayList;
  */
 public class ThumbnailGridAdapter extends BaseAdapter {
 
-    //写真数
-    public final static int PORTRAIT_NUM = 2;
-    public final static int LANDSCAPE_NUM = 6;
-
     //マップ上のピクチャノード情報
-    private final ArrayList<PictureNodesBottomSheetDialog.PictureNodeInfo> mData;
+    private final ArrayList<PictureNodesDialog.PictureNodeInfo> mData;
     private final Context mContext;
     private final LayoutInflater mInflater;
-    //private int mPictureNumOnLine;            //1行で表示する写真の数
 
 
     /*
      * コンストラクタ
      */
-    public ThumbnailGridAdapter(Context context, ArrayList<PictureNodesBottomSheetDialog.PictureNodeInfo> data){
+    public ThumbnailGridAdapter(Context context, ArrayList<PictureNodesDialog.PictureNodeInfo> data){
         mContext = context;
         mData = data;
         mInflater = LayoutInflater.from(context);
-
-        //1行の写真表示数を設定
-        //setPictureNumOnLine();
-    }
-
-    /*
-     * 表示写真の1辺の長さを設定
-     */
-    public void setPictureNumOnLine() {
-        //画面向きを取得
-        int orientation = mContext.getResources().getConfiguration().orientation;
-
-        //向きに応じて、1行で表示する写真数を設定
-        //mPictureNumOnLine = ( (orientation == Configuration.ORIENTATION_PORTRAIT) ? PORTRAIT_NUM : LANDSCAPE_NUM );
     }
 
     @Override
@@ -67,21 +48,10 @@ public class ThumbnailGridAdapter extends BaseAdapter {
         //初めて表示されるなら、セルを割り当て。セルはレイアウトファイルを使用。
         if (convertView == null) {
             convertView = mInflater.inflate(R.layout.item_picture_node_info, null);
-
-            //写真用ビューのサイズ
-/*            int sideLength = (parent.getWidth() / mPictureNumOnLine) - (int)mDp;
-            AbsListView.LayoutParams params = new AbsListView.LayoutParams(
-                    sideLength,
-                    sideLength);
-            convertView.setLayoutParams(params);*/
-
-            //float dp = mContext.getResources().getDisplayMetrics().density;
-            //Log.i("ギャラリー", "position=" + position + " 前回設定サイズ=" + (parent.getWidth() / 2 - (int)dp) );
-            //Log.i("ギャラリー", "position=" + position + " mPictureNumOnLine=" + mPictureNumOnLine);
         }
 
         //ピクチャノード情報
-        PictureNodesBottomSheetDialog.PictureNodeInfo pictureNodeInfo = mData.get(position);
+        PictureNodesDialog.PictureNodeInfo pictureNodeInfo = mData.get(position);
 
         //ピクチャノードサイズ
         int viewSize = (int)mContext.getResources().getDimension(R.dimen.gallery_tab_size);
@@ -111,7 +81,6 @@ public class ThumbnailGridAdapter extends BaseAdapter {
         return convertView;
     }
 
-
     @Override
     public long getItemId(int position) {
         return 0;
@@ -120,8 +89,5 @@ public class ThumbnailGridAdapter extends BaseAdapter {
     public Object getItem(int position) {
         return null;
     }
-
-
-
 }
 
