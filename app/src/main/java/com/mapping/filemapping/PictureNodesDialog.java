@@ -190,7 +190,7 @@ public class PictureNodesDialog extends DialogFragment {
         int orientation = getResources().getConfiguration().orientation;
         float ratio = ( (orientation == Configuration.ORIENTATION_PORTRAIT) ? PORTRAIT_RATIO : LANDSCAPE_RATIO );
 
-        //画面メトリクスの取得
+        //画面サイズの取得
         int screeenWidth = ResourceManager.getScreenWidth( getContext() );
         int screeenHeight = ResourceManager.getScreenHeight( getContext() );
         //レイアウトパラメータ

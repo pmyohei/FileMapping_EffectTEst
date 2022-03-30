@@ -124,15 +124,13 @@ public class HelpDialog extends DialogFragment {
         int orientation = getResources().getConfiguration().orientation;
         float widthRatio = ( (orientation == Configuration.ORIENTATION_PORTRAIT) ? PORTRAIT_RATIO : LANDSCAPE_RATIO );
 
-        //画面メトリクスの取得
-        DisplayMetrics metrics = getResources().getDisplayMetrics();
-
+        //画面サイズの取得
+        int screeenWidth = ResourceManager.getScreenWidth( getContext() );
         //レイアウトパラメータ
         Window window = dialog.getWindow();
         WindowManager.LayoutParams lp = dialog.getWindow().getAttributes();
         //lp.height = metrics.heightPixels / 2;
-        lp.width = (int) (metrics.widthPixels * widthRatio);
-
+        lp.width = (int) (screeenWidth * widthRatio);
         //サイズ設定
         window.setAttributes(lp);
     }

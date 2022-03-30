@@ -1382,6 +1382,7 @@ public class MapActivity extends AppCompatActivity {
 
             //ノード名を設定
             TextView tv_node = vg_item.findViewById(R.id.tv_node);
+            Typeface typeface;
 
             String nodeName = node.getNodeName();
             if( nodeName.isEmpty() ){
@@ -1391,11 +1392,16 @@ public class MapActivity extends AppCompatActivity {
                         ? getResources().getString(R.string.no_nodeNamePictureNode)
                         : getResources().getString(R.string.no_nodeName) );
 
+                typeface = Typeface.create(Typeface.SERIF, Typeface.ITALIC);
+
             } else {
                 //ノード名がある場合、改行をなくす
                 nodeName = nodeName.replaceAll("\n", "");
+
+                typeface = Typeface.create(Typeface.SERIF, Typeface.NORMAL);
             }
             tv_node.setText( nodeName );
+            tv_node.setTypeface( typeface );
 
             //クリックリスナー
             vg_item.setOnClickListener(new View.OnClickListener() {
