@@ -26,13 +26,13 @@
             \n*The photo will not be removed from your device.
         ]]>
     </string>
-    <string name="alert_deletePicture_messageAdd">\n*Thumbnails are not deleted.</string>
+    <string name="alert_deletePicture_messageAdd">\n*Thumbnail is not deleted.</string>
     <string name="alert_movePicture_title">Move photo</string>
     <string name="alert_movePicture_message">Do you want to move the photo to the selection node?</string>
     <string name="alert_movePicture_messageAdd">
         <![CDATA[
             \n*If the selected "picture node" has the same photo, that photo will not be moved.
-            \n*Thumbnails are not moved.
+            \n*Thumbnail is not moved.
         ]]>
     </string>
     <string name="alert_deleteNode_title">Remove node</string>
@@ -74,8 +74,8 @@
     <string name="toast_orientationError">When adding a photo, operate with the screen orientation fixed.</string>
     <string name="toast_moved">The photo has been moved.</string>
     <string name="toast_notMoves">No photos moved.</string>
-    <string name="toast_cannotThumbnailMove">Thumbnails cannot be moved.</string>
-    <string name="toast_cannotThumbnailDelete">Thumbnails cannot be removed.</string>
+    <string name="toast_cannotThumbnailMove">Thumbnail cannot be moved.</string>
+    <string name="toast_cannotThumbnailDelete">Thumbnail cannot be removed.</string>
     <string name="toast_qeuestPermission">Please allow access to the media</string>
     <string name="toast_qeuestPermissionFirst">If you want to display the image on the map,\nplease change to permission</string>
 

@@ -32,7 +32,7 @@
     <string name="alert_movePicture_messageAdd">
         <![CDATA[
             \n※移動先に同じ写真がある場合、移動されません
-            \n※サムネイルは移動されません。
+            \n※サムネイルは移動されません
         ]]>
     </string>
     <string name="alert_deleteNode_title">ノードの削除</string>
@@ -40,7 +40,7 @@
     <string name="alert_launch_mapList_title">初めに</string>
     <string name="alert_launch_mapList_message">まずは、画面下の「New Map」を押してマップを作成しましょう。</string>
     <string name="alert_launch_mapEntry_title">マップの生成</string>
-    <string name="alert_launch_mapEntry_message">マップ名を入力して、好きな色を選んで下さい。\n（色はマップ作成後でも追加可能です）</string>
+    <string name="alert_launch_mapEntry_message">マップ名を入力して、好きな色を選んで下さい。\n（色はマップ作成後でも追加可能）</string>
     <string name="alert_launch_gallery_title">端末内画像との同期</string>
     <string name="alert_launch_gallery_message">ギャラリー中の画像と端末内の画像の状態を同期したい場合、本アプリを再起動して下さい</string>
     <string name="alert_trimming_ui_title">切り取り範囲の反映</string>
@@ -175,11 +175,11 @@
     <string name="help_icon_add_picture_node_note">※１つのノードに作成できるピクチャノードは「２つ」まで</string>
     <string name="help_icon_edit_name">ノード編集</string>
     <string name="help_icon_edit">ノードを編集します。\nデザインやノード名を変えたい場合は、このアイコンを選択してください。</string>
-    <string name="help_icon_edit_note">※マップ上のすべてのノードデザインを統一したいときは、マップ画面上部の以下のアイコンを選択してください</string>
+    <string name="help_icon_edit_note">※マップ上のすべてのノードのデザインを統一したいときは、マップ画面上部にある以下のアイコンを選択してください</string>
     <string name="help_icon_delete_name">ノード削除</string>
     <string name="help_icon_delete">ノードとその配下のノードをマップ上から削除します。</string>
-    <string name="help_icon_delete_note">※削除対象のノードに紐づけた写真は、端末上からは削除されません</string>
-    <string name="help_icon_photo_library_name">ギャラリー表示</string>
+    <string name="help_icon_delete_note">※削除対象ノードに紐づいている写真は、端末上からは削除されません</string>
+    <string name="help_icon_photo_library_name">ギャラリー</string>
     <string name="help_icon_photo_library">このノードに紐づけた写真をギャラリーで確認することができます。</string>
     <string name="help_icon_change_parent_name">親ノードの変更</string>
     <string name="help_icon_change_parent">親ノードを変更します。\nこのアイコンを選択した後、親にしたいノードをタッチすると、そのノードを親に変更できます。</string>
@@ -205,7 +205,7 @@
     <string name="help_map_word_picture_2">マップ上に画像を表示できるノードです。\nこのノードに、関連する画像を格納できます。</string>
 
     <string name="help_map_basic_details1">まずはノードをタッチしてみましょう！\n操作アイコンが表示されます。\n各種アイコンから、新しいノードの作成や写真の紐づけをすることができます。</string>
-    <string name="help_map_basic_details1_note">※アイコンの詳細は、タッチした時に現れる「？」アイコンでご確認下さい\n</string>
+    <string name="help_map_basic_details1_note">※アイコンの詳細は、ノードをタッチした時に現れる「？」アイコンでご確認下さい\n</string>
     <string name="help_map_basic_sample1">操作例１</string>
     <string name="help_map_basic_sample1_title">～新しくノードを作成したい～</string>
     <string name="help_map_basic_sample1_details1">①ノードをタッチ</string>
@@ -214,12 +214,12 @@
     <string name="help_map_basic_sample2">操作例２</string>
     <string name="help_map_basic_sample2_title">～ピクチャノードに写真を格納したい～</string>
     <string name="help_map_basic_sample2_details1">①ノードをタッチ</string>
-    <string name="help_map_basic_sample2_details2">②ピクチャノード作成アイコンを選択</string>
+    <string name="help_map_basic_sample2_details2">②「ピクチャノード作成アイコン」を選択</string>
     <string name="help_map_basic_sample2_details3">③好きな写真を選択</string>
     <string name="help_map_basic_sample2_details4">④作成されたピクチャノードをタッチ</string>
-    <string name="help_map_basic_sample2_details5">⑤写真追加アイコンを選択</string>
+    <string name="help_map_basic_sample2_details5">⑤「写真格納アイコン」を選択</string>
     <string name="help_map_basic_sample2_details6">⑥好きな写真を選択</string>
-    <string name="help_map_basic_sample2_details7">ギャラリーアイコンを選択すると、ノードに格納された写真を確認することができます。</string>
+    <string name="help_map_basic_sample2_details7">「ギャラリーアイコン」を選択すると、ノードに格納された写真を確認することができます。</string>
 
     <string name="help_map_toolbar_details1">画面上部のアイコンについて</string>
     <string name="help_map_toolbar_palette1">全体的なマップデザイン変更</string>
