@@ -532,7 +532,7 @@ public class BaseNode extends FrameLayout {
 
                     //ノードの形状
                     setNodeShape( mNode.getNodeShape() );
-                    //スケールサイズを設定
+                    //設定中のスケールサイズを設定
                     setSetScale();
 
                     //レイアウト確定後は、不要なので本リスナー削除

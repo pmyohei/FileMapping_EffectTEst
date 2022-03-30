@@ -148,13 +148,14 @@ public class NodeView extends ChildNode implements Serializable {
             return;
         }
 
+        Log.i("縮小問題", "setNodeShape() max=" + max);
+
         //長い方の辺で縦横サイズを統一
         cv_node.setMinimumHeight(max);
         cv_node.setMinimumWidth(max);
         cv_node.setRadius(radius);
 
         mNode.setNodeShape( shapeKind );
-
     }
 
 

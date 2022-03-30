@@ -308,13 +308,11 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
         @Override
         public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
         }
-
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
             //ノードに反映
             mv_node.setNodeName( charSequence.toString() );
         }
-
         @Override
         public void afterTextChanged(Editable editable) {
             //ノードに反映
