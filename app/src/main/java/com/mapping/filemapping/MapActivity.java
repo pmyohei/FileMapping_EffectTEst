@@ -638,7 +638,7 @@ public class MapActivity extends AppCompatActivity {
     /*
      *　ノードにフォーカスをあてる（画面中心に指定座標をもってくる）
      */
-    public void focusNodeToCenterScreen(float nodeLeft, float nodeTop, int POS_KIND) {
+    public void focusNodeToCenterScreen(float nodeCenterPosX, float nodeCenterPosY, int POS_KIND) {
         int height = 0;
 
         if (POS_KIND == MOVE_UPPER) {
@@ -650,23 +650,25 @@ public class MapActivity extends AppCompatActivity {
         float mapAbsX = fl_map.getTranslationX() + mPinchShiftX;
         float mapAbsY = fl_map.getTranslationY() + mPinchShiftY;
 
-        //ピンチ倍率１倍のマップ座標位置
+        //ピンチ倍率１倍でみたときのマップ座標位置を計算
         float mapAbs1xX = mapAbsX / pinchDistanceRatioX;
         float mapAbs1xY = mapAbsY / pinchDistanceRatioY;
 
         //マップ絶対位置のマージンを取得（ルートノードを基準に算出）
         RootNodeView v_rootnode = findViewById(R.id.v_rootnode);
-        float mapLeft = v_rootnode.getLeft() - mapAbs1xX;
-        float mapTop  = v_rootnode.getTop() - mapAbs1xY;
+        //float mapLeft = v_rootnode.getLeft() - mapAbs1xX;
+        //float mapTop  = v_rootnode.getTop() - mapAbs1xY;
+        float mapLeft = v_rootnode.getCenterPosX() - mapAbs1xX;
+        float mapTop  = v_rootnode.getCenterPosY() - mapAbs1xY;
 
         //移動量
-        float moveDistanceX = (int) (pinchDistanceRatioX * (nodeLeft - mapLeft));
-        float moveDistanceY = (int) (pinchDistanceRatioY * (nodeTop - mapTop + height));
+        float moveDistanceX = (int) (pinchDistanceRatioX * (nodeCenterPosX - mapLeft));
+        float moveDistanceY = (int) (pinchDistanceRatioY * (nodeCenterPosY - mapTop + height));
 
         //スクロール時間 [milliseconds]
         final int MOVE_DURATION = 600;
 
-        //Log.i("move中心", "移動先ノード nodeLeft=" + nodeLeft + " nodeTop=" + nodeTop);
+        //Log.i("move中心", "移動先ノード nodeCenterPosX=" + nodeCenterPosX + " nodeCenterPosY=" + nodeCenterPosY);
         //Log.i("move中心", "mapLeft=" + mapLeft + " mapTop=" + mapTop);
         //Log.i("move中心", "スクロール開始位置 x=" + mapAbsX + " y=" + mapAbsY);
 
@@ -709,12 +711,12 @@ public class MapActivity extends AppCompatActivity {
     /*
      * デザイン設定のBottomSheetを開く
      */
-    public void openDesignBottomSheet(int designKind, View view, float nodeLeft, float nodeTop, int POS_KIND) {
+    public void openDesignBottomSheet(int designKind, View view, float nodeCenterPosX, float nodeCenterPosY) {
         //ボトムシートを開く
         openDesignBottomSheet(designKind, view);
 
         //ノードを画面上部の中心に移動させる
-        focusNodeToCenterScreen(nodeLeft, nodeTop, MOVE_UPPER);
+        focusNodeToCenterScreen(nodeCenterPosX, nodeCenterPosY, MOVE_UPPER);
     }
 
     /*
@@ -850,12 +852,8 @@ public class MapActivity extends AppCompatActivity {
         MapCommonData mapCommonData = (MapCommonData) getApplication();
         mapCommonData.enqueUpdateNodeWithUnique(node.getNode());
 
-        //ノード本体のマージンを取得
-        float marginLeft = node.getLeft();
-        float marginTop  = node.getTop();
-
         //BottomSheetを開く（画面移動あり）
-        openDesignBottomSheet(DesignBottomSheet.NODE, node, marginLeft, marginTop, MOVE_UPPER);
+        openDesignBottomSheet(DesignBottomSheet.NODE, node, node.getCenterPosX(), node.getCenterPosY());
     }
 
     /*
@@ -1404,7 +1402,7 @@ public class MapActivity extends AppCompatActivity {
                 @Override
                 public void onClick(View view) {
                     //ノードを画面中央に持ってくる
-                    focusNodeToCenterScreen( node.getNodeView().getLeft(), node.getNodeView().getTop(), MOVE_CENTER);
+                    focusNodeToCenterScreen( node.getNodeView().getCenterPosX(), node.getNodeView().getCenterPosY(), MOVE_CENTER);
                 }
             });
         }

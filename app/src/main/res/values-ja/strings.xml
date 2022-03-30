@@ -98,7 +98,7 @@
     <string name="toolbar_titleGallery">ギャラリー</string>
     <string name="toolbar_titleGalleryMulti">複数選択</string>
     <!--  移動先ノードダイアログ  -->
-    <string name="move_picture_title">移動先のノードを選択してください</string>
+    <string name="move_picture_title">移動先ノードの選択</string>
 
     <!--  オプションメニュー  -->
     <string name="menu_help">ヘルプ</string>

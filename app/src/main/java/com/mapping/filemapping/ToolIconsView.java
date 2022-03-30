@@ -374,7 +374,7 @@ public class ToolIconsView extends ConstraintLayout {
                         int moveToY = (int) parentNode.getNodeView().getTop();
 
                         //BottomSheetを開く（画面移動あり）
-                        mMapActivity.openDesignBottomSheet(DesignBottomSheet.NODE, v_node, moveToX, moveToY, MOVE_UPPER);
+                        mMapActivity.openDesignBottomSheet(DesignBottomSheet.NODE, v_node, moveToX, moveToY);
 
                         //ノードに持たせていた自分をクローズ
                         mBaseNode.closeIconView();
