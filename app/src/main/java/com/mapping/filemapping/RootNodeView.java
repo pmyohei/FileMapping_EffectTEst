@@ -134,8 +134,8 @@ public class RootNodeView extends BaseNode implements Serializable {
     public void setNodeShape( int shapeKind ) {
 
         //長い方の辺
-        MaterialCardView cv_node = findViewById(R.id.cv_node);
-        int max = Math.max( cv_node.getWidth(), cv_node.getHeight() );
+        TextView tv_node = findViewById(R.id.tv_node);
+        int max = Math.max( tv_node.getWidth(), tv_node.getHeight() );
 
         float radius = -1;
         if( shapeKind == NodeTable.CIRCLE ){
@@ -150,6 +150,7 @@ public class RootNodeView extends BaseNode implements Serializable {
         }
 
         //長い方の辺で縦横サイズを統一
+        MaterialCardView cv_node = findViewById(R.id.cv_node);
         cv_node.setMinimumHeight(max);
         cv_node.setMinimumWidth(max);
         cv_node.setRadius(radius);

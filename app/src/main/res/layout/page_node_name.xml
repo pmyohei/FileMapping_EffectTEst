@@ -16,7 +16,7 @@
         android:textSize="16sp"
         android:hint="@string/node_nameHint"
         android:maxLength="16"
-        android:maxLines="3"
+        android:maxLines="@integer/max_node_name_line"
         />
 
 </LinearLayout>

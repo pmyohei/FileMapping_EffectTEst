@@ -127,7 +127,8 @@
 
     <!-- ノードデザイン -->
     <string name="coloeCodeHint">123456</string>
-    <string name="node_nameHint">Max.16 text</string>
+    <string name="map_nameHint">Max.16 text</string>
+    <string name="node_nameHint">Max.16 text(3 lines)</string>
     <string name="title_nodeName">Node name</string>
     <string name="title_nodeSize">Node Size</string>
     <string name="title_nodeShape">Node Shape</string>

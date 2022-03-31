@@ -35,6 +35,8 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
 
         //設定対象ノードビュー
         private final BaseNode mv_node;
+        //ノード名最大行数
+        private final int max_nodeNameLine;
 
         /*--- ノードテキスト ---*/
         private EditText et_nodeName;
@@ -66,6 +68,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
             super(itemView);
 
             mv_node = node;
+            max_nodeNameLine = mv_node.getContext().getResources().getInteger( R.integer.max_node_name_line );
 
             switch (position) {
                 case 0:
@@ -310,11 +313,23 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
         }
         @Override
         public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            //最大行数を超過した入力は、ノード名に反映させない
+            if( et_nodeName.getLineCount() > max_nodeNameLine ){
+                return;
+            }
+
             //ノードに反映
             mv_node.setNodeName( charSequence.toString() );
         }
         @Override
         public void afterTextChanged(Editable editable) {
+
+            //最大行数を超過した入力は、ノード名に反映させない
+            if( et_nodeName.getLineCount() > max_nodeNameLine ){
+                return;
+            }
+
             //ノードに反映
             mv_node.setNodeName( editable.toString() );
             mv_node.addLayoutConfirmedListener();
