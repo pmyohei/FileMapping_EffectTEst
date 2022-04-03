@@ -35,6 +35,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewTreeObserver;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -320,8 +321,27 @@ public class TrimmingActivity extends AppCompatActivity {
         } else {
             //※画面向き変更時の画面再生成等、Crop範囲を取得すると取れないタイミングがあるため、本対応を入れている
             iv_cropSource.post(() -> {
-                iv_toThumbnail.setImageBitmap(iv_cropSource.getCroppedBitmap());
+
+                try {
+                    iv_toThumbnail.setImageBitmap(iv_cropSource.getCroppedBitmap());
+                } catch (RuntimeException e) {
+                    Log.i("bitmapサイズエラー", "RuntimeException");
+                    throw new RuntimeException( "エラー発生" );
+                }
+
             });
+/*            ViewTreeObserver observer = iv_cropSource.getViewTreeObserver();
+            observer.addOnGlobalLayoutListener(
+                new ViewTreeObserver.OnGlobalLayoutListener() {
+                    @Override
+                    public void onGlobalLayout() {
+                        //iv_toThumbnail.setImageBitmap(iv_cropSource.getCroppedBitmap());
+                        //レイアウト確定後は、不要なので本リスナー削除
+                        iv_cropSource.getViewTreeObserver().removeOnGlobalLayoutListener(this);
+                    }
+                }
+            );*/
+
         }
 
         /*-- Picassoは使わない --*/
@@ -341,6 +361,11 @@ public class TrimmingActivity extends AppCompatActivity {
             Log.i("URI", "Bitmap生成エラー");
             return;
         }
+
+        Log.i("Bitmapサイズ", "bmp.getByteCount()=" + bmp.getByteCount());
+        Log.i("Bitmapサイズ", "bmp.getHeight()=" + bmp.getHeight());
+        Log.i("Bitmapサイズ", "bmp.getWidth()=" + bmp.getWidth());
+
         //選択画像をCropとして設定
         setSelectedPicture();
         //レイアウト初回設定
