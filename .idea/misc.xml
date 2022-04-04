@@ -197,6 +197,7 @@
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/frame_font.xml" value="0.1895" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/frame_item_map.xml" value="0.21979166666666666" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/ic_no_image.xml" value="0.169" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/placeholder_progress.xml" value="0.139" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/selector_guide_indicator.xml" value="0.26974358974358975" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout-land/color_picker_dialog.xml" value="0.15828924162257496" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/activity_color_picker.xml" value="0.1609375" />
@@ -223,6 +224,7 @@
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/item_font_jp.xml" value="0.26875" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/item_gallery_picture.xml" value="0.13677811550151975" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/item_map.xml" value="0.20364583333333333" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/item_single_matrix_picture.xml" value="0.20416666666666666" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/map_item.xml" value="0.13855116514690982" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node.xml" value="0.4" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/node_body.xml" value="0.13044579533941236" />

@@ -1,6 +1,8 @@
 package com.mapping.filemapping;
 
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -53,6 +55,7 @@ public class SinglePictureAdapter extends RecyclerView.Adapter<SinglePictureAdap
             //画像割り当て
             Picasso.get()
                     .load( new File( picture.getPath() ) )
+                    .fit().centerInside()                       //画像サイズが大きい場合、これがないと落ちるため注意
                     .error(R.drawable.ic_no_image_single)
                     .into( iv_singlePicture );
         }
