@@ -1,7 +1,11 @@
 package com.mapping.filemapping;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.content.Context;
 import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,6 +13,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
+
+import androidx.cardview.widget.CardView;
 
 public class SampleMapView extends FrameLayout {
 
@@ -306,7 +312,8 @@ public class SampleMapView extends FrameLayout {
     private void set2ColorToMap(int first, int second) {
 
         //マップ、テキスト名
-        findViewById(R.id.fl_map).setBackgroundColor(Color.parseColor(mSelectedColors[first]));
+        //findViewById(R.id.fl_map).setBackgroundColor(Color.parseColor(mSelectedColors[first]));
+        setMapColorWithAnimation( Color.parseColor(mSelectedColors[first]));
         mTmpNodes.setAllNodeTxColor(mSelectedColors[first]);
 
         //ノード枠線、ライン、ノード背景色、影色
@@ -327,7 +334,8 @@ public class SampleMapView extends FrameLayout {
     private void set3ColorToMap(int first, int second, int third) {
 
         //マップ
-        findViewById(R.id.fl_map).setBackgroundColor(Color.parseColor(mSelectedColors[first]));
+        //findViewById(R.id.fl_map).setBackgroundColor(Color.parseColor(mSelectedColors[first]));
+        setMapColorWithAnimation( Color.parseColor(mSelectedColors[first]) );
 
         //ノード枠線、ライン、テキスト名
         mTmpNodes.setAllNodeBorderColor(mSelectedColors[second]);
@@ -379,5 +387,19 @@ public class SampleMapView extends FrameLayout {
     }
     public void setMapName(String mapName) {
         this.mMapName = mapName;
+    }
+
+    /*
+     * アニメーション付きのマップ色の設定
+     */
+    private void setMapColorWithAnimation( int dstColor ) {
+
+        //---------------------------------------
+        // アニメーション付きでマップ色を変更
+        //---------------------------------------
+        FrameLayout fl_map = findViewById(R.id.fl_map);
+        int srcColor = ((ColorDrawable)fl_map.getBackground()).getColor();
+        //設定メソッドは、「ViewのsetBackgroundColor」
+        BaseNode.startTranceColorAnimation(fl_map.getContext(), fl_map, "backgroundColor", srcColor, dstColor);
     }
 }

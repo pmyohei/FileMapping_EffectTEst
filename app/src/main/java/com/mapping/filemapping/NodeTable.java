@@ -143,7 +143,7 @@ public class NodeTable implements Serializable {
     public static final String DEFAULT_COLOR_WHITE = "#FFFFFF";
     public static final String DEFAULT_COLOR_BLACK = "#000000";
 
-    //サイズ
+    //サイズ関連
     public static final float DEFAULT_THICK_LINE = 2f;
     public static final int DEFAULT_THICK_BORDER = 3;
 

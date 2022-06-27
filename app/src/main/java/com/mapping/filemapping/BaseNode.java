@@ -1,5 +1,8 @@
 package com.mapping.filemapping;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -133,8 +136,8 @@ public class BaseNode extends FrameLayout {
         //ペイント生成
         mPaint = new Paint();
 
-        if( Build.VERSION.SDK_INT <= Build.VERSION_CODES.P ){
-            //※API28以下は、影の描画に必要な処理
+        if( Build.VERSION.SDK_INT <= Build.VERSION_CODES.R ){
+            //※API30以下は、影の描画に必要な処理
             setLayerType(View.LAYER_TYPE_SOFTWARE, null);
             //※透明の場合、影は描画されない
             mPaint.setColor(Color.WHITE);
@@ -681,8 +684,35 @@ public class BaseNode extends FrameLayout {
     }
 
 
-    /*------ getter／setter ------*/
+    /*
+     * アニメーション付きの色変更
+     *   開始色から終了色に遷移するアニメーションを、指定されたビューに対して適用する。
+     * 　 para1：Context
+     * 　 para2：色変更対象ビュー
+     * 　 para3：プロパティ文字列
+     * 　 para4：開始色
+     * 　 para5：終了色
+     */
+    static public void startTranceColorAnimation( Context context, Object object, String property, int srcColor, int dstColor ) {
 
+        //アニメーション時間
+        int duration = context.getResources().getInteger(R.integer.color_trance_animation_duration);
+
+        //---------------------------------------
+        // アニメーション付きで背景色を変更
+        //---------------------------------------
+        ValueAnimator tranceAnimator = ObjectAnimator.ofArgb(object, property, srcColor, dstColor);
+        tranceAnimator.setDuration( duration );
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.play(tranceAnimator);
+        animatorSet.start();
+    }
+
+
+    /*----------------------------*/
+    /*------ getter／setter ------*/
+    /*----------------------------*/
     public NodeTable getNode() {
         return mNode;
     }
@@ -712,4 +742,5 @@ public class BaseNode extends FrameLayout {
         this.mIconView.closeMyself();
         this.mIconView = null;
     }
+
 }

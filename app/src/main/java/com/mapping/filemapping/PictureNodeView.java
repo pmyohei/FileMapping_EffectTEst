@@ -87,17 +87,28 @@ public class PictureNodeView extends ChildNode implements Serializable {
         //※これをしないと、別のマップに同じサムネイルがあったとき、そのサムネイル情報で表示されてしまう
         Picasso.get().invalidate(new File(path));
 
-        //画像割り当て
-        //※fit()ではなく、一定値を指定したresize()を使用
-        // fit()だと、ノードサイズが小さく、解像度が下がるため。
-        // ある程度の解像度を確保するためにresize()を使用する。
-        // 仮にマップ画面が重くなる場合は、このリサイズ値を見直す
-        Picasso.get()
-                .load(new File(path))
-                .resize(ThumbnailTransformation.RESIZE, ThumbnailTransformation.RESIZE)
-                .transform(new ThumbnailTransformation(thumbnail, iv_node.getWidth()))
-                .error(R.drawable.baseline_no_image)
-                .into(iv_node);
+        if( ResourceManager.READ_URI ){
+            Picasso.get()
+                    //.load(new File(path))
+                    .load(path)
+                    .resize(ThumbnailTransformation.RESIZE, ThumbnailTransformation.RESIZE)
+                    .transform(new ThumbnailTransformation(thumbnail, iv_node.getWidth()))
+                    .error(R.drawable.baseline_no_image)
+                    .into(iv_node);
+        } else {
+            //画像割り当て
+            //※fit()ではなく、一定値を指定したresize()を使用
+            // fit()だと、ノードサイズが小さく、解像度が下がるため。
+            // ある程度の解像度を確保するためにresize()を使用する。
+            // 仮にマップ画面が重くなる場合は、このリサイズ値を見直す
+            Picasso.get()
+                    .load(new File(path))
+                    //.load(path)
+                    .resize(ThumbnailTransformation.RESIZE, ThumbnailTransformation.RESIZE)
+                    .transform(new ThumbnailTransformation(thumbnail, iv_node.getWidth()))
+                    .error(R.drawable.baseline_no_image)
+                    .into(iv_node);
+        }
     }
 
     /*

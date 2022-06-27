@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 回転を繰り返すアニメーション -->
+<set
+    xmlns:android="http://schemas.android.com/apk/res/android" >
+
+    <objectAnimator
+        android:interpolator="@android:anim/linear_interpolator"
+        android:propertyName="spinEffect"
+        android:duration="5000"
+        android:valueFrom="0.0f"
+        android:valueTo="360.0f"
+        android:repeatCount="-1"
+        android:repeatMode="restart"
+        />
+</set>

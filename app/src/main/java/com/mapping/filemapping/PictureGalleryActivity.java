@@ -257,7 +257,6 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
      *   para3：タブ内のレイアウトIDリスト
      */
     private void setGalleryViewPager(List<PictureArrayList<PictureTable>> galleries,
-                                     //List<Bitmap> thumbnailBitmaps,
                                      List<PictureTable> thumbnails,
                                      List<Integer> layoutIdList) {
 
@@ -294,12 +293,25 @@ public class PictureGalleryActivity extends AppCompatActivity implements Picture
                             //アイコンとして設定
                             //※画質を担保するため、resize()である程度画像の大きさを確保してからtransform()に渡す
                             ImageView iv_picture = tab.getCustomView().findViewById(R.id.iv_picture);
-                            Picasso.get()
-                                    .load(new File(path))
-                                    .resize(ThumbnailTransformation.RESIZE, ThumbnailTransformation.RESIZE)
-                                    .transform(new ThumbnailTransformation(thumbnail, viewSize))
-                                    .error(R.drawable.baseline_no_image)
-                                    .into(iv_picture);
+
+                            if( ResourceManager.READ_URI ){
+                                Picasso.get()
+                                        //.load(new File(path))
+                                        .load(path)
+                                        .resize(ThumbnailTransformation.RESIZE, ThumbnailTransformation.RESIZE)
+                                        .transform(new ThumbnailTransformation(thumbnail, viewSize))
+                                        .error(R.drawable.baseline_no_image)
+                                        .into(iv_picture);
+                            } else {
+                                //本ルートがリリース用
+                                Picasso.get()
+                                        .load(new File(path))
+                                        //.load(path)
+                                        .resize(ThumbnailTransformation.RESIZE, ThumbnailTransformation.RESIZE)
+                                        .transform(new ThumbnailTransformation(thumbnail, viewSize))
+                                        .error(R.drawable.baseline_no_image)
+                                        .into(iv_picture);
+                            }
                         }
                     }
                 }

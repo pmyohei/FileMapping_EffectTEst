@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--  ノード名最大行数  -->
     <integer name="max_node_name_line">3</integer>
+    <!--  アニメーション時間：色遷移  -->
+    <integer name="color_trance_animation_duration">200</integer>
 
 </resources>

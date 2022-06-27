@@ -14,6 +14,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
 import android.widget.FrameLayout;
+import android.widget.TextView;
 
 import java.io.Serializable;
 
@@ -138,7 +139,17 @@ public class ChildNode extends BaseNode {
      * ラインカラーの設定・取得
      */
     public void setLineColor(String color) {
-        mLineView.setColor(color);
+        //mLineView.setPaintColor(color);
+
+        //---------------------------------------
+        // アニメーション付きでライン色を変更
+        //---------------------------------------
+        //TextView tv_node = findViewById(R.id.tv_node);
+        //変更前と変更後の色
+        int srcColor = Color.parseColor( mNode.getLineColor() );
+        int dstColor = Color.parseColor( color );
+        //設定メソッドは、「LineViewのsetPaintColor」
+        startTranceColorAnimation(getContext(), mLineView, "paintColor", srcColor, dstColor);
 
         //テーブル側も更新
         mNode.setLineColor( color );
@@ -774,9 +785,9 @@ public class ChildNode extends BaseNode {
         /*
          * ラインカラーの設定
          */
-        public void setColor(String color) {
+        public void setPaintColor(int color) {
             //色設定
-            mPaint.setColor(Color.parseColor(color));
+            mPaint.setColor(color);
             //再描画
             invalidate();
         }

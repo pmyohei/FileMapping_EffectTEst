@@ -59,20 +59,30 @@ public class GalleryGridAdapter extends BaseAdapter {
                 mPictureInGalleryView.setChecked(false);
             }
 
-            String path = mData.get(position).getPath();
-            File file = new File(path);
-            if( !file.isFile() ){
-                //ファイルがないとき、Picassoでは描画が遅れるため、ここでエラー設定を行う
-                mIv_picture.setImageResource( R.drawable.baseline_no_image);
-                return;
-            }
+            if( ResourceManager.READ_URI ){
+                Picasso.get()
+                        .load( mData.get(position).getPath() )
+                        .fit().centerCrop()                     //※画像の表示範囲の指定はxmlではなくここでやること（表示がかなり重くなるため）
+                        .error(R.drawable.baseline_no_image)    //エラー画像の設定は、Picassoでは行わない、描画が遅れるため（※この.error設定は念のため）
+                        .into( mIv_picture );
+            } else {
+                //リリース版はこちら
 
-            //Picassoを利用して画像を設定
-            Picasso.get()
-                    .load( file )
-                    .fit().centerCrop()               //※画像の表示範囲の指定はxmlではなくここでやること（表示がかなり重くなるため）
-                    .error(R.drawable.baseline_no_image)    //エラー画像の設定は、Picassoでは行わない、描画が遅れるため（※この.error設定は念のため）
-                    .into( mIv_picture );
+                //ファイルがないとき、Picassoでは描画が遅れるため、ここでエラー設定を行う
+                String path = mData.get(position).getPath();
+                File file = new File(path);
+                if( !file.isFile() ){
+                    mIv_picture.setImageResource( R.drawable.baseline_no_image);
+                    return;
+                }
+
+                //Picassoを利用して画像を設定
+                Picasso.get()
+                        .load( file )
+                        .fit().centerCrop()                     //※画像の表示範囲の指定はxmlではなくここでやること（表示がかなり重くなるため）
+                        .error(R.drawable.baseline_no_image)    //エラー画像の設定は、Picassoでは行わない、描画が遅れるため（※この.error設定は念のため）
+                        .into( mIv_picture );
+            }
         }
     }
 

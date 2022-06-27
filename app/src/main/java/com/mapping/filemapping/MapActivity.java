@@ -8,10 +8,13 @@ import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -23,6 +26,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
 import android.os.Bundle;
@@ -335,15 +339,27 @@ public class MapActivity extends AppCompatActivity {
     /*
      * マップ背景色の設定
      */
-    public void setMapColor(String color) {
-        int value = Color.parseColor(color);
+    public void setMapColor(String colorStr) {
 
-        //マップ全体
-        findViewById(R.id.fl_screenMap).setBackgroundColor(value);
-        //システムバー
-        getWindow().setStatusBarColor(value);
+        //変更前と変更後の色
+        int srcColor = Color.parseColor( mMap.getMapColor() );
+        int dstColor = Color.parseColor( colorStr );
+
+        //--------------------------------------------
+        // アニメーション付きでマップ色を変更
+        //--------------------------------------------
+        //※設定メソッド：「ViewのsetBackgroundColor()」
+        FrameLayout fl_screenMap = findViewById(R.id.fl_screenMap);
+        BaseNode.startTranceColorAnimation(this, fl_screenMap, "backgroundColor", srcColor, dstColor);
+
+        //--------------------------------------------
+        // アニメーション付きでシステムバーの色を変更
+        //--------------------------------------------
+        //※設定メソッド：「WindowのsetStatusBarColor()」
+        BaseNode.startTranceColorAnimation(this, getWindow(), "statusBarColor", srcColor, dstColor);
+
         //テーブル更新
-        mMap.setMapColor(color);
+        mMap.setMapColor(colorStr);
     }
 
     /*
@@ -847,13 +863,24 @@ public class MapActivity extends AppCompatActivity {
      * 編集用ボトムシートの表示
      */
     public void openEdit(BaseNode node) {
-
         //更新対象ビューに追加
         MapCommonData mapCommonData = (MapCommonData) getApplication();
         mapCommonData.enqueUpdateNodeWithUnique(node.getNode());
 
         //BottomSheetを開く（画面移動あり）
         openDesignBottomSheet(DesignBottomSheet.NODE, node, node.getCenterPosX(), node.getCenterPosY());
+    }
+
+    /*
+     * マップエフェクト初期処理
+     */
+    private void initEffectMap() {
+        //エフェクトマネージャーを生成し、エフェクト開始
+        ViewGroup vg = findViewById(R.id.fl_map);
+        //EffectManager effectManager = new EffectManager( vg, MapTable.HEART_INFLATED, Paint.Style.STROKE, MapTable.STROKE_GRADATION_ROTATE);
+        //EffectManager effectManager = new EffectManager( vg, MapTable.CIRCLE, Paint.Style.FILL, MapTable.BLINK);
+        EffectManager effectManager = new EffectManager( vg, MapTable.STAR, Paint.Style.FILL, MapTable.SPIN);
+        effectManager.startEffect();
     }
 
     /*
@@ -934,6 +961,11 @@ public class MapActivity extends AppCompatActivity {
             case R.id.action_help:
                 //マップヘルプの表示
                 showHelpDialog();
+
+                //--お試し
+                initEffectMap();
+                //--お試し
+
                 return true;
 
             case R.id.action_palette:

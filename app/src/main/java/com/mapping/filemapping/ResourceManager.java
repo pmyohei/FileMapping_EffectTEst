@@ -31,6 +31,11 @@ import java.util.List;
  */
 public class ResourceManager {
 
+    //URI読み込み有効
+    //※URIからの読み込みを有効にする（端末内の全てのリソースにアクセス可能にする）
+    //※リリースでは、必ず「false」にすること
+    public static final boolean READ_URI = false;
+
     //URIパス
     public static final String URI_PATH = "content://com.android.providers.media.documents/document/image%";
 
@@ -190,11 +195,20 @@ public class ResourceManager {
             if( !file.isFile() ){
                 //念のためファイルとして生成できるパスか確認
                 //File認定されなければ、変換エラーとする
-                return null;
+                path = null;
             }
         }
 
         cursor.close();
+
+        //-- URI読み込み有効化
+        if( ResourceManager.READ_URI ){
+            if( path == null ){
+                path = uri.toString();
+            }
+        }
+        //--
+
         return path;
     }
 

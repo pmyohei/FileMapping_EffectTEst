@@ -53,6 +53,51 @@ public class MapTable implements Serializable {
     @ColumnInfo(name = "is_shadow")
     private boolean isShadow;
 
+
+    //------------------------------------
+    // エフェクト形状
+    //------------------------------------
+    //ハート
+    static public final int HEART_NORMAL = 0x00;
+    static public final int HEART_THIN = 0x01;
+    static public final int HEART_INFLATED = 0x02;
+    //尖鋭
+    static public final int TRIANGLE = 0x10;
+    static public final int DIA = 0x11;
+    //星
+    static public final int STAR = 0x20;
+    //スパークル
+    static public final int SPARKLE_SHORT = 0x30;
+    static public final int SPARKLE_SHIN = 0x31;
+    static public final int SPARKLE_LONG = 0x32;
+    static public final int SPARKLE_RANDOM = 0x33;
+    static public final int SPARCLE_CENTRAL_CIRCLE = 0x34;
+    //花
+    static public final int FLOWER = 0x40;
+    static public final int SAKURA = 0x41;
+    //円
+    static public final int CIRCLE = 0x50;
+
+    public static enum EffectShape {
+        FILL(0),
+        STROKE(1),
+        FILL_AND_STROKE(2);
+
+        // フィールドの定義
+        private int id;
+
+        EffectShape(int id) {
+            this.id = id;
+        }
+    }
+
+    //エフェクトアニメーション
+    static public final int BLINK = 0;                      //明滅
+    static public final int SPIN = 1;                       //回転
+    static public final int SLOW_MOVE = 2;                  //ゆっくり移動
+    static public final int SLOW_FLOAT = 3;                 //ゆっくり浮き上がる
+    static public final int STROKE_GRADATION_ROTATE = 4;    //枠線のグラデーションの回転
+
     /*---  getter/setter  ---*/
     public int getPid() {
         return pid;

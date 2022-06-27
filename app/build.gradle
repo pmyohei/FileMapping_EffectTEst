@@ -9,8 +9,9 @@ android {
         applicationId "com.mapping.filemapping"
         minSdk 21
         targetSdk 31
-        versionCode 1
-        versionName "1.0"
+        //2022/06/20 エフェクト更新対応
+        versionCode 3
+        versionName "2.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
 

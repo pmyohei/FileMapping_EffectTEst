@@ -17,6 +17,20 @@
     <color name="transparent_0_white">#00FFFFFF</color>
     <color name="gray">#FFEAEAEA</color>
 
+    <!-- エフェクトランダムカラー -->
+    <color name="effect_yellow">#FFEB3B</color>
+    <color name="effect_right_yellow">#FDFBE8</color>
+    <color name="effect_red">#FF3838</color>
+    <color name="effect_right_red">#FFE0E0</color>
+    <color name="effect_blue">#140CFF</color>
+    <color name="effect_right_blue">#E6EDFF</color>
+    <color name="effect_green">#50FF11</color>
+    <color name="effect_right_green">#ECFFE6</color>
+    <color name="effect_pink">#FF2CC4</color>
+    <color name="effect_right_pink">#FFE9F9</color>
+    <color name="effect_purple">#FFBB86FC</color>
+    <color name="effect_right_purple">#EFE1FF</color>
+
     <!--  ツールアイコン  -->
     <color name="bg_icon">#80FFFFFF</color>
 

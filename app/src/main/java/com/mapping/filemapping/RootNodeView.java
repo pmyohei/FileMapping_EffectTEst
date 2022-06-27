@@ -1,5 +1,8 @@
 package com.mapping.filemapping;
 
+import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
@@ -53,15 +56,39 @@ public class RootNodeView extends BaseNode implements Serializable {
     @Override
     public void setNodeBackgroundColor(String color) {
         //背景色を設定
-        //ColorDrawable colorDrawable = (ColorDrawable)findViewById(R.id.tv_node).getBackground();
-        //colorDrawable.setColor( color );
+        //CardView cv_node = findViewById(R.id.cv_node);
+        //cv_node.setCardBackgroundColor(Color.parseColor(color));
 
-        //Drawable drawable = findViewById(R.id.tv_node).getBackground();
-        //drawable.setTint( color );
+        //---------------------------------------
+        // アニメーション付きで背景色を変更
+        //---------------------------------------
         CardView cv_node = findViewById(R.id.cv_node);
-        //cv_node.setBackgroundColor( Color.parseColor(color) );
-        cv_node.setCardBackgroundColor(Color.parseColor(color));
+        //変更前と変更後の色
+        int srcColor = Color.parseColor( mNode.getNodeColor() );
+        int dstColor = Color.parseColor( color );
+        //設定メソッドは、「CardViewのsetCardBackgroundColor」
+        startTranceColorAnimation(getContext(), cv_node, "cardBackgroundColor", srcColor, dstColor);
 
+/*        //アニメーション時間
+        int duration = getResources().getInteger(R.integer.color_trance_animation_duration);
+
+        //---------------------------------------
+        // アニメーション付きで背景色を設定
+        //---------------------------------------
+        CardView cv_node = findViewById(R.id.cv_node);
+        //変更前と変更後の色
+        int srcColor = Color.parseColor( mNode.getNodeColor() );
+        int dstColor = Color.parseColor( color );
+        ValueAnimator tranceAnimator = ObjectAnimator.ofArgb(cv_node, "cardBackgroundColor", srcColor, dstColor);
+        tranceAnimator.setDuration( duration );
+
+        AnimatorSet animatorSet = new AnimatorSet();
+        animatorSet.play(tranceAnimator);
+        animatorSet.start();*/
+
+        //---------------------------------------
+        // テーブル更新
+        //---------------------------------------
         mNode.setNodeColor( color );
     }
 
@@ -71,7 +98,17 @@ public class RootNodeView extends BaseNode implements Serializable {
      */
     @Override
     public void setNodeTextColor(String color) {
-        ((TextView) findViewById(R.id.tv_node)).setTextColor( Color.parseColor(color) );
+        //((TextView) findViewById(R.id.tv_node)).setTextColor( Color.parseColor(color) );
+
+        //---------------------------------------
+        // アニメーション付きでテキスト色を変更
+        //---------------------------------------
+        TextView tv_node = findViewById(R.id.tv_node);
+        //変更前と変更後の色
+        int srcColor = Color.parseColor( mNode.getTextColor() );
+        int dstColor = Color.parseColor( color );
+        //設定メソッドは、「TextViewのsetTextColor」
+        startTranceColorAnimation(getContext(), tv_node, "textColor", srcColor, dstColor);
 
         mNode.setTextColor( color );
     }
@@ -122,7 +159,17 @@ public class RootNodeView extends BaseNode implements Serializable {
     @Override
     public void setBorderColor( String color ) {
         //枠色を設定
-        ((MaterialCardView)findViewById( R.id.cv_node )).setStrokeColor( Color.parseColor(color) );
+        //((MaterialCardView)findViewById( R.id.cv_node )).setStrokeColor( Color.parseColor(color) );
+
+        //---------------------------------------
+        // アニメーション付きで背景色を変更
+        //---------------------------------------
+        CardView cv_node = findViewById(R.id.cv_node);
+        //変更前と変更後の色
+        int srcColor = Color.parseColor( mNode.getBorderColor() );
+        int dstColor = Color.parseColor( color );
+        //設定メソッドは、「MaterialCardViewのsetStrokeColor」
+        startTranceColorAnimation(getContext(), cv_node, "strokeColor", srcColor, dstColor);
 
         mNode.setBorderColor( color );
     }
