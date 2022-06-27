@@ -299,6 +299,10 @@ public class ToolIconsView extends ConstraintLayout {
         //アイコン毎にリスナーを生成
         int iconKind = toolIconData.getIconKind();
         switch (iconKind) {
+
+            //--------------------------------------------------------
+            // ノード新規生成
+            //--------------------------------------------------------
             case TooliconData.CREATE_NODE:
 
                 listener = new OnClickListener() {
@@ -383,6 +387,9 @@ public class ToolIconsView extends ConstraintLayout {
 
                 break;
 
+            //--------------------------------------------------------
+            // ピクチャノード新規生成
+            //--------------------------------------------------------
             case TooliconData.CREATE_PICTURE_NODE:
 
                 listener = new OnClickListener() {
@@ -420,6 +427,9 @@ public class ToolIconsView extends ConstraintLayout {
 
                 break;
 
+            //--------------------------------------------------------
+            // ノード編集
+            //--------------------------------------------------------
             case TooliconData.EDIT:
 
                 listener = new OnClickListener() {
@@ -456,6 +466,9 @@ public class ToolIconsView extends ConstraintLayout {
 
                 break;
 
+            //--------------------------------------------------------
+            // ギャラリー表示
+            //--------------------------------------------------------
             case TooliconData.DISPLAY_ALL_PICTURE:
 
                 listener = new OnClickListener() {
@@ -486,6 +499,9 @@ public class ToolIconsView extends ConstraintLayout {
 
                 break;
 
+            //--------------------------------------------------------
+            // ノード削除
+            //--------------------------------------------------------
             case TooliconData.DELETE:
 
                 listener = new OnClickListener() {
@@ -539,6 +555,9 @@ public class ToolIconsView extends ConstraintLayout {
 
                 break;
 
+            //--------------------------------------------------------
+            // 親ノードの変更
+            //--------------------------------------------------------
             case TooliconData.CHANGE_PARENT:
                 listener = new OnClickListener() {
                     @Override
@@ -555,6 +574,9 @@ public class ToolIconsView extends ConstraintLayout {
 
                 break;
 
+            //--------------------------------------------------------
+            // 新マップの作成
+            //--------------------------------------------------------
             case TooliconData.NEW_MAP:
                 //※現状なし
                 listener = new OnClickListener() {
@@ -568,6 +590,9 @@ public class ToolIconsView extends ConstraintLayout {
 
                 break;
 
+            //--------------------------------------------------------
+            // 写真をノードに追加
+            //--------------------------------------------------------
             case TooliconData.ADD_PICTURE:
 
                 listener = new OnClickListener() {
@@ -593,6 +618,9 @@ public class ToolIconsView extends ConstraintLayout {
                 };
                 break;
 
+            //--------------------------------------------------------
+            // ヘルプ
+            //--------------------------------------------------------
             case TooliconData.HELP:
 
                 listener = new OnClickListener() {
@@ -609,6 +637,9 @@ public class ToolIconsView extends ConstraintLayout {
                 };
                 break;
 
+            //--------------------------------------------------------
+            // アイコンクローズ
+            //--------------------------------------------------------
             case TooliconData.CLOSE:
 
                 listener = new OnClickListener() {

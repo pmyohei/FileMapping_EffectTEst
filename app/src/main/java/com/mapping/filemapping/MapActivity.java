@@ -41,6 +41,8 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewTreeObserver;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.view.animation.DecelerateInterpolator;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
@@ -583,10 +585,8 @@ public class MapActivity extends AppCompatActivity {
     public BaseNode drawNode(NodeTable nodeTable) {
         //生成
         BaseNode nodeView = new NodeView(this, nodeTable);
-        //子ノード共通初期化処理
-        initChildNodeCommon( nodeView, nodeTable );
-        //全ノード共通設定
-        initAllNodeCommon(nodeView, nodeTable);
+        //ノード描画初期処理
+        drawNodeInit(nodeView, nodeTable);
 
         return nodeView;
     }
@@ -597,12 +597,23 @@ public class MapActivity extends AppCompatActivity {
     private void drawPictureNode(NodeTable nodeTable, PictureTable thumbnail) {
         //生成
         BaseNode nodeView = new PictureNodeView(this, nodeTable, thumbnail);
+        //ノード描画初期処理
+        drawNodeInit(nodeView, nodeTable);
+    }
+
+    /*
+     * ノード描画の初期処理
+     *   ノードの初期化処理と生成時のアニメーションを適用する
+     */
+    private void drawNodeInit(BaseNode nodeView, NodeTable nodeTable){
         //子ノード共通初期化処理
         initChildNodeCommon( nodeView, nodeTable );
         //全ノード共通設定
         initAllNodeCommon(nodeView, nodeTable);
 
-        Log.i("ピクチャノード生成問題", "drawPictureNode：ピクチャノードの描画 nodeTable.getPosX()=" + nodeTable.getPosX());
+        //生成時アニメーション
+        Animation animation = AnimationUtils.loadAnimation(nodeView.getContext(), R.anim.appear_node);
+        nodeView.startAnimation(animation);
     }
 
     /*

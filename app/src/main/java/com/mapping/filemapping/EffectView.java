@@ -27,14 +27,6 @@ public class EffectView extends View {
         int height;
 
         //--------------------------------
-        // グラデーション移動方向
-        //--------------------------------
-        final int RIGHT = 0;
-        final int DOWN = 1;
-        final int LEFT = 2;
-        final int UP = 3;
-
-        //--------------------------------
         // グラデーション移動方向変更の閾値
         //--------------------------------
         final float STEP_CHANGE_INTERVAL = 0.25f;

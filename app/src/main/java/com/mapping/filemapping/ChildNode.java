@@ -796,7 +796,6 @@ public class ChildNode extends BaseNode {
          * ラインカラーの取得
          */
         public String getColor() {
-
             return ("#" + Integer.toHexString(mPaint.getColor()));
         }
 
@@ -904,9 +903,6 @@ public class ChildNode extends BaseNode {
             double degrees = Math.toDegrees(radian);
             //double slopeDegrees = degrees;
 
-            //Log.i("ライン調査", "傾き=" + slope);
-            //Log.i("ライン調査", "傾き（角度）=" + degrees);
-
             //回転角度
             if (mSelfPosX >= mStartPosX) {
                 //親よりも右にいる場合
@@ -918,8 +914,6 @@ public class ChildNode extends BaseNode {
 
             //回転角度をラジアン角度に変換
             radian = Math.toRadians(degrees);
-
-            //Log.i("ライン調査", "回転角度=" + degrees);
 
             return (float)radian;
         }
