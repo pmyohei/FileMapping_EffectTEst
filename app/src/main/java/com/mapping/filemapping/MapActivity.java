@@ -6,6 +6,7 @@ import androidx.activity.result.ActivityResultCallback;
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
 import androidx.annotation.NonNull;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
@@ -29,6 +30,7 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -201,10 +203,9 @@ public class MapActivity extends AppCompatActivity {
         AsyncReadNodes db = new AsyncReadNodes(this, mMap.getPid(), new AsyncReadNodes.OnReadListener() {
 
             //DB読み取り完了
+            @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onRead(NodeArrayList<NodeTable> nodeList, PictureArrayList<PictureTable> thumbnailList) {
-
-                Log.i("ピクチャノード生成問題", "onRead：DB読み取り完了");
 
                 //マップ共通データ
                 MapCommonData mapCommonData = (MapCommonData) getApplication();
@@ -342,7 +343,6 @@ public class MapActivity extends AppCompatActivity {
      * マップ背景色の設定
      */
     public void setMapColor(String colorStr) {
-
         //変更前と変更後の色
         int srcColor = Color.parseColor( mMap.getMapColor() );
         int dstColor = Color.parseColor( colorStr );
@@ -352,7 +352,8 @@ public class MapActivity extends AppCompatActivity {
         //--------------------------------------------
         //※設定メソッド：「ViewのsetBackgroundColor()」
         FrameLayout fl_screenMap = findViewById(R.id.fl_screenMap);
-        BaseNode.startTranceColorAnimation(this, fl_screenMap, "backgroundColor", srcColor, dstColor);
+        //BaseNode.startTranceColorAnimation(this, fl_screenMap, "backgroundColor", srcColor, dstColor);
+        BaseNode.startTranceGradationColorAnimation(this, fl_screenMap, srcColor, dstColor, 0x123456, 0xF2F406);
 
         //--------------------------------------------
         // アニメーション付きでシステムバーの色を変更
@@ -988,13 +989,11 @@ public class MapActivity extends AppCompatActivity {
                 //フォルダーツリー表示
                 DrawerLayout drawer = findViewById(R.id.dl_map);
                 drawer.openDrawer(GravityCompat.END);
-
                 return true;
 
             case R.id.action_close:
                 //親ノード変更モードの解除
                 disableChangeParentMode();
-
                 return true;
 
             default:

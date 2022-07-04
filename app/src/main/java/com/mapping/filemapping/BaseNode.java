@@ -1,7 +1,10 @@
 package com.mapping.filemapping;
 
+import android.animation.Animator;
 import android.animation.AnimatorSet;
+import android.animation.ArgbEvaluator;
 import android.animation.ObjectAnimator;
+import android.animation.TimeAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -10,6 +13,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Build;
 import android.util.AttributeSet;
 import android.util.Log;
@@ -52,6 +56,7 @@ public class BaseNode extends FrameLayout {
     private Paint mPaint;
     //影色
     private int mShadowColor;
+    private int mPreShadowColor;
     //影サイズの最小・最大値
     private float MIN_RADIUS;
     private float MAX_RADIUS;
@@ -100,9 +105,8 @@ public class BaseNode extends FrameLayout {
         //影サイズの最小最大（px→dp）
         MIN_RADIUS = getResources().getDimension(R.dimen.shadow_radius_min);
         MAX_RADIUS = getResources().getDimension(R.dimen.shadow_radius_max);
-
-        //Log.i("影半径", "MIN_RADIUS=" + MIN_RADIUS);
-        //Log.i("影半径", "MAX_RADIUS=" + MAX_RADIUS);
+        //前回影色の初期値
+        mPreShadowColor = getResources().getColor( R.color.white);
 
         //OnDraw()をコールさせる設定
         setWillNotDraw(false);
@@ -119,7 +123,6 @@ public class BaseNode extends FrameLayout {
                     //未設定なら、処理なし
                     return;
                 }
-
                 mClickListener.onClick( view );
             }
         });
@@ -364,6 +367,7 @@ public class BaseNode extends FrameLayout {
         }
 
         //色更新
+        mPreShadowColor = mShadowColor;
         mShadowColor = colorHex;
 
         //影設定ありなら、設定色で描画
@@ -403,8 +407,8 @@ public class BaseNode extends FrameLayout {
             }
 
             //影の設定
-            mPaint.setShadowLayer(nodeRadius, 0, 0, mShadowColor);
-
+            //mPaint.setShadowLayer(nodeRadius, 0, 0, mShadowColor);
+            startTranceShadowColorAnimation( getContext(), mPaint, nodeRadius, mPreShadowColor, mShadowColor );
         } else {
             //影を削除
             mPaint.clearShadowLayer();
@@ -709,9 +713,84 @@ public class BaseNode extends FrameLayout {
         animatorSet.start();
     }
 
+    /*
+     * アニメーション付きの色変更
+     *   開始色から終了色に遷移するアニメーションを、指定されたビューに対して適用する。
+     * 　 para1：Context
+     * 　 para2：色変更対象ビュー
+     * 　 para3：プロパティ文字列
+     * 　 para4：開始色
+     * 　 para5：終了色
+     */
+    static public void startTranceShadowColorAnimation( final Context context, final Object object, final float radius,
+                                                        final int startColor, final int endColor) {
+        //アニメーション時間
+        int duration = context.getResources().getInteger(R.integer.color_trance_animation_duration);
+
+        //---------------------------------------
+        // アニメーション付きで背景色を変更
+        //---------------------------------------
+        ArgbEvaluator argb = new ArgbEvaluator();
+
+        ValueAnimator animator = TimeAnimator.ofFloat(0.0f, 1.0f);
+        animator.setDuration(duration);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                //現在の進行度
+                float fraction = valueAnimator.getAnimatedFraction();
+                //設定色（変化中の色）
+                int color = (int)argb.evaluate( fraction, startColor, endColor );
+                //影レイヤーに適用
+                ((Paint)object).setShadowLayer(radius, 0, 0, color);
+            }
+        });
+        animator.start();
+    }
+
+    /*
+     * アニメーション付きの色変更
+     *   開始色から終了色に遷移するアニメーションを、指定されたビューに対して適用する。
+     * 　 para1：Context
+     * 　 para2：色変更対象ビュー
+     * 　 para3：プロパティ文字列
+     * 　 para4：開始色
+     * 　 para5：終了色
+     */
+    static public void startTranceGradationColorAnimation( Context context, Object object,
+                                                           int startColor1, int endColor1, int startColor2, int endColor2 ) {
+        //アニメーション時間
+        int duration = context.getResources().getInteger(R.integer.color_trance_animation_duration);
+
+        //---------------------------------------
+        // アニメーション付きで背景色を変更
+        //---------------------------------------
+        ArgbEvaluator argb = new ArgbEvaluator();
+
+        GradientDrawable bgDraw = new GradientDrawable();
+        bgDraw.setOrientation( GradientDrawable.Orientation.TOP_BOTTOM );
+
+        ValueAnimator animator = TimeAnimator.ofFloat(0.0f, 1.0f);
+        animator.setDuration(duration);
+        animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator valueAnimator) {
+                //現在の進行度
+                float fraction = valueAnimator.getAnimatedFraction();
+                //設定するグラデーション
+                int gradationColor1 = (int)argb.evaluate( fraction, startColor1, endColor1 );
+                int gradationColor2 = (int)argb.evaluate( fraction, startColor2, endColor2 );
+                bgDraw.setColors( new int[]{gradationColor1, gradationColor2} );
+                //背景色に適用
+                ((View)object).setBackground(bgDraw);
+            }
+        });
+        animator.start();
+    }
+
 
     /*----------------------------*/
-    /*------ getter／setter ------*/
+    /*       getter／setter       */
     /*----------------------------*/
     public NodeTable getNode() {
         return mNode;

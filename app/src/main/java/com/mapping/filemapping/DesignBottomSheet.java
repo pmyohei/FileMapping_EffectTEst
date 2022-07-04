@@ -256,6 +256,7 @@ public class DesignBottomSheet extends CoordinatorLayout {
         //ノードデザイン設定レイアウト
         List<Integer> layoutIdList = new ArrayList<>();
         layoutIdList.add( R.layout.page_map_design);
+        layoutIdList.add( R.layout.page_map_effect);
         layoutIdList.add( R.layout.page_node_font);
         layoutIdList.add( R.layout.page_node_size);
         layoutIdList.add( R.layout.page_node_shape_map);
@@ -269,6 +270,7 @@ public class DesignBottomSheet extends CoordinatorLayout {
         Resources resources = getResources();
         List<String> tabs = new ArrayList<>();
         tabs.add( resources.getString(R.string.tab_map_color));
+        tabs.add( resources.getString(R.string.tab_map_effect));
         tabs.add( resources.getString(R.string.tab_font));
         tabs.add( resources.getString(R.string.tab_size));
         tabs.add( resources.getString(R.string.tab_shape));

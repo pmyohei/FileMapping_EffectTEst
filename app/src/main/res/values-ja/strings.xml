@@ -111,11 +111,12 @@
     <string name="menu_movePicture">格納先の変更</string>
     <string name="menu_removePicture">写真の削除</string>
 
-    <!-- ノードデザインタブ -->
+    <!-- デザインタブ -->
     <string name="tab_node_name">ノード名</string>
     <string name="tab_thumnbnail">サムネイル</string>
     <string name="change_thumnbnail">サムネイルの変更</string>
     <string name="tab_map_color">マップ色</string>
+    <string name="tab_map_effect">エフェクト</string>
     <string name="tab_font">フォント</string>
     <string name="tab_text_color">テキスト色</string>
     <string name="tab_size">サイズ</string>
@@ -140,6 +141,10 @@
 
     <string name="title_mapDesign">マップデザイン</string>
     <string name="title_mapBackgroundColor">マップの色</string>
+
+    <string name="subtitle_monochromatic">単色</string>
+    <string name="subtitle_gradation">グラデーション</string>
+    <string name="subtitle_gradationDir">グラデーション方向</string>
 
     <string name="shape_common">共通</string>
     <string name="shape_pictureNodeOnly">ピクチャノードのみ</string>

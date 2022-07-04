@@ -2,6 +2,7 @@
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
@@ -17,10 +18,204 @@
             android:paddingTop="@dimen/design_sheet_paddingTop"
             android:orientation="vertical">
 
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text="@string/subtitle_monochromatic"
+                android:textColor="@color/white"
+                android:background="@color/transparent_50_black"
+                android:gravity="center" />
+
             <com.mapping.filemapping.ColorSelectionView
-                android:id="@+id/csv_map"
+                android:id="@+id/csv_mapMonoColor"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="4dp"
+                android:paddingBottom="4dp"
+                android:text="@string/subtitle_gradation"
+                android:textColor="@color/white"
+                android:background="@color/transparent_50_black"
+                android:gravity="center" />
+
+            <Switch
+                android:id="@+id/sw_gradation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="24dp"
+                android:showText="false"
+                android:checked="true"
+                android:theme="@style/toggle"
+                tools:ignore="UseSwitchCompatOrMaterialXml" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_gravity="center"
+                android:text="@string/shadow_on_off"
+                android:textColor="@color/black" />
+
+            <com.mapping.filemapping.ColorSelectionView
+                android:id="@+id/csv_mapGradationColor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <!--  仕切り線  -->
+            <View
+                android:layout_width="match_parent"
+                android:layout_height="1dp"
+                android:layout_marginTop="24dp"
+                android:layout_marginBottom="24dp"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:background="@color/transparent_50_black"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="4dp"
+                android:layout_gravity="center"
+                android:text="@string/subtitle_gradationDir"
+                android:textColor="@color/black" />
+
+            <!--      グラデーションの方向      -->
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"
+                android:layout_marginBottom="40dp">
+
+                <!-- 1行目 -->
+                <ImageView
+                    android:id="@+id/iv_TlBr"
+                    android:layout_width="@dimen/gradation_direction_size"
+                    android:layout_height="@dimen/gradation_direction_size"
+                    android:layout_marginTop="12dp"
+                    android:padding="8dp"
+                    android:elevation="4dp"
+                    android:background="@drawable/bt_gradation_direction"
+                    android:src="@drawable/baseline_tl_br_24"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_TopBottom"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_editor_absoluteY="20dp" />
+
+                <ImageView
+                    android:id="@+id/iv_TopBottom"
+                    android:layout_width="@dimen/gradation_direction_size"
+                    android:layout_height="@dimen/gradation_direction_size"
+                    android:layout_marginTop="12dp"
+                    android:padding="8dp"
+                    android:elevation="4dp"
+                    android:background="@drawable/bt_gradation_direction"
+                    android:src="@drawable/baseline_top_bottom_24"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_TrBl"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/iv_TlBr"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_editor_absoluteY="20dp" />
+
+                <ImageView
+                    android:id="@+id/iv_TrBl"
+                    android:layout_width="@dimen/gradation_direction_size"
+                    android:layout_height="@dimen/gradation_direction_size"
+                    android:layout_marginTop="12dp"
+                    android:padding="8dp"
+                    android:elevation="4dp"
+                    android:background="@drawable/bt_gradation_direction"
+                    android:src="@drawable/baseline_tr_bl_24"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/iv_TopBottom"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:layout_editor_absoluteY="20dp" />
+
+                <!-- 2行目 -->
+                <ImageView
+                    android:id="@+id/iv_LeftRight"
+                    android:layout_width="@dimen/gradation_direction_size"
+                    android:layout_height="@dimen/gradation_direction_size"
+                    android:layout_marginTop="20dp"
+                    android:padding="8dp"
+                    android:elevation="4dp"
+                    android:background="@drawable/bt_gradation_direction"
+                    android:src="@drawable/baseline_left_right_24"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_RightLeft"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/iv_TlBr"
+                    tools:layout_editor_absoluteY="141dp" />
+
+                <ImageView
+                    android:id="@+id/iv_RightLeft"
+                    android:layout_width="@dimen/gradation_direction_size"
+                    android:layout_height="@dimen/gradation_direction_size"
+                    android:layout_marginTop="20dp"
+                    android:padding="8dp"
+                    android:elevation="4dp"
+                    android:background="@drawable/bt_gradation_direction"
+                    android:src="@drawable/baseline_right_left_24"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/iv_LeftRight"
+                    app:layout_constraintTop_toBottomOf="@+id/iv_TlBr"
+                    tools:layout_editor_absoluteY="141dp" />
+
+                <!-- 3行目 -->
+                <ImageView
+                    android:id="@+id/iv_BlTr"
+                    android:layout_width="@dimen/gradation_direction_size"
+                    android:layout_height="@dimen/gradation_direction_size"
+                    android:layout_marginTop="20dp"
+                    android:padding="8dp"
+                    android:elevation="4dp"
+                    android:background="@drawable/bt_gradation_direction"
+                    android:src="@drawable/baseline_bl_tr_24"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_BottomTop"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/iv_LeftRight"
+                    tools:layout_editor_absoluteY="20dp" />
+
+                <ImageView
+                    android:id="@+id/iv_BottomTop"
+                    android:layout_width="@dimen/gradation_direction_size"
+                    android:layout_height="@dimen/gradation_direction_size"
+                    android:layout_marginTop="20dp"
+                    android:padding="8dp"
+                    android:elevation="4dp"
+                    android:background="@drawable/bt_gradation_direction"
+                    android:src="@drawable/baseline_bottom_top_24"
+                    app:layout_constraintEnd_toStartOf="@+id/iv_BrTl"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/iv_BlTr"
+                    app:layout_constraintTop_toBottomOf="@+id/iv_LeftRight"
+                    tools:layout_editor_absoluteY="20dp" />
+
+                <ImageView
+                    android:id="@+id/iv_BrTl"
+                    android:layout_width="@dimen/gradation_direction_size"
+                    android:layout_height="@dimen/gradation_direction_size"
+                    android:layout_marginTop="20dp"
+                    android:padding="8dp"
+                    android:elevation="4dp"
+                    android:background="@drawable/bt_gradation_direction"
+                    android:src="@drawable/baseline_br_tl_24"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintStart_toEndOf="@+id/iv_BottomTop"
+                    app:layout_constraintTop_toBottomOf="@+id/iv_LeftRight"
+                    tools:layout_editor_absoluteY="20dp" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
 
         </LinearLayout>
 

@@ -1,9 +1,14 @@
 package com.mapping.filemapping;
 
 import android.app.Application;
+import android.content.res.ColorStateList;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.util.Log;
 import android.view.View;
+
+import androidx.annotation.RequiresApi;
 
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
@@ -111,7 +116,8 @@ public class MapCommonData extends Application {
     /*
      * 色履歴リストの生成
      */
-    public void createColorHistory( MapTable map, View v_map ) {
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void createColorHistory(MapTable map, View v_map ) {
 
         //色履歴一時リスト（重複あり、大文字小文字混在）
         ArrayList<String> tmpColors = new ArrayList<>();
@@ -125,11 +131,15 @@ public class MapCommonData extends Application {
         }
 
         //現在のマップ背景色
-        ColorDrawable colorDrawable = (ColorDrawable) v_map.getBackground();
-        int colorInt = colorDrawable.getColor();
-        String mapColor = "#" + Integer.toHexString(colorInt);
-        //一時リストに追加
-        tmpColors.add( mapColor );
+        //ColorDrawable colorDrawable = (ColorDrawable) v_map.getBackground();
+        //int colorInt = colorDrawable.getColor();
+        GradientDrawable colorDrawable = (GradientDrawable) v_map.getBackground();
+        int[] colorInts = colorDrawable.getColors();
+        for( int color: colorInts ){
+            //一時リストに追加
+            String mapColor = "#" + Integer.toHexString( color );
+            tmpColors.add( mapColor );
+        }
 
         //マップ中のノードに設定されている色を取得
         tmpColors.addAll( mNodes.getAllNodeColors() );

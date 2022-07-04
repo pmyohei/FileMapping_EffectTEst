@@ -84,14 +84,14 @@ public class DesignPicturePageAdapter extends RecyclerView.Adapter<DesignPicture
 
                 case 2:
                     //ノード形
-                    iv_circle = itemView.findViewById(R.id.iv_circle);
-                    iv_circleLittle = itemView.findViewById(R.id.iv_circleLittle);
-                    iv_squareRounded = itemView.findViewById(R.id.iv_squareRounded);
-                    iv_square = itemView.findViewById(R.id.iv_square);
-                    iv_octagon = itemView.findViewById(R.id.iv_octagon);
-                    iv_octagonRounded = itemView.findViewById(R.id.iv_octagonRounded);
-                    iv_dia = itemView.findViewById(R.id.iv_dia);
-                    iv_diaSemi = itemView.findViewById(R.id.iv_diaSemi);
+                    iv_circle = itemView.findViewById(R.id.iv_TlBr);
+                    iv_circleLittle = itemView.findViewById(R.id.iv_TopBottom);
+                    iv_squareRounded = itemView.findViewById(R.id.iv_TrBl);
+                    iv_square = itemView.findViewById(R.id.iv_BlTr);
+                    iv_octagon = itemView.findViewById(R.id.iv_BottomTop);
+                    iv_octagonRounded = itemView.findViewById(R.id.iv_BrTl);
+                    iv_dia = itemView.findViewById(R.id.iv_LeftRight);
+                    iv_diaSemi = itemView.findViewById(R.id.iv_RightLeft);
                     break;
 
                 case 3:

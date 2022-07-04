@@ -265,7 +265,7 @@ public class EffectView extends View {
     private int getEffectRangeSize() {
 
         //--------------------------------
-        // エフェクト形状に応じて最大サイズを返す
+        // エフェクト形状に応じたサイズ加算範囲
         //--------------------------------
         switch (mEffectShape) {
             case MapTable.HEART_NORMAL:
@@ -282,6 +282,7 @@ public class EffectView extends View {
             case MapTable.CIRCLE:
                 return 100;
 
+            case MapTable.DOT:
             case MapTable.TRIANGLE:
             case MapTable.DIA:
                 return 10;
@@ -297,7 +298,7 @@ public class EffectView extends View {
     private int getEffectMinSize() {
 
         //--------------------------------
-        // エフェクト形状に応じたPath設定
+        // エフェクト形状に応じた最小サイズ
         //--------------------------------
         switch (mEffectShape) {
             case MapTable.HEART_NORMAL:
@@ -314,6 +315,7 @@ public class EffectView extends View {
             case MapTable.CIRCLE:
                 return 100;
 
+            case MapTable.DOT:
             case MapTable.TRIANGLE:
             case MapTable.DIA:
                 return 10;
@@ -390,6 +392,7 @@ public class EffectView extends View {
                 break;
 
             case MapTable.CIRCLE:
+            case MapTable.DOT:
                 mPath = createCircle();
                 break;
 
@@ -1133,7 +1136,7 @@ public class EffectView extends View {
 
         //Paintの色情報設定
         setPaintColor(paint);
-        paint.setAlpha(0xCC);   //※色設定後に行う必要がある
+        paint.setAlpha(0xFF);   //※色設定後に行う必要がある
 
         //----------------------------------------
         // Paint.Styleの適用
@@ -1142,7 +1145,7 @@ public class EffectView extends View {
             paint.setStyle(Paint.Style.FILL);
         } else {
             paint.setStyle(Paint.Style.STROKE);
-            paint.setStrokeWidth(6);
+            paint.setStrokeWidth(4);
         }
 
         ArrayList<Paint> paints = new ArrayList<>();
@@ -1183,7 +1186,7 @@ public class EffectView extends View {
         //中心円
         Paint CirclePaint = new Paint();
         CirclePaint.setAntiAlias(true);
-        CirclePaint.setAlpha(0x99);
+        CirclePaint.setAlpha(0xFF);
         CirclePaint.setStyle(Paint.Style.FILL);
         CirclePaint.setShadowLayer(mSize / 8f, 0, 0, Color.WHITE);
         CirclePaint.setShader(circleGradient);
@@ -1191,7 +1194,7 @@ public class EffectView extends View {
         //十字／斜め十字
         Paint sparklePaint = new Paint();
         sparklePaint.setAntiAlias(true);
-        sparklePaint.setAlpha(0x99);
+        sparklePaint.setAlpha(0xFF);
         sparklePaint.setStyle(Paint.Style.FILL);
         sparklePaint.setShadowLayer(mSize / 8f, 0, 0, Color.WHITE);
         sparklePaint.setShader(sparkleGradient);

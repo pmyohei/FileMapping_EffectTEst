@@ -76,7 +76,8 @@ public class MapTable implements Serializable {
     static public final int FLOWER = 0x40;
     static public final int SAKURA = 0x41;
     //円
-    static public final int CIRCLE = 0x50;
+    static public final int DOT = 0x50;
+    static public final int CIRCLE = 0x51;
 
     public static enum EffectShape {
         FILL(0),

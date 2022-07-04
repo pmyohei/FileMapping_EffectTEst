@@ -96,8 +96,8 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
 
                 case 3:
                     //ノード形
-                    iv_circle = itemView.findViewById(R.id.iv_circle);
-                    iv_squareRounded = itemView.findViewById(R.id.iv_squareRounded);
+                    iv_circle = itemView.findViewById(R.id.iv_TlBr);
+                    iv_squareRounded = itemView.findViewById(R.id.iv_TrBl);
                     break;
 
                 case 4:

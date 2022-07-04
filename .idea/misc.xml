@@ -182,12 +182,28 @@
         <entry key="..\:/Users/t.yohei/AndroidStudioProjects/FileMapping/app/src/main/res/menu/toolbar_trimming_port.xml" value="0.2890625" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable-hdpi/baseline_effect_24.xml" value="0.1" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable-v24/baseline_open_map_24.xml" value="0.30104166666666665" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable-xxxhdpi/baseline_BOTTOM_TOP_24.xml" value="0.1265" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable-xxxhdpi/baseline_BR_TL_24.xml" value="0.1265" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable-xxxhdpi/baseline_LEFT_RIGHT_24.xml" value="0.1265" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable-xxxhdpi/baseline_RIGHT_LEFT_24.xml" value="0.1265" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable-xxxhdpi/baseline_TL_BR_24.xml" value="0.1265" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable-xxxhdpi/baseline_TOP_BOTTOM_24.xml" value="0.1265" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_add_24.xml" value="0.1" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_bl_tr_24.xml" value="0.1265" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_bottom_top_24.xml" value="0.1265" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_br_tl_24.xml" value="0.1265" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_close_24.xml" value="0.19722222222222222" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_delete_24.xml" value="0.30104166666666665" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_edit_24.xml" value="0.1" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_left_rigjht_24.xml" value="0.1265" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_question_24.xml" value="0.1" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_right_left_24.xml" value="0.1265" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_tl_br_24.xml" value="0.1265" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_top_bottom_24.xml" value="0.1265" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/baseline_tr_bl_24.xml" value="0.1265" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/bt_create.xml" value="0.30104166666666665" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/bt_gradation_direction.xml" value="0.1" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/bt_image.xml" value="0.1075" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/circle.xml" value="0.22135416666666666" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/circle_node.xml" value="0.10740740740740741" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/drawable/circle_tool.xml" value="0.18958333333333333" />
@@ -248,10 +264,15 @@
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_map_create_0.xml" value="0.1" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_map_create_1.xml" value="0.1" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_map_create_2.xml" value="0.1" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_map_design.xml" value="0.18151815181518152" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_map_effect.xml" value="0.22304832713754646" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_node_color.xml" value="0.2807971014492754" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_node_design.xml" value="0.14166666666666666" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_node_font.xml" value="0.26875" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_node_line_design.xml" value="0.14166666666666666" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_node_name.xml" value="0.18697916666666667" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_node_shadow.xml" value="0.22304832713754646" />
+        <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_node_shape.xml" value="0.2708333333333333" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/page_node_size.xml" value="0.26875" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/picture_node.xml" value="0.1276595744680851" />
         <entry key="..\:/Users/takahashi_yhi/AndroidStudioProjects/FileMapping/app/src/main/res/layout/root_node.xml" value="0.264" />

@@ -40,6 +40,7 @@ public class ColorSelectionView extends LinearLayout {
     public static final int COLOR_SHADOW = 3;
     public static final int COLOR_LINE = 4;
     public static final int COLOR_MAP = 5;
+    public static final int COLOR_MAP_GRADATION = 6;
 
     private int  mViewKind;       //ビュー種別（ノードorマップ(全ノード)）
     private int  mPart;           //カラー設定個所
@@ -127,43 +128,41 @@ public class ColorSelectionView extends LinearLayout {
     /*
      * マップ全体に色を設定
      */
-    private void setMapAllNodeColor(String code ){
+    private void setMapAllNodeColor(String colorCode ){
 
         //マップ共通データ
         MapCommonData commonData = (MapCommonData)((Activity)getContext()).getApplication();
         NodeArrayList<NodeTable> nodes = commonData.getNodes();
 
         switch (mPart){
-
             case COLOR_MAP:
                 //マップ色
-                ((MapActivity)mSetView.getContext()).setMapColor( code );
-                //mSetView.setBackgroundColor( Color.parseColor(code) );
+                ((MapActivity)mSetView.getContext()).setMapColor( colorCode );
                 break;
 
             case COLOR_BACKGROUNG:
                 //ノード背景色
-                nodes.setAllNodeBgColor( code );
+                nodes.setAllNodeBgColor( colorCode );
                 break;
 
             case COLOR_TEXT:
                 //ノードテキストカラー
-                nodes.setAllNodeTxColor( code );
+                nodes.setAllNodeTxColor( colorCode );
                 break;
 
             case COLOR_BORDER:
                 //枠線カラー
-                nodes.setAllNodeBorderColor( code );
+                nodes.setAllNodeBorderColor( colorCode );
                 break;
 
             case COLOR_SHADOW:
                 //影カラー
-                nodes.setAllNodeShadowColor( code );
+                nodes.setAllNodeShadowColor( colorCode );
                 break;
 
             case COLOR_LINE:
                 //ラインカラー
-                nodes.setAllNodeLineColor( code );
+                nodes.setAllNodeLineColor( colorCode );
                 break;
         }
 
@@ -591,7 +590,6 @@ public class ColorSelectionView extends LinearLayout {
          */
         @Override
         public int getItemViewType(int position) {
-
             return position;
         }
 
@@ -601,7 +599,6 @@ public class ColorSelectionView extends LinearLayout {
         @NonNull
         @Override
         public ColorHistoryViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int viewType) {
-
             //ビューを生成
             LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
             View view = inflater.inflate(R.layout.item_color_history, viewGroup, false);
@@ -615,10 +612,8 @@ public class ColorSelectionView extends LinearLayout {
          */
         @Override
         public void onBindViewHolder(@NonNull ColorHistoryViewHolder viewHolder, final int i) {
-
             //対象マップ情報
             String color = mData.get(i);
-
             //ビューの設定
             viewHolder.setView( color );
         }

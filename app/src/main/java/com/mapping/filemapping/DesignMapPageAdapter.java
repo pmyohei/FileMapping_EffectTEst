@@ -3,10 +3,12 @@ package com.mapping.filemapping;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
+import android.graphics.Paint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.Switch;
 import android.widget.TextView;
@@ -33,8 +35,29 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
 
         //マップ
         private final View mv_map;
+
         //マップデザイン
         private ColorSelectionView csv_map;
+        @SuppressLint("UseSwitchCompatOrMaterialCode")
+        private Switch sw_mapGradation;
+        private ColorSelectionView csv_mapGradation;
+        private ImageView iv_TlBr;
+        private ImageView iv_TopBottom;
+        private ImageView iv_TrBl;
+        private ImageView iv_LeftRight;
+        private ImageView iv_RightLeft;
+        private ImageView iv_BlTr;
+        private ImageView iv_BottomTop;
+        private ImageView iv_BrTl;
+        //エフェクト
+        private TextView tv_star;
+        private TextView tv_flower;
+        private TextView tv_sakura;
+        private TextView tv_spakcle;
+        private TextView tv_dia;
+        private TextView tv_dot;
+        private TextView tv_circle;
+        private TextView tv_heart;
         //ノードデザイン
         private ColorSelectionView csv_background;
         private ColorSelectionView csv_text;
@@ -70,18 +93,40 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
 
             switch (position) {
                 case 0:
-                    //ノード名
-                    csv_map = itemView.findViewById(R.id.csv_map);
+                    //マップ
+                    csv_map = itemView.findViewById(R.id.csv_mapMonoColor);
+                    csv_mapGradation = itemView.findViewById(R.id.csv_mapGradationColor);
+                    sw_mapGradation = itemView.findViewById(R.id.sw_gradation);
+                    iv_TlBr = itemView.findViewById(R.id.iv_TlBr);
+                    iv_TopBottom = itemView.findViewById(R.id.iv_TopBottom);
+                    iv_TrBl = itemView.findViewById(R.id.iv_TrBl);
+                    iv_LeftRight = itemView.findViewById(R.id.iv_LeftRight);
+                    iv_RightLeft = itemView.findViewById(R.id.iv_RightLeft);
+                    iv_BlTr = itemView.findViewById(R.id.iv_BlTr);
+                    iv_BottomTop = itemView.findViewById(R.id.iv_BottomTop);
+                    iv_BrTl = itemView.findViewById(R.id.iv_BrTl);
                     break;
 
                 case 1:
+                    //tmp
+                    tv_star = itemView.findViewById(R.id.tv_star);
+                    tv_flower = itemView.findViewById(R.id.tv_flower);
+                    tv_sakura = itemView.findViewById(R.id.tv_sakura);
+                    tv_spakcle = itemView.findViewById(R.id.tv_spakcle);
+                    tv_dia = itemView.findViewById(R.id.tv_dia);
+                    tv_dot = itemView.findViewById(R.id.tv_dot);
+                    tv_circle = itemView.findViewById(R.id.tv_circle);
+                    tv_heart = itemView.findViewById(R.id.tv_heart);
+                    break;
+
+                case 2:
                     //フォント
                     rv_fontAlphabet = itemView.findViewById(R.id.rv_fontAlphabet);
                     rv_fontjapanese = itemView.findViewById(R.id.rv_fontJapanese);
                     tv_fontjapanese = itemView.findViewById(R.id.tv_fontJapanese);
                     break;
 
-                case 2:
+                case 3:
                     //ノードサイズ
                     tv_titel_nodeSize = itemView.findViewById(R.id.tv_titel_nodeSize);
                     sbv_nodeSize = itemView.findViewById(R.id.sbv_nodeSize);
@@ -91,40 +136,40 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
                     sbv_borderSize = itemView.findViewById(R.id.sbv_borderSize);
                     break;
 
-                case 3:
+                case 4:
                     //ノード形
-                    iv_circle = itemView.findViewById(R.id.iv_circle);
-                    iv_circleLittle = itemView.findViewById(R.id.iv_circleLittle);
-                    iv_squareRounded = itemView.findViewById(R.id.iv_squareRounded);
-                    iv_square = itemView.findViewById(R.id.iv_square);
-                    iv_octagon = itemView.findViewById(R.id.iv_octagon);
-                    iv_octagonRounded = itemView.findViewById(R.id.iv_octagonRounded);
-                    iv_dia = itemView.findViewById(R.id.iv_dia);
-                    iv_diaSemi = itemView.findViewById(R.id.iv_diaSemi);
+                    iv_circle = itemView.findViewById(R.id.iv_TlBr);
+                    iv_circleLittle = itemView.findViewById(R.id.iv_TopBottom);
+                    iv_squareRounded = itemView.findViewById(R.id.iv_TrBl);
+                    iv_square = itemView.findViewById(R.id.iv_BlTr);
+                    iv_octagon = itemView.findViewById(R.id.iv_BottomTop);
+                    iv_octagonRounded = itemView.findViewById(R.id.iv_BrTl);
+                    iv_dia = itemView.findViewById(R.id.iv_LeftRight);
+                    iv_diaSemi = itemView.findViewById(R.id.iv_RightLeft);
                     break;
 
-                case 4:
+                case 5:
                     //テキスト色
                     csv_text = itemView.findViewById(R.id.csv_text);
                     break;
 
-                case 5:
+                case 6:
                     //背景色
                     csv_background = itemView.findViewById(R.id.csv_background);
                     break;
 
-                case 6:
+                case 7:
                     //枠線色
                     csv_border = itemView.findViewById(R.id.csv_border);
                     break;
 
-                case 7:
+                case 8:
                     //影
                     sw_shadow = itemView.findViewById(R.id.sw_shadow);
                     csv_shadow = itemView.findViewById(R.id.csv_shadow);
                     break;
 
-                case 8:
+                case 9:
                     //ラインの色
                     csv_line = itemView.findViewById(R.id.csv_line);
                     break;
@@ -138,47 +183,127 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
 
             switch (position){
                 case 0:
-                    setPage0();
+                    setMapColorPage();
                     break;
                 case 1:
-                    setPage1();
+                    setMapEffectPage();
                     break;
                 case 2:
-                    setPage2();
+                    setFontPage();
                     break;
                 case 3:
-                    setPage3();
+                    setLinePage();
                     break;
                 case 4:
-                    setPage4();
+                    setNodeShapePage();
                     break;
                 case 5:
-                    setPage5();
+                    setTextPage();
                     break;
                 case 6:
-                    setPage6();
+                    setBackgroundPage();
                     break;
                 case 7:
-                    setPage7();
+                    setBorderPage();
                     break;
                 case 8:
-                    setPage8();
+                    setShadowPage();
+                    break;
+                case 9:
+                    setLineColorPage();
                     break;
             }
         }
 
         /*
-         * ページ設定（０）
+         * ページ設定：マップ色
          */
-        public void setPage0() {
+        public void setMapColorPage() {
             //マップ色
             csv_map.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_MAP, mv_map );
+            csv_mapGradation.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_MAP_GRADATION, mv_map );
         }
 
         /*
-         * ページ設定（１）
+         * ページ設定：マップエフェクト
          */
-        public void setPage1() {
+        public void setMapEffectPage() {
+            //エフェクト追加先のマップビューを取得
+            FrameLayout fl_map = mv_map.findViewById(R.id.fl_map);
+            final EffectManager effectManager = new EffectManager( (ViewGroup)fl_map );
+
+            tv_star.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    effectManager.setEffectAttr( MapTable.STAR, Paint.Style.FILL, MapTable.SPIN);
+                    effectManager.restartEffect();
+                }
+            });
+
+            tv_flower.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    effectManager.setEffectAttr( MapTable.FLOWER, Paint.Style.FILL, MapTable.SPIN);
+                    effectManager.restartEffect();
+                }
+            });
+
+            tv_sakura.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    effectManager.setEffectAttr( MapTable.SAKURA, Paint.Style.FILL, MapTable.SPIN);
+                    effectManager.restartEffect();
+                }
+            });
+
+            tv_spakcle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    effectManager.setEffectAttr( MapTable.SPARCLE_CENTRAL_CIRCLE, Paint.Style.FILL, MapTable.BLINK);
+                    effectManager.setEffectVolume( 100 );
+                    effectManager.restartEffect();
+                }
+            });
+
+            tv_dia.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    effectManager.setEffectAttr( MapTable.DIA, Paint.Style.FILL, MapTable.BLINK);
+                    effectManager.restartEffect();
+                }
+            });
+
+            tv_dot.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    effectManager.setEffectAttr( MapTable.DOT, Paint.Style.FILL, MapTable.BLINK);
+                    effectManager.restartEffect();
+                }
+            });
+
+            tv_circle.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    effectManager.setEffectAttr( MapTable.CIRCLE, Paint.Style.FILL, MapTable.BLINK);
+                    effectManager.restartEffect();
+                }
+            });
+
+            tv_heart.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    effectManager.setEffectAttr( MapTable.HEART_INFLATED, Paint.Style.STROKE, MapTable.STROKE_GRADATION_ROTATE);
+                    effectManager.setEffectVolume( 20 );
+                    effectManager.restartEffect();
+                }
+            });
+
+        }
+
+        /*
+         * ページ設定：フォント
+         */
+        public void setFontPage() {
 
             Context context = mv_map.getContext();
 
@@ -220,9 +345,9 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         }
 
         /*
-         * ページ設定（２）
+         * ページ設定：ラインサイズ
          */
-        public void setPage2() {
+        public void setLinePage() {
             //ラインサイズ
             sbv_lineSize.setLineSizeSeekbar( null );
             //枠サイズのシークバー
@@ -234,9 +359,9 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         }
 
         /*
-         * ページ設定（３）
+         * ページ設定：ノードの形状
          */
-        private void setPage3() {
+        private void setNodeShapePage() {
             //ノード形
             iv_circle.setOnClickListener( new ClickShapeImage(NodeTable.CIRCLE) );
             iv_circleLittle.setOnClickListener( new ClickShapeImage(NodeTable.CIRCLE_LITTLE) );
@@ -249,33 +374,33 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         }
 
         /*
-         * ページ設定（４）
+         * ページ設定：テキスト色
          */
-        private void setPage4() {
+        private void setTextPage() {
             //テキスト色
             csv_text.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_TEXT, mv_map );
         }
 
         /*
-         * ページ設定（５）
+         * ページ設定：ノード色
          */
-        private void setPage5() {
+        private void setBackgroundPage() {
             //背景色
             csv_background.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_BACKGROUNG, mv_map );
         }
 
         /*
-         * ページ設定（６）
+         * ページ設定：ノード境界線
          */
-        private void setPage6() {
+        private void setBorderPage() {
             //枠色
             csv_border.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_BORDER, mv_map );
         }
 
         /*
-         * ページ設定（７）
+         * ページ設定：ノードの影
          */
-        private void setPage7() {
+        private void setShadowPage() {
             //影色
             csv_shadow.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_SHADOW, mv_map );
 
@@ -297,17 +422,15 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         }
 
         /*
-         * ページ設定（８）
+         * ページ設定：ライン色
          */
-        private void setPage8() {
+        private void setLineColorPage() {
             //ラインカラー
             csv_line.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_LINE, mv_map );
         }
 
         /*
-         *
          * ノード形状イメージリスナー
-         *
          */
         private class ClickShapeImage implements View.OnClickListener {
 
@@ -322,11 +445,9 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
 
             @Override
             public void onClick(View view) {
-
                 //マップ共通データ
                 MapCommonData commonData = (MapCommonData)((Activity)mv_map.getContext()).getApplication();
                 NodeArrayList<NodeTable> nodes = commonData.getNodes();
-
                 //全ノードに形状を設定
                 nodes.setAllNodeShape( mShapeKind );
             }

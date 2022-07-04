@@ -19,7 +19,15 @@ public class EffectManager {
     private int mEffectAnimation;
     //エフェクトのPaintStyle
     private Paint.Style mPaintStyle;
+    //エフェクト量
+    private int mEffectVolume;
 
+    /*
+     * コンストラクタ
+     */
+    public EffectManager(ViewGroup parentView) {
+        mAddDistView = parentView;
+    }
 
     /*
      * コンストラクタ
@@ -51,9 +59,10 @@ public class EffectManager {
     }
 
     /*
-     * エフェクト更新
+     * エフェクト再開始
+     *   表示中のエフェクトを削除し、現在設定中のエフェクト設定値で再開始
      */
-    public void updateEffect() {
+    public void restartEffect() {
 
         //------------------------
         // 描画中のエフェクトを削除
@@ -75,6 +84,18 @@ public class EffectManager {
         mEffectShape = shape;
         mPaintStyle = paintStyle;
         mEffectAnimation = animation;
+
+        //初期値
+        mEffectVolume = 20;
+    }
+
+    /*
+     * エフェクト情報の設定
+     *   para1：エフェクト形状
+     *   para2：エフェクトアニメーション
+     */
+    public void setEffectVolume(int volume) {
+        mEffectVolume = volume;
     }
 
     /*
@@ -91,7 +112,7 @@ public class EffectManager {
             //---------------------------------
             //エフェクトビューの生成
             //---------------------------------
-            for (int i = 0; i < 40; i++) {
+            for (int i = 0; i < mEffectVolume; i++) {
 
                 //---------------------------------
                 // エフェクトビュー生成・レイアウトへ追加
@@ -130,8 +151,19 @@ public class EffectManager {
      * エフェクト削除
      */
     private void removeEffects() {
+        //子ビュー数
+        int childNum = mAddDistView.getChildCount();
 
-
+        //------------------------------------
+        // 最後尾から削除チェック
+        //------------------------------------
+        for( int i = childNum - 1; i >= 0; i--){
+            //エフェクトビューならレイアウトから除外
+            View view = mAddDistView.getChildAt(i);
+            if( view instanceof EffectView ){
+                mAddDistView.removeView( view );
+            }
+        }
     }
 
     /*
@@ -154,7 +186,6 @@ public class EffectManager {
         // 指定アニメーションに応じて適用
         //--------------------------------
         switch (mEffectAnimation) {
-
             //------------------------
             // 明滅
             //------------------------
@@ -217,7 +248,7 @@ public class EffectManager {
         AnimatorSet tmpSet = (AnimatorSet) AnimatorInflater.loadAnimator(animationTarget.getContext(), R.animator.effect_blink);
         tmpSet.setTarget(animationTarget);
         tmpSet.setDuration( duration );
-        tmpSet.setStartDelay( delay );
+        //tmpSet.setStartDelay( delay );
         tmpSet.start();
     }
 
@@ -240,7 +271,7 @@ public class EffectManager {
         AnimatorSet tmpSet = (AnimatorSet) AnimatorInflater.loadAnimator(animationTarget.getContext(), R.animator.effect_spin);
         tmpSet.setTarget(animationTarget);
         tmpSet.setDuration( duration );
-        tmpSet.setStartDelay( delay );
+        //tmpSet.setStartDelay( delay );
         tmpSet.start();
     }
 
@@ -263,7 +294,7 @@ public class EffectManager {
         //------------------------
         EffectAnimation animation = new EffectAnimation((EffectView)animationTarget);
         animation.setDuration(duration);
-        animation.setStartOffset(delay);
+        //animation.setStartOffset(delay);
         animation.setRepeatCount(Animation.INFINITE);
         animation.setRepeatMode(Animation.RESTART);
         animationTarget.startAnimation(animation);

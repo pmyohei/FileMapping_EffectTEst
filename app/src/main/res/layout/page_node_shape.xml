@@ -19,13 +19,13 @@
 
             <!-- 1行目 -->
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/iv_circle"
+                android:id="@+id/iv_TlBr"
                 android:layout_width="@dimen/node_shape_sample_size"
                 android:layout_height="@dimen/node_shape_sample_size"
                 android:layout_marginTop="40dp"
                 android:padding="2dp"
                 android:src="@drawable/baseline_node_shape_empty_24"
-                app:layout_constraintEnd_toStartOf="@+id/iv_circleLittle"
+                app:layout_constraintEnd_toStartOf="@+id/iv_TopBottom"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -35,15 +35,15 @@
                 tools:layout_editor_absoluteY="20dp" />
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/iv_circleLittle"
+                android:id="@+id/iv_TopBottom"
                 android:layout_width="@dimen/node_shape_sample_size"
                 android:layout_height="@dimen/node_shape_sample_size"
                 android:layout_marginTop="40dp"
                 android:padding="2dp"
                 android:src="@drawable/baseline_node_shape_empty_24"
-                app:layout_constraintEnd_toStartOf="@+id/iv_squareRounded"
+                app:layout_constraintEnd_toStartOf="@+id/iv_TrBl"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/iv_circle"
+                app:layout_constraintStart_toEndOf="@+id/iv_TlBr"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/circleLittle"
                 app:strokeColor="@color/black"
@@ -51,7 +51,7 @@
                 tools:layout_editor_absoluteY="20dp" />
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/iv_squareRounded"
+                android:id="@+id/iv_TrBl"
                 android:layout_width="@dimen/node_shape_sample_size"
                 android:layout_height="@dimen/node_shape_sample_size"
                 android:layout_marginTop="40dp"
@@ -59,7 +59,7 @@
                 android:src="@drawable/baseline_node_shape_empty_24"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/iv_circleLittle"
+                app:layout_constraintStart_toEndOf="@+id/iv_TopBottom"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/squareRounded"
                 app:strokeColor="@color/black"
@@ -68,39 +68,39 @@
 
             <!-- 2行目 -->
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/iv_square"
+                android:id="@+id/iv_BlTr"
                 android:layout_width="@dimen/node_shape_sample_size"
                 android:layout_height="@dimen/node_shape_sample_size"
                 android:layout_marginTop="20dp"
                 android:padding="2dp"
                 android:src="@drawable/baseline_node_shape_empty_24"
-                app:layout_constraintEnd_toStartOf="@+id/iv_octagon"
+                app:layout_constraintEnd_toStartOf="@+id/iv_BottomTop"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_circle"
+                app:layout_constraintTop_toBottomOf="@+id/iv_TlBr"
                 app:shapeAppearanceOverlay="@style/square"
                 app:strokeColor="@color/black"
                 app:strokeWidth="1dp"
                 tools:layout_editor_absoluteY="20dp" />
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/iv_octagon"
+                android:id="@+id/iv_BottomTop"
                 android:layout_width="@dimen/node_shape_sample_size"
                 android:layout_height="@dimen/node_shape_sample_size"
                 android:layout_marginTop="20dp"
                 android:padding="2dp"
                 android:src="@drawable/baseline_node_shape_empty_24"
-                app:layout_constraintEnd_toStartOf="@+id/iv_octagonRounded"
+                app:layout_constraintEnd_toStartOf="@+id/iv_BrTl"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/iv_square"
-                app:layout_constraintTop_toBottomOf="@+id/iv_circle"
+                app:layout_constraintStart_toEndOf="@+id/iv_BlTr"
+                app:layout_constraintTop_toBottomOf="@+id/iv_TlBr"
                 app:shapeAppearanceOverlay="@style/octagon"
                 app:strokeColor="@color/black"
                 app:strokeWidth="1dp"
                 tools:layout_editor_absoluteY="20dp" />
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/iv_octagonRounded"
+                android:id="@+id/iv_BrTl"
                 android:layout_width="@dimen/node_shape_sample_size"
                 android:layout_height="@dimen/node_shape_sample_size"
                 android:layout_marginTop="20dp"
@@ -108,8 +108,8 @@
                 android:src="@drawable/baseline_node_shape_empty_24"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/iv_octagon"
-                app:layout_constraintTop_toBottomOf="@+id/iv_circle"
+                app:layout_constraintStart_toEndOf="@+id/iv_BottomTop"
+                app:layout_constraintTop_toBottomOf="@+id/iv_TlBr"
                 app:shapeAppearanceOverlay="@style/octagonRounded"
                 app:strokeColor="@color/black"
                 app:strokeWidth="1dp"
@@ -117,24 +117,24 @@
 
             <!-- 3行目 -->
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/iv_dia"
+                android:id="@+id/iv_LeftRight"
                 android:layout_width="@dimen/node_shape_sample_size"
                 android:layout_height="@dimen/node_shape_sample_size"
                 android:layout_marginTop="20dp"
                 android:layout_marginBottom="20dp"
                 android:padding="2dp"
                 android:src="@drawable/baseline_node_shape_empty_24"
-                app:layout_constraintEnd_toStartOf="@+id/iv_diaSemi"
+                app:layout_constraintEnd_toStartOf="@+id/iv_RightLeft"
                 app:layout_constraintHorizontal_bias="0.5"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_square"
+                app:layout_constraintTop_toBottomOf="@+id/iv_BlTr"
                 app:shapeAppearanceOverlay="@style/dia"
                 app:strokeColor="@color/black"
                 app:strokeWidth="1dp"
                 tools:layout_editor_absoluteY="141dp" />
 
             <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/iv_diaSemi"
+                android:id="@+id/iv_RightLeft"
                 android:layout_width="@dimen/node_shape_sample_size"
                 android:layout_height="@dimen/node_shape_sample_size"
                 android:layout_marginTop="20dp"
@@ -143,8 +143,8 @@
                 android:src="@drawable/baseline_node_shape_empty_24"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintHorizontal_bias="0.5"
-                app:layout_constraintStart_toEndOf="@+id/iv_dia"
-                app:layout_constraintTop_toBottomOf="@+id/iv_square"
+                app:layout_constraintStart_toEndOf="@+id/iv_LeftRight"
+                app:layout_constraintTop_toBottomOf="@+id/iv_BlTr"
                 app:shapeAppearanceOverlay="@style/diaSemi"
                 app:strokeColor="@color/black"
                 app:strokeWidth="1dp"
