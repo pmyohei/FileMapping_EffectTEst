@@ -68,6 +68,11 @@ public class MapActivity extends AppCompatActivity {
     public static String INTENT_NODE_PID = "NodePid";
     public static String INTENT_EDIT = "edit";
 
+    /* マップ設定色パターン */
+    public final int MAP_COLOR_PTN_FIRST = 0;
+    public final int MAP_COLOR_PTN_SECOND = 1;
+    public final int MAP_COLOR_PTN_GRADATION_OFF = 2;
+
     //ノードフォーカス処理
     public static final int MOVE_CENTER = 0;
     public static final int MOVE_UPPER = 1;
@@ -318,7 +323,7 @@ public class MapActivity extends AppCompatActivity {
      */
     private void initMapColor() {
         //マップ色の設定
-        setMapColor(mMap.getMapColor());
+        setMapColor(1, mMap.getMapColor());
     }
 
     /*
@@ -342,10 +347,13 @@ public class MapActivity extends AppCompatActivity {
     /*
      * マップ背景色の設定
      */
-    public void setMapColor(String colorStr) {
+    public void setMapColor(int pettern, String colorStr) {
         //変更前と変更後の色
-        int srcColor = Color.parseColor( mMap.getMapColor() );
-        int dstColor = Color.parseColor( colorStr );
+        //int srcColor = Color.parseColor(mMap.getMapColor());
+        //int dstColor = Color.parseColor(colorStr);
+
+        //設定するカラーパターンを取得
+        int[] colors = getSettingMapColor(pettern, colorStr );
 
         //--------------------------------------------
         // アニメーション付きでマップ色を変更
@@ -353,16 +361,85 @@ public class MapActivity extends AppCompatActivity {
         //※設定メソッド：「ViewのsetBackgroundColor()」
         FrameLayout fl_screenMap = findViewById(R.id.fl_screenMap);
         //BaseNode.startTranceColorAnimation(this, fl_screenMap, "backgroundColor", srcColor, dstColor);
-        BaseNode.startTranceGradationColorAnimation(this, fl_screenMap, srcColor, dstColor, 0x123456, 0xF2F406);
+        //BaseNode.startTranceGradationColorAnimation(this, fl_screenMap, srcColor, dstColor, 0x123456, 0xF2F406);
+        BaseNode.startTranceGradationColorAnimation(this, fl_screenMap, colors[0], colors[1], colors[2], colors[3]);
 
         //--------------------------------------------
         // アニメーション付きでシステムバーの色を変更
         //--------------------------------------------
         //※設定メソッド：「WindowのsetStatusBarColor()」
-        BaseNode.startTranceColorAnimation(this, getWindow(), "statusBarColor", srcColor, dstColor);
+        BaseNode.startTranceColorAnimation(this, getWindow(), "statusBarColor", colors[0], colors[1]);
 
         //テーブル更新
-        mMap.setMapColor(colorStr);
+        mMap.setMapColors(colors[1], colors[3]);
+    }
+
+    /*
+     * マップ背景色に設定する色リストを取得
+     *    [0]：マップ色主-変更前
+     *    [1]：マップ色主-変更後
+     *    [2]：マップ色副-変更前
+     *    [3]：マップ色副-変更後
+     */
+    private int[] getSettingMapColor( int pettern, String dstColorStr ) {
+        //---------------------------------------
+        // カラーパターン
+        //---------------------------------------
+        int[] colors = new int[4];
+
+        //---------------------------------------
+        // 設定中の色／変更指定色
+        //---------------------------------------
+        int srcPrimaryColor = Color.parseColor(mMap.getMapColor());
+        int srcSubColor = Color.parseColor(mMap.getMapColor());
+        int dstColor = Color.parseColor(dstColorStr);
+
+        //---------------------------------------
+        // 変更対象に応じて、カラーリストを設定
+        //---------------------------------------
+        switch( pettern ){
+            //---------------------------------------
+            // 主カラーを指定色に変更
+            //---------------------------------------
+            case MAP_COLOR_PTN_FIRST:
+                colors[0] = srcPrimaryColor;
+                colors[1] = dstColor;
+                colors[2] = srcSubColor;
+                colors[3] = srcSubColor;
+                break;
+
+            //---------------------------------------
+            // 副カラーを指定色に変更
+            //---------------------------------------
+            case MAP_COLOR_PTN_SECOND:
+                colors[0] = srcPrimaryColor;
+                colors[1] = srcPrimaryColor;
+                colors[2] = srcSubColor;
+                colors[3] = dstColor;
+                break;
+
+            //---------------------------------------
+            // 副カラーを主カラーに変更
+            //---------------------------------------
+            case MAP_COLOR_PTN_GRADATION_OFF:
+                colors[0] = srcPrimaryColor;
+                colors[1] = srcPrimaryColor;
+                colors[2] = srcSubColor;
+                colors[3] = srcPrimaryColor;
+                break;
+
+            //---------------------------------------
+            // グラデーションOFFと同じ処理
+            //---------------------------------------
+            default:
+                colors[0] = srcPrimaryColor;
+                colors[1] = srcPrimaryColor;
+                colors[2] = srcSubColor;
+                colors[3] = srcPrimaryColor;
+                break;
+        }
+
+        return colors;
     }
 
     /*

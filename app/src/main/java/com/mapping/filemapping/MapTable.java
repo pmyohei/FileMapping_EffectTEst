@@ -49,10 +49,21 @@ public class MapTable implements Serializable {
     @ColumnInfo(name = "map_color")
     private String mapColor;
 
+    //マップカラー（グラデーション）
+    @ColumnInfo(name = "map_gradation_color")
+    private String mapGradationColor;
+
+    //グラデーションonoff
+    @ColumnInfo(name = "is_gradation")
+    private boolean isGradation;
+
+    //グラデーション方向
+    @ColumnInfo(name = "gradation_direction")
+    private boolean gradationDirection;
+
     //デフォルト影onoff
     @ColumnInfo(name = "is_shadow")
     private boolean isShadow;
-
 
     //------------------------------------
     // エフェクト形状
@@ -155,8 +166,40 @@ public class MapTable implements Serializable {
     public String getMapColor() { return mapColor; }
     public void setMapColor(String mapColor) { this.mapColor = mapColor; }
 
+    public String getMapGradationColor() {
+        return mapGradationColor;
+    }
+    public void setMapGradationColor(String mapGradationColor) {
+        this.mapGradationColor = mapGradationColor;
+    }
+
+    public boolean isGradation() {
+        return isGradation;
+    }
+    public void setGradation(boolean gradation) {
+        isGradation = gradation;
+    }
+
+    public boolean isGradationDirection() {
+        return gradationDirection;
+    }
+    public void setGradationDirection(boolean gradationDirection) {
+        this.gradationDirection = gradationDirection;
+    }
+
     public boolean isShadow() { return isShadow; }
     public void setShadow(boolean isShadow) { this.isShadow = isShadow;}
+
+
+    /*
+     * マップカラーの設定（主カラー、副カラー）
+     */
+    public void setMapColors(int primaryColor, int subColor) {
+        String primary = "#" + Integer.toHexString( primaryColor );
+        String secondary = "#" + Integer.toHexString( subColor );
+        this.mapColor = primary;
+        this.mapGradationColor = secondary;
+    }
 
     /*
      * デフォルトカラーを取得
