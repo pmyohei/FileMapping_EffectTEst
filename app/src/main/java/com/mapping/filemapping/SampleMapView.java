@@ -312,7 +312,6 @@ public class SampleMapView extends FrameLayout {
     private void set2ColorToMap(int first, int second) {
 
         //マップ、テキスト名
-        //findViewById(R.id.fl_map).setBackgroundColor(Color.parseColor(mSelectedColors[first]));
         setMapColorWithAnimation( Color.parseColor(mSelectedColors[first]));
         mTmpNodes.setAllNodeTxColor(mSelectedColors[first]);
 
@@ -357,11 +356,14 @@ public class SampleMapView extends FrameLayout {
      */
     private void switchSampleNodeShadow() {
 
-        //ノード背景色
-        RootNodeView rootNodeView = findViewById(R.id.v_rootNode);
-        String color = rootNodeView.getNodeBackgroundColor();
-        //影色を更新
-        mTmpNodes.setAllNodeShadowColor(color);
+        //OFF → ON なら、影色を設定
+        if( !isMapShadow() ){
+            //ノード背景色
+            RootNodeView rootNodeView = findViewById(R.id.v_rootNode);
+            String color = rootNodeView.getNodeBackgroundColor();
+            //影色を更新
+            mTmpNodes.setAllNodeShadowColor(color);
+        }
 
         //影設定を反転
         mTmpNodes.switchAllNodeShadow();
