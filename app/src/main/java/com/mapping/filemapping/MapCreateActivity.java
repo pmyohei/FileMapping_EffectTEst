@@ -187,8 +187,11 @@ public class MapCreateActivity extends AppCompatActivity {
                 SampleMapView smv = findViewById(R.id.fl_map);
                 String[] colors = smv.getCurrentColors();
 
-                //マップ色
+                //マップ色関連
                 mMap.setMapColor( colors[0] );
+                mMap.setMapGradationColor( colors[0] );
+                mMap.setGradation( false );
+                mMap.setGradationDirection( MapTable.GRNDIR_TOP_BOTTOM );
 
                 //デフォルトカラー
                 mMap.setFirstColor( colors[0] );

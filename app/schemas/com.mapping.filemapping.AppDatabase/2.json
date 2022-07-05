@@ -2,11 +2,11 @@
   "formatVersion": 1,
   "database": {
     "version": 2,
-    "identityHash": "e0a184759f8090178b8d12f997c1b415",
+    "identityHash": "f3a37de2570c6222e1bd8299ecb2305f",
     "entities": [
       {
         "tableName": "map",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`pid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `map_name` TEXT, `memo` TEXT, `created_date` TEXT, `update_date` TEXT, `first_color` TEXT, `second_color` TEXT, `third_color` TEXT, `map_color` TEXT, `is_shadow` INTEGER NOT NULL)",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`pid` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `map_name` TEXT, `memo` TEXT, `created_date` TEXT, `update_date` TEXT, `first_color` TEXT, `second_color` TEXT, `third_color` TEXT, `map_color` TEXT, `map_gradation_color` TEXT, `is_gradation` INTEGER NOT NULL DEFAULT false, `gradation_direction` INTEGER NOT NULL DEFAULT 0, `is_shadow` INTEGER NOT NULL)",
         "fields": [
           {
             "fieldPath": "pid",
@@ -61,6 +61,26 @@
             "columnName": "map_color",
             "affinity": "TEXT",
             "notNull": false
+          },
+          {
+            "fieldPath": "mapGradationColor",
+            "columnName": "map_gradation_color",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "isGradation",
+            "columnName": "is_gradation",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "false"
+          },
+          {
+            "fieldPath": "gradationDirection",
+            "columnName": "gradation_direction",
+            "affinity": "INTEGER",
+            "notNull": true,
+            "defaultValue": "0"
           },
           {
             "fieldPath": "isShadow",
@@ -348,7 +368,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'e0a184759f8090178b8d12f997c1b415')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'f3a37de2570c6222e1bd8299ecb2305f')"
     ]
   }
 }

@@ -131,15 +131,8 @@ public class MapCommonData extends Application {
         }
 
         //現在のマップ背景色
-        //ColorDrawable colorDrawable = (ColorDrawable) v_map.getBackground();
-        //int colorInt = colorDrawable.getColor();
-        GradientDrawable colorDrawable = (GradientDrawable) v_map.getBackground();
-        int[] colorInts = colorDrawable.getColors();
-        for( int color: colorInts ){
-            //一時リストに追加
-            String mapColor = "#" + Integer.toHexString( color );
-            tmpColors.add( mapColor );
-        }
+        tmpColors.add( map.getMapColor() );
+        tmpColors.add( map.getMapGradationColor() );
 
         //マップ中のノードに設定されている色を取得
         tmpColors.addAll( mNodes.getAllNodeColors() );

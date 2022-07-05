@@ -18,6 +18,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.google.android.material.card.MaterialCardView;
+
 import java.util.List;
 import java.util.Locale;
 
@@ -39,7 +41,7 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         //マップデザイン
         private ColorSelectionView csv_map;
         @SuppressLint("UseSwitchCompatOrMaterialCode")
-        private Switch sw_mapGradation;
+        private MaterialCardView mcv_gradationClear;
         private ColorSelectionView csv_mapGradation;
         private ImageView iv_TlBr;
         private ImageView iv_TopBottom;
@@ -96,7 +98,7 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
                     //マップ
                     csv_map = itemView.findViewById(R.id.csv_mapMonoColor);
                     csv_mapGradation = itemView.findViewById(R.id.csv_mapGradationColor);
-                    sw_mapGradation = itemView.findViewById(R.id.sw_gradation);
+                    mcv_gradationClear = itemView.findViewById(R.id.mcv_gradationClear);
                     iv_TlBr = itemView.findViewById(R.id.iv_TlBr);
                     iv_TopBottom = itemView.findViewById(R.id.iv_TopBottom);
                     iv_TrBl = itemView.findViewById(R.id.iv_TrBl);
@@ -219,9 +221,35 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
          * ページ設定：マップ色
          */
         public void setMapColorPage() {
-            //マップ色
+            //--------------------------------------
+            // マップ色
+            //--------------------------------------
             csv_map.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_MAP, mv_map );
             csv_mapGradation.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_MAP_GRADATION, mv_map );
+
+            //--------------------------------------
+            // グラデーションOnOff
+            //--------------------------------------
+            mcv_gradationClear.setOnClickListener(new View.OnClickListener() {
+                     @Override
+                     public void onClick(View view) {
+                         //※設定色は適当な値（本値は設定されない）
+                         ((MapActivity)mv_map.getContext()).setMapColor( MapActivity.MAP_COLOR_PTN_GRADATION_OFF, "#000000", MapTable.GRNDIR_KEEPING );
+                     }
+                 }
+            );
+
+            //--------------------------------------
+            // グラデーション方向
+            //--------------------------------------
+            iv_TlBr.setOnClickListener( new ClickGradationDirectionImage( MapTable.GRNDIR_TL_BR ));
+            iv_TopBottom.setOnClickListener( new ClickGradationDirectionImage( MapTable.GRNDIR_TOP_BOTTOM ));
+            iv_TrBl.setOnClickListener( new ClickGradationDirectionImage( MapTable.GRNDIR_TR_BL ));
+            iv_LeftRight.setOnClickListener( new ClickGradationDirectionImage( MapTable.GRNDIR_LEFT_RIGHT ));
+            iv_RightLeft.setOnClickListener( new ClickGradationDirectionImage( MapTable.GRNDIR_RIGHT_LEFT ));
+            iv_BlTr.setOnClickListener( new ClickGradationDirectionImage( MapTable.GRNDIR_BL_TR ));
+            iv_BottomTop.setOnClickListener( new ClickGradationDirectionImage( MapTable.GRNDIR_BOTTOM_TOP ));
+            iv_BrTl.setOnClickListener( new ClickGradationDirectionImage( MapTable.GRNDIR_BR_TL ));
         }
 
         /*
@@ -452,6 +480,27 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
                 nodes.setAllNodeShape( mShapeKind );
             }
         }
+
+
+        /*
+         * グラデーション方向クリックリスナー
+         */
+        private class ClickGradationDirectionImage implements View.OnClickListener {
+            //グラデーション方向
+            private final int mDirection;
+
+            public ClickGradationDirectionImage(int direction ){
+                mDirection = direction;
+            }
+
+            @Override
+            public void onClick(View view) {
+                //※設定色は適当な値（本色は設定されない）
+                ((MapActivity)mv_map.getContext()).setMapColor( MapActivity.MAP_COLOR_PTN_GRADATION_DIR, "#000000", mDirection );
+            }
+        }
+
+
     }
 
     /*

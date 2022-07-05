@@ -3,9 +3,10 @@ package com.mapping.filemapping;
 import android.app.Activity;
 import android.content.Context;
 import android.content.res.ColorStateList;
-import android.content.res.Configuration;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
+import android.graphics.drawable.GradientDrawable;
+import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -104,8 +105,8 @@ public class ColorSelectionView extends LinearLayout {
         mSetView  = view;
 
         //リスナーの設定
-        findViewById(R.id.tv_rgb).setOnClickListener(new ClickColor( ClickColor.RGB) );
-        findViewById(R.id.tv_graphic).setOnClickListener( new ClickColor( ClickColor.PICKER) );
+        findViewById(R.id.tv_rgb).setOnClickListener(new ClickColorInputIcon( ClickColorInputIcon.RGB) );
+        findViewById(R.id.tv_graphic).setOnClickListener( new ClickColorInputIcon( ClickColorInputIcon.PICKER) );
 
         //横スクロールを本リサイクラービューに優先させる
         ViewPager2 vp2 = mSetView.getRootView().findViewById( R.id.vp2_design );
@@ -136,8 +137,13 @@ public class ColorSelectionView extends LinearLayout {
 
         switch (mPart){
             case COLOR_MAP:
-                //マップ色
-                ((MapActivity)mSetView.getContext()).setMapColor( colorCode );
+                //マップ色（メイン）
+                ((MapActivity)mSetView.getContext()).setMapColor( MapActivity.MAP_COLOR_PTN_MAIN, colorCode, MapTable.GRNDIR_KEEPING );
+                break;
+
+            case COLOR_MAP_GRADATION:
+                //マップ色（サブ）
+                ((MapActivity)mSetView.getContext()).setMapColor( MapActivity.MAP_COLOR_PTN_SUB, colorCode, MapTable.GRNDIR_KEEPING );
                 break;
 
             case COLOR_BACKGROUNG:
@@ -209,22 +215,20 @@ public class ColorSelectionView extends LinearLayout {
     /*
      * カラー入力アイコンリスナー
      */
-    private class ClickColor implements View.OnClickListener, TextWatcher {
+    private class ClickColorInputIcon implements View.OnClickListener, TextWatcher {
 
         //カラー入力方法
         public static final int RGB = 0;
         public static final int PICKER = 1;
-
         //カラー入力方法
         private final int mInputKind;
-
         //表示中ダイアログ
         private AlertDialog mDialog;
 
         /*
          * コンストラクタ
          */
-        public ClickColor(int colorKind) {
+        public ClickColorInputIcon(int colorKind) {
             mInputKind = colorKind;
         }
 
@@ -235,7 +239,6 @@ public class ColorSelectionView extends LinearLayout {
             String settingColor = getCurrentColor();
 
             //ダイアログ
-            //ColorDialog dialog;
             if (mInputKind == RGB) {
                 showColorCodeDialog(settingColor);
             } else {
@@ -414,9 +417,14 @@ public class ColorSelectionView extends LinearLayout {
             //色設定の対象毎に処理
             switch (mPart){
                 case COLOR_MAP:
-                    //マップ色
-                    ColorDrawable colorDrawable = (ColorDrawable) mSetView.getBackground();
-                    return "#" + Integer.toHexString( colorDrawable.getColor() );
+                    //マップ色（メイン）
+                    String mapMainColor = commonData.getMap().getMapColor();
+                    return mapMainColor;
+
+                case COLOR_MAP_GRADATION:
+                    //マップ色（サブ）
+                    String mapSubColor = commonData.getMap().getMapGradationColor();
+                    return mapSubColor;
 
                 case COLOR_BACKGROUNG:
                     //ノード背景色

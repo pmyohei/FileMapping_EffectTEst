@@ -1,5 +1,7 @@
 package com.mapping.filemapping;
 
+import android.graphics.drawable.GradientDrawable;
+
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
@@ -54,12 +56,12 @@ public class MapTable implements Serializable {
     private String mapGradationColor;
 
     //グラデーションonoff
-    @ColumnInfo(name = "is_gradation")
+    @ColumnInfo(name = "is_gradation", defaultValue="false")
     private boolean isGradation;
 
     //グラデーション方向
-    @ColumnInfo(name = "gradation_direction")
-    private boolean gradationDirection;
+    @ColumnInfo(name = "gradation_direction", defaultValue="0")
+    private int gradationDirection;
 
     //デフォルト影onoff
     @ColumnInfo(name = "is_shadow")
@@ -109,6 +111,17 @@ public class MapTable implements Serializable {
     static public final int SLOW_MOVE = 2;                  //ゆっくり移動
     static public final int SLOW_FLOAT = 3;                 //ゆっくり浮き上がる
     static public final int STROKE_GRADATION_ROTATE = 4;    //枠線のグラデーションの回転
+
+    //グラデーション方向
+    static public final int GRNDIR_KEEPING = -1;            //※現状維持指定用
+    static public final int GRNDIR_TL_BR = 0;
+    static public final int GRNDIR_TOP_BOTTOM = 1;
+    static public final int GRNDIR_TR_BL = 2;
+    static public final int GRNDIR_LEFT_RIGHT = 3;
+    static public final int GRNDIR_RIGHT_LEFT = 4;
+    static public final int GRNDIR_BL_TR = 5;
+    static public final int GRNDIR_BOTTOM_TOP = 6;
+    static public final int GRNDIR_BR_TL = 7;
 
     /*---  getter/setter  ---*/
     public int getPid() {
@@ -167,6 +180,10 @@ public class MapTable implements Serializable {
     public void setMapColor(String mapColor) { this.mapColor = mapColor; }
 
     public String getMapGradationColor() {
+        //空ならマップ色（メイン）を返す
+        if( mapGradationColor == null || mapGradationColor.isEmpty() ){
+            return mapColor;
+        }
         return mapGradationColor;
     }
     public void setMapGradationColor(String mapGradationColor) {
@@ -180,10 +197,10 @@ public class MapTable implements Serializable {
         isGradation = gradation;
     }
 
-    public boolean isGradationDirection() {
+    public int getGradationDirection() {
         return gradationDirection;
     }
-    public void setGradationDirection(boolean gradationDirection) {
+    public void setGradationDirection(int gradationDirection) {
         this.gradationDirection = gradationDirection;
     }
 
@@ -213,5 +230,30 @@ public class MapTable implements Serializable {
         return colors;
     }
 
+    /*
+     * GradientDrawableクラスのグラデーション方向の取得
+     */
+    public static GradientDrawable.Orientation getGradationOrientation( int direction ) {
 
+        switch ( direction ){
+            case GRNDIR_TL_BR:
+                return GradientDrawable.Orientation.TL_BR;
+            case GRNDIR_TOP_BOTTOM:
+                return GradientDrawable.Orientation.TOP_BOTTOM;
+            case GRNDIR_TR_BL:
+                return GradientDrawable.Orientation.TR_BL;
+            case GRNDIR_LEFT_RIGHT:
+                return GradientDrawable.Orientation.LEFT_RIGHT;
+            case GRNDIR_RIGHT_LEFT:
+                return GradientDrawable.Orientation.RIGHT_LEFT;
+            case GRNDIR_BL_TR:
+                return GradientDrawable.Orientation.BL_TR;
+            case GRNDIR_BOTTOM_TOP:
+                return GradientDrawable.Orientation.BOTTOM_TOP;
+            case GRNDIR_BR_TL:
+                return GradientDrawable.Orientation.BR_TL;
+            default:
+                return GradientDrawable.Orientation.TOP_BOTTOM;
+        }
+    }
 }

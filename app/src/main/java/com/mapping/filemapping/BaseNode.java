@@ -756,9 +756,11 @@ public class BaseNode extends FrameLayout {
      * 　 para3：プロパティ文字列
      * 　 para4：開始色
      * 　 para5：終了色
+     * 　 para6：グラデーション方向
      */
     static public void startTranceGradationColorAnimation( Context context, Object object,
-                                                           int startColor1, int endColor1, int startColor2, int endColor2 ) {
+                                                           int startColor1, int endColor1, int startColor2, int endColor2,
+                                                           GradientDrawable.Orientation orientation) {
         //アニメーション時間
         int duration = context.getResources().getInteger(R.integer.color_trance_animation_duration);
 
@@ -768,7 +770,7 @@ public class BaseNode extends FrameLayout {
         ArgbEvaluator argb = new ArgbEvaluator();
 
         GradientDrawable bgDraw = new GradientDrawable();
-        bgDraw.setOrientation( GradientDrawable.Orientation.TOP_BOTTOM );
+        bgDraw.setOrientation( orientation );
 
         ValueAnimator animator = TimeAnimator.ofFloat(0.0f, 1.0f);
         animator.setDuration(duration);

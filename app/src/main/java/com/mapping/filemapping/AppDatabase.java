@@ -8,16 +8,16 @@ import androidx.room.RoomDatabase;
  * Database定義
  */
 @Database(
-        version = 1,
+        version = 2,
         entities = {
-                MapTable.class,         //マップテーブル
-                NodeTable.class,        //ノードテーブル
-                PictureTable.class,     //ピクチャテーブル
+            MapTable.class,         //マップテーブル
+            NodeTable.class,        //ノードテーブル
+            PictureTable.class,     //ピクチャテーブル
         },
-        exportSchema = true
-/*        autoMigrations = {
-                @AutoMigration(from = 1, to = 1)
-        }*/
+        exportSchema = true,
+        autoMigrations = {
+            @AutoMigration(from = 1, to = 2)
+        }
 )
 public abstract class AppDatabase extends RoomDatabase {
     //DAO

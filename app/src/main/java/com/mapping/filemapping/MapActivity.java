@@ -9,13 +9,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.cardview.widget.CardView;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.DialogFragment;
 
-import android.animation.AnimatorSet;
-import android.animation.ObjectAnimator;
 import android.animation.ValueAnimator;
 import android.annotation.SuppressLint;
 import android.app.Activity;
@@ -29,6 +26,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
@@ -52,6 +50,7 @@ import android.widget.Scroller;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.Map;
 import java.util.Objects;
 
 /*
@@ -69,9 +68,11 @@ public class MapActivity extends AppCompatActivity {
     public static String INTENT_EDIT = "edit";
 
     /* マップ設定色パターン */
-    public final int MAP_COLOR_PTN_FIRST = 0;
-    public final int MAP_COLOR_PTN_SECOND = 1;
-    public final int MAP_COLOR_PTN_GRADATION_OFF = 2;
+    public static final int MAP_COLOR_PTN_MAIN = 0;
+    public static final int MAP_COLOR_PTN_SUB = 1;
+    public static final int MAP_COLOR_PTN_GRADATION_OFF = 2;
+    public static final int MAP_COLOR_PTN_INIT = 3;
+    public static final int MAP_COLOR_PTN_GRADATION_DIR = 4;
 
     //ノードフォーカス処理
     public static final int MOVE_CENTER = 0;
@@ -322,12 +323,12 @@ public class MapActivity extends AppCompatActivity {
      * マップ背景色の設定
      */
     private void initMapColor() {
-        //マップ色の設定
-        setMapColor(1, mMap.getMapColor());
+        //マップ色初期設定
+        setMapColor(MAP_COLOR_PTN_INIT, mMap.getMapColor(), MapTable.GRNDIR_KEEPING);
     }
 
     /*
-     * マップ背景色の設定
+     * マップスケールの設定
      */
     private void setMapScalevalue() {
 
@@ -340,29 +341,27 @@ public class MapActivity extends AppCompatActivity {
         //最大マップ移動距離は、マップサイズの半分
         mMaxMapScaleX = mapSizeX / 2f;
         mMaxMapScaleY = mapSizeY / 2f;
-
-        Log.i("最大距離", "mMaxMapScaleX=" + (mMaxMapScaleX) + " mMaxMapScaleY=" + (mMaxMapScaleY));
     }
 
     /*
      * マップ背景色の設定
      */
-    public void setMapColor(int pettern, String colorStr) {
-        //変更前と変更後の色
-        //int srcColor = Color.parseColor(mMap.getMapColor());
-        //int dstColor = Color.parseColor(colorStr);
-
+    public void setMapColor(int pettern, String colorStr, int direction) {
         //設定するカラーパターンを取得
-        int[] colors = getSettingMapColor(pettern, colorStr );
+        int[] colors = getSettingMapColor(pettern, colorStr);
+        //グラデーション方向を取得
+        if( direction == MapTable.GRNDIR_KEEPING){
+            //現状維持の指定なら、現在設定中の方向を取得
+            direction = mMap.getGradationDirection();
+        }
+        GradientDrawable.Orientation orientation = MapTable.getGradationOrientation( direction );
 
         //--------------------------------------------
         // アニメーション付きでマップ色を変更
         //--------------------------------------------
         //※設定メソッド：「ViewのsetBackgroundColor()」
         FrameLayout fl_screenMap = findViewById(R.id.fl_screenMap);
-        //BaseNode.startTranceColorAnimation(this, fl_screenMap, "backgroundColor", srcColor, dstColor);
-        //BaseNode.startTranceGradationColorAnimation(this, fl_screenMap, srcColor, dstColor, 0x123456, 0xF2F406);
-        BaseNode.startTranceGradationColorAnimation(this, fl_screenMap, colors[0], colors[1], colors[2], colors[3]);
+        BaseNode.startTranceGradationColorAnimation(this, fl_screenMap, colors[0], colors[1], colors[2], colors[3], orientation);
 
         //--------------------------------------------
         // アニメーション付きでシステムバーの色を変更
@@ -370,8 +369,11 @@ public class MapActivity extends AppCompatActivity {
         //※設定メソッド：「WindowのsetStatusBarColor()」
         BaseNode.startTranceColorAnimation(this, getWindow(), "statusBarColor", colors[0], colors[1]);
 
-        //テーブル更新
+        //--------------------------------------------
+        // テーブル更新
+        //--------------------------------------------
         mMap.setMapColors(colors[1], colors[3]);
+        mMap.setGradationDirection(direction);
     }
 
     /*
@@ -381,7 +383,7 @@ public class MapActivity extends AppCompatActivity {
      *    [2]：マップ色副-変更前
      *    [3]：マップ色副-変更後
      */
-    private int[] getSettingMapColor( int pettern, String dstColorStr ) {
+    private int[] getSettingMapColor(int pettern, String dstColorStr) {
         //---------------------------------------
         // カラーパターン
         //---------------------------------------
@@ -391,17 +393,17 @@ public class MapActivity extends AppCompatActivity {
         // 設定中の色／変更指定色
         //---------------------------------------
         int srcPrimaryColor = Color.parseColor(mMap.getMapColor());
-        int srcSubColor = Color.parseColor(mMap.getMapColor());
+        int srcSubColor = Color.parseColor(mMap.getMapGradationColor());
         int dstColor = Color.parseColor(dstColorStr);
 
         //---------------------------------------
         // 変更対象に応じて、カラーリストを設定
         //---------------------------------------
-        switch( pettern ){
+        switch (pettern) {
             //---------------------------------------
             // 主カラーを指定色に変更
             //---------------------------------------
-            case MAP_COLOR_PTN_FIRST:
+            case MAP_COLOR_PTN_MAIN:
                 colors[0] = srcPrimaryColor;
                 colors[1] = dstColor;
                 colors[2] = srcSubColor;
@@ -411,7 +413,7 @@ public class MapActivity extends AppCompatActivity {
             //---------------------------------------
             // 副カラーを指定色に変更
             //---------------------------------------
-            case MAP_COLOR_PTN_SECOND:
+            case MAP_COLOR_PTN_SUB:
                 colors[0] = srcPrimaryColor;
                 colors[1] = srcPrimaryColor;
                 colors[2] = srcSubColor;
@@ -426,6 +428,26 @@ public class MapActivity extends AppCompatActivity {
                 colors[1] = srcPrimaryColor;
                 colors[2] = srcSubColor;
                 colors[3] = srcPrimaryColor;
+                break;
+
+            //---------------------------------------
+            // マップ色初期設定
+            //---------------------------------------
+            case MAP_COLOR_PTN_INIT:
+                colors[0] = Color.WHITE;
+                colors[1] = srcPrimaryColor;
+                colors[2] = Color.WHITE;
+                colors[3] = srcSubColor;
+                break;
+
+            //---------------------------------------
+            // マップ色グラデーション方向の変更
+            //---------------------------------------
+            case MAP_COLOR_PTN_GRADATION_DIR:
+                colors[0] = srcPrimaryColor;
+                colors[1] = srcPrimaryColor;
+                colors[2] = srcSubColor;
+                colors[3] = srcSubColor;
                 break;
 
             //---------------------------------------
@@ -1050,11 +1072,6 @@ public class MapActivity extends AppCompatActivity {
             case R.id.action_help:
                 //マップヘルプの表示
                 showHelpDialog();
-
-                //--お試し
-                initEffectMap();
-                //--お試し
-
                 return true;
 
             case R.id.action_palette:
