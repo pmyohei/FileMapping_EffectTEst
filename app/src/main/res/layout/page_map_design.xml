@@ -97,130 +97,201 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="12dp"
-                android:layout_marginBottom="40dp">
+                android:layout_marginBottom="12dp">
 
                 <!-- 1行目 -->
-                <ImageView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/iv_TlBr"
                     android:layout_width="@dimen/gradation_direction_size"
                     android:layout_height="@dimen/gradation_direction_size"
                     android:layout_marginTop="12dp"
-                    android:padding="8dp"
-                    android:elevation="4dp"
-                    android:background="@drawable/bt_gradation_direction"
-                    android:src="@drawable/baseline_tl_br_24"
+                    android:theme="@style/Theme.MaterialComponents.Light"
+                    app:cardCornerRadius="@dimen/color_history_item_half_size"
+                    app:cardElevation="4dp"
                     app:layout_constraintEnd_toStartOf="@+id/iv_TopBottom"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:layout_editor_absoluteY="20dp" />
+                    tools:layout_editor_absoluteY="20dp">
 
-                <ImageView
+                    <ImageView
+                        android:layout_width="@dimen/gradation_direction_size"
+                        android:layout_height="@dimen/gradation_direction_size"
+                        android:padding="8dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/baseline_tl_br_24" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/iv_TopBottom"
                     android:layout_width="@dimen/gradation_direction_size"
                     android:layout_height="@dimen/gradation_direction_size"
                     android:layout_marginTop="12dp"
-                    android:padding="8dp"
-                    android:elevation="4dp"
-                    android:background="@drawable/bt_gradation_direction"
-                    android:src="@drawable/baseline_top_bottom_24"
+                    android:theme="@style/Theme.MaterialComponents.Light"
+                    app:cardCornerRadius="@dimen/color_history_item_half_size"
+                    app:cardElevation="4dp"
                     app:layout_constraintEnd_toStartOf="@+id/iv_TrBl"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/iv_TlBr"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:layout_editor_absoluteY="20dp" />
+                    tools:layout_editor_absoluteY="20dp" >
 
-                <ImageView
+
+                    <ImageView
+                        android:layout_width="@dimen/gradation_direction_size"
+                        android:layout_height="@dimen/gradation_direction_size"
+                        android:padding="8dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/baseline_top_bottom_24" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/iv_TrBl"
                     android:layout_width="@dimen/gradation_direction_size"
                     android:layout_height="@dimen/gradation_direction_size"
                     android:layout_marginTop="12dp"
-                    android:padding="8dp"
-                    android:elevation="4dp"
-                    android:background="@drawable/bt_gradation_direction"
-                    android:src="@drawable/baseline_tr_bl_24"
+                    android:theme="@style/Theme.MaterialComponents.Light"
+                    app:cardCornerRadius="@dimen/color_history_item_half_size"
+                    app:cardElevation="4dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/iv_TopBottom"
                     app:layout_constraintTop_toTopOf="parent"
-                    tools:layout_editor_absoluteY="20dp" />
+                    tools:layout_editor_absoluteY="20dp" >
+
+                    <ImageView
+                        android:layout_width="@dimen/gradation_direction_size"
+                        android:layout_height="@dimen/gradation_direction_size"
+                        android:padding="8dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/baseline_tr_bl_24" />
+
+                </com.google.android.material.card.MaterialCardView>
 
                 <!-- 2行目 -->
-                <ImageView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/iv_LeftRight"
                     android:layout_width="@dimen/gradation_direction_size"
                     android:layout_height="@dimen/gradation_direction_size"
-                    android:layout_marginTop="20dp"
-                    android:padding="8dp"
-                    android:elevation="4dp"
-                    android:background="@drawable/bt_gradation_direction"
-                    android:src="@drawable/baseline_left_right_24"
+                    android:layout_marginTop="12dp"
+                    android:theme="@style/Theme.MaterialComponents.Light"
+                    app:cardCornerRadius="@dimen/color_history_item_half_size"
+                    app:cardElevation="4dp"
                     app:layout_constraintEnd_toStartOf="@+id/iv_RightLeft"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/iv_TlBr"
-                    tools:layout_editor_absoluteY="141dp" />
+                    tools:layout_editor_absoluteY="141dp" >
 
-                <ImageView
+                    <ImageView
+                        android:layout_width="@dimen/gradation_direction_size"
+                        android:layout_height="@dimen/gradation_direction_size"
+                        android:padding="8dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/baseline_left_right_24" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/iv_RightLeft"
                     android:layout_width="@dimen/gradation_direction_size"
                     android:layout_height="@dimen/gradation_direction_size"
-                    android:layout_marginTop="20dp"
-                    android:padding="8dp"
-                    android:elevation="4dp"
-                    android:background="@drawable/bt_gradation_direction"
-                    android:src="@drawable/baseline_right_left_24"
+                    android:layout_marginTop="12dp"
+                    android:theme="@style/Theme.MaterialComponents.Light"
+                    app:cardCornerRadius="@dimen/color_history_item_half_size"
+                    app:cardElevation="4dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/iv_LeftRight"
                     app:layout_constraintTop_toBottomOf="@+id/iv_TlBr"
-                    tools:layout_editor_absoluteY="141dp" />
+                    tools:layout_editor_absoluteY="141dp"  >
+
+                    <ImageView
+                        android:layout_width="@dimen/gradation_direction_size"
+                        android:layout_height="@dimen/gradation_direction_size"
+                        android:padding="8dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/baseline_right_left_24" />
+
+                </com.google.android.material.card.MaterialCardView>
 
                 <!-- 3行目 -->
-                <ImageView
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/iv_BlTr"
                     android:layout_width="@dimen/gradation_direction_size"
                     android:layout_height="@dimen/gradation_direction_size"
-                    android:layout_marginTop="20dp"
-                    android:padding="8dp"
-                    android:elevation="4dp"
-                    android:background="@drawable/bt_gradation_direction"
-                    android:src="@drawable/baseline_bl_tr_24"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="4dp"
+                    android:theme="@style/Theme.MaterialComponents.Light"
+                    app:cardCornerRadius="@dimen/color_history_item_half_size"
+                    app:cardElevation="4dp"
                     app:layout_constraintEnd_toStartOf="@+id/iv_BottomTop"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/iv_LeftRight"
-                    tools:layout_editor_absoluteY="20dp" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:layout_editor_absoluteY="20dp">
 
-                <ImageView
+                    <ImageView
+                        android:layout_width="@dimen/gradation_direction_size"
+                        android:layout_height="@dimen/gradation_direction_size"
+                        android:padding="8dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/baseline_bl_tr_24" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/iv_BottomTop"
                     android:layout_width="@dimen/gradation_direction_size"
                     android:layout_height="@dimen/gradation_direction_size"
-                    android:layout_marginTop="20dp"
-                    android:padding="8dp"
-                    android:elevation="4dp"
-                    android:background="@drawable/bt_gradation_direction"
-                    android:src="@drawable/baseline_bottom_top_24"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="4dp"
+                    android:theme="@style/Theme.MaterialComponents.Light"
+                    app:cardCornerRadius="@dimen/color_history_item_half_size"
+                    app:cardElevation="4dp"
                     app:layout_constraintEnd_toStartOf="@+id/iv_BrTl"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/iv_BlTr"
                     app:layout_constraintTop_toBottomOf="@+id/iv_LeftRight"
-                    tools:layout_editor_absoluteY="20dp" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:layout_editor_absoluteY="20dp" >
 
-                <ImageView
+                    <ImageView
+                        android:layout_width="@dimen/gradation_direction_size"
+                        android:layout_height="@dimen/gradation_direction_size"
+                        android:padding="8dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/baseline_bottom_top_24" />
+
+                </com.google.android.material.card.MaterialCardView>
+
+                <com.google.android.material.card.MaterialCardView
                     android:id="@+id/iv_BrTl"
                     android:layout_width="@dimen/gradation_direction_size"
                     android:layout_height="@dimen/gradation_direction_size"
-                    android:layout_marginTop="20dp"
-                    android:padding="8dp"
-                    android:elevation="4dp"
-                    android:background="@drawable/bt_gradation_direction"
-                    android:src="@drawable/baseline_br_tl_24"
+                    android:layout_marginTop="12dp"
+                    android:layout_marginBottom="4dp"
+                    android:theme="@style/Theme.MaterialComponents.Light"
+                    app:cardCornerRadius="@dimen/color_history_item_half_size"
+                    app:cardElevation="4dp"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintStart_toEndOf="@+id/iv_BottomTop"
                     app:layout_constraintTop_toBottomOf="@+id/iv_LeftRight"
-                    tools:layout_editor_absoluteY="20dp" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    tools:layout_editor_absoluteY="20dp" >
+
+                    <ImageView
+                        android:layout_width="@dimen/gradation_direction_size"
+                        android:layout_height="@dimen/gradation_direction_size"
+                        android:padding="8dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/baseline_br_tl_24" />
+
+                </com.google.android.material.card.MaterialCardView>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

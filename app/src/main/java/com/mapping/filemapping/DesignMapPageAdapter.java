@@ -43,14 +43,14 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         @SuppressLint("UseSwitchCompatOrMaterialCode")
         private MaterialCardView mcv_gradationClear;
         private ColorSelectionView csv_mapGradation;
-        private ImageView iv_TlBr;
-        private ImageView iv_TopBottom;
-        private ImageView iv_TrBl;
-        private ImageView iv_LeftRight;
-        private ImageView iv_RightLeft;
-        private ImageView iv_BlTr;
-        private ImageView iv_BottomTop;
-        private ImageView iv_BrTl;
+        private MaterialCardView iv_TlBr;
+        private MaterialCardView iv_TopBottom;
+        private MaterialCardView iv_TrBl;
+        private MaterialCardView iv_LeftRight;
+        private MaterialCardView iv_RightLeft;
+        private MaterialCardView iv_BlTr;
+        private MaterialCardView iv_BottomTop;
+        private MaterialCardView iv_BrTl;
         //エフェクト
         private TextView tv_star;
         private TextView tv_flower;
