@@ -87,6 +87,7 @@
     <string name="map_create_tab1">Map name</string>
     <string name="map_create_tab2">2Colors</string>
     <string name="map_create_tab3">3Colors</string>
+    <string name="map_create_tab4">Generation</string>
     <!--  マップ編集画面  -->
     <string name="hint_map_memo">note(Max.128 text)</string>
     <string name="toolbar_titleMapEdit">Map Edit</string>

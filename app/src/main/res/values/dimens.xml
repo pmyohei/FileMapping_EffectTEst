@@ -53,6 +53,7 @@
     <!--  カラーパターン  -->
     <dimen name="color_pattern_circle_size">40dp</dimen>
     <dimen name="color_pattern_circle_half_size">20dp</dimen>
+    <dimen name="color_pattern_checkable_circle_size">48dp</dimen>
 
     <!--  ギャラリー画面のタブのサムネイルサークル  -->
     <dimen name="gallery_tab_size">40dp</dimen>

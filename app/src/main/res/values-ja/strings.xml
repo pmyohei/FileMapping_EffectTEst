@@ -87,6 +87,7 @@
     <string name="map_create_tab1">マップ名</string>
     <string name="map_create_tab2">2Colors</string>
     <string name="map_create_tab3">3Colors</string>
+    <string name="map_create_tab4">色生成</string>
     <!--  マップ編集画面  -->
     <string name="hint_map_memo">メモ（128文字）</string>
     <string name="toolbar_titleMapEdit">マップ編集</string>

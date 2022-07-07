@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/ll_colorParent"
+    android:gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal">
+
+    <FrameLayout
+        android:layout_width="@dimen/color_pattern_checkable_circle_size"
+        android:layout_height="@dimen/color_pattern_checkable_circle_size"
+        android:gravity="center">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/mcv_color0"
+            android:theme="@style/Theme.MaterialComponents.Light"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp"
+            app:cardCornerRadius="@dimen/color_pattern_circle_half_size"
+            app:cardElevation="4dp"
+            />
+
+        <ImageView
+            android:id="@+id/iv_check_state0"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:visibility="invisible"
+            android:elevation="6dp"
+            android:src="@drawable/baseline_check_24" />
+
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="@dimen/color_pattern_checkable_circle_size"
+        android:layout_height="@dimen/color_pattern_checkable_circle_size"
+        android:gravity="center">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/mcv_color1"
+            android:theme="@style/Theme.MaterialComponents.Light"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="4dp"
+            app:cardCornerRadius="@dimen/color_pattern_circle_half_size"
+            app:cardElevation="4dp"
+            />
+
+        <ImageView
+            android:id="@+id/iv_check_state1"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:layout_marginTop="12dp"
+            android:visibility="invisible"
+            android:elevation="6dp"
+            android:src="@drawable/baseline_check_24" />
+
+    </FrameLayout>
+
+</LinearLayout>

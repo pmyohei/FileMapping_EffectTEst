@@ -131,22 +131,38 @@ public class MapCreateActivity extends AppCompatActivity {
         layoutIdList.add(R.layout.page_map_create_0);
         layoutIdList.add(R.layout.page_map_create_1);
         layoutIdList.add(R.layout.page_map_create_2);
+        layoutIdList.add(R.layout.page_map_create_3);
 
         //サンプルマップ
         FrameLayout fl_map = findViewById(R.id.fl_map);
 
         //ViewPager2にアダプタを割り当て
         ViewPager2 vp = findViewById(R.id.vp2_createMap);
-        CreateMapPageAdapter adapter = new CreateMapPageAdapter(layoutIdList, fl_map);
+        CreateMapPageAdapter adapter = new CreateMapPageAdapter(layoutIdList, (SampleMapView)fl_map);
         vp.setAdapter(adapter);
+        vp.registerOnPageChangeCallback(new ViewPager2.OnPageChangeCallback() {
+            @Override
+            public void onPageSelected(int position) {
+                super.onPageSelected(position);
 
+                //色生成ページが表示されたなら、選択中色を更新する
+                final int COLOR_GENERATE_PAGE = 3;
+                if( position == COLOR_GENERATE_PAGE){
+                    adapter.notifyItemChanged( position );
+                }
+            }
+        });
+
+        //----------------------
+        // インジケータの設定
+        //----------------------
         String[] titles = new String[]{
                 getString(R.string.map_create_tab1),
                 getString(R.string.map_create_tab2),
                 getString(R.string.map_create_tab3),
+                getString(R.string.map_create_tab4),
         };
 
-        //インジケータの設定
         TabLayout tabLayout = findViewById(R.id.tab_createMap);
         new TabLayoutMediator(tabLayout, vp,
                 (tab, position) -> tab.setText(titles[position])

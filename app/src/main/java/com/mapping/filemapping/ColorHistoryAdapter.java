@@ -1,7 +1,5 @@
 package com.mapping.filemapping;
 
-import static android.view.View.GONE;
-
 import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
@@ -15,14 +13,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.card.MaterialCardView;
 
-public class ColorPatternAdapter extends RecyclerView.Adapter<ColorPatternAdapter.ViewHolder> {
+import java.util.List;
+
+public class ColorHistoryAdapter extends RecyclerView.Adapter<ColorHistoryAdapter.ViewHolder> {
 
     //カラーパターン
     public static final int COLOR_2 = 2;
-    public static final int COLOR_3 = 3;
 
-    private final String[] mData;
+    private final List<String[]> mData;
     private final SampleMapView mfl_sampleMap;
+    private final ViewGroup mll_colorParent;
     private final int mPattern;
 
     /*
@@ -32,33 +32,29 @@ public class ColorPatternAdapter extends RecyclerView.Adapter<ColorPatternAdapte
     class ViewHolder extends RecyclerView.ViewHolder {
 
         private final SampleMapView mfl_sampleMap;
+        private final ViewGroup mll_colorParent;
         private final LinearLayout ll_colorItem;
 
         /*
          * コンストラクタ
          */
-        public ViewHolder(View itemView, View view) {
+        public ViewHolder(View itemView, View view, ViewGroup colorParent) {
             super(itemView);
 
             mfl_sampleMap = (SampleMapView)view;
+            mll_colorParent = colorParent;
             ll_colorItem = itemView.findViewById(R.id.ll_colorItem);
         }
 
         /*
          * ビューの設定
          */
-        public void setView( String colorPettern ){
+        public void setView( String[] colorPettern ){
 
-            //カラーパターンタイトルのリソースID
             Context context = mfl_sampleMap.getContext();
-            int colorPetternId = context.getResources().getIdentifier( colorPettern, "array", context.getPackageName() );
-
-            //カラーパターン
-            String[] colorsStr = context.getResources().getStringArray( colorPetternId );
 
             int count = 0;
-            for( String color: colorsStr ){
-
+            for( String color: colorPettern ){
                 //カラーを設定するビューID
                 String idStr = "v_color" + Integer.toString( count );
                 int v_id = context.getResources().getIdentifier( idStr, "id", context.getPackageName() );
@@ -83,12 +79,17 @@ public class ColorPatternAdapter extends RecyclerView.Adapter<ColorPatternAdapte
                 count++;
             }
 
-            //リスナー
+            //色履歴クリックリスナー
             ll_colorItem.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    //カラーパターンをサンプルマップに設定
-                    mfl_sampleMap.setColorPattern( colorsStr );
+                    //履歴をサンプルマップに反映
+                    mfl_sampleMap.setColorPattern( colorPettern );
+                    //履歴を選択中色に反映
+                    MaterialCardView mcv_color0 = mll_colorParent.findViewById(R.id.mcv_color0);
+                    MaterialCardView mcv_color1 = mll_colorParent.findViewById(R.id.mcv_color1);
+                    mcv_color0.setCardBackgroundColor( Color.parseColor(colorPettern[0]) );
+                    mcv_color1.setCardBackgroundColor( Color.parseColor(colorPettern[1]) );
                 }
             });
         }
@@ -97,12 +98,12 @@ public class ColorPatternAdapter extends RecyclerView.Adapter<ColorPatternAdapte
     /*
      * コンストラクタ
      */
-    public ColorPatternAdapter(String[] data, View sampleMap, int pattern ) {
+    public ColorHistoryAdapter(List<String[]> data, View sampleMap, ViewGroup colorParent, int pattern ) {
         mData = data;
         mfl_sampleMap = (SampleMapView) sampleMap;
+        mll_colorParent = colorParent;
         mPattern = pattern;
     }
-
 
     /*
      * ここの戻り値が、onCreateViewHolder()の第２引数になる
@@ -125,7 +126,7 @@ public class ColorPatternAdapter extends RecyclerView.Adapter<ColorPatternAdapte
         LayoutInflater inflater = LayoutInflater.from(viewGroup.getContext());
         View view = inflater.inflate(layout, viewGroup, false);
 
-        return new ViewHolder(view, mfl_sampleMap);
+        return new ViewHolder(view, mfl_sampleMap, mll_colorParent);
     }
 
     /*
@@ -135,7 +136,7 @@ public class ColorPatternAdapter extends RecyclerView.Adapter<ColorPatternAdapte
     @Override
     public void onBindViewHolder(@NonNull ViewHolder viewHolder, final int i) {
         //ビューの設定
-        viewHolder.setView( mData[i] );
+        viewHolder.setView( mData.get(i) );
     }
 
     /*
@@ -144,7 +145,7 @@ public class ColorPatternAdapter extends RecyclerView.Adapter<ColorPatternAdapte
     @Override
     public int getItemCount() {
         //表示データ数を返す
-        return mData.length;
+        return mData.size();
     }
 
 }
