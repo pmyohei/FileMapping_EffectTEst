@@ -41,7 +41,7 @@
             android:layout_gravity="center|top"
             android:background="@color/transparent_65_white"
             app:tabTextAppearance="@style/tab_font_serif"
-            app:tabIndicatorColor="@color/black"
+            app:tabIndicatorColor="@color/icon_base_color"
             app:tabGravity="center"
             app:tabIndicatorFullWidth="false"
             app:tabRippleColor="@null" />

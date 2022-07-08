@@ -28,7 +28,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/circle"
-                app:strokeColor="@color/black"
+                app:strokeColor="@color/icon_base_color"
                 app:strokeWidth="1dp" />
 
             <com.google.android.material.imageview.ShapeableImageView
@@ -43,7 +43,7 @@
                 app:layout_constraintStart_toEndOf="@+id/iv_TlBr"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/squareRounded"
-                app:strokeColor="@color/black"
+                app:strokeColor="@color/icon_base_color"
                 app:strokeWidth="1dp" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>

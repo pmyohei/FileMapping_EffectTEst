@@ -46,7 +46,7 @@
             app:tabTextAppearance="@style/tab_font_serif"
             app:tabGravity="center"
             app:tabIndicatorFullWidth="false"
-            app:tabIndicatorColor="@color/black"
+            app:tabIndicatorColor="@color/icon_base_color"
             app:tabRippleColor="@null"
             app:tabMode="scrollable" />
 

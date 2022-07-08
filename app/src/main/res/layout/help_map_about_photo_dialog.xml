@@ -59,7 +59,7 @@
                 android:padding="2dp"
                 app:shapeAppearanceOverlay="@style/squareRounded"
                 app:srcCompat="@drawable/baseline_no_image"
-                app:strokeColor="@color/black"
+                app:strokeColor="@color/icon_base_color"
                 app:strokeWidth="1dp" />
 
             <TextView
