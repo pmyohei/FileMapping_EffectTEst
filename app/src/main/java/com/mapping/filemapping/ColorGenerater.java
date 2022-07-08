@@ -11,8 +11,7 @@ import java.util.Random;
 public class ColorGenerater {
 
     //適合色角度リスト
-    static float[] matchAngles = {45, 90, 120, 180};
-
+    static float[] matchAngles = {45, 90, 105, 120, 135, 180};
 
     public ColorGenerater(){}
 

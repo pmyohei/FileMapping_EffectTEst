@@ -9,6 +9,7 @@
     <color name="transparent_90_black">#E6000000</color>
     <color name="transparent_70_black">#B3000000</color>
     <color name="transparent_50_black">#80000000</color>
+    <color name="transparent_25_black">#40000000</color>
     <color name="transparent_4_black">#0A000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="transparent_80_white">#CCFFFFFF</color>

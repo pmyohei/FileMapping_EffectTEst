@@ -62,7 +62,6 @@ public class ColorSelectionView extends LinearLayout {
 
     public ColorSelectionView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
         init(context);
     }
 

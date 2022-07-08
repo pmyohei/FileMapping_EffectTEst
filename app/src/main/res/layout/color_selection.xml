@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="12dp"
+    android:layout_marginTop="6dp"
     android:paddingBottom="@dimen/colorSelectionPaddingBottom">
 
     <com.google.android.material.card.MaterialCardView
@@ -39,7 +39,7 @@
         android:theme="@style/Theme.MaterialComponents.Light"
         app:cardCornerRadius="@dimen/color_history_item_half_size"
         app:cardElevation="4dp"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/aaaa"
         app:layout_constraintStart_toEndOf="@+id/tv_rgb"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -51,29 +51,65 @@
 
     </com.google.android.material.card.MaterialCardView>
 
-    <ImageView
+    <com.google.android.material.card.MaterialCardView
+        android:id="@+id/aaaa"
+        android:layout_width="@dimen/color_history_item_size"
+        android:layout_height="@dimen/color_history_item_size"
+        android:layout_margin="4dp"
+        android:gravity="center"
+        android:theme="@style/Theme.MaterialComponents.Light"
+        app:cardCornerRadius="@dimen/color_history_item_half_size"
+        app:cardElevation="4dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_graphic"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/baseline_color_generate_24" />
+
+    </com.google.android.material.card.MaterialCardView>
+
+
+    <com.google.android.material.card.MaterialCardView
         android:id="@+id/iv_updateHistory"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="52dp"
+        android:layout_width="@dimen/color_history_update_size"
+        android:layout_height="@dimen/color_history_update_size"
         android:padding="8dp"
         android:elevation="4dp"
-        android:background="@drawable/bt_image"
-        android:src="@drawable/baseline_update_24"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_rgb" />
+        android:gravity="center"
+        android:theme="@style/Theme.MaterialComponents.Light"
+        app:cardCornerRadius="@dimen/color_history_update_half_size"
+        app:cardElevation="4dp"
+        app:layout_constraintStart_toStartOf="@id/rv_history"
+        app:layout_constraintEnd_toEndOf="@id/rv_history"
+        app:layout_constraintTop_toTopOf="@id/rv_history"
+        app:layout_constraintBottom_toTopOf="@id/rv_history">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:src="@drawable/baseline_update_24" />
+
+    </com.google.android.material.card.MaterialCardView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_history"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="40dp"
+        android:layout_gravity="center"
+        android:layout_marginTop="44dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginEnd="4dp"
         android:clipToPadding="false"
-        android:paddingStart="80dp"
+        android:paddingTop="24dp"
+        android:paddingBottom="16dp"
+        android:background="@drawable/rv_history"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/iv_updateHistory"
-        app:layout_constraintTop_toBottomOf="@id/tv_rgb" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tv_graphic" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

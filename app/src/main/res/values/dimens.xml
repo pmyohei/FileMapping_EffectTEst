@@ -40,6 +40,8 @@
     <!--  色選択ビューの各種アイコンサイズ  -->
     <dimen name="color_history_item_size">48dp</dimen>
     <dimen name="color_history_item_half_size">24dp</dimen>
+    <dimen name="color_history_update_size">40dp</dimen>
+    <dimen name="color_history_update_half_size">20dp</dimen>
     <!--  フォント選択肢の円のサイズ  -->
     <dimen name="font_item_size">48dp</dimen>
     <dimen name="font_item_half_size">24dp</dimen>
