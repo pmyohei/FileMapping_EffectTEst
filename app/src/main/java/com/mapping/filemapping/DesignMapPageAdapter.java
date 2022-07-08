@@ -414,7 +414,7 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
          */
         private void setBackgroundPage() {
             //背景色
-            csv_background.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_BACKGROUNG, mv_map );
+            csv_background.setOnColorListener( ColorSelectionView.MAP, ColorSelectionView.COLOR_NODE_BACKGROUNG, mv_map );
         }
 
         /*

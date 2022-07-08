@@ -31,7 +31,8 @@
             <com.mapping.filemapping.ColorSelectionView
                 android:id="@+id/csv_mapMonoColor"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"/>
 
             <TextView
                 android:layout_width="match_parent"
@@ -72,7 +73,8 @@
             <com.mapping.filemapping.ColorSelectionView
                 android:id="@+id/csv_mapGradationColor"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:layout_marginTop="12dp"/>
 
             <!--  仕切り線  -->
             <View

@@ -2,14 +2,12 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginTop="6dp"
     android:paddingBottom="@dimen/colorSelectionPaddingBottom">
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/tv_rgb"
+        android:id="@+id/mcv_rgb"
         android:layout_width="@dimen/color_history_item_size"
         android:layout_height="@dimen/color_history_item_size"
         android:layout_margin="4dp"
@@ -17,7 +15,7 @@
         android:theme="@style/Theme.MaterialComponents.Light"
         app:cardCornerRadius="@dimen/color_history_item_half_size"
         app:cardElevation="4dp"
-        app:layout_constraintEnd_toStartOf="@+id/tv_graphic"
+        app:layout_constraintEnd_toStartOf="@+id/mcv_graphic"
         app:layout_constraintHorizontal_chainStyle="spread"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
@@ -31,7 +29,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/tv_graphic"
+        android:id="@+id/mcv_graphic"
         android:layout_width="@dimen/color_history_item_size"
         android:layout_height="@dimen/color_history_item_size"
         android:layout_margin="4dp"
@@ -39,8 +37,8 @@
         android:theme="@style/Theme.MaterialComponents.Light"
         app:cardCornerRadius="@dimen/color_history_item_half_size"
         app:cardElevation="4dp"
-        app:layout_constraintEnd_toStartOf="@+id/aaaa"
-        app:layout_constraintStart_toEndOf="@+id/tv_rgb"
+        app:layout_constraintEnd_toStartOf="@+id/mcv_generate"
+        app:layout_constraintStart_toEndOf="@+id/mcv_rgb"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -52,7 +50,7 @@
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
-        android:id="@+id/aaaa"
+        android:id="@+id/mcv_generate"
         android:layout_width="@dimen/color_history_item_size"
         android:layout_height="@dimen/color_history_item_size"
         android:layout_margin="4dp"
@@ -61,7 +59,7 @@
         app:cardCornerRadius="@dimen/color_history_item_half_size"
         app:cardElevation="4dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/tv_graphic"
+        app:layout_constraintStart_toEndOf="@+id/mcv_graphic"
         app:layout_constraintTop_toTopOf="parent">
 
         <ImageView
@@ -107,9 +105,9 @@
         android:clipToPadding="false"
         android:paddingTop="24dp"
         android:paddingBottom="16dp"
-        android:background="@drawable/rv_history"
+        android:background="@drawable/rv_color_history"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_graphic" />
+        app:layout_constraintTop_toBottomOf="@id/mcv_graphic" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

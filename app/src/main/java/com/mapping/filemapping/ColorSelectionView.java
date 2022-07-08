@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.graphics.drawable.GradientDrawable;
-import android.os.Build;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.AttributeSet;
@@ -35,7 +33,7 @@ public class ColorSelectionView extends LinearLayout {
     public static final int NODE = 1;
 
     //カラー指定
-    public static final int COLOR_BACKGROUNG = 0;
+    public static final int COLOR_NODE_BACKGROUNG = 0;
     public static final int COLOR_TEXT = 1;
     public static final int COLOR_BORDER = 2;
     public static final int COLOR_SHADOW = 3;
@@ -43,8 +41,8 @@ public class ColorSelectionView extends LinearLayout {
     public static final int COLOR_MAP = 5;
     public static final int COLOR_MAP_GRADATION = 6;
 
-    private int  mViewKind;       //ビュー種別（ノードorマップ(全ノード)）
-    private int  mPart;           //カラー設定個所
+    private int mViewKind;       //ビュー種別（ノードorマップ(全ノード)）
+    private int mPart;           //カラー設定部位
     private View mSetView;        //設定対象ビュー（ノードorマップ）
 
     private ColorHistoryAdapter mColorHistoryAdapter;
@@ -68,22 +66,22 @@ public class ColorSelectionView extends LinearLayout {
     /*
      *
      */
-    private void init( Context context ) {
+    private void init(Context context) {
 
         //レイアウト生成
         LayoutInflater inflater = LayoutInflater.from(getContext());
         inflater.inflate(R.layout.color_selection, this, true);
 
         //色履歴リスト
-        MapCommonData mapCommonData = (MapCommonData) ((Activity)context).getApplication();
-        ArrayList<String> colors =  mapCommonData.getColorHistory();
+        MapCommonData mapCommonData = (MapCommonData) ((Activity) context).getApplication();
+        ArrayList<String> colors = mapCommonData.getColorHistory();
 
-        mColorHistoryAdapter = new ColorHistoryAdapter( colors );
-        
+        mColorHistoryAdapter = new ColorHistoryAdapter(colors);
+
         //色履歴を設定
         RecyclerView rv_history = findViewById(R.id.rv_history);
-        rv_history.setAdapter( mColorHistoryAdapter );
-        rv_history.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false ));
+        rv_history.setAdapter(mColorHistoryAdapter);
+        rv_history.setLayoutManager(new LinearLayoutManager(context, LinearLayoutManager.HORIZONTAL, false));
 
         //色履歴更新リスナー
         findViewById(R.id.iv_updateHistory).setOnClickListener(new OnClickListener() {
@@ -98,26 +96,93 @@ public class ColorSelectionView extends LinearLayout {
     /*
      * 色設定対象ビュー
      */
-    public void setOnColorListener(int kind, int part, View view ) {
+    public void setOnColorListener(int kind, int part, View view) {
         mViewKind = kind;
-        mPart     = part;
-        mSetView  = view;
+        mPart = part;
+        mSetView = view;
+
+        //ベースカラーの取得
+        int baseColor = getBaseColor(part);
 
         //リスナーの設定
-        findViewById(R.id.tv_rgb).setOnClickListener(new ClickColorInputIcon( ClickColorInputIcon.RGB) );
-        findViewById(R.id.tv_graphic).setOnClickListener( new ClickColorInputIcon( ClickColorInputIcon.PICKER) );
+        findViewById(R.id.mcv_rgb).setOnClickListener( new ClickColorInputIcon(ClickColorInputIcon.RGB) );
+        findViewById(R.id.mcv_graphic).setOnClickListener( new ClickColorInputIcon(ClickColorInputIcon.PICKER) );
+        findViewById(R.id.mcv_generate).setOnClickListener( new ClickColorGenerateIcon(baseColor) );
 
         //横スクロールを本リサイクラービューに優先させる
-        ViewPager2 vp2 = mSetView.getRootView().findViewById( R.id.vp2_design );
+        ViewPager2 vp2 = mSetView.getRootView().findViewById(R.id.vp2_design);
         RecyclerView rv_history = findViewById(R.id.rv_history);
-        rv_history.addOnItemTouchListener( new Vp2OnItemTouchListener( vp2 ) );
+        rv_history.addOnItemTouchListener(new Vp2OnItemTouchListener(vp2));
+    }
+
+    /*
+     * ベースカラーを取得
+     */
+    private int getBaseColor(int part) {
+
+        int baseColor;
+        switch (part) {
+            case COLOR_MAP:
+            case COLOR_MAP_GRADATION:
+                baseColor = getBaseColorOfMap(part);
+                break;
+
+            default:
+                baseColor = getBaseColorOfNode();
+                break;
+        }
+
+        return baseColor;
+    }
+
+    /*
+     * マップ色に対するベースカラーを取得
+     */
+    private int getBaseColorOfMap(int part) {
+
+        //-------------------
+        // マップ色を取得
+        //-------------------
+        MapCommonData commonData = (MapCommonData) ((Activity) getContext()).getApplication();
+        MapTable map = commonData.getMap();
+        int mapColor = Color.parseColor(map.getMapColor());
+        int mapGradationColor = Color.parseColor(map.getMapGradationColor());
+
+        //---------------------------------------------------------
+        // マップ色がグラデーションとメインで同じであれば、ルートノードの色を返す
+        //---------------------------------------------------------
+        if (mapColor == mapGradationColor) {
+            String rootNodeColor = commonData.getNodes().getRootNode().getNodeColor();
+            return Color.parseColor(rootNodeColor);
+        }
+
+        //---------------------------------------------------------
+        // マップ色がグラデーションとメインで同じであれば、ルートノードの色を返す
+        //---------------------------------------------------------
+        if (part == COLOR_MAP) {
+            return mapGradationColor;
+        } else {
+            return mapColor;
+        }
+    }
+
+    /*
+     * ノード各種色に対するベースカラーを取得
+     */
+    private int getBaseColorOfNode(){
+
+        //-------------------
+        // マップ色を返す
+        //-------------------
+        MapCommonData commonData = (MapCommonData) ((Activity) getContext()).getApplication();
+        MapTable map = commonData.getMap();
+        return Color.parseColor(map.getMapColor());
     }
 
     /*
      * 色を設定
      */
-    private void setColor( String code ){
-
+    private void setColorToPart(String code ){
         if( mViewKind == MAP ){
             setMapAllNodeColor( code );
         } else {
@@ -145,7 +210,7 @@ public class ColorSelectionView extends LinearLayout {
                 ((MapActivity)mSetView.getContext()).setMapColor( MapActivity.MAP_COLOR_PTN_SUB, colorCode, MapTable.GRNDIR_KEEPING );
                 break;
 
-            case COLOR_BACKGROUNG:
+            case COLOR_NODE_BACKGROUNG:
                 //ノード背景色
                 nodes.setAllNodeBgColor( colorCode );
                 break;
@@ -184,7 +249,7 @@ public class ColorSelectionView extends LinearLayout {
         //色設定の対象毎に処理
         switch (mPart) {
 
-            case COLOR_BACKGROUNG:
+            case COLOR_NODE_BACKGROUNG:
                 //ノード背景色
                 node.setNodeBackgroundColor(code);
                 break;
@@ -213,6 +278,8 @@ public class ColorSelectionView extends LinearLayout {
 
     /*
      * カラー入力アイコンリスナー
+     * ・コード入力
+     * ・カラーパレット入力
      */
     private class ClickColorInputIcon implements View.OnClickListener, TextWatcher {
 
@@ -317,9 +384,6 @@ public class ColorSelectionView extends LinearLayout {
             cpv.setOnColorChangedListener(new ColorPickerView.OnColorChangedListener() {
                 @Override
                 public void onColorChanged(int newColor) {
-                    //Log.i("onColorChanged", "getColor=" + cpv.getColor());
-                    //Log.i("onColorChanged", "getColor(Hex)=" + Integer.toHexString(cpv.getColor()) );
-
                     //「例）#123456」を作成
                     //cpv.getColor()で取得できる値「ARGB」 例）ffb58d8d
                     String code = "#" + Integer.toHexString(cpv.getColor());
@@ -378,7 +442,7 @@ public class ColorSelectionView extends LinearLayout {
             String code = "#" + Integer.toHexString(colorInt);
 
             //色を設定
-            setColor(code);
+            setColorToPart(code);
 
             //色履歴の追加
             MapCommonData commonData = (MapCommonData)((Activity)getContext()).getApplication();
@@ -425,7 +489,7 @@ public class ColorSelectionView extends LinearLayout {
                     String mapSubColor = commonData.getMap().getMapGradationColor();
                     return mapSubColor;
 
-                case COLOR_BACKGROUNG:
+                case COLOR_NODE_BACKGROUNG:
                     //ノード背景色
                     return rootNode.getNodeBackgroundColor();
 
@@ -469,7 +533,7 @@ public class ColorSelectionView extends LinearLayout {
             //色設定の対象毎に処理
             switch (mPart) {
 
-                case COLOR_BACKGROUNG:
+                case COLOR_NODE_BACKGROUNG:
                     //ノード背景色
                     return node.getNodeBackgroundColor();
 
@@ -529,6 +593,59 @@ public class ColorSelectionView extends LinearLayout {
 
     }
 
+
+    /*
+     * カラー自動生成アイコンリスナー
+     */
+    private class ClickColorGenerateIcon implements View.OnClickListener {
+
+        //カラー生成におけるベースカラー
+        private final int mBaseColor;
+
+        /*
+         * コンストラクタ
+         */
+        public ClickColorGenerateIcon(int baseColor) {
+            mBaseColor = baseColor;
+        }
+
+        @Override
+        public void onClick(View view) {
+            //---------------------------------
+            // ベースカラーに合う色を対象のビューに反映
+            //---------------------------------
+            int matchingColor = createMatchingColor();
+            String code = "#" + Integer.toHexString(matchingColor);
+            setColorToPart(code);
+
+            //-------------------------
+            // 色履歴に反映
+            //-------------------------
+            MapCommonData commonData = (MapCommonData)((Activity)getContext()).getApplication();
+            int idx = commonData.addColorHistory( code );
+            if( idx >= 0 ){
+                //アダプタに追加を通知
+                mColorHistoryAdapter.notifyItemInserted(idx);
+            }
+        }
+
+        /*
+         * ベースカラーに合う色を取得
+         */
+        private int createMatchingColor(){
+            //ベースカラーの適合色を生成
+            float[] baseColorHSV = new float[3];
+            Color.colorToHSV(mBaseColor, baseColorHSV);
+            float[] matchingHSV = ColorGenerater.createMatchingHSV( baseColorHSV );
+
+            return Color.HSVToColor( matchingHSV );
+        }
+
+
+    }
+
+
+
     /*
      * 色履歴アダプタ
      */
@@ -579,7 +696,7 @@ public class ColorSelectionView extends LinearLayout {
                     @Override
                     public void onClick(View view) {
                         //色を設定
-                        setColor( color );
+                        setColorToPart( color );
                     }
                 });
             }

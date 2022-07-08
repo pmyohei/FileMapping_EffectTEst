@@ -270,7 +270,7 @@ public class DesignNodePageAdapter extends RecyclerView.Adapter<DesignNodePageAd
          */
         private void setPage5() {
             //背景色
-            csv_background.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_BACKGROUNG, mv_node );
+            csv_background.setOnColorListener( ColorSelectionView.NODE, ColorSelectionView.COLOR_NODE_BACKGROUNG, mv_node );
         }
 
         /*
