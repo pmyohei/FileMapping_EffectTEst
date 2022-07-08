@@ -30,7 +30,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/circle"
-                app:strokeColor="@color/black"
+                app:strokeColor="@color/icon_base_color"
                 app:strokeWidth="1dp"
                 tools:layout_editor_absoluteY="20dp" />
 
@@ -46,7 +46,7 @@
                 app:layout_constraintStart_toEndOf="@+id/iv_TlBr"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/circleLittle"
-                app:strokeColor="@color/black"
+                app:strokeColor="@color/icon_base_color"
                 app:strokeWidth="1dp"
                 tools:layout_editor_absoluteY="20dp" />
 
@@ -62,7 +62,7 @@
                 app:layout_constraintStart_toEndOf="@+id/iv_TopBottom"
                 app:layout_constraintTop_toTopOf="parent"
                 app:shapeAppearanceOverlay="@style/squareRounded"
-                app:strokeColor="@color/black"
+                app:strokeColor="@color/icon_base_color"
                 app:strokeWidth="1dp"
                 tools:layout_editor_absoluteY="20dp" />
 
@@ -79,7 +79,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_TlBr"
                 app:shapeAppearanceOverlay="@style/square"
-                app:strokeColor="@color/black"
+                app:strokeColor="@color/icon_base_color"
                 app:strokeWidth="1dp"
                 tools:layout_editor_absoluteY="20dp" />
 
@@ -95,7 +95,7 @@
                 app:layout_constraintStart_toEndOf="@+id/iv_BlTr"
                 app:layout_constraintTop_toBottomOf="@+id/iv_TlBr"
                 app:shapeAppearanceOverlay="@style/octagon"
-                app:strokeColor="@color/black"
+                app:strokeColor="@color/icon_base_color"
                 app:strokeWidth="1dp"
                 tools:layout_editor_absoluteY="20dp" />
 
@@ -111,7 +111,7 @@
                 app:layout_constraintStart_toEndOf="@+id/iv_BottomTop"
                 app:layout_constraintTop_toBottomOf="@+id/iv_TlBr"
                 app:shapeAppearanceOverlay="@style/octagonRounded"
-                app:strokeColor="@color/black"
+                app:strokeColor="@color/icon_base_color"
                 app:strokeWidth="1dp"
                 tools:layout_editor_absoluteY="20dp" />
 
@@ -129,7 +129,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_BlTr"
                 app:shapeAppearanceOverlay="@style/dia"
-                app:strokeColor="@color/black"
+                app:strokeColor="@color/icon_base_color"
                 app:strokeWidth="1dp"
                 tools:layout_editor_absoluteY="141dp" />
 
@@ -146,7 +146,7 @@
                 app:layout_constraintStart_toEndOf="@+id/iv_LeftRight"
                 app:layout_constraintTop_toBottomOf="@+id/iv_BlTr"
                 app:shapeAppearanceOverlay="@style/diaSemi"
-                app:strokeColor="@color/black"
+                app:strokeColor="@color/icon_base_color"
                 app:strokeWidth="1dp"
                 tools:layout_editor_absoluteY="141dp" />
 

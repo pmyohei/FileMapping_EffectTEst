@@ -36,7 +36,7 @@
                 android:layout_gravity="center"
                 android:text="@string/shadow_on_off"
                 android:textSize="18sp"
-                android:textColor="@color/black" />
+                android:textColor="@color/text_base_color" />
 
             <!--  仕切り線  -->
             <View

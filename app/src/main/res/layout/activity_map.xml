@@ -32,7 +32,7 @@
                 android:id="@+id/tv_mapName"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:textColor="@color/black"
+                android:textColor="@color/text_base_color"
                 android:ellipsize="end"
                 android:singleLine="true" />
 

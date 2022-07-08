@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/toolbar_titleGallery"
-            android:textColor="@color/black"/>
+            android:textColor="@color/text_base_color"/>
 
     </androidx.appcompat.widget.Toolbar>
 
@@ -36,7 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
         app:tabTextAppearance="@style/tab_font_serif"
-        app:tabIndicatorColor="@color/black"
+        app:tabIndicatorColor="@color/icon_base_color"
         app:tabMinWidth="0dp"
         app:tabRippleColor="@null"
         app:tabGravity="start"

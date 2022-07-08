@@ -34,6 +34,8 @@
 
     <!--  ツールアイコン  -->
     <color name="bg_icon">#80FFFFFF</color>
+    <color name="icon_base_color">#89000000</color>
+    <color name="text_base_color">#89000000</color>
 
     <!--  ナビゲーションビュー用  -->
     <color name="transparent_navi">#80FFFFFF</color>

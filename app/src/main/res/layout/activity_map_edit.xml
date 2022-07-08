@@ -24,7 +24,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/toolbar_titleMapEdit"
-            android:textColor="@color/black"/>
+            android:textColor="@color/text_base_color"/>
 
     </androidx.appcompat.widget.Toolbar>
 

@@ -21,33 +21,17 @@ import java.util.ArrayList;
 
 public class SeekbarView extends LinearLayout {
 
-    //デザインレイアウト種別
-    public static final int MAP = 0;
-    public static final int NODE = 1;
-
-    //サイズ変更対象
-    public static final int SIZE_NODE = 0;
-    public static final int SIZE_BORDER = 1;
-    public static final int SIZE_LINE = 2;
-
-    private int  mViewKind;       //ビュー種別（ノードorマップ(全ノード)）
-    private int  mPart;           //サイズ変更個所
-    private View mSetView;        //設定対象ビュー（ノードorマップ）
-
     /*
      * コンストラクタ
      */
     public SeekbarView(Context context) {
         this(context, null);
     }
-
     public SeekbarView(Context context, AttributeSet attrs) {
         this(context, attrs, 0);
     }
-
     public SeekbarView(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
-
         init(context);
     }
 
@@ -82,7 +66,7 @@ public class SeekbarView extends LinearLayout {
         float scaleSize = node.getScaleWidth();
         int progress = (int)((scaleSize / maxSize) * 100f);
 
-        Log.i("sb_nodeSize", "scaleSize=" + scaleSize + " progress=" + progress);
+        //Log.i("sb_nodeSize", "scaleSize=" + scaleSize + " progress=" + progress);
 
         //進捗バー最大値
         final int PROGRESS_MAX = 100;
@@ -162,7 +146,7 @@ public class SeekbarView extends LinearLayout {
                 }
 
                 //Log.i("sb_nodeSize", "設定比率=" + setRatio + " 目標サイズ=" + setSize);
-                Log.i("seekbar", "ライン太さ=" + thick);
+                //Log.i("seekbar", "ライン太さ=" + thick);
             }
         });
     }
@@ -213,89 +197,5 @@ public class SeekbarView extends LinearLayout {
             }
         });
     }
-
-    /*
-     * マップ全体に色を設定
-     */
-    private void setMapColor( String code ){
-
-        //マップ共通データ
-        MapCommonData commonData = (MapCommonData)((Activity)getContext()).getApplication();
-        NodeArrayList<NodeTable> nodes = commonData.getNodes();
-
-/*        switch (mPart){
-
-            case COLOR_MAP:
-                //マップ色
-                mSetView.setBackgroundColor( Color.parseColor(code) );
-                break;
-
-            case COLOR_BACKGROUNG:
-                //ノード背景色
-                nodes.setAllNodeBgColor( code );
-                break;
-
-            case COLOR_TEXT:
-                //ノードテキストカラー
-                nodes.setAllNodeTxColor( code );
-                break;
-
-            case COLOR_BORDER:
-                //枠線カラー
-                nodes.setAllNodeBorderColor( code );
-                break;
-
-            case COLOR_SHADOW:
-                //影カラー
-                nodes.setAllNodeShadowColor( code );
-                break;
-
-            case COLOR_LINE:
-                //ラインカラー
-                nodes.setAllNodeLineColor( code );
-                break;
-        }*/
-
-    }
-
-    /*
-     * ノード単体に色を設定
-     */
-    private void setNodeColor( String code ){
-
-        //ノードにキャスト
-        BaseNode node = (BaseNode) mSetView;
-
-/*        //色設定の対象毎に処理
-        switch (mPart) {
-
-            case COLOR_BACKGROUNG:
-                //ノード背景色
-                node.setNodeBackgroundColor(code);
-                break;
-
-            case COLOR_TEXT:
-                //ノードテキストカラー
-                node.setNodeTextColor(code);
-                break;
-
-            case COLOR_BORDER:
-                //枠線カラー
-                node.setBorderColor(code);
-                break;
-
-            case COLOR_SHADOW:
-                //影カラー
-                node.setShadowColor(code, node.getNode().getKind());
-                break;
-
-            case COLOR_LINE:
-                //ラインカラー
-                ((ChildNode) node).setLineColor(code);
-                break;
-        }*/
-
-    }
-
 
 }

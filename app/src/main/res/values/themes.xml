@@ -60,7 +60,7 @@
         <item name="android:elevation">8dp</item>
         <item name="android:background">@drawable/frame_color</item>
         <item name="android:gravity">center</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/text_base_color</item>
     </style>
 
     <!--  ツールアイコン用  -->
@@ -81,13 +81,13 @@
     <!--  タブレイアウト用  -->
     <style name="tab_font_serif" parent="@android:style/TextAppearance.Widget.TabWidget">
         <item name="android:typeface">serif</item>
-        <item name="android:textColor">@color/black</item>
+        <item name="android:textColor">@color/text_base_color</item>
     </style>
 
     <!--  トグルボタン用  -->
     <style name="toggle" parent="Theme.AppCompat.Light">
         <!--ボタンON時のボタンの通り道・ボタンとタッチフィードバックカラー-->
-        <item name="colorControlActivated">@color/black</item>
+        <item name="colorControlActivated">@color/icon_base_color</item>
         <!--ボタンOFF時のボタンの通り道-->
         <item name="android:colorForeground">@color/transparent_50_black</item>
         <!-- OFFボタンを押したときのタッチフィードバックカラー -->

@@ -22,18 +22,10 @@
         android:layout_gravity="center"
         android:text="Sample"
         android:textSize="18sp"
-        android:textColor="@color/black"
+        android:textColor="@color/text_base_color"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
-<!--
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1dp"
-        android:paddingStart="1dp"
-        android:paddingEnd="1dp"
-        android:background="@color/gray">
-    </View>-->
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,17 +34,6 @@
         android:gravity="end"
         android:layout_marginBottom="4dp"
         android:orientation="horizontal">
-
-<!--
-        <ImageButton
-            android:id="@+id/ib_map"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginEnd="12dp"
-            android:background="@color/white"
-            app:srcCompat="@drawable/baseline_open_map_24" />
--->
 
         <ImageButton
             android:id="@+id/ib_edit"

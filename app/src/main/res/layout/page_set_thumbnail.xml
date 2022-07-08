@@ -31,6 +31,6 @@
         android:layout_marginTop="12dp"
         android:layout_gravity="center_horizontal"
         android:text="@string/change_thumnbnail"
-        android:textColor="@color/black" />
+        android:textColor="@color/text_base_color" />
 
 </LinearLayout>

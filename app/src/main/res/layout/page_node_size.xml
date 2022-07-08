@@ -27,7 +27,7 @@
                 android:layout_marginStart="12dp"
                 android:gravity="center"
                 android:text="@string/size_node"
-                android:textColor="@color/black" />
+                android:textColor="@color/text_base_color" />
 
             <com.mapping.filemapping.SeekbarView
                 android:id="@+id/sbv_nodeSize"
@@ -42,7 +42,7 @@
                 android:layout_marginStart="12dp"
                 android:gravity="center"
                 android:text="@string/size_border"
-                android:textColor="@color/black" />
+                android:textColor="@color/text_base_color" />
 
             <com.mapping.filemapping.SeekbarView
                 android:id="@+id/sbv_borderSize"
@@ -58,7 +58,7 @@
                 android:layout_marginStart="12dp"
                 android:gravity="center"
                 android:text="@string/size_line"
-                android:textColor="@color/black" />
+                android:textColor="@color/text_base_color" />
 
             <com.mapping.filemapping.SeekbarView
                 android:id="@+id/sbv_lineSize"

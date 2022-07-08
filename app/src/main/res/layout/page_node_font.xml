@@ -25,7 +25,7 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginStart="8dp"
                 android:text="@string/font_alphabet"
-                android:textColor="@color/black"/>
+                android:textColor="@color/text_base_color"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_fontAlphabet"
@@ -42,7 +42,7 @@
                 android:layout_marginTop="24dp"
                 android:layout_marginStart="8dp"
                 android:text="@string/font_japanese"
-                android:textColor="@color/black"/>
+                android:textColor="@color/text_base_color"/>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_fontJapanese"

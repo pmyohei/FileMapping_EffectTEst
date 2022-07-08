@@ -25,7 +25,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/toolbar_titleTrimming"
-                android:textColor="@color/black"/>
+                android:textColor="@color/text_base_color"/>
 
         </androidx.appcompat.widget.Toolbar>
 
@@ -42,7 +42,7 @@
             android:scaleType="centerCrop"
             android:src="@drawable/baseline_no_image"
             app:shapeAppearanceOverlay="@style/circle"
-            app:strokeColor="@color/black"
+            app:strokeColor="@color/icon_base_color"
             app:strokeWidth="1dp" />
 
         <!--  仕切り線  -->
@@ -53,11 +53,10 @@
             android:layout_marginBottom="12dp"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="12dp"
-            android:background="@color/black"/>
+            android:background="@color/icon_base_color"/>
 
         <!--  選択した写真  -->
         <com.isseiaoki.simplecropview.CropImageView
-            xmlns:custom="http://schemas.android.com/apk/res-auto"
             android:id="@+id/iv_cropSource"
             android:layout_width="wrap_content"
             android:layout_height="0dp"
