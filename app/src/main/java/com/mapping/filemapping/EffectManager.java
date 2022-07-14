@@ -1,8 +1,13 @@
 package com.mapping.filemapping;
 
+import android.animation.Animator;
 import android.animation.AnimatorInflater;
+import android.animation.AnimatorListenerAdapter;
 import android.animation.AnimatorSet;
+import android.animation.ObjectAnimator;
+import android.animation.ValueAnimator;
 import android.graphics.Paint;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
@@ -101,13 +106,20 @@ public class EffectManager {
     /*
      * エフェクト生成
      */
-    private void createEffects() {
+    public void createEffects() {
 
         //レイアウト確定待ち
-        mAddDistView.post(() -> {
+        //mAddDistView.post(() -> {
             //中央座標を取得
             int centerX = mAddDistView.getWidth() / 2;
             int centerY = mAddDistView.getHeight() / 2;
+
+            int rangeX = (int)(mAddDistView.getWidth() * 0.4f);
+            int rangeY = (int)(mAddDistView.getHeight() * 0.4f);
+            int absRangeX = rangeX / 2;
+            int absRangeY = rangeY / 2;
+
+            Log.i("エフェクト生成位置", "centerX=" + centerX + " centerY=" + centerY);
 
             //---------------------------------
             //エフェクトビューの生成
@@ -125,26 +137,21 @@ public class EffectManager {
                 //---------------------------------
                 //座標offsetをランダムに設定
                 Random random = new Random();
-                int offsetX = random.nextInt(centerX / 4 + 1);
-                int offsetY = random.nextInt(centerY / 4 + 1);
-                //座標をばらけさせる（半分の割合を逆の座標へ）
-                if ((offsetX % 2) == 0) {
-                    offsetX *= -1;
-                }
-                if ((offsetY % 2) == 0) {
-                    offsetY *= -1;
-                }
+                int offsetX = random.nextInt( rangeX ) - absRangeX;
+                int offsetY = random.nextInt( rangeY ) - absRangeY;
 
                 //位置設定
                 ViewGroup.MarginLayoutParams mlp = (ViewGroup.MarginLayoutParams) effectView.getLayoutParams();
                 mlp.setMargins(centerX + offsetX, centerY + offsetY, mlp.rightMargin, mlp.bottomMargin);
+
+                //Log.i("エフェクト生成位置", "位置x=" + (centerX + offsetX) + " 位置y=" + (centerY + offsetY));
 
                 //---------------------------------
                 //　アニメーションの適用
                 //---------------------------------
                 applyEffectAnimation( effectView );
             }
-        });
+        //});
     }
 
     /*
@@ -194,6 +201,13 @@ public class EffectManager {
                 break;
 
             //------------------------
+            // 場所を変えながら明滅
+            //------------------------
+            case MapTable.BLINK_MOVE:
+                applyBlinkMoveEffectAnimation(animationTarget);
+                break;
+
+            //------------------------
             // 回転
             //------------------------
             case MapTable.SPIN:
@@ -220,6 +234,9 @@ public class EffectManager {
             case MapTable.STROKE_GRADATION_ROTATE:
                 applyStrokeGradationRotateEffectAnimation(animationTarget);
                 break;
+
+
+
 
             //------------------------
             // 処理なし
@@ -251,6 +268,68 @@ public class EffectManager {
         //tmpSet.setStartDelay( delay );
         tmpSet.start();
     }
+
+    /*
+     * エフェクトアニメーション
+     * 　　明滅：移動あり
+     */
+    private void applyBlinkMoveEffectAnimation( View animationTarget ) {
+
+        //------------------------
+        // 乱数値
+        //------------------------
+        Random random = new Random();
+        int duration = random.nextInt( 2501 ) + 1000;
+
+        //------------------------
+        // アニメーションの適用
+        //------------------------
+        Animator anim = AnimatorInflater.loadAnimator(animationTarget.getContext(), R.animator.effect_blink);
+        anim.setTarget( animationTarget );
+        anim.setDuration( duration );
+/*        anim.addListener(new Animator.AnimatorListener() {
+            @Override
+            public void onAnimationStart(Animator animator) {
+                Log.i("アニメーション開始", "コールチェック");
+            }
+            @Override
+            public void onAnimationEnd(Animator animator) {
+                Log.i("アニメーション開始", "コールチェック　エンド");
+            }
+            @Override
+            public void onAnimationCancel(Animator animator) {
+            }
+            @Override
+            public void onAnimationRepeat(Animator animator) {
+                Log.i("アニメーション開始", "コールチェック　リピート");
+            }
+        });*/
+
+        anim.addListener(new AnimatorListenerAdapter() {
+            public void onAnimationRepeat(Animator animation) {
+                Log.i("アニメーション開始", "コールチェック　リピートA");
+            }});
+
+
+        ValueAnimator fadeAnim = ObjectAnimator.ofFloat(animationTarget, "alpha", 1f, 0f);
+        fadeAnim.setDuration( 1000 );
+        fadeAnim.setRepeatMode( ValueAnimator.REVERSE );
+        fadeAnim.setRepeatCount( ValueAnimator.INFINITE );
+        fadeAnim.addListener(new AnimatorListenerAdapter() {
+            public void onAnimationRepeat(Animator animation) {
+                Log.i("アニメーション開始", "コールチェック　リピートAAA");
+            }});
+        fadeAnim.start();
+
+        //AnimatorSet tmpSet = (AnimatorSet) AnimatorInflater.loadAnimator(animationTarget.getContext(), R.animator.effect_blink);
+        AnimatorSet tmpSet = new AnimatorSet();
+        //tmpSet.setTarget(animationTarget);
+        //tmpSet.setDuration( duration );
+
+        //tmpSet.play(anim);
+        //tmpSet.start();
+    }
+
 
     /*
      * エフェクトアニメーション
@@ -297,6 +376,7 @@ public class EffectManager {
         //animation.setStartOffset(delay);
         animation.setRepeatCount(Animation.INFINITE);
         animation.setRepeatMode(Animation.RESTART);
+
         animationTarget.startAnimation(animation);
     }
 

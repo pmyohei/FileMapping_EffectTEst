@@ -258,74 +258,88 @@ public class DesignMapPageAdapter extends RecyclerView.Adapter<DesignMapPageAdap
         public void setMapEffectPage() {
             //エフェクト追加先のマップビューを取得
             FrameLayout fl_map = mv_map.findViewById(R.id.fl_map);
-            final EffectManager effectManager = new EffectManager( (ViewGroup)fl_map );
 
-            tv_star.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    effectManager.setEffectAttr( MapTable.STAR, Paint.Style.FILL, MapTable.SPIN);
-                    effectManager.restartEffect();
-                }
+            fl_map.post(() -> {
+                final EffectManager effectManager = new EffectManager( (ViewGroup)fl_map );
+
+                tv_star.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        effectManager.setEffectAttr( MapTable.STAR, Paint.Style.FILL, MapTable.SPIN);
+                        effectManager.setEffectVolume( 100 );
+                        effectManager.restartEffect();
+
+                        effectManager.setEffectAttr( MapTable.DOT, Paint.Style.FILL, MapTable.BLINK);
+                        effectManager.setEffectVolume( 300 );
+                        effectManager.createEffects();
+                    }
+                });
+
+                tv_flower.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        effectManager.setEffectAttr( MapTable.FLOWER, Paint.Style.FILL, MapTable.SPIN);
+                        effectManager.restartEffect();
+                    }
+                });
+
+                tv_sakura.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        effectManager.setEffectAttr( MapTable.SAKURA, Paint.Style.FILL, MapTable.BLINK_MOVE);
+                        effectManager.setEffectVolume( 1 );
+                        effectManager.restartEffect();
+                    }
+                });
+
+                tv_spakcle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        effectManager.setEffectAttr( MapTable.SPARCLE_CENTRAL_CIRCLE, Paint.Style.FILL, MapTable.BLINK);
+                        effectManager.setEffectVolume( 100 );
+                        effectManager.restartEffect();
+                    }
+                });
+
+                tv_dia.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        effectManager.setEffectAttr( MapTable.DIA, Paint.Style.FILL, MapTable.BLINK);
+                        effectManager.restartEffect();
+                    }
+                });
+
+                tv_dot.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        effectManager.setEffectAttr( MapTable.DOT, Paint.Style.FILL, MapTable.BLINK);
+                        effectManager.setEffectVolume( 300 );
+                        effectManager.restartEffect();
+                    }
+                });
+
+                tv_circle.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        effectManager.setEffectAttr( MapTable.CIRCLE, Paint.Style.FILL, MapTable.BLINK);
+                        effectManager.setEffectVolume( 100 );
+                        effectManager.restartEffect();
+
+                        effectManager.setEffectAttr( MapTable.DOT, Paint.Style.FILL, MapTable.BLINK);
+                        effectManager.setEffectVolume( 300 );
+                        effectManager.createEffects();
+                    }
+                });
+
+                tv_heart.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        effectManager.setEffectAttr( MapTable.HEART_INFLATED, Paint.Style.STROKE, MapTable.STROKE_GRADATION_ROTATE);
+                        effectManager.setEffectVolume( 20 );
+                        effectManager.restartEffect();
+                    }
+                });
             });
-
-            tv_flower.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    effectManager.setEffectAttr( MapTable.FLOWER, Paint.Style.FILL, MapTable.SPIN);
-                    effectManager.restartEffect();
-                }
-            });
-
-            tv_sakura.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    effectManager.setEffectAttr( MapTable.SAKURA, Paint.Style.FILL, MapTable.SPIN);
-                    effectManager.restartEffect();
-                }
-            });
-
-            tv_spakcle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    effectManager.setEffectAttr( MapTable.SPARCLE_CENTRAL_CIRCLE, Paint.Style.FILL, MapTable.BLINK);
-                    effectManager.setEffectVolume( 100 );
-                    effectManager.restartEffect();
-                }
-            });
-
-            tv_dia.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    effectManager.setEffectAttr( MapTable.DIA, Paint.Style.FILL, MapTable.BLINK);
-                    effectManager.restartEffect();
-                }
-            });
-
-            tv_dot.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    effectManager.setEffectAttr( MapTable.DOT, Paint.Style.FILL, MapTable.BLINK);
-                    effectManager.restartEffect();
-                }
-            });
-
-            tv_circle.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    effectManager.setEffectAttr( MapTable.CIRCLE, Paint.Style.FILL, MapTable.BLINK);
-                    effectManager.restartEffect();
-                }
-            });
-
-            tv_heart.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    effectManager.setEffectAttr( MapTable.HEART_INFLATED, Paint.Style.STROKE, MapTable.STROKE_GRADATION_ROTATE);
-                    effectManager.setEffectVolume( 20 );
-                    effectManager.restartEffect();
-                }
-            });
-
         }
 
         /*
